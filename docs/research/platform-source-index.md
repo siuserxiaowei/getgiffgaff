@@ -3,6 +3,17 @@
 更新日期：2026-07-01  
 用途：整理公开可访问的 giffgaff / GG 卡相关资料，方便学习、核对说法和继续扩展教程。本文只保存链接、主题和原创摘要，不复制第三方全文。
 
+## 按平台继续看
+
+- [官方资料怎么读](../platforms/official.md)（路径：`docs/platforms/official.md`）
+- [知乎资料怎么读](../platforms/zhihu.md)（路径：`docs/platforms/zhihu.md`）
+- [抖音资料怎么读](../platforms/douyin.md)（路径：`docs/platforms/douyin.md`）
+- [Bilibili 资料怎么读](../platforms/bilibili.md)（路径：`docs/platforms/bilibili.md`）
+- [X / Twitter 资料怎么读](../platforms/x-twitter.md)（路径：`docs/platforms/x-twitter.md`）
+- [小红书资料怎么读](../platforms/xiaohongshu.md)（路径：`docs/platforms/xiaohongshu.md`）
+- [快手资料怎么读](../platforms/kuaishou.md)（路径：`docs/platforms/kuaishou.md`）
+- [微信公众号资料怎么读](../platforms/wechat.md)（路径：`docs/platforms/wechat.md`）
+
 ## 先看官方来源
 
 | 来源 | 链接 | 适合学习什么 |
@@ -63,7 +74,7 @@
 
 ## 小红书、快手、公众号的处理方式
 
-这些平台公开索引不稳定，直接复制内容不合适，也不适合把截图/全文搬进 GitHub。建议只做三类记录：
+这些平台公开索引不稳定，直接复制内容不合适，也不适合把截图/全文搬进 GitHub。目前更稳定的线索通常是 X 帖转述、YouTube / B站视频、知乎长文和公众号转载。建议只做三类记录：
 
 1. 稳定公开链接：能打开就记录标题、作者、URL 和主题。
 2. 自己的原创摘要：看完后用自己的话写“这条内容主要讲什么、哪些说法要核查”。
