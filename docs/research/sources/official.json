@@ -1,0 +1,178 @@
+[
+  {
+    "id": "official-home",
+    "platform": "official",
+    "title": "giffgaff official home",
+    "url": "https://www.giffgaff.com/",
+    "topics": ["buying", "activation", "roaming"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "官方首页适合确认品牌入口、套餐入口和帮助中心路径，是所有社区说法回溯到官方资料的起点。",
+    "verification": "核对首页导航、套餐页、帮助中心和当前可见的 SIM 或 eSIM 入口。"
+  },
+  {
+    "id": "official-activate",
+    "platform": "official",
+    "title": "Activate your giffgaff SIM",
+    "url": "https://www.giffgaff.com/activate",
+    "topics": ["activation", "buying"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "官方激活入口用于确认激活码、账号登录和开卡流程，不应被第三方教程替代。",
+    "verification": "以官方激活页当前表单提示和实际激活流程截图复核。"
+  },
+  {
+    "id": "official-help-activation",
+    "platform": "official",
+    "title": "Activating your giffgaff SIM",
+    "url": "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+    "topics": ["activation", "buying", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "激活帮助页适合核查 SIM 激活、SIM swap 和多卡场景的官方边界。",
+    "verification": "用该帮助页复核任何关于激活失败、换卡或激活码位置的社区说法。"
+  },
+  {
+    "id": "official-deactivation",
+    "platform": "official",
+    "title": "Understanding why your number has been deactivated",
+    "url": "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",
+    "topics": ["deactivation", "credit", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "号码停用页用于确认长期不用号码的官方规则，是保号教程必须引用的核心来源。",
+    "verification": "所有保号周期、余额动作和号码回收说法都回到该页核查。"
+  },
+  {
+    "id": "official-roaming",
+    "platform": "official",
+    "title": "giffgaff roaming charges",
+    "url": "https://www.giffgaff.com/roaming-charges",
+    "topics": ["roaming", "sms", "credit"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "漫游资费页用于确认在中国或其他国家接打电话、发短信、用流量的当前费用。",
+    "verification": "价格和国家资费必须以该页面当前查询结果为准，并记录查询日期。"
+  },
+  {
+    "id": "official-credit",
+    "platform": "official",
+    "title": "Everything to know about credit",
+    "url": "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit",
+    "topics": ["credit", "buying", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "Airtime Credit 帮助页适合确认余额、充值和 goodybag 之外的扣费逻辑。",
+    "verification": "涉及充值、余额有效性和扣费方式的内容需与该页及账号实测对照。"
+  },
+  {
+    "id": "official-esim",
+    "platform": "official",
+    "title": "Switching to an eSIM with giffgaff",
+    "url": "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+    "topics": ["esim", "activation", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "eSIM 切换页用于确认实体卡转 eSIM 的官方流程、前置条件和风险提示。",
+    "verification": "第三方二维码、写卡或转卡说法必须用该页和账号内实际入口复核。"
+  },
+  {
+    "id": "official-manual-roam",
+    "platform": "official",
+    "title": "How to perform a manual roam",
+    "url": "https://help.giffgaff.com/en/articles/258873-how-to-perform-a-manual-roam",
+    "topics": ["roaming", "sms", "activation"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "手动选网页适合排查海外无服务、无法注册网络和收不到短信时的基础动作。",
+    "verification": "排障步骤应结合手机系统版本、所在地运营商和官方手动选网说明复核。"
+  },
+  {
+    "id": "official-network-troubleshooting",
+    "platform": "official",
+    "title": "Network service troubleshooting",
+    "url": "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+    "topics": ["sms", "roaming", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "网络排查页用于区分无信号、短信异常、设备设置和服务状态问题。",
+    "verification": "收不到验证码前先用该页排查普通短信、网络注册和设备设置。"
+  },
+  {
+    "id": "official-wifi-calling-volte",
+    "platform": "official",
+    "title": "Understanding WiFi Calling and VoLTE",
+    "url": "https://help.giffgaff.com/en/articles/258841-understanding-wifi-calling-and-volte",
+    "topics": ["roaming", "sms", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "WiFi Calling 和 VoLTE 页面用于确认支持条件、设备限制和海外使用边界。",
+    "verification": "任何降低资费或海外可用性说法都要回到该页和手机实际开关状态核查。"
+  },
+  {
+    "id": "official-sms-policy",
+    "platform": "official",
+    "title": "Policy to manage illegitimate SMS usage",
+    "url": "https://help.giffgaff.com/en/articles/246074-policy-to-manage-illegitimate-sms-usage",
+    "topics": ["sms", "risk", "deactivation"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "短信使用政策用于提醒不要把号码用于自动化、商业化或异常高频短信用途。",
+    "verification": "涉及风控、封号或短信滥用风险的教程必须引用该页并结合实际使用频率判断。"
+  },
+  {
+    "id": "official-esim-different-phone",
+    "platform": "official",
+    "title": "Continuing to use your eSIM if you switch to a different phone",
+    "url": "https://help.giffgaff.com/en/articles/240399-continuing-to-use-your-esim-if-you-switch-to-a-different-phone",
+    "topics": ["esim", "activation", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "换手机继续使用 eSIM 的官方说明适合核查设备迁移、重新安装和旧设备处理边界。",
+    "verification": "所有 eSIM 换机教程都需用该页和账号内迁移流程实测复核。"
+  },
+  {
+    "id": "official-esim-deleted",
+    "platform": "official",
+    "title": "What to do if you delete your eSIM",
+    "url": "https://help.giffgaff.com/en/articles/240403-what-to-do-if-you-delete-your-esim",
+    "topics": ["esim", "activation", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "误删 eSIM 的帮助页用于确认删除配置后如何恢复、是否需要重新安装或联系支持。",
+    "verification": "涉及误删、重装和二维码恢复的说法必须回到该页和账号实测核查。"
+  },
+  {
+    "id": "official-lost-sim-phone",
+    "platform": "official",
+    "title": "What to do if you've lost your SIM or phone",
+    "url": "https://help.giffgaff.com/en/articles/240710-what-to-do-if-you-ve-lost-your-sim-or-phone",
+    "topics": ["activation", "risk", "sms"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "丢失 SIM 或手机的官方页适合核查挂失、补卡、账号安全和号码恢复流程。",
+    "verification": "任何补卡、找回号码或被盗风险建议都需与该页和账号安全设置对照。"
+  },
+  {
+    "id": "official-physical-sim-and-esim",
+    "platform": "official",
+    "title": "Using a physical SIM card and an eSIM on the same phone",
+    "url": "https://help.giffgaff.com/en/articles/240301-using-a-physical-sim-card-and-an-esim-on-the-same-phone",
+    "topics": ["esim", "activation", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "实体 SIM 与 eSIM 同机使用说明适合核查双卡设备、号码选择和切换限制。",
+    "verification": "双卡场景需要结合该页、手机型号兼容性和实际通话短信测试复核。"
+  },
+  {
+    "id": "official-credit-plans-contracts",
+    "platform": "official",
+    "title": "The difference between credit, plans and contracts",
+    "url": "https://help.giffgaff.com/en/articles/234199-the-difference-between-credit-plans-and-contracts",
+    "topics": ["credit", "buying", "risk"],
+    "sourceType": "official-rule",
+    "publicAccess": "open",
+    "summary": "Credit、plans 和 contracts 的差异页适合解释余额、套餐和合约边界，避免把概念混用。",
+    "verification": "充值、套餐购买和长期持有成本说明需与该页及 Credit 帮助页一起核查。"
+  }
+]
