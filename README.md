@@ -22,6 +22,17 @@
 - [giffgaff / GG 卡全网资料索引](docs/research/platform-source-index.md)
 - [giffgaff / GG 卡 7 天学习路线](docs/research/learning-map.md)
 
+## 按平台看资料
+
+- [官方资料怎么读](docs/platforms/official.md)
+- [知乎资料怎么读](docs/platforms/zhihu.md)
+- [抖音资料怎么读](docs/platforms/douyin.md)
+- [Bilibili 资料怎么读](docs/platforms/bilibili.md)
+- [X / Twitter 资料怎么读](docs/platforms/x-twitter.md)
+- [小红书资料怎么读](docs/platforms/xiaohongshu.md)
+- [快手资料怎么读](docs/platforms/kuaishou.md)
+- [微信公众号资料怎么读](docs/platforms/wechat.md)
+
 ## 简单结论
 
 G0 新卡适合会自己激活、能处理首次充值的人。G2 有余额卡更适合第一次购买、急用，或者不想卡在支付和充值环节的人。
