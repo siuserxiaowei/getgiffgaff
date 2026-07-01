@@ -1,37 +1,36 @@
-# getgiffgaff: giffgaff / GG 卡中文教程和避坑指南
+# giffgaff / GG 卡中文教程
 
-这是 getgiffgaff.com 的公开引流仓库，用来沉淀 giffgaff 英国手机卡、GG 卡、G0 新卡、G2 有余额卡、国内激活、保号、充值、收短信、eSIM 和常见踩坑问题。
+这里整理 giffgaff 英国手机卡，也就是很多人说的 GG 卡，在国内购买、激活、充值、保号、收短信、eSIM 和排查问题时会用到的中文教程。
 
-线上教程入口：
+如果你只是想直接看教程或买卡，可以从这里进：
 
 - [giffgaff 使用教程和避坑清单](https://getgiffgaff.com/guides/6-pitfalls/)
 - [giffgaff 手机卡购买与中文教程首页](https://getgiffgaff.com/)
-- [G0 / G2 手机卡商城](https://getgiffgaff.com/shop/)
-- [购买前联系确认库存和余额范围](https://getgiffgaff.com/contact/)
+- [G0 新卡 / G2 有余额卡购买入口](https://getgiffgaff.com/shop/)
+- [购买前确认库存、余额和发货方式](https://getgiffgaff.com/contact/)
 
-## 适合谁看
+## 先看哪篇
 
-- 想在国内购买 giffgaff 英国实体 SIM 卡的人。
-- 已经有 GG 卡，但不清楚怎么激活、充值、保号或排查信号的人。
-- 想用英国 +44 手机号作为海外平台备用号码，但不想被“万能验证码”说法误导的人。
+- [GG 卡是什么？giffgaff 英国手机卡适合谁用](docs/articles/gg-card-guide.md)
+- [G0 新卡和 G2 有余额卡怎么选](docs/articles/giffgaff-g0-vs-g2.md)
+- [国内购买 giffgaff 手机卡前要确认什么](docs/articles/buy-giffgaff-sim-in-china.md)
+- [giffgaff 手机卡国内激活步骤和常见问题](docs/articles/giffgaff-activation-in-china.md)
+- [giffgaff 保号规则：6 个月不用会怎样](docs/articles/giffgaff-keep-number-active.md)
+- [giffgaff 收不到短信验证码怎么排查](docs/articles/giffgaff-sms-verification-troubleshooting.md)
+- [giffgaff eSIM 转换前要注意什么](docs/articles/giffgaff-esim-guide.md)
+- [giffgaff 使用教程和避坑清单总览](docs/giffgaff-usage-pitfalls.md)
 
-## 先看结论
+## 简单结论
 
-- G0 新卡适合会自己激活、能处理首次充值的人。
-- G2 有余额卡更适合第一次购买、急用或不想卡在付款环节的人。
-- giffgaff 保号不是放着不管，官方 inactive 规则要求 6 个月内至少有一次有效使用或充值。
-- 国内收短信要同时看信号、漫游、号码状态、平台风控、IP 和设备环境，不承诺所有验证码都能送达。
-- eSIM 切换后旧实体 SIM 或旧 eSIM 会停止工作，操作前必须确认账号、App、邮箱和短信验证都可用。
+G0 新卡适合会自己激活、能处理首次充值的人。G2 有余额卡更适合第一次购买、急用，或者不想卡在支付和充值环节的人。
 
-## 仓库内容
+giffgaff 可以作为英国 +44 手机号和低频短信备用方案，但不要把它理解成“所有平台验证码都保证能到”。验证码是否送达还会受平台风控、IP、设备、账号资料、请求频率和漫游状态影响。
 
-- [`docs/giffgaff-usage-pitfalls.md`](docs/giffgaff-usage-pitfalls.md)：GitHub Markdown 版使用教程和避坑清单。
-- [`public/guides/6-pitfalls-page.txt`](public/guides/6-pitfalls-page.txt)：线上页面的 HTML 内容，由 Cloudflare Pages Worker 以 `/guides/6-pitfalls/` 返回。
-- [`public/worker-logic.js`](public/worker-logic.js)：Cloudflare Pages Worker 热修逻辑，负责新增教程页、目录链接、sitemap 注入和联系页快团团弹窗。
+长期使用时要注意保号。giffgaff 官方帮助页说明，SIM 如果 6 个月没有有效使用或充值，可能被视为 inactive 并被停用。
 
-## 重要边界
+## 重要提醒
 
-getgiffgaff 不是 giffgaff 官方运营商。号码状态、资费、漫游规则、活动、eSIM 流程和风控规则都可能变化，购买和操作前请以 giffgaff 官方当前页面与本站客服确认为准。
+getgiffgaff 不是 giffgaff 官方运营商。号码状态、资费、漫游规则、活动、eSIM 流程和账号规则都会变化，购买和操作前请以 giffgaff 官方当前页面为准。
 
 ## 官方参考
 

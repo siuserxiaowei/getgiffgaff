@@ -5,6 +5,12 @@
 
 这篇面向中文用户，整理 giffgaff 英国手机卡，也就是常说的 GG 卡，在国内购买、激活、充值、保号、收短信、eSIM 和排查问题时最容易踩的坑。
 
+相关文章：
+
+- [GG 卡是什么？giffgaff 英国手机卡适合谁用](articles/gg-card-guide.md)
+- [G0 新卡和 G2 有余额卡怎么选](articles/giffgaff-g0-vs-g2.md)
+- [giffgaff 收不到短信验证码怎么排查](articles/giffgaff-sms-verification-troubleshooting.md)
+
 ## 1. G0 和 G2 怎么选
 
 G0 新卡是全新未激活 SIM，适合会自己激活、能处理首次充值、愿意按官方流程慢慢操作的人。优点是更适合批量备用，缺点是激活和首次付款都要自己处理。
