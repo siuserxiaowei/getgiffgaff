@@ -2,10 +2,13 @@
 
 这里整理 giffgaff 英国手机卡，也就是很多人说的 GG 卡，在国内购买、激活、充值、保号、收短信、eSIM 和排查问题时会用到的中文教程。
 
+如果你是在 GitHub 搜 giffgaff 中文教程、GG 卡使用教程、giffgaff 保号、giffgaff 收不到验证码、giffgaff eSIM 这些问题，这个仓库可以当作入口和资料索引。
+
 如果你只是想直接看教程或买卡，可以从这里进：
 
 - [giffgaff 使用教程和避坑清单](https://getgiffgaff.com/guides/6-pitfalls/)
 - [giffgaff 手机卡购买与中文教程首页](https://getgiffgaff.com/)
+- [giffgaff / GG 卡全网资料索引](https://getgiffgaff.com/research/)
 - [G0 新卡 / G2 有余额卡购买入口](https://getgiffgaff.com/shop/)
 - [购买前确认库存、余额和发货方式](https://getgiffgaff.com/contact/)
 

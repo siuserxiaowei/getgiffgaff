@@ -189,7 +189,7 @@ test("injects the pitfalls guide into sitemap.xml", async () => {
     const response = await worker.fetch(new Request("https://getgiffgaff.com/sitemap.xml"), {});
     const xml = await response.text();
 
-    assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "sitemap-pitfalls-guide");
+    assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "sitemap-hotfix-routes");
     assert.match(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//);
     assert.match(xml, /https:\/\/getgiffgaff\.com\/research\//);
     assert.match(xml, /2026-07-01T00:00:00\.000Z/);

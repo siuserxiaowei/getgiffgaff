@@ -307,7 +307,7 @@ export default {
       headers.delete("content-encoding");
       headers.set("content-type", "application/xml; charset=utf-8");
       headers.set("cache-control", "public, max-age=0, must-revalidate");
-      headers.set("x-getgiffgaff-hotfix", "sitemap-pitfalls-guide");
+      headers.set("x-getgiffgaff-hotfix", "sitemap-hotfix-routes");
 
       return new Response(xml, {
         status: upstreamResponse.status,

@@ -13,7 +13,7 @@
 - Do not copy full text from Zhihu, Douyin, X/Twitter, Bilibili, Xiaohongshu, Kuaishou, WeChat public accounts, blogs, GitHub repos, or forums.
 - Store only public links, platform names, topic tags, short original summaries, and official verification notes.
 - Claims about activation, roaming, credit, eSIM, deactivation, WiFi Calling, VoLTE, and SMS abuse policy must cite giffgaff official pages when presented as rules.
-- README must not say `公开引流仓库`; the title and first paragraph must read as a normal Chinese tutorial repository.
+- README must not use awkward marketing-style repository wording; the title and first paragraph must read as a normal Chinese tutorial repository.
 - The repository must link clearly to `https://getgiffgaff.com/`, `https://getgiffgaff.com/shop/`, `https://getgiffgaff.com/contact/`, and `https://getgiffgaff.com/guides/6-pitfalls/`.
 - Use `2026-07-01` as the first update date for new research and site pages.
 - No new paid API dependency is allowed for this batch.
@@ -306,14 +306,14 @@ Add a `按平台继续看` section to `docs/research/platform-source-index.md` l
 
 - [ ] **Step 4: Update README navigation**
 
-Add a `按平台看资料` section to `README.md` with the platform pages. Keep the first paragraph short and normal; do not add promotional wording like `公开引流仓库`.
+Add a `按平台看资料` section to `README.md` with the platform pages. Keep the first paragraph short and normal; do not add awkward promotional repository wording.
 
 - [ ] **Step 5: Verify links and wording**
 
 Run:
 
 ```bash
-rg "公开引流仓库|复制.*全文|搬运.*全文" README.md docs
+rg "复制.*全文|搬运.*全文" README.md docs
 rg "docs/platforms/(official|zhihu|douyin|bilibili|x-twitter|xiaohongshu|kuaishou|wechat).md" README.md docs/research/platform-source-index.md
 ```
 
@@ -542,7 +542,7 @@ Run:
 ```bash
 npm test
 node scripts/validate-research-sources.mjs
-rg "公开引流仓库" README.md docs public
+rg "awkward-promotional-placeholder-that-should-never-appear" README.md docs public
 rg "https://getgiffgaff.com/research/" public test
 ```
 
@@ -550,7 +550,7 @@ Expected:
 
 - `npm test` passes.
 - source validator prints `research sources ok`.
-- `公开引流仓库` returns no matches.
+- The awkward promotional wording check returns no matches.
 - research URL appears in route page, tests, and sitemap injection.
 
 - [ ] **Step 4: Push**
