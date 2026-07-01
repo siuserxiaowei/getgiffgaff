@@ -249,7 +249,6 @@
         <a href="/more/">更多玩法</a>
         <a href="/qa/">常见问题</a>
         <a href="/contact/">联系我</a>
-        <a href="https://nano-banana.lol/" target="_blank" rel="noreferrer">Nano Banana</a>
         <a class="btn btn-primary btn-compact" href="/shop/">点此购买</a>
       </nav>
     </header>
@@ -420,7 +419,6 @@
       </div>
       <div class="footer-warning"><span>不承诺长期保号，不承诺所有验证码均可送达。</span></div>
       <p class="footer-contact">购买要点：<a href="/answers/">G0/G2 对比与常见结论</a></p>
-      <p class="footer-contact">AI 订阅购买：<a href="https://nano-banana.lol/" target="_blank" rel="noreferrer">Nano Banana</a></p>
     </footer>
   </body>
 </html>

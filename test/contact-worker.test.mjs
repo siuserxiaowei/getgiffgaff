@@ -36,6 +36,20 @@ const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
 </url>
 </urlset>`;
 
+const sitemapXmlWithHotfixRoutes = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://getgiffgaff.com/guides/6-pitfalls/</loc>
+</url>
+<url>
+<loc>https://getgiffgaff.com/research/</loc>
+</url>
+</urlset>`;
+
+function countOccurrences(text, pattern) {
+  return (text.match(pattern) || []).length;
+}
+
 async function assetEnv() {
   const pitfallsHtml = await readFile(
     new URL("../public/guides/6-pitfalls-page.txt", import.meta.url),
@@ -124,6 +138,7 @@ test("serves the giffgaff pitfalls guide from Pages assets", async () => {
   assert.match(html, /giffgaff 使用教程和避坑清单/);
   assert.match(html, /https:\/\/help\.giffgaff\.com\/en\/articles\/242797-understanding-why-your-number-has-been-deactivated/);
   assert.match(html, /不承诺所有验证码均可送达/);
+  assert.doesNotMatch(html, /nano-banana|Nano Banana|AI 订阅/);
 });
 
 test("redirects the pitfalls guide to the canonical trailing slash", async () => {
@@ -178,7 +193,7 @@ test("injects the pitfalls guide into the guide directory", async () => {
   }
 });
 
-test("injects the pitfalls guide into sitemap.xml", async () => {
+test("injects the hotfix routes into sitemap.xml", async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () =>
     new Response(sitemapXml, {
@@ -193,6 +208,25 @@ test("injects the pitfalls guide into sitemap.xml", async () => {
     assert.match(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//);
     assert.match(xml, /https:\/\/getgiffgaff\.com\/research\//);
     assert.match(xml, /2026-07-01T00:00:00\.000Z/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("does not duplicate hotfix routes already present in sitemap.xml", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(sitemapXmlWithHotfixRoutes, {
+      headers: { "content-type": "application/xml; charset=utf-8" },
+    });
+
+  try {
+    const response = await worker.fetch(new Request("https://getgiffgaff.com/sitemap.xml"), {});
+    const xml = await response.text();
+
+    assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "sitemap-hotfix-routes");
+    assert.equal(countOccurrences(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//g), 1);
+    assert.equal(countOccurrences(xml, /https:\/\/getgiffgaff\.com\/research\//g), 1);
   } finally {
     globalThis.fetch = originalFetch;
   }

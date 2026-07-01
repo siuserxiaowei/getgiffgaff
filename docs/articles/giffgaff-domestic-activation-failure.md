@@ -59,6 +59,8 @@ giffgaff 官方激活说明：[Activating your giffgaff SIM](https://help.giffga
 
 余额和充值说明可看：[Everything to know about Credit](https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit)。
 
+WiFi Calling 和 VoLTE 边界可看：[Understanding WiFi Calling and VoLTE](https://help.giffgaff.com/en/articles/258841-understanding-wifi-calling-and-volte)。
+
 本站总览：[giffgaff 使用教程和避坑清单](https://getgiffgaff.com/guides/6-pitfalls/)。
 
 ## 下一步

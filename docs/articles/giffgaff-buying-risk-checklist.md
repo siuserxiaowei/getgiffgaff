@@ -50,6 +50,8 @@ giffgaff 官方激活说明：[Activating your giffgaff SIM](https://help.giffga
 
 号码 inactive 和停用说明：[Understanding why your number has been deactivated](https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated)。
 
+WiFi Calling 和 VoLTE 边界：[Understanding WiFi Calling and VoLTE](https://help.giffgaff.com/en/articles/258841-understanding-wifi-calling-and-volte)。
+
 本站总览：[giffgaff 使用教程和避坑清单](https://getgiffgaff.com/guides/6-pitfalls/)。
 
 ## 下一步
