@@ -404,6 +404,7 @@
               <li><a href="https://help.giffgaff.com/en/articles/246074-policy-to-manage-illegitimate-sms-usage" target="_blank" rel="noreferrer">giffgaff 官方：SMS usage policy</a></li>
               <li><a href="https://github.com/ssnhd/giffgaff" target="_blank" rel="noreferrer">中文实操参考：ssnhd/giffgaff</a></li>
               <li><a href="https://github.com/youweijinjin/giffgaff" target="_blank" rel="noreferrer">中文避坑参考：youweijinjin/giffgaff</a></li>
+              <li><a href="https://github.com/siuserxiaowei/getgiffgaff" target="_blank" rel="noreferrer">GitHub 版教程仓库：siuserxiaowei/getgiffgaff</a></li>
             </ul>
           </section>
         </article>
