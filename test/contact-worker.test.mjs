@@ -41,6 +41,10 @@ async function assetEnv() {
     new URL("../public/guides/6-pitfalls-page.txt", import.meta.url),
     "utf8",
   );
+  const researchHtml = await readFile(
+    new URL("../public/research/index-page.txt", import.meta.url),
+    "utf8",
+  );
 
   return {
     ASSETS: {
@@ -48,6 +52,11 @@ async function assetEnv() {
         const url = new URL(request.url);
         if (url.pathname === "/guides/6-pitfalls-page.txt") {
           return new Response(pitfallsHtml, {
+            headers: { "content-type": "text/html; charset=utf-8" },
+          });
+        }
+        if (url.pathname === "/research/index-page.txt") {
+          return new Response(researchHtml, {
             headers: { "content-type": "text/html; charset=utf-8" },
           });
         }
@@ -127,6 +136,29 @@ test("redirects the pitfalls guide to the canonical trailing slash", async () =>
   assert.equal(response.headers.get("location"), "https://getgiffgaff.com/guides/6-pitfalls/");
 });
 
+test("serves the research hub from Pages assets", async () => {
+  const response = await worker.fetch(
+    new Request("https://getgiffgaff.com/research/"),
+    await assetEnv(),
+  );
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "research-hub");
+  assert.match(html, /giffgaff \/ GG 卡全网资料索引/);
+  assert.match(html, /github\.com\/siuserxiaowei\/getgiffgaff/);
+});
+
+test("redirects the research hub to the canonical trailing slash", async () => {
+  const response = await worker.fetch(
+    new Request("https://getgiffgaff.com/research"),
+    await assetEnv(),
+  );
+
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get("location"), "https://getgiffgaff.com/research/");
+});
+
 test("injects the pitfalls guide into the guide directory", async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async () =>
@@ -159,6 +191,7 @@ test("injects the pitfalls guide into sitemap.xml", async () => {
 
     assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "sitemap-pitfalls-guide");
     assert.match(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//);
+    assert.match(xml, /https:\/\/getgiffgaff\.com\/research\//);
     assert.match(xml, /2026-07-01T00:00:00\.000Z/);
   } finally {
     globalThis.fetch = originalFetch;

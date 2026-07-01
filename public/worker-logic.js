@@ -6,6 +6,8 @@ const KTT_IMAGE_PATH = "/contact/ktt-giga-card.png";
 const BUTTON_TARGET = `#${KTT_MODAL_ID}`;
 const PITFALLS_PATH = "/guides/6-pitfalls/";
 const PITFALLS_ASSET_PATH = "/guides/6-pitfalls-page.txt";
+const RESEARCH_PATH = "/research/";
+const RESEARCH_ASSET_PATH = "/research/index-page.txt";
 const PITFALLS_NAV_ITEM =
   '<li><a href="/guides/6-pitfalls/">giffgaff 使用教程和避坑清单</a></li>';
 const PITFALLS_DOC_LIST_ITEM = `<a class="doc-list-item" href="/guides/6-pitfalls/"><span>giffgaff 使用教程和避坑清单</span><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>`;
@@ -216,18 +218,26 @@ function injectPitfallsGuideLinks(html) {
   return rewritten;
 }
 
-function injectPitfallsIntoSitemap(xml) {
-  if (xml.includes(`https://getgiffgaff.com${PITFALLS_PATH}`)) return xml;
-
-  const entry = `<url>
-<loc>https://getgiffgaff.com${PITFALLS_PATH}</loc>
+function injectHotfixRoutesIntoSitemap(xml) {
+  const entries = [
+    { path: PITFALLS_PATH, priority: "0.78" },
+    { path: RESEARCH_PATH, priority: "0.7" },
+  ]
+    .filter(({ path }) => !xml.includes(`https://getgiffgaff.com${path}`))
+    .map(
+      ({ path, priority }) => `<url>
+<loc>https://getgiffgaff.com${path}</loc>
 <lastmod>2026-07-01T00:00:00.000Z</lastmod>
 <changefreq>monthly</changefreq>
-<priority>0.78</priority>
+<priority>${priority}</priority>
 </url>
-`;
+`,
+    )
+    .join("");
 
-  return xml.replace("</urlset>", `${entry}</urlset>`);
+  if (!entries) return xml;
+
+  return xml.replace("</urlset>", `${entries}</urlset>`);
 }
 
 function shouldRewriteHtmlPath(pathname) {
@@ -253,6 +263,11 @@ export default {
       return Response.redirect(url.toString(), 301);
     }
 
+    if (url.pathname === "/research") {
+      url.pathname = RESEARCH_PATH;
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (url.pathname === PITFALLS_PATH && env?.ASSETS) {
       const response = await env.ASSETS.fetch(assetRequestFor(request, PITFALLS_ASSET_PATH));
       const headers = new Headers(response.headers);
@@ -267,12 +282,26 @@ export default {
       });
     }
 
+    if (url.pathname === RESEARCH_PATH && env?.ASSETS) {
+      const response = await env.ASSETS.fetch(assetRequestFor(request, RESEARCH_ASSET_PATH));
+      const headers = new Headers(response.headers);
+      headers.set("content-type", "text/html; charset=utf-8");
+      headers.set("cache-control", "public, max-age=0, must-revalidate");
+      headers.set("x-getgiffgaff-hotfix", "research-hub");
+
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+
     const upstreamResponse = await fetch(upstreamRequestFor(request));
     const isContactPage = CONTACT_PATHS.has(url.pathname);
     const contentType = upstreamResponse.headers.get("content-type") || "";
 
     if (url.pathname === "/sitemap.xml" && contentType.includes("xml")) {
-      const xml = injectPitfallsIntoSitemap(await upstreamResponse.text());
+      const xml = injectHotfixRoutesIntoSitemap(await upstreamResponse.text());
       const headers = new Headers(upstreamResponse.headers);
       headers.delete("content-length");
       headers.delete("content-encoding");
