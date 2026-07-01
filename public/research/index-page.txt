@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>giffgaff / GG 卡全网资料索引</title>
+    <meta name="description" content="giffgaff / GG 卡资料索引，集中整理官方资料、中文使用教程、购买入口和售前联系入口。">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1">
+    <link rel="canonical" href="https://getgiffgaff.com/research/">
+    <meta property="og:title" content="giffgaff / GG 卡全网资料索引">
+    <meta property="og:description" content="把 GG 卡购买、激活、保号、避坑和站点源码资料放在一个入口里。">
+    <meta property="og:url" content="https://getgiffgaff.com/research/">
+    <meta property="og:site_name" content="getgiffgaff">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="/favicon.svg">
+    <link rel="stylesheet" href="/_next/static/chunks/0zd-htgp-~j4m.css">
+    <style>
+      .research-hero {
+        border-bottom: 1px solid rgba(47, 94, 65, 0.16);
+        background: linear-gradient(135deg, #f7fbf5 0%, #eef7ef 58%, #fff7df 100%);
+      }
+      .research-hero-inner,
+      .research-wrap {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+      .research-hero-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+        gap: 34px;
+        padding: 62px 0 44px;
+        align-items: end;
+      }
+      .research-kicker {
+        margin: 0 0 12px;
+        color: #2f5e41;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .research-hero h1 {
+        margin: 0;
+        color: #102019;
+        font-size: clamp(34px, 5vw, 60px);
+        line-height: 1.08;
+        letter-spacing: 0;
+      }
+      .research-hero p {
+        max-width: 720px;
+        color: #4f5f55;
+        font-size: 18px;
+        line-height: 1.8;
+      }
+      .research-summary {
+        border: 1px solid rgba(47, 94, 65, 0.18);
+        border-radius: 8px;
+        background: #ffffff;
+        padding: 22px;
+        box-shadow: 0 18px 40px rgba(38, 64, 49, 0.1);
+      }
+      .research-summary strong,
+      .research-card strong {
+        display: block;
+        color: #102019;
+        font-size: 18px;
+      }
+      .research-summary ul,
+      .research-card ul {
+        margin: 10px 0 0;
+        padding-left: 22px;
+      }
+      .research-summary li,
+      .research-card li {
+        margin: 8px 0;
+        color: #405047;
+        line-height: 1.75;
+      }
+      .research-wrap {
+        padding: 42px 0 72px;
+      }
+      .research-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .research-card {
+        border: 1px solid rgba(47, 94, 65, 0.16);
+        border-radius: 8px;
+        background: #fff;
+        padding: 22px;
+      }
+      .research-card p {
+        margin: 10px 0 18px;
+        color: #4f5f55;
+        line-height: 1.75;
+      }
+      .research-card a {
+        color: #2f5e41;
+        font-weight: 800;
+      }
+      .research-card .research-link {
+        display: inline-flex;
+        align-items: center;
+        min-height: 42px;
+        border: 1px solid rgba(47, 94, 65, 0.18);
+        border-radius: 8px;
+        padding: 0 14px;
+        background: #f3f8f2;
+        text-decoration: none;
+      }
+      .research-note {
+        margin-top: 24px;
+        border-left: 4px solid #2f5e41;
+        background: #f3f8f2;
+        padding: 14px 16px;
+        color: #2f5e41;
+        font-weight: 800;
+        line-height: 1.75;
+      }
+      @media (max-width: 860px) {
+        .research-hero-inner,
+        .research-grid {
+          grid-template-columns: 1fr;
+        }
+        .research-hero-inner {
+          padding-top: 42px;
+        }
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "giffgaff / GG 卡全网资料索引",
+        "description": "giffgaff / GG 卡资料索引，集中整理官方资料、中文使用教程、购买入口和售前联系入口。",
+        "url": "https://getgiffgaff.com/research/",
+        "inLanguage": "zh-CN",
+        "datePublished": "2026-07-01",
+        "dateModified": "2026-07-01",
+        "publisher": {
+          "@type": "Organization",
+          "name": "getgiffgaff",
+          "url": "https://getgiffgaff.com"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" aria-label="getgiffgaff 首页" href="/">
+        <span class="brand-mark">GG</span>
+        <span><strong>getgiffgaff</strong><small>英国手机卡购买与教程</small></span>
+      </a>
+      <nav aria-label="主导航">
+        <a href="/shop/">手机卡</a>
+        <a href="/guides/">教程</a>
+        <a href="/more/">更多玩法</a>
+        <a href="/qa/">常见问题</a>
+        <a href="/contact/">联系我</a>
+        <a class="btn btn-primary btn-compact" href="/shop/">点此购买</a>
+      </nav>
+    </header>
+    <main>
+      <section class="research-hero">
+        <div class="research-hero-inner">
+          <div>
+            <p class="research-kicker">Research Hub</p>
+            <h1>giffgaff / GG 卡全网资料索引</h1>
+            <p>这个页面把站内教程、购买入口、客服入口和开源资料放到同一个地方。适合先做功课，再决定买 G0 新卡、G2 有余额卡，或者只把 GG 卡当备用英国号码维护。</p>
+          </div>
+          <aside class="research-summary" aria-label="使用建议">
+            <strong>先按这个顺序看</strong>
+            <ul>
+              <li>先读避坑教程，确认它是不是适合你的使用场景。</li>
+              <li>再看商城里的 G0/G2 当前入口和库存说明。</li>
+              <li>购买前有急用、批量或验证码需求，先联系确认。</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="research-wrap" aria-label="资料入口">
+        <div class="research-grid">
+          <article class="research-card">
+            <strong>站点源码和公开资料</strong>
+            <p>用于查看 getgiffgaff 站点资料、页面内容和后续维护记录。适合需要核对内容来源或二次整理的人。</p>
+            <a class="research-link" href="https://github.com/siuserxiaowei/getgiffgaff" target="_blank" rel="noreferrer">打开 GitHub 仓库</a>
+          </article>
+
+          <article class="research-card">
+            <strong>GG 卡使用教程和避坑清单</strong>
+            <p>集中讲购买前判断、激活、保号、国内收短信、漫游、eSIM、无信号和验证码排查。</p>
+            <a class="research-link" href="https://getgiffgaff.com/guides/6-pitfalls/">阅读避坑教程</a>
+          </article>
+
+          <article class="research-card">
+            <strong>手机卡商城</strong>
+            <p>从这里进入当前可购买入口。下单前留意 G0/G2 类型、余额范围、库存和发货方式。</p>
+            <a class="research-link" href="https://getgiffgaff.com/shop/">进入商城</a>
+          </article>
+
+          <article class="research-card">
+            <strong>购买前联系确认</strong>
+            <p>急用、批量、对验证码有特定平台要求，建议先说清使用场景，再确认是否适合买。</p>
+            <a class="research-link" href="https://getgiffgaff.com/contact/">联系售前客服</a>
+          </article>
+        </div>
+
+        <p class="research-note">本站不是 giffgaff 官方运营商。号码状态、资费、活动、漫游和平台验证码结果会变化；购买和操作前，请以当前官方页面、站内教程和客服确认为准。</p>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div>
+        <a class="brand brand-footer" href="/">
+          <span class="brand-mark">GG</span>
+          <span><strong>getgiffgaff</strong><small>英国手机卡购买、激活和使用教程</small></span>
+        </a>
+        <p>getgiffgaff 官网。新客户可从手机卡商城开始，已购买客户可继续按教程、更多玩法、常见问题和联系我查找内容。</p>
+      </div>
+      <div class="footer-warning"><span>不承诺长期保号，不承诺所有验证码均可送达。</span></div>
+      <p class="footer-contact">购买要点：<a href="/answers/">G0/G2 对比与常见结论</a></p>
+    </footer>
+  </body>
+</html>
