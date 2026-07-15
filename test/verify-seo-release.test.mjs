@@ -1,14 +1,17 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
   SeoReleaseError,
   extractSitemapUrls,
   parseCliOptions,
+  runCli,
   validateCanonicalVariants,
   validatePolicyProbes,
   validateSeoRelease,
 } from "../scripts/verify-seo-release.mjs";
+import worker from "../public/worker-logic.js";
 
 const BASE_URL = "https://getgiffgaff.test";
 
@@ -35,13 +38,33 @@ function healthyHtml(url, extraJsonLd = {}) {
 }
 
 function fixtureFetch(routes) {
-  return async (input) => {
+  return async (input, init = {}) => {
     const url = typeof input === "string" ? input : input.url;
     const route = routes.get(url);
     if (!route) return jsonResponse("not found", { status: 404 });
-    return typeof route === "function" ? route(url) : route.clone();
+    return typeof route === "function" ? route(url, init) : route.clone();
   };
 }
+
+const ROBOTS_POLICY = `User-agent: *
+Allow: /
+
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Bytespider
+User-agent: CCBot
+Disallow: /
+
+Sitemap: ${BASE_URL}/sitemap.xml`;
 
 test("extractSitemapUrls preserves duplicate loc entries for validation", () => {
   const xml = `<?xml version="1.0"?><urlset>
@@ -77,6 +100,7 @@ test("validates sitemap pages without making live requests", async () => {
   const report = await validateSeoRelease({
     baseUrl: BASE_URL,
     expectedUrlCount: 2,
+    expectedIndexablePaths: ["/", "/contact/"],
     fetchImpl: fixtureFetch(routes),
     checkCanonicalization: false,
     checkPolicyProbes: false,
@@ -130,6 +154,7 @@ test("collects duplicate, robots, canonical, OG and JSON-LD failures", async () 
     validateSeoRelease({
       baseUrl: BASE_URL,
       expectedUrlCount: 2,
+      expectedIndexablePaths: ["/contact/"],
       fetchImpl: fixtureFetch(routes),
       checkCanonicalization: false,
       checkPolicyProbes: false,
@@ -146,6 +171,8 @@ test("collects duplicate, robots, canonical, OG and JSON-LD failures", async () 
       assert.match(messages, /pages\.dev/i);
       assert.match(messages, /official giffgaff entity/i);
       assert.match(messages, /unverified commerce/i);
+      assert.match(messages, /paused schema type/i);
+      assert.match(messages, /schema\.org @context/i);
       return true;
     },
   );
@@ -164,6 +191,7 @@ test("allows giffgaff as an external Brand but rejects it as this site's publish
   const allowed = await validateSeoRelease({
     baseUrl: BASE_URL,
     expectedUrlCount: 1,
+    expectedIndexablePaths: ["/contact/"],
     fetchImpl: fixtureFetch(routesFor({
       about: {
         "@type": "Brand",
@@ -180,6 +208,7 @@ test("allows giffgaff as an external Brand but rejects it as this site's publish
     validateSeoRelease({
       baseUrl: BASE_URL,
       expectedUrlCount: 1,
+      expectedIndexablePaths: ["/contact/"],
       fetchImpl: fixtureFetch(routesFor({
         publisher: {
           "@type": "Organization",
@@ -254,7 +283,7 @@ test("rejects temporary redirects and indirect redirect targets", async () => {
   assert.match(messages, /one hop/i);
 });
 
-test("validates supporting, private and non-HTML policy probes", async () => {
+test("validates supporting, private, sensitive, robots and non-HTML policy probes", async () => {
   const privateHeaders = {
     "cache-control": "private, no-store",
     "x-robots-tag": "noindex, nofollow, noarchive",
@@ -263,16 +292,17 @@ test("validates supporting, private and non-HTML policy probes", async () => {
     [`${BASE_URL}/llms.txt`, jsonResponse("llms", {
       headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
-    [`${BASE_URL}/llms-full.txt`, jsonResponse("llms full", {
+    [`${BASE_URL}/llms-full.txt`, jsonResponse("retired", {
+      status: 410,
+      headers: privateHeaders,
+    })],
+    [`${BASE_URL}/privacy/`, jsonResponse("privacy", {
+      status: 200,
       headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
-    [`${BASE_URL}/privacy/`, jsonResponse("missing", {
-      status: 404,
-      headers: privateHeaders,
-    })],
-    [`${BASE_URL}/terms/`, jsonResponse("missing", {
-      status: 404,
-      headers: privateHeaders,
+    [`${BASE_URL}/terms/`, jsonResponse("terms", {
+      status: 200,
+      headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
     [`${BASE_URL}/__seo-release-probe-missing__/`, jsonResponse("missing", {
       status: 404,
@@ -282,7 +312,27 @@ test("validates supporting, private and non-HTML policy probes", async () => {
       status: 404,
       headers: privateHeaders,
     })],
-    [`${BASE_URL}/robots.txt`, jsonResponse("User-agent: *\nAllow: /")],
+    [`${BASE_URL}/contact/?otp=release-gate-secret`, jsonResponse("rejected", {
+      status: 400,
+      headers: privateHeaders,
+    })],
+    [`${BASE_URL}/contact/?api_key=release-gate-secret`, jsonResponse("rejected", {
+      status: 400,
+      headers: privateHeaders,
+    })],
+    [`${BASE_URL}/contact/?auth_token=release-gate-secret`, jsonResponse("rejected", {
+      status: 400,
+      headers: privateHeaders,
+    })],
+    [`${BASE_URL}/contact/?id_token=release-gate-secret`, jsonResponse("rejected", {
+      status: 400,
+      headers: privateHeaders,
+    })],
+    [`${BASE_URL}/contact/`, (url, init) => {
+      assert.equal(init.headers.authorization, "Bearer release-gate-secret");
+      return jsonResponse("rejected", { status: 400, headers: privateHeaders });
+    }],
+    [`${BASE_URL}/robots.txt`, jsonResponse(ROBOTS_POLICY)],
   ]);
 
   const issues = await validatePolicyProbes(BASE_URL, {
@@ -290,6 +340,178 @@ test("validates supporting, private and non-HTML policy probes", async () => {
   });
 
   assert.deepEqual(issues, []);
+});
+
+test("requires sitemap URLs to match the route manifest paths exactly", async () => {
+  const expectedUrl = `${BASE_URL}/contact/`;
+  const unexpectedUrl = `${BASE_URL}/shop/`;
+  const sitemap = `<?xml version="1.0"?><urlset>
+    <url><loc>${unexpectedUrl}</loc></url>
+  </urlset>`;
+  const routes = new Map([
+    [`${BASE_URL}/sitemap.xml`, jsonResponse(sitemap, {
+      headers: { "content-type": "application/xml" },
+    })],
+    [unexpectedUrl, jsonResponse(healthyHtml(unexpectedUrl), {
+      headers: { "content-type": "text/html" },
+    })],
+  ]);
+
+  await assert.rejects(
+    validateSeoRelease({
+      baseUrl: BASE_URL,
+      expectedIndexablePaths: ["/contact/"],
+      expectedUrlCount: 1,
+      fetchImpl: fixtureFetch(routes),
+      checkCanonicalization: false,
+      checkPolicyProbes: false,
+    }),
+    (error) => {
+      const codes = new Set(error.issues.map((entry) => entry.code));
+      assert.ok(codes.has("sitemap-manifest-missing"), `missing ${expectedUrl}`);
+      assert.ok(codes.has("sitemap-manifest-unexpected"), `unexpected ${unexpectedUrl}`);
+      assert.ok(codes.has("sitemap-noindex-route"), `${unexpectedUrl} is a noindex route`);
+      return true;
+    },
+  );
+});
+
+test("requires successful HEAD checks for sitemap and every indexable page", async () => {
+  const url = `${BASE_URL}/contact/`;
+  const sitemap = `<?xml version="1.0"?><urlset><url><loc>${url}</loc></url></urlset>`;
+  const fetchImpl = async (input, init = {}) => {
+    const requestUrl = typeof input === "string" ? input : input.url;
+    const method = init.method || "GET";
+    if (requestUrl === `${BASE_URL}/sitemap.xml`) {
+      if (method === "HEAD") return jsonResponse(null, { status: 405 });
+      return jsonResponse(sitemap, { headers: { "content-type": "application/xml" } });
+    }
+    if (requestUrl === url) {
+      if (method === "HEAD") return jsonResponse(null, { status: 503 });
+      return jsonResponse(healthyHtml(url), { headers: { "content-type": "text/html" } });
+    }
+    return jsonResponse("not found", { status: 404 });
+  };
+
+  await assert.rejects(
+    validateSeoRelease({
+      baseUrl: BASE_URL,
+      expectedIndexablePaths: ["/contact/"],
+      expectedUrlCount: 1,
+      fetchImpl,
+      checkCanonicalization: false,
+      checkPolicyProbes: false,
+    }),
+    (error) => {
+      const codes = new Set(error.issues.map((entry) => entry.code));
+      assert.ok(codes.has("sitemap-head-status"));
+      assert.ok(codes.has("page-head-status"));
+      return true;
+    },
+  );
+});
+
+test("policy probes fail closed for policy pages, sensitive inputs, robots and 404 canonicals", async () => {
+  const supportingHeaders = { "x-robots-tag": "noindex, follow, noarchive" };
+  const privateHeaders = {
+    "cache-control": "private, no-store",
+    "x-robots-tag": "noindex, nofollow, noarchive",
+  };
+  const canonical404 = `<!doctype html><link rel="canonical" href="${BASE_URL}/"><meta property="og:url" content="${BASE_URL}/">`;
+  const routes = new Map([
+    [`${BASE_URL}/llms.txt`, jsonResponse("llms", { headers: supportingHeaders })],
+    [`${BASE_URL}/llms-full.txt`, jsonResponse("gone", { status: 410, headers: privateHeaders })],
+    [`${BASE_URL}/privacy/`, jsonResponse("missing", { status: 404, headers: privateHeaders })],
+    [`${BASE_URL}/terms/`, jsonResponse("missing", { status: 404, headers: privateHeaders })],
+    [`${BASE_URL}/__seo-release-probe-missing__/`, jsonResponse(canonical404, {
+      status: 404,
+      headers: { ...privateHeaders, "content-type": "text/html" },
+    })],
+    [`${BASE_URL}/api/__seo-release-probe`, jsonResponse("missing", { status: 404, headers: privateHeaders })],
+    [`${BASE_URL}/contact/?otp=release-gate-secret`, jsonResponse("forwarded", { status: 200 })],
+    [`${BASE_URL}/contact/?api_key=release-gate-secret`, jsonResponse("forwarded", { status: 200 })],
+    [`${BASE_URL}/contact/?auth_token=release-gate-secret`, jsonResponse("forwarded", { status: 200 })],
+    [`${BASE_URL}/contact/?id_token=release-gate-secret`, jsonResponse("forwarded", { status: 200 })],
+    [`${BASE_URL}/contact/`, jsonResponse("forwarded", { status: 200 })],
+    [`${BASE_URL}/robots.txt`, jsonResponse("User-agent: *\nAllow: /\n")],
+  ]);
+
+  const issues = await validatePolicyProbes(BASE_URL, { fetchImpl: fixtureFetch(routes) });
+  const codes = new Set(issues.map((entry) => entry.code));
+  assert.ok(codes.has("policy-page-status"));
+  assert.ok(codes.has("sensitive-request-status"));
+  assert.ok(codes.has("robots-ai-policy"));
+  assert.ok(codes.has("404-canonical"));
+  assert.ok(codes.has("404-og-url"));
+});
+
+test("rejects commercial destinations and high-risk sales CTAs on indexable pages", async () => {
+  const url = `${BASE_URL}/answers/`;
+  const html = healthyHtml(url).replace(
+    "<main>ok</main>",
+    '<main><a href="/shop/">立即购买 G2</a><button>确认 G2 库存</button><p>验证码更可靠</p></main>',
+  );
+  const sitemap = `<?xml version="1.0"?><urlset><url><loc>${url}</loc></url></urlset>`;
+  const routes = new Map([
+    [`${BASE_URL}/sitemap.xml`, jsonResponse(sitemap, { headers: { "content-type": "application/xml" } })],
+    [url, jsonResponse(html, { headers: { "content-type": "text/html" } })],
+  ]);
+
+  await assert.rejects(
+    validateSeoRelease({
+      baseUrl: BASE_URL,
+      expectedIndexablePaths: ["/answers/"],
+      expectedUrlCount: 1,
+      fetchImpl: fixtureFetch(routes),
+      checkCanonicalization: false,
+      checkPolicyProbes: false,
+    }),
+    (error) => {
+      const codes = new Set(error.issues.map((entry) => entry.code));
+      assert.ok(codes.has("commercial-link"));
+      assert.ok(codes.has("commercial-cta"));
+      assert.ok(codes.has("commercial-claim"));
+      return true;
+    },
+  );
+});
+
+test("the local-only Worker passes the complete release verifier without network access", async () => {
+  const contentTypes = new Map([
+    [".txt", "text/plain; charset=utf-8"],
+    [".png", "image/png"],
+    [".svg", "image/svg+xml"],
+    [".css", "text/css; charset=utf-8"],
+    [".js", "text/javascript; charset=utf-8"],
+  ]);
+  const assets = {
+    async fetch(request) {
+      const url = new URL(request.url);
+      const relativePath = url.pathname.replace(/^\/+/, "");
+      const assetUrl = new URL(`../public/${relativePath}`, import.meta.url);
+      try {
+        const body = await readFile(assetUrl);
+        const extension = url.pathname.slice(url.pathname.lastIndexOf("."));
+        return jsonResponse(request.method === "HEAD" ? null : body, {
+          headers: { "content-type": contentTypes.get(extension) || "application/octet-stream" },
+        });
+      } catch {
+        return jsonResponse("not found", { status: 404 });
+      }
+    },
+  };
+  const fetchImpl = (input, init = {}) =>
+    worker.fetch(new Request(input, init), { ASSETS: assets }, {});
+
+  const report = await validateSeoRelease({
+    baseUrl: "https://getgiffgaff.com",
+    fetchImpl,
+  });
+
+  assert.equal(report.ok, true);
+  assert.equal(report.urlCount, report.pagesChecked);
+  assert.equal(report.canonicalizationChecked, true);
+  assert.equal(report.policyProbesChecked, true);
 });
 
 test("parses --base-url and environment fallbacks with a configurable count", () => {
@@ -313,4 +535,66 @@ test("parses --base-url and environment fallbacks with a configurable count", ()
     expectedUrlCount: 7,
     help: false,
   });
+});
+
+test("fails fast on invalid CLI and sitemap transport inputs", async () => {
+  assert.throws(() => parseCliOptions([], {}), /Missing --base-url/);
+  assert.throws(
+    () => parseCliOptions(["--unknown"], { SEO_BASE_URL: BASE_URL }),
+    /Unknown option/,
+  );
+  assert.throws(
+    () => parseCliOptions(["--expected-url-count=0"], { SEO_BASE_URL: BASE_URL }),
+    /positive integer/,
+  );
+
+  await assert.rejects(
+    validateSeoRelease({
+      baseUrl: BASE_URL,
+      fetchImpl: async () => {
+        throw new Error("offline");
+      },
+      checkCanonicalization: false,
+      checkPolicyProbes: false,
+    }),
+    (error) => error instanceof SeoReleaseError && error.issues[0].code === "sitemap-fetch",
+  );
+
+  await assert.rejects(
+    validateSeoRelease({
+      baseUrl: BASE_URL,
+      fetchImpl: async () => jsonResponse("unavailable", { status: 503 }),
+      checkCanonicalization: false,
+      checkPolicyProbes: false,
+    }),
+    (error) => error instanceof SeoReleaseError && error.issues[0].code === "sitemap-status",
+  );
+});
+
+test("CLI help and invalid invocation return deterministic exit codes", async () => {
+  const stdout = [];
+  const stderr = [];
+  assert.equal(await runCli(["--help"], {}, {
+    stdout: (line) => stdout.push(line),
+    stderr: (line) => stderr.push(line),
+  }), 0);
+  assert.match(stdout.join("\n"), /Usage:/);
+
+  stdout.length = 0;
+  assert.equal(await runCli([], {}, {
+    stdout: (line) => stdout.push(line),
+    stderr: (line) => stderr.push(line),
+  }), 2);
+  assert.match(stderr.join("\n"), /Missing --base-url/);
+});
+
+test("rejects canonical checks against a different origin", async () => {
+  const issues = await validateCanonicalVariants("https://other.test/contact/", {
+    baseUrl: BASE_URL,
+    fetchImpl: async () => {
+      throw new Error("must not fetch");
+    },
+  });
+  assert.equal(issues.length, 1);
+  assert.equal(issues[0].code, "canonical-origin");
 });

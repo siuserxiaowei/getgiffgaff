@@ -1,16 +1,26 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import worker, {
   CANONICAL_ORIGIN,
-  HOTFIX_ORIGIN,
   PUBLIC_INDEXABLE_PATHS,
 } from "../public/worker-logic.js";
+
+const PREVIEW_FIXTURE_ORIGIN = "https://preview-fixture.invalid";
 
 const INDEXABLE_DIRECTIVES =
   "index, follow, max-snippet:-1, max-image-preview:large";
 const PRIVATE_DIRECTIVES = "noindex, nofollow, noarchive";
-const EXPECTED_PUBLIC_URL_COUNT = 34;
+const EXPECTED_PUBLIC_URL_COUNT = PUBLIC_INDEXABLE_PATHS.length;
+const LOCAL_PITFALLS_HTML = await readFile(
+  new URL("../public/guides/6-pitfalls-page.txt", import.meta.url),
+  "utf8",
+);
+const LOCAL_RESEARCH_HTML = await readFile(
+  new URL("../public/research/index-page.txt", import.meta.url),
+  "utf8",
+);
 
 function parseAttributes(tag) {
   const attributes = new Map();
@@ -59,8 +69,8 @@ function legacyHtml(pathname) {
     <title>Preview fixture</title>
     <meta name="description" content="Preview fixture for ${pathname}">
     <meta name="keywords" content="giffgaff官方客服,getgiffgaff官网">
-    <link rel="canonical" href="${HOTFIX_ORIGIN}${pathname}">
-    <meta property="og:url" content="${HOTFIX_ORIGIN}${pathname}">
+    <link rel="canonical" href="${PREVIEW_FIXTURE_ORIGIN}${pathname}">
+    <meta property="og:url" content="${PREVIEW_FIXTURE_ORIGIN}${pathname}">
     <script type="application/ld+json">${JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Product",
@@ -86,7 +96,7 @@ function upstreamSitemapFixture() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${CANONICAL_ORIGIN}/contact/?utm_source=preview#fragment</loc></url>
   <url><loc>${CANONICAL_ORIGIN}/contact/</loc></url>
-  <url><loc>${HOTFIX_ORIGIN}/</loc></url>
+  <url><loc>${PREVIEW_FIXTURE_ORIGIN}/</loc></url>
   <url><loc>${CANONICAL_ORIGIN}/not-public/</loc></url>
 </urlset>`;
 }
@@ -113,12 +123,12 @@ function localAssetEnv() {
 
         if (pathname === "/guides/6-pitfalls-page.txt") {
           return responseWithInheritedNoindex(
-            legacyHtml("/guides/6-pitfalls/"),
+            LOCAL_PITFALLS_HTML,
           );
         }
 
         if (pathname === "/research/index-page.txt") {
-          return responseWithInheritedNoindex(legacyHtml("/research/"));
+          return responseWithInheritedNoindex(LOCAL_RESEARCH_HTML);
         }
 
         if (pathname === "/robots.txt") {
@@ -131,6 +141,12 @@ function localAssetEnv() {
         if (pathname === "/contact/getgiffgaff-contact-og.png") {
           return responseWithInheritedNoindex("png-fixture", {
             contentType: "image/png",
+          });
+        }
+
+        if (pathname === "/assets/site.css") {
+          return responseWithInheritedNoindex("body { color: #111; }", {
+            contentType: "text/css; charset=utf-8",
           });
         }
 
@@ -188,8 +204,8 @@ function extractSitemapLocations(xml) {
   );
 }
 
-test("the production indexable allowlist contains exactly 34 unique canonical paths", () => {
-  assert.equal(PUBLIC_INDEXABLE_PATHS.length, EXPECTED_PUBLIC_URL_COUNT);
+test("the production indexable allowlist is manifest-derived and unique", () => {
+  assert.ok(PUBLIC_INDEXABLE_PATHS.length > 0);
   assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, EXPECTED_PUBLIC_URL_COUNT);
 
   for (const pathname of PUBLIC_INDEXABLE_PATHS) {
@@ -201,7 +217,7 @@ test("the production indexable allowlist contains exactly 34 unique canonical pa
   }
 });
 
-test("all 34 public routes override inherited noindex and emit self-referencing metadata", async () => {
+test("all manifest-indexable public routes override inherited noindex and emit self-referencing metadata", async () => {
   await withMockFetch(offlineUpstreamFetch, async () => {
     const env = localAssetEnv();
 
@@ -228,7 +244,7 @@ test("all 34 public routes override inherited noindex and emit self-referencing 
   });
 });
 
-test("sitemap.xml is rebuilt as exactly the 34 unique canonical public URLs", async () => {
+test("sitemap.xml is rebuilt as exactly the manifest-indexable canonical URLs", async () => {
   await withMockFetch(offlineUpstreamFetch, async () => {
     const response = await worker.fetch(
       new Request(`${CANONICAL_ORIGIN}/sitemap.xml`),
@@ -252,32 +268,31 @@ test("HTTP, www and missing-trailing-slash variants redirect to the final URL in
   const cases = [
     {
       request: "http://getgiffgaff.com/contact?source=http-apex",
-      expected: "https://getgiffgaff.com/contact/?source=http-apex",
+      expected: "https://getgiffgaff.com/contact/",
       status: 301,
       method: "GET",
     },
     {
       request: "https://www.getgiffgaff.com/contact?source=https-www",
-      expected: "https://getgiffgaff.com/contact/?source=https-www",
+      expected: "https://getgiffgaff.com/contact/",
       status: 301,
       method: "GET",
     },
     {
       request: "http://www.getgiffgaff.com/contact?source=combined&campaign=seo",
-      expected:
-        "https://getgiffgaff.com/contact/?source=combined&campaign=seo",
+      expected: "https://getgiffgaff.com/contact/",
       status: 301,
       method: "GET",
     },
     {
       request: "https://getgiffgaff.com/contact?source=slash-only",
-      expected: "https://getgiffgaff.com/contact/?source=slash-only",
+      expected: "https://getgiffgaff.com/contact/",
       status: 301,
       method: "GET",
     },
     {
       request: "http://www.getgiffgaff.com/contact?source=post",
-      expected: "https://getgiffgaff.com/contact/?source=post",
+      expected: "https://getgiffgaff.com/contact/",
       status: 308,
       method: "POST",
     },
@@ -302,7 +317,7 @@ test("404 and API responses remain noindex and bypass every cache", async () => 
   await withMockFetch(offlineUpstreamFetch, async () => {
     const cases = [
       ["/missing/", 404],
-      ["/api/orders/fixture", 200],
+      ["/api/orders/fixture", 404],
     ];
 
     for (const [pathname, expectedStatus] of cases) {
@@ -322,7 +337,7 @@ test("404 and API responses remain noindex and bypass every cache", async () => 
   });
 });
 
-test("robots.txt and local or proxied static assets never inherit preview noindex", async () => {
+test("robots.txt and same-deployment static assets never inherit stale noindex", async () => {
   await withMockFetch(offlineUpstreamFetch, async () => {
     const cases = [
       ["/robots.txt", "text/plain"],

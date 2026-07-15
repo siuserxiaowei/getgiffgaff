@@ -1,5 +1,8 @@
 # 国内购买 giffgaff 手机卡前要确认什么
 
+> [!CAUTION]
+> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
+
 国内购买 giffgaff 手机卡，也就是 GG 卡，不能只看价格。更重要的是确认卡种、库存、余额范围、发货方式和使用边界。
 
 购买入口：[getgiffgaff 手机卡商城](https://getgiffgaff.com/shop/)  

@@ -1,5 +1,8 @@
 # giffgaff 手机卡国内激活步骤和常见问题
 
+> [!CAUTION]
+> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
+
 giffgaff 手机卡在国内激活时，最容易卡在激活码、账号邮箱、支付方式和网页提交。第一次操作建议慢一点，不要连续重复提交。
 
 官方参考：[Activating your giffgaff SIM](https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim)  

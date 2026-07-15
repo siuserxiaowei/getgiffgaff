@@ -1,113 +1,128 @@
-# giffgaff / GG 卡中文教程
+# getgiffgaff 中文独立信息站
 
-这里整理 giffgaff 英国手机卡，也就是很多人说的 GG 卡，在国内购买、激活、充值、保号、收短信、eSIM 和排查问题时会用到的中文教程。
+这里整理 giffgaff 英国手机卡（也常被称为 GG 卡）的中文使用资料，覆盖激活、账户、充值、保号、短信、漫游、eSIM 和故障排查。
 
-getgiffgaff 是独立第三方服务站，不是 giffgaff Limited 官方网站、官方客服或授权代表。涉及运营商账户、号码状态、资费与规则时，请以 giffgaff 当前官方页面为准。
+getgiffgaff 是独立第三方信息与既有订单支持站，不是 giffgaff Limited 官方网站、官方客服或授权代表。运营商规则、号码状态和资费可能变化，实际操作前应回到页面所列的 giffgaff 官方来源复核。
 
-如果你是在 GitHub 搜 giffgaff 中文教程、GG 卡使用教程、giffgaff 保号、giffgaff 收不到验证码、giffgaff eSIM 这些问题，这个仓库可以当作入口和资料索引。
+## 当前发布状态
 
-如果你只是想直接看教程或买卡，可以从这里进：
+本仓库中的 v2 是尚未提升到生产域的候选版本。2026-07-15 的线上 release verifier 仍报告旧站 317 个门禁问题；摘要见 [生产域发布前验证记录](docs/live-verification-2026-07-15.md)。在候选部署、缓存清理和再次零错误验证前，不得把下列本地结果描述为线上已生效。
+
+当前分支采用 v2 硬门禁，发布顺序是：
+
+`索引稳定 → 品牌与交易许可 → 真实信任实体 → 声明治理 → 数据基线 → 原创证据 → 白帽传播`
+
+在书面品牌/交易许可、真实供货证据和经营主体资料完成核验前：
+
+- 商城、G0/G2 商品、下单和人工充值服务页默认 `noindex,follow`，不进入 sitemap，也不提供新客交易或库存承诺。
+- G2 销售、推荐、价格、余额、验证码可靠性及购买 CTA 全部 fail closed。
+- `/answers/` 仅解释 G0/G2 的风险和核验项；G0/G2 是本站或市场分类，不是 giffgaff 官方产品名称。
+- Contact 仅处理既有订单和使用问题，并明确不得发送密码、短信验证码、完整支付卡资料、Cookie/Token 或 eSIM QR/LPA 信息。
+- 真实经营主体、地址、电话、服务时间、SLA、作者和审核人缺失时显示“待经营主体确认”，不得补写或猜测。
+
+是否恢复交易由业务、授权和法律审核决定，不能用 SEO 分数、内容数量或外链替代。
+
+## 推荐阅读
 
 - [giffgaff 使用教程和避坑清单](https://getgiffgaff.com/guides/6-pitfalls/)
-- [giffgaff 国内激活与失败排查](https://getgiffgaff.com/guides/2-activate/)
-- [giffgaff 保号规则](https://getgiffgaff.com/guides/3-usage/)
-- [giffgaff eSIM 转换检查](https://getgiffgaff.com/more/03-esim/)
-- [giffgaff eSIM 二维码与第三方写卡安全边界](https://getgiffgaff.com/more/04-esim-qrcode/)
-- [giffgaff 收不到验证码排查](https://getgiffgaff.com/guides/4-signal/)
-- [G0 与 G2 状态和总成本对比](https://getgiffgaff.com/answers/)
-- [giffgaff 手机卡购买与中文教程首页](https://getgiffgaff.com/)
-- [giffgaff / GG 卡全网资料索引](https://getgiffgaff.com/research/)
-- [G0 新卡 / G2 有余额卡购买入口](https://getgiffgaff.com/shop/)
-- [购买前确认库存、余额和发货方式](https://getgiffgaff.com/contact/)
+- [国内激活与失败排查](https://getgiffgaff.com/guides/2-activate/)
+- [保号规则与本地提醒工具](https://getgiffgaff.com/guides/3-usage/)
+- [短信、验证码与信号排查](https://getgiffgaff.com/guides/4-signal/)
+- [中国漫游与成本边界](https://getgiffgaff.com/guides/5-travel-data/)
+- [eSIM 转换前检查](https://getgiffgaff.com/more/03-esim/)
+- [eSIM 二维码与第三方写卡风险](https://getgiffgaff.com/more/04-esim-qrcode/)
+- [G0/G2 分类与风险说明](https://getgiffgaff.com/answers/)
+- [联系与既有订单支持](https://getgiffgaff.com/contact/)
 
-## 先看哪篇
+`docs/articles/` 中的旧长文已经统一标记为 `ARCHIVED / NOT FOR PUBLISHING`。这些文件保留研究历史，可能含暂停的交易链接或已经失效的具体数字，不能作为当前页面素材。所有目录状态与复用规则见 [内容状态与唯一发布源](docs/CONTENT-GOVERNANCE.md)。
 
-- [GG 卡是什么？giffgaff 英国手机卡适合谁用](docs/articles/gg-card-guide.md)
-- [G0 新卡和 G2 有余额卡怎么选](docs/articles/giffgaff-g0-vs-g2.md)
-- [国内购买 giffgaff 手机卡前要确认什么](docs/articles/buy-giffgaff-sim-in-china.md)
-- [购买 giffgaff / GG 卡前的风险检查清单](docs/articles/giffgaff-buying-risk-checklist.md)
-- [giffgaff 手机卡国内激活步骤和常见问题](docs/articles/giffgaff-activation-in-china.md)
-- [giffgaff 国内激活失败：从激活码、充值到漫游排查](docs/articles/giffgaff-domestic-activation-failure.md)
-- [giffgaff 保号规则：6 个月不用会怎样](docs/articles/giffgaff-keep-number-active.md)
-- [giffgaff 保号清单：6 个月不用前要做什么](docs/articles/giffgaff-number-preservation-checklist.md)
-- [giffgaff 收不到短信验证码怎么排查](docs/articles/giffgaff-sms-verification-troubleshooting.md)
-- [giffgaff 收不到验证码：按平台排查 GG 卡短信](docs/articles/giffgaff-verification-code-platforms.md)
-- [giffgaff eSIM 转换前要注意什么](docs/articles/giffgaff-esim-guide.md)
-- [giffgaff 转 eSIM 前要确认什么](docs/articles/giffgaff-esim-before-switching.md)
-- [giffgaff 使用教程和避坑清单总览](docs/giffgaff-usage-pitfalls.md)
-- [giffgaff / GG 卡全网资料索引](docs/research/platform-source-index.md)
-- [giffgaff / GG 卡 7 天学习路线](docs/research/learning-map.md)
+## 路由、声明与发布门禁
 
-## 按平台看资料
+公开路由数量不再写死为 34。`public/route-manifest.js` 是路由和索引策略的唯一来源：sitemap、canonical、缓存策略、交易开关和生产验证都从 manifest 派生。新增或移除路由时必须先改 manifest，再由测试证明 sitemap 与响应头一致。
 
-- [官方资料怎么读](docs/platforms/official.md)
-- [知乎资料怎么读](docs/platforms/zhihu.md)
-- [抖音资料怎么读](docs/platforms/douyin.md)
-- [Bilibili 资料怎么读](docs/platforms/bilibili.md)
-- [X / Twitter 资料怎么读](docs/platforms/x-twitter.md)
-- [小红书资料怎么读](docs/platforms/xiaohongshu.md)
-- [快手资料怎么读](docs/platforms/kuaishou.md)
-- [微信公众号资料怎么读](docs/platforms/wechat.md)
+`public/claim-registry.js` 管理会变化或有风险的公开声明。只有未过期、来源健康且状态为 `ACTIVE` 的声明可以进入正文、Schema、OG、CTA、工具和 `/llms.txt`。商业、安全和资费声明过期或证据不足时必须隐藏结果或停止转化，不得继续展示旧数字。
 
-## 简单结论
+当前 AI 辅助文件策略：
 
-G0 新卡适合愿意用本人资料完成官方激活、并能处理首次充值的人。G2 只是本站的库存状态称呼，不是 giffgaff 官方产品；考虑 G2 前必须核对卡的来源、激活状态、登记责任、买方控制权和当前条款，无法确认就不要购买。
+- `/llms.txt` 由公开 route manifest 与可发布声明生成，并保持 `noindex,follow,noarchive`。
+- `/llms-full.txt` 已退役，固定返回 `410 Gone`；不得手工维护一份可能与页面冲突的长摘要。
 
-giffgaff 可以作为英国 +44 手机号和低频短信备用方案，但不要把它理解成“所有平台验证码都保证能到”。验证码是否送达还会受平台风控、IP、设备、账号资料、请求频率和漫游状态影响。
+完整门禁和状态机见 [SEO / GEO v2 门禁](docs/seo-geo-gates-v2.md)，发布、清缓存、平台提交和回滚见 [SEO / GEO 发布运维清单](docs/seo-release-runbook.md)。
 
-长期使用时要注意保号。giffgaff 官方帮助页说明，SIM 如果 6 个月没有有效使用或充值，可能被视为 inactive 并被停用。
-
-## 全网资料怎么用
-
-仓库里的资料索引只保存公开链接、主题和原创摘要，不复制知乎、公众号、小红书、B站、抖音、快手等平台的全文。这样做更稳，也更适合长期维护。
-
-本轮新增了可复核的研究资产：
-
-- [用户指定 6 个来源的逐站拆解](docs/research/sources/six-source-teardown.json)
-- [40 个竞品合并研究与内容差距](docs/research/competitor-study-2026-07-15.md)
-- [竞品证据卡 01–20](docs/research/competitors/competitors-01-20.json)
-- [竞品证据卡 21–40](docs/research/competitors/competitors-21-40.json)
-- [来源字段、版权边界与验证规则](docs/research/source-schema.md)
-- [1 个支柱页 + 5 个任务集群的执行计划](docs/strategy/cluster-plan.md)
-- [可视化内容集群地图](docs/strategy/cluster-map.html)
-- [90 条正文内链矩阵](docs/strategy/internal-links.json)
-
-这些文件记录 URL、标题、结构、意图、CTA、信任信号和独立摘要，不保存第三方全文或截图，也不根据搜索结果顺序猜流量与排名。
-
-读第三方内容时，建议按这个顺序判断：
-
-- 先看它讲的是购买、激活、保号、验证码、eSIM 还是封号。
-- 再看它是官方规则、用户经验，还是卖家话术。
-- 涉及价格、保号、漫游、封号、验证码必到的说法，回到 giffgaff 官方页面核查。
-- 最后再决定是否写进自己的操作清单。
-
-## 重要提醒
-
-getgiffgaff 不是 giffgaff 官方运营商。号码状态、资费、漫游规则、活动、eSIM 流程和账号规则都会变化，购买和操作前请以 giffgaff 官方当前页面为准。
-
-## SEO 边缘发布门禁
-
-`public/worker-logic.js` 是当前生产域的临时边缘修复层。它会统一清理上游预览部署继承的 `X-Robots-Tag`，按显式路由清单设置索引策略，并规范化 HTTPS、apex 域和尾斜杠。当前 sitemap 的 34 个公开 HTML URL 是唯一允许索引的路由清单；未列出的 HTML 默认 `noindex,nofollow`。
-
-本地校验：
+## 本地验证
 
 ```bash
+npm install --ignore-scripts
 npm run verify
 npm run test:coverage
+git diff --check
 ```
 
-部署后校验生产域：
+部署后验证生产域：
 
 ```bash
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
+npm run verify:seo -- --base-url https://getgiffgaff.com
 ```
 
-发布、缓存清理、搜索平台重提与回滚流程见 [`docs/seo-release-runbook.md`](docs/seo-release-runbook.md)。长期仍应把 Contact 与全站模板修复合并回正式 Next.js 源码，并移除对 Pages 预览快照及字符串级 HTML 重写的依赖。
+正常发布不要再传固定 `--expected-url-count 34`；验证脚本默认读取当前 route manifest 的可索引路由数。显式覆盖计数只用于调查 manifest 与候选部署版本不一致的问题，不能作为跳过失败的手段。
+
+## 原创工具与数据门槛
+
+第一阶段只发布低数据风险工具：
+
+- 保号提醒在浏览器本地按日历月计算并导出 `.ics`，不上传号码或账户信息，也不写入 `localStorage`。
+- 中国漫游成本工具只有在完整、未过期的 `ACTIVE` 费率声明存在时才启用；缺少证据时显示“暂不计算”，不提供推测价格。
+
+后续数据资产达到以下最低门槛前只保留 `noindex` 方法预览：
+
+| 资产 | 最低发布证据 |
+| --- | --- |
+| 中国网络/SMS 矩阵 | 30 条复核记录、3 个城市、3 个设备版本、2 个网络环境、最近 90 天 |
+| OTP 状态板 | 50 个复核事件、5 个平台、每平台至少 5 条、3 类环境，并有普通短信基线 |
+| eSIM 兼容检查器 | 20 条精确到型号、地区版本、OS 与 App 版本的 A/B 记录 |
+| G0/G2 总成本工具 | 品牌许可、转售路径、供货证明、账户控制权和实时价格全部通过；此前保持 HOLD |
+
+样本不足时明确写“证据不足”，禁止生成虚构样本、空壳状态板或批量 programmatic SEO 页面。
+
+## 竞品研究与版权边界
+
+用户指定的教程和竞品只进入内部来源登记表，记录公开 URL、作者、发布日期、主题、搜索意图、漏斗、CTA、证据类型、独立摘要和许可状态。
+
+没有明确许可时：
+
+- 不下载或镜像第三方全文、截图、图片、视频和附件。
+- 不做逐段近似改写，也不把搜索摘要当作已核实事实。
+- 网站内容必须依据官方来源、本站方法和本站真实样本独立创作。
+- 竞品研究只能用于发现用户问题、内容结构和证据缺口，不能冒充原创实测。
+
+研究资产入口：
+
+- [用户指定 6 个来源的结构化拆解](docs/research/sources/six-source-teardown.json)
+- [40 个竞品研究与内容差距](docs/research/competitor-study-2026-07-15.md)
+- [来源字段、版权边界与验证规则](docs/research/source-schema.md)
+- [历史内容集群计划](docs/strategy/cluster-plan.md)（`ARCHIVED_NOT_FOR_PUBLISHING`，不得覆盖 route manifest）
+
+## 上线之外的阻断项
+
+以下事项不能由代码仓库自动完成，必须由对应所有者提供：
+
+- 覆盖当前域名、地区、销售/分发及 G2 流程的 giffgaff 书面许可；普通 Participant 身份或客服聊天不能替代。
+- 不含第三方商标的中性品牌域名、注册主体与迁移窗口。
+- 可公开核验的真实经营主体、卖方身份、联系方式、发货、退款、隐私、作者和审核信息。
+- GSC、Bing Webmaster、百度搜索资源平台和 Cloudflare DNS/WAF/Verified Bot/日志权限。
+
+第 14 天仍无充分书面许可时，默认进入中性域迁移准备。迁移必须一对一保留 URL，不能同时改域名、重做设计、合并 URL 和更换内容系统；详细顺序见发布手册。
+
+## 历史事故说明
+
+2026-07-15 之前，生产域曾反代带 `X-Robots-Tag: noindex` 的 Pages 预览部署，历史 sitemap 的 34 个 URL 中有 32 个受到影响。该事故随后修复，并曾完成历史 34/34 验证。
+
+“34”只描述当时的事故与发布快照，不是当前架构常量。v2 已改为由 route manifest 计算可索引 URL，商业 HOLD、信任页新增或路由合并都会合法改变 sitemap 数量。
 
 ## 官方参考
 
+- [giffgaff Terms and conditions](https://www.giffgaff.com/boiler-plate/terms)
 - [Activating your giffgaff SIM](https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim)
 - [Understanding why your number has been deactivated](https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated)
 - [Roaming with giffgaff](https://www.giffgaff.com/roaming)
-- [Everything to know about Credit](https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit)
 - [Switching to an eSIM with giffgaff](https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff)

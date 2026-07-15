@@ -1,0 +1,122 @@
+{
+  "schemaVersion": "1.0.0",
+  "templateId": "getgiffgaff-geo-monthly-review-v1",
+  "questionSet": "./geo-question-set.json",
+  "review": {
+    "month": null,
+    "runId": null,
+    "startedAt": null,
+    "completedAt": null,
+    "reviewer": null,
+    "notes": null
+  },
+  "allowedValues": {
+    "accuracy.rating": ["PASS", "PARTIAL", "FAIL", "NOT_SCORED"],
+    "boundary.rating": ["PASS", "PARTIAL", "FAIL", "NOT_SCORED"],
+    "officialConfusion.occurred": [true, false],
+    "brandMention.mentioned": [true, false],
+    "siteCitation.cited": [true, false],
+    "referral.observed": [true, false]
+  },
+  "observationTemplate": {
+    "engine": null,
+    "engineModelOrMode": null,
+    "date": null,
+    "capturedAt": null,
+    "queryLocale": null,
+    "answer": null,
+    "urlCitations": [],
+    "accuracy": {
+      "rating": null,
+      "criticalFactsChecked": null,
+      "criticalFactsAccurate": null,
+      "notes": null
+    },
+    "boundary": {
+      "rating": null,
+      "boundariesChecked": null,
+      "boundariesPreserved": null,
+      "notes": null
+    },
+    "officialConfusion": {
+      "occurred": null,
+      "quotedText": null,
+      "notes": null
+    },
+    "brandMention": {
+      "mentioned": null,
+      "nameUsed": null,
+      "notes": null
+    },
+    "siteCitation": {
+      "cited": null,
+      "urls": [],
+      "supportsAnswer": null,
+      "notes": null
+    },
+    "referral": {
+      "observed": null,
+      "landingUrl": null,
+      "evidenceReference": null,
+      "notes": null
+    },
+    "reviewer": null,
+    "notes": null
+  },
+  "urlCitationEntryTemplate": {
+    "url": null,
+    "title": null,
+    "sourceType": null,
+    "accessedAt": null,
+    "supportsAnswer": null,
+    "notes": null
+  },
+  "questions": [
+    {"questionId": "geo-01", "observations": []},
+    {"questionId": "geo-02", "observations": []},
+    {"questionId": "geo-03", "observations": []},
+    {"questionId": "geo-04", "observations": []},
+    {"questionId": "geo-05", "observations": []},
+    {"questionId": "geo-06", "observations": []},
+    {"questionId": "geo-07", "observations": []},
+    {"questionId": "geo-08", "observations": []},
+    {"questionId": "geo-09", "observations": []},
+    {"questionId": "geo-10", "observations": []},
+    {"questionId": "geo-11", "observations": []},
+    {"questionId": "geo-12", "observations": []},
+    {"questionId": "geo-13", "observations": []},
+    {"questionId": "geo-14", "observations": []},
+    {"questionId": "geo-15", "observations": []},
+    {"questionId": "geo-16", "observations": []},
+    {"questionId": "geo-17", "observations": []},
+    {"questionId": "geo-18", "observations": []},
+    {"questionId": "geo-19", "observations": []},
+    {"questionId": "geo-20", "observations": []},
+    {"questionId": "geo-21", "observations": []},
+    {"questionId": "geo-22", "observations": []},
+    {"questionId": "geo-23", "observations": []},
+    {"questionId": "geo-24", "observations": []},
+    {"questionId": "geo-25", "observations": []},
+    {"questionId": "geo-26", "observations": []},
+    {"questionId": "geo-27", "observations": []},
+    {"questionId": "geo-28", "observations": []},
+    {"questionId": "geo-29", "observations": []},
+    {"questionId": "geo-30", "observations": []}
+  ],
+  "summary": {
+    "observationsTotal": null,
+    "criticalFactsChecked": null,
+    "criticalFactsAccurate": null,
+    "criticalFactAccuracyRate": null,
+    "boundariesChecked": null,
+    "boundariesPreserved": null,
+    "boundaryRetentionRate": null,
+    "officialConfusionCount": null,
+    "brandMentionCount": null,
+    "siteCitationCount": null,
+    "supportedSiteCitationCount": null,
+    "referralCount": null,
+    "gatePassed": null,
+    "notes": null
+  }
+}

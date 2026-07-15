@@ -1,5 +1,8 @@
 # getgiffgaff SEO / GEO 内容集群计划
 
+> [!CAUTION]
+> 状态：`ARCHIVED_NOT_FOR_PUBLISHING`（2026-07-15）。其中的交易 CTA、内链激活状态和固定周期可能已失效；现行路由、交易开关和声明只以 `public/route-manifest.js` 与 `public/claim-registry.js` 为准。未来资产规格见同目录 briefs，但仍保持 HOLD，不能据此直接上线。
+
 更新日期：2026-07-15
 
 机读版：[`cluster-plan.json`](cluster-plan.json)

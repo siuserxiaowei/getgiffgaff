@@ -1,5 +1,8 @@
 # giffgaff 保号规则：6 个月不用会怎样
 
+> [!CAUTION]
+> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
+
 giffgaff 保号最重要的一点是：不要把 SIM 放着不管。官方帮助页说明，如果 SIM 6 个月没有有效使用，号码可能被视为 inactive 并被停用。
 
 官方参考：[Understanding why your number has been deactivated](https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated)

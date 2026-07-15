@@ -96,7 +96,7 @@ test("serves standalone, citation-ready tutorial HTML with safe entity markup", 
       "index, follow, max-snippet:-1, max-image-preview:large",
       pathname,
     );
-    assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "edge-static-tutorial");
+    assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "local-tutorial-page");
     assert.match(html, new RegExp(`<link rel="canonical" href="https://getgiffgaff\\.com${pathname}">`));
     assert.match(html, new RegExp(`<meta property="og:url" content="https://getgiffgaff\\.com${pathname}">`));
     assert.equal(occurrences(html, /<h1\b/gi), 1, `${pathname}: expected one H1`);
@@ -171,6 +171,21 @@ test("eSIM QR boundary page never teaches credential extraction or upload", asyn
   assert.doesNotMatch(html, /(?:第\s*[一二三四五六七八九十0-9]+\s*步|step\s*\d+).*(?:提取|导出|上传).*(?:LPA|Cookie|二维码)/i);
 });
 
+test("answers is a risk explanation with no commerce funnel or purchase recommendation", async () => {
+  const response = await worker.fetch(
+    new Request("https://getgiffgaff.com/answers/"),
+    {},
+  );
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.match(html, /搜索意图：风险解释 \/ 决策边界/);
+  assert.match(html, /当前结论：不做购买推荐/);
+  assert.match(html, /既有订单与使用支持/);
+  assert.doesNotMatch(html, /href=["']\/(?:shop|guides\/1-order|guides\/4-recharge-service)\//i);
+  assert.doesNotMatch(html, /商业调研|优先评估|确认\s*G[02]\s*库存|库存、下单/i);
+});
+
 test("redirects tutorial paths without a trailing slash in one worker hop", async () => {
   for (const pathname of REQUIRED_TUTORIAL_PATHS) {
     const withoutSlash = pathname.slice(0, -1);
@@ -200,6 +215,6 @@ test("reconciles every tutorial into the public sitemap exactly once", () => {
     const entry = xml.match(
       new RegExp(`<url><loc>https:\\/\\/getgiffgaff\\.com${pathname}<\\/loc>([\\s\\S]*?)<\\/url>`),
     )?.[0];
-    assert.match(entry ?? "", /<lastmod>2026-07-15T00:00:00\.000Z<\/lastmod>/, pathname);
+    assert.match(entry ?? "", /<lastmod>2026-07-15(?:T00:00:00\.000Z)?<\/lastmod>/, pathname);
   }
 });

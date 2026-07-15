@@ -1,5 +1,8 @@
 # giffgaff 收不到短信验证码怎么排查
 
+> [!CAUTION]
+> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
+
 giffgaff 收不到短信验证码，不一定是卡坏了。GG 卡在国内使用时，验证码送达会受到信号、漫游、号码状态、平台风控、IP、设备和请求频率影响。
 
 线上教程：[giffgaff 使用教程和避坑清单](https://getgiffgaff.com/guides/6-pitfalls/)

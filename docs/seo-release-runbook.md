@@ -1,35 +1,58 @@
-# getgiffgaff SEO / GEO 发布运维清单
+# getgiffgaff SEO / GEO v2 发布运维清单
 
-> 状态（2026-07-15）：P0 技术修复已发布到生产；搜索引擎重提、Verified Bot 日志复核、真实经营资料和品牌许可仍待业务/平台账号完成。本文同时保留为后续发布 SOP。命令不包含任何密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
+> 状态（2026-07-15）：v2 技术实现位于当前候选分支，尚需完成发布、缓存清理和线上复核。品牌书面许可、中性域名、真实经营资料及搜索/Cloudflare 账号权限属于外部阻断项，代码测试不能代替。2026-07-15 的 32/34 `noindex` 事故及后续 34/34 修复记录保留在文末历史附录，不再作为当前固定 URL 数量。
 
-## 1. 发布门槛与责任人
+配套规则见 [`seo-geo-gates-v2.md`](seo-geo-gates-v2.md)。
 
-发布前先指定一名发布负责人，并确认以下权限或资料是否到位：
+## 1. 先确认本次能做什么
 
-- [ ] Cloudflare Pages 项目与 DNS 管理权限（需 Cloudflare 账号）。
-- [ ] Google Search Console 已验证所有者、Bing Webmaster Tools 与百度搜索资源平台权限（需各平台账号）。
-- [ ] 可查看 Cloudflare 请求日志、Verified Bot 字段及缓存状态的权限。
-- [ ] 业务负责人已确认经营主体、客服渠道、服务时间、响应 SLA、发货、退换/退款、作者与审核人信息。缺失时不得自行补写或猜测。
-- [ ] 业务负责人已提供 giffgaff 书面品牌许可，或法务已确认可接受的域名与表述边界。没有许可时，当前域只按过渡资产处理。
+发布负责人必须记录：候选 Git commit、当前生产 deployment ID、可恢复 deployment ID、执行人、时间和业务批准范围。
 
-技术性 `noindex` 修复可以独立发布；依赖真实业务资料的 Contact、Schema 与政策内容，资料未确认时不得用占位信息冒充正式内容。
+### 技术发布所需权限
 
-## 2. T-72 小时：冻结与留档
+- [ ] Cloudflare Pages 项目与 Custom Domains 权限。
+- [ ] DNS、Redirect Rules、WAF、AI Crawl Control、缓存清理和请求日志权限。
+- [ ] 可查看 Cloudflare Verified Bot 字段，而不是只能看到 User-Agent。
+- [ ] GSC、Bing Webmaster Tools 与百度搜索资源平台的已验证所有者权限。
 
-- [ ] 冻结新增内容、URL、导航和模板改版，只允许本次索引修复及其测试变更。
-- [ ] 记录待发布 Git commit、当前生产部署 ID、上一个可恢复部署 ID、执行人和时间。
-- [ ] 保存发布前 `/sitemap.xml`、`/robots.txt`、核心页面响应头及验证脚本输出；日志中不得保存 Cookie、订单参数或个人信息。
-- [ ] 确认 sitemap 预期为 **34 个唯一 URL**；如业务已批准变更数量，先同步更新测试和发布记录，不能临时跳过计数检查。
+### 不能由工程补写的业务输入
 
-生产发布前的基线命令：
+- [ ] 覆盖当前域名、地区、销售/分发及 G2 流程的 giffgaff 书面许可。
+- [ ] 真实经营主体、卖方身份、客服渠道、服务时间、SLA、发货和退款资料。
+- [ ] 真实作者、审核人、来源政策和纠错负责人。
+- [ ] 中性品牌域名、注册主体和迁移窗口。
+
+资料缺失时必须保留“待经营主体确认”和“交易暂停”，不得用占位公司、地址、电话、作者、审核人或服务时间替代。普通 Participant 身份、口头说明或客服聊天不等于覆盖当前域名和 G2 流程的正式许可。
+
+## 2. 五道发布门禁
+
+| 门禁 | 发布判定 |
+| --- | --- |
+| G0 技术 | manifest 中全部可索引 URL 200、自指 canonical、无 noindex；所有规范变体一跳 |
+| G1 品牌 | 已取得充分书面许可，或业务已批准进入中性域迁移 |
+| G2 信任 | 真实经营/卖方、联系方式、发货、退款、隐私和编辑资料可核验 |
+| G3 测量 | 搜索平台和 Cloudflare 已接入，最小事件连续 7 天通过数据 QA |
+| G4 证据 | 工具/数据页达到来源、样本、复核和失效边界门槛 |
+
+本次代码发布可以完成 G0，并以 fail closed 方式保护未通过的 G1–G4。未通过 G1/G2 时不得恢复商业页、G2 CTA、价格、库存或推荐；未通过 G3/G4 时不得宣称转化、AI referral、实测成功率或排名提升。
+
+## 3. T-72 小时：冻结与留档
+
+- [ ] 冻结新增 URL、导航、广告、外链购买和不相关模板改版。
+- [ ] 保存当前生产 `/sitemap.xml`、`/robots.txt`、`/llms.txt`、`/llms-full.txt`、核心页面响应头和验证输出。
+- [ ] 日志与工单中不得保存 Cookie、Authorization、原始查询、订单号、手机号或聊天截图。
+- [ ] 比较生产 sitemap 与候选 `PUBLIC_INDEXABLE_PATHS`；数量变化必须能由 route manifest 中的 HOLD、信任页新增或批准路由变更解释。
+- [ ] 检查现有 Cloudflare Redirect Rules 是否仍写死历史 34/33 路径。候选 manifest 新增或移除路由后，同步更新 Zone 规则或确认 Worker 可在一跳内完成所有组合；不得保留两套冲突清单。
+
+发布前生产基线：
 
 ```bash
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
+npm run verify:seo -- --base-url https://getgiffgaff.com
 ```
 
-该命令调用 [`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs)。如果当前线上正是待修复的 `noindex` 事故版本，预发布基线可以失败，但只允许记录已经确认的事故项；出现新的 5xx、跨域 canonical、重定向环或 sitemap 数量变化时停止发布。发布后必须全部通过，不得继续豁免。
+候选 manifest 与尚未升级的生产版本不一致时，该命令可能按预期失败。记录具体差异，但不得通过重新写死旧数量、删除测试或手工覆盖 `--expected-url-count` 把红灯改绿。
 
-## 3. 本地测试门禁
+## 4. 本地门禁
 
 在仓库根目录执行：
 
@@ -39,189 +62,226 @@ npm test
 npm run test:coverage
 npm run verify
 git diff --check
+git status --short
 ```
 
-- [ ] `npm test` 全绿；重点覆盖 [`test/seo-response-policy.test.mjs`](../test/seo-response-policy.test.mjs)、[`test/contact-seo.test.mjs`](../test/contact-seo.test.mjs)、[`test/worker-seo-integration.test.mjs`](../test/worker-seo-integration.test.mjs) 和 [`test/verify-seo-release.test.mjs`](../test/verify-seo-release.test.mjs)。
-- [ ] `npm run verify` 通过，其中 [`scripts/verify-contact-hotfix.mjs`](../scripts/verify-contact-hotfix.mjs) 验证 Contact 热修复资产与交互。
-- [ ] 覆盖率下降有明确解释；新增响应策略、重定向或验证逻辑必须有回归测试。
-- [ ] diff 中没有密钥、令牌、真实订单数据、个人联系方式草稿或无关改动。
+必须确认：
 
-任一项失败即停止，不执行部署。
+- [ ] route manifest 是 sitemap、响应索引策略和默认验证数量的唯一来源。
+- [ ] 商城、G0、G2、下单和人工充值服务页为 `noindex,follow`、不在 sitemap、`commerceAllowed=false`。
+- [ ] `/research/` 和证据不足的平台页维持 noindex。
+- [ ] Contact 与 About、Shipping、Returns、Editorial、Disclaimer 可索引；Privacy、Terms 为 `noindex,follow`。
+- [ ] 上游即使返回 `noindex`、旧 Product/FAQ Schema、旧价格或 `Set-Cookie`，生产响应仍按 manifest 清理。
+- [ ] `/llms-full.txt` 为 410；短版 `/llms.txt` 不含暂停的 G2、价格、库存或推荐声明。
+- [ ] `Authorization`、`api_key`、`auth_token`、`id_token`、`otp` 等在请求上游前被拒绝，公开请求 Cookie 不转发。
+- [ ] 404 HTML 不含其他页面 canonical 或 `og:url`。
+- [ ] 一个 `<main>`、一个 H1、skip link、表格 caption/焦点和 JSON-LD 解析测试通过。
+- [ ] diff 不含密钥、真实个人资料、订单信息、虚构经营资料或未获许可的第三方全文/截图。
 
-## 4. 本地与 Pages Preview 检查
+任一项失败即停止发布。
 
-本地启动 Pages：
+## 5. 本地与 Pages Preview
+
+启动本地 Pages：
 
 ```bash
 npx wrangler pages dev public
 ```
 
-另开终端做基础检查（端口以 Wrangler 实际输出为准）：
+另开终端抽查，端口以 Wrangler 输出为准：
 
 ```bash
 curl -sS -D - -o /dev/null http://127.0.0.1:8788/contact/
-curl -sS http://127.0.0.1:8788/contact/ | rg -n 'canonical|og:url|application/ld\+json|独立第三方'
-curl -sS http://127.0.0.1:8788/robots.txt
+curl -sS http://127.0.0.1:8788/contact/ | rg -n 'canonical|og:url|独立第三方|交易暂停|不要发送'
 curl -sS http://127.0.0.1:8788/sitemap.xml | rg -o '<loc>' | wc -l
+curl -sSI http://127.0.0.1:8788/sitemap.xml
+curl -sS -D - -o /dev/null 'http://127.0.0.1:8788/guides/?api_key=release-probe'
+curl -sS -D - -o /dev/null http://127.0.0.1:8788/llms-full.txt
 ```
 
-需要 Cloudflare Pages 权限时，可建立非生产分支 Preview：
+- [ ] sitemap GET 和 HEAD 都为 200，并使用一致的 Content-Type、ETag 和 Content-Length 语义。
+- [ ] 敏感探针为 400、`noindex,nofollow,noarchive`、`private,no-store`，且未触发上游请求。
+- [ ] Preview 自定义页面可访问，但 `.pages.dev` 环境整体保持 `noindex,nofollow,noarchive`。
+- [ ] 不向任何搜索平台提交 Preview URL，也不强行让 Preview canonical 指向自身以“跑绿”生产门禁。
 
-```bash
-npx wrangler pages deploy public --project-name getgiffgaff --branch seo-release-check --commit-dirty=true
-```
-
-- [ ] Preview 页面、二维码、弹窗键盘操作和核心链接均可用。
-- [ ] `.pages.dev` Preview 按设计应返回 `noindex, nofollow, noarchive`，防止预览环境被收录。
-- [ ] 不把 Pages Preview 上的 `noindex` 当作生产公开页策略，也不把 Preview URL 提交给搜索引擎。
-
-注意：[`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs) 要求 sitemap、canonical 与被测 origin 完全一致，因此 `.pages.dev` Preview 不应被强行跑成“绿色”。候选版本的预发布门禁由本地测试、Preview 人工检查和生产发布前基线共同组成；生产域发布后再执行完整 34 URL 验证。
-
-## 5. 发布、缓存与域名
-
-确认测试结果和回滚目标后，由有 Cloudflare 权限的发布负责人执行：
+如需非生产分支 Preview：
 
 ```bash
 npm run deploy
 ```
 
-`npm run deploy` 会先执行仓库的 `predeploy` 门禁。部署完成后：
+## 6. 发布与缓存
 
-2026-07-15 生产实施记录：
+`npm run deploy` 只发布到 `seo-geo-candidate` Preview 分支，不会切换生产域。先记录 Preview URL 与部署 ID，并运行同一套验证器。
 
-- Git commit：`4b8ef1b`；Cloudflare Pages deployment：`0c6b1933-7bc1-4be5-a574-4603c394c186`。
-- Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 排在第一位：只匹配 `PUBLIC_INDEXABLE_PATHS` 中除 `/` 外的 33 个无尾斜杠 GET/HEAD 路径，目标为 `concat("https://getgiffgaff.com", http.request.uri.path, "/")`，保留 query。
-- Zone Redirect Rule `ea4cb9d838184b509aae1fd95f78c729` 排在第二位：匹配 `(http.host eq "www.getgiffgaff.com")`，目标为 `concat("https://getgiffgaff.com", http.request.uri.path)`，保留 query。
-- 最终执行 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34`，结果为 34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
-- Cloudflare AI Crawl Control 会在生产 `/robots.txt` 前附加 Managed Content/Content-Signal，因此验收应检查最终指令语义，不能要求与仓库文件逐字节相同。`robots.txt` 不是 HTML canonical 目标，不用它代替本节的 34 个公开 HTML 变体验收。
-
-2026-07-15 证据型内容系统发布记录：
-
-- Git commit：`f864e35`；Cloudflare Pages deployment：`552d38ec`（`https://552d38ec.getgiffgaff.pages.dev`）。
-- 6 个既有 canonical URL 在不增加 sitemap URL 的前提下完成全面重写：`/guides/2-activate/`、`/guides/3-usage/`、`/more/03-esim/`、`/more/04-esim-qrcode/`、`/guides/4-signal/`、`/answers/`。
-- 本地 `npm run verify` 为 52/52 测试通过；6 个来源、40 个竞品、5 个集群/20 个 spoke/6 份 brief/90 条内链计划的结构校验全部通过。
-- 自动 `postdeploy` 再次执行生产门禁：34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
-- 生产抽查确认 6 页均为 200、自指 canonical、显式 index 指令和 `x-getgiffgaff-render-mode: edge-static-tutorial`；首页、Contact 与 QA 不再被注入教程目录，只有 `/guides/` 包含该目录。
-- Preview 上同一教程返回 `noindex, nofollow, noarchive`，生产页返回 `index, follow, max-snippet:-1, max-image-preview:large`。
-
-- [x] 生产别名传播完成后，34 URL 门禁已成功退出；若自动 `postdeploy` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑，仍失败则按第 9 节回滚或向前修复。
-
-- [x] 在 Cloudflare Pages 中确认生产分支和部署 commit 正确。
-- [ ] 清理受影响的 HTML、`/sitemap.xml`、`/robots.txt`、`/llms.txt` 与 `/llms-full.txt` 缓存。本次响应头策略全站变化时优先执行一次受控的全站清缓存，并记录时间（需 Cloudflare 缓存权限）。
-- [ ] 确认公开 HTML 使用预期边缘缓存；API、订单、带敏感参数的请求和含 `Set-Cookie` 的响应不得进入公共缓存。
-- [ ] 在 Cloudflare Custom Domains 中确认 apex 与 `www` 均绑定正确证书；在 DNS 中确认没有绕过 Worker 的旧记录（需 DNS 权限）。
-
-DNS 与一跳规范化检查：
+取得明确生产发布批准、工作树已提交且回滚目标已记录后，才执行：
 
 ```bash
-dig +short getgiffgaff.com A
-dig +short getgiffgaff.com AAAA
-dig +short getgiffgaff.com CNAME
-dig +short www.getgiffgaff.com A
-dig +short www.getgiffgaff.com AAAA
-dig +short www.getgiffgaff.com CNAME
-
-curl -sS -o /dev/null -D - --max-redirs 0 http://getgiffgaff.com/contact/
-curl -sS -o /dev/null -D - --max-redirs 0 https://www.getgiffgaff.com/contact/
-curl -sS -o /dev/null -D - --max-redirs 0 https://getgiffgaff.com/contact
-curl -sS -o /dev/null -D - --max-redirs 0 http://www.getgiffgaff.com/contact/
-curl -sS -o /dev/null -D - --max-redirs 0 http://www.getgiffgaff.com/contact
+CONFIRM_PRODUCTION_DEPLOY=getgiffgaff npm run deploy:production
 ```
 
-五个变体都必须以一个 `301` 或 `308` 直接到：
+生产脚本会拒绝脏工作树，先运行本地门禁，使用当前 commit 部署，再对生产域运行 release verifier。正常发布命令和 CI 不得写死 `--expected-url-count 34`。验证失败时停止后续提交，并按已记录的部署 ID 在 Cloudflare 执行回滚；仓库脚本不会猜测应回滚到哪个生产版本。
 
-```text
-https://getgiffgaff.com/contact/
-```
+部署完成后：
 
-不得出现 `www` 200、临时重定向、两跳链、跨域跳转或循环。
+- [ ] 确认生产别名已指向候选 commit，而不是只看到 Preview 成功。
+- [ ] 清理受影响的 HTML、sitemap、robots、llms 和旧 HOLD 页面缓存；全站响应策略变化时执行一次受控全站清缓存并记录时间。
+- [ ] 检查公开 HTML 的 `Cache-Control`、`CDN-Cache-Control` 和实际 `CF-Cache-Status`；API、错误、敏感参数、含 Cookie 的响应不得进入共享缓存。
+- [ ] 检查 HSTS、`X-Content-Type-Options`、`Referrer-Policy`、`X-Frame-Options` 和 `Permissions-Policy`；本轮不申请 HSTS preload。
+- [ ] 同步 Cloudflare Redirect Rules 中的 apex、www、HTTP 和尾斜杠路由清单，确保新增信任页也能一跳到最终 canonical。
 
-如果 Cloudflare 在 Pages Worker 之前先把 HTTP 跳到 HTTPS，单靠 Worker 无法消除 `HTTP → HTTPS www → HTTPS apex` 链。此时需在 Cloudflare Redirect Rules / Bulk Redirects 中配置优先级更高的规范化规则（需 Zone Rules 权限）：`www.getgiffgaff.com` 指向 `https://getgiffgaff.com`，保留 query、子路径和 path suffix；对无尾斜杠的 34 个已批准 HTML 路由，规则目标必须直接是最终带 `/` URL。以生产 `verify:seo` 的组合变体结果为准，不能只验证 HTTPS www。
+## 7. 生产强制验收
 
-## 6. 发布后 34 URL 强制验收
-
-缓存清理后立即执行：
+别名传播和缓存清理完成后执行：
 
 ```bash
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
+npm run verify:seo -- --base-url https://getgiffgaff.com
 ```
 
-该门禁必须确认：
+该命令的 URL 数量来自当前 route manifest，必须验证：
 
-- [x] sitemap 有 34 个唯一 URL，且都属于 canonical origin。
-- [x] 34/34 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
-- [x] 每页只有一个自指 canonical，且 `og:url` 与 canonical 一致。
-- [x] HTTP、`www`、无尾斜杠变体均一跳永久重定向。
-- [x] JSON-LD 可解析，不引用 `pages.dev`，不把本站声明为 giffgaff 官方实体、母公司或官方 seller。
-- [x] `/llms.txt`、`/llms-full.txt` 保持 supporting `noindex, follow, noarchive`；404、API 和敏感路由保持 `noindex, nofollow, noarchive`；`robots.txt` 不带继承的 X-Robots-Tag。这些固定探针由 `verify:seo` 自动检查。
-- [x] Product JSON-LD 不包含未经发布证据支持的 `offers`、价格、库存、评价或聚合评分。
+- [ ] sitemap 条目与 `PUBLIC_INDEXABLE_PATHS` 完全一致且唯一，不含 HOLD/noindex/private/gone/redirect 路由。
+- [ ] sitemap 内页面全部直接 200、HTML、无 HTTP 或 meta noindex。
+- [ ] 每页一个自指 canonical；`og:url` 与 canonical 一致。
+- [ ] HTTP、www 和无尾斜杠组合一跳 301/308 到最终 URL。
+- [ ] JSON-LD 可解析，不含 `pages.dev`，不把本站标为 giffgaff 官方实体、母组织、`sameAs` 或 seller。
+- [ ] 无 Product/Offer/FAQPage 及无证据价格、库存、评价或聚合评分。
+- [ ] Privacy/Terms 为 supporting noindex；404/API/敏感路由和 `/llms-full.txt` 为 private noindex/no-store。
+- [ ] `robots.txt` 和 sitemap 不继承预览部署的 robots 头。
 
-再用真实 Googlebot Smartphone 抓取结果确认核心页面。仅用伪造 UA 的 `curl` 不足以证明真实 Googlebot 可访问；最终以 GSC URL Inspection 的“测试实际网址”和 Cloudflare Verified Bot 日志为准。
+再执行专项探针：
 
-## 7. Verified Bots、AI 爬虫与日志
+```bash
+curl -sS -D /tmp/getgiffgaff-sitemap-get.headers -o /tmp/getgiffgaff-sitemap.xml https://getgiffgaff.com/sitemap.xml
+curl -sSI https://getgiffgaff.com/sitemap.xml
+curl -sS -D - -o /dev/null 'https://getgiffgaff.com/contact/?utm_source=release-probe'
+curl -sS -D - -o /dev/null https://getgiffgaff.com/contact//
+curl -sS -D - -o /dev/null https://getgiffgaff.com/contact/index.html
+curl -sS -D - -o /dev/null 'https://getgiffgaff.com/guides/?otp=release-probe'
+curl -sS -D - -o /dev/null https://getgiffgaff.com/llms-full.txt
+```
 
-以下操作需 Cloudflare 安全策略和日志权限：
+预期：普通查询、双斜杠和 `index.html` 一跳到无参数 canonical；敏感查询 400 且 no-store；`llms-full` 为 410。不要在探针中使用真实令牌、订单或个人信息。
 
-- [ ] 对 Googlebot、Bingbot、OAI-SearchBot、Claude-SearchBot、PerplexityBot 使用 Cloudflare Verified Bot 信号或官方公布的 IP/反向与正向 DNS 验证；不能只按 User-Agent 放行。
-- [ ] 检查 WAF、Bot Fight Mode、速率限制、地区规则和 AI Crawl Control，确保搜索型爬虫不会被 403/挑战页拦截。
-- [ ] 保持 [`public/robots.txt`](../public/robots.txt) 的意图：允许搜索型 OAI-SearchBot、Claude-SearchBot、PerplexityBot；阻止训练型 GPTBot、ClaudeBot。每次修改都要复核官方爬虫名称和用途。
-- [ ] 在发布后 24–72 小时抽查日志：请求路径、状态码、缓存状态、Verified Bot 分类和 IP 验证结果；不得仅以 UA 字符串统计。
-- [ ] 发现真实搜索机器人持续 403、429 或 5xx 时，先定位具体 WAF 规则并最小范围修正，不能无条件放开所有“bot”流量。
+实际 Googlebot Smartphone 是否可抓取，最终以 GSC URL Inspection 的“测试实际网址”和 Cloudflare Verified Bot 日志为准；伪造 User-Agent 的 `curl` 不构成证据。
 
-## 8. 搜索引擎重新提交
+## 8. 搜索型 Bot 与 Cloudflare
 
-只有对应账号的已验证站点所有者可以执行，完成后在发布记录中保存提交时间和平台回执，不记录登录凭证。
+以下操作必须由有安全策略和日志权限的账号执行：
 
-- [ ] Google Search Console：重新提交 `https://getgiffgaff.com/sitemap.xml`；用 URL Inspection 对首页、`/shop/`、`/answers/`、`/guides/1-order/`、`/contact/` 及每类核心模板各一页执行“测试实际网址”，确认可编入索引后请求抓取。
-- [ ] Bing Webmaster Tools：重新提交同一 sitemap，并检查 URL Inspection / Site Scan 的抓取状态。
-- [ ] 百度搜索资源平台：提交 sitemap，检查抓取诊断与索引反馈；如平台不支持当前提交方式，记录实际可用入口，不虚构已成功。
-- [ ] 各平台发现的 canonical、robots、软 404 或抓取异常应回到代码修复，不能只重复点击“请求收录”。
+- [ ] 使用 Cloudflare Verified Bot 或官方 IP/DNS 验证 Googlebot、Bingbot、OAI-SearchBot、Claude-SearchBot 和 PerplexityBot；不能仅凭 UA。
+- [ ] 搜索型 Bot 的豁免只适用于 GET/HEAD 和公开路由，只移除误伤的挑战/速率限制，不绕过核心 WAF、API、订单和私有路由。
+- [ ] 保持 robots 意图：允许搜索型 OAI-SearchBot、Claude-SearchBot、PerplexityBot；阻止训练型 GPTBot、ClaudeBot。
+- [ ] 发布后 24–72 小时记录 Verified Bot 的 canonical 路径、状态、延迟和缓存分类；不记录原始 query、Cookie、Authorization 或个人信息。
+- [ ] 真实搜索机器人持续出现 403、429 或 5xx 时，只修正命中的具体规则，不开放所有 bot 流量。
 
-## 9. 回滚与止损
+Cloudflare AI Crawl Control 可能在最终 robots 响应中添加 Managed Content/Content-Signal；验收检查最终语义，不要求与仓库 `robots.txt` 字节一致。
 
-任一条件触发立即停止后续提交，并进入回滚或紧急向前修复：
+## 9. 搜索平台提交
 
-- 公开 sitemap URL 出现 `noindex`、非 200、跨域 canonical、重定向循环或两跳以上规范化。
-- sitemap 不再是批准的 34 个唯一 URL。
-- JSON-LD 无法解析、含 `pages.dev`，或出现本站是 giffgaff 官方实体的错误声明。
-- 5xx、403/429、缓存错误或核心 CTA 故障明显上升。
-- 订单、Cookie、个人信息或敏感参数进入公共缓存/日志。
-- Verified Googlebot/Bingbot/搜索型 AI 爬虫被新规则系统性阻断。
+只有已验证站点所有者能执行。提交时间和平台回执应记录在发布工单中，不保存登录凭证。
+
+- [ ] GSC：提交一次 `https://getgiffgaff.com/sitemap.xml`；检查首页、Contact、About、一个核心教程和一个 noindex HOLD 页。只对可索引代表页请求抓取，不提交商城/G2 HOLD 页。
+- [ ] Bing Webmaster Tools：提交同一 sitemap，检查 URL Inspection / Site Scan。
+- [ ] 百度搜索资源平台：提交 sitemap 并使用实际可用的抓取诊断入口；没有权限或功能不可用时明确记录，不能宣称已提交。
+- [ ] Cloudflare 日志：验证真实搜索 Bot 命中的是生产版本、正确状态和正确缓存策略。
+
+不要反复点击“请求编入索引”。平台报告 canonical、robots、软 404 或抓取异常时回到代码修复。
+
+## 10. 工具、数据与 GEO 放量门
+
+### 可以先发布
+
+- 保号提醒：全部计算和 `.ics` 生成在浏览器本地完成，不上传号码/账户，不写 `localStorage`。
+- 中国漫游成本：仅在完整、未过期的 ACTIVE 费率声明存在时启用；否则禁用并显示“暂不计算”。
+
+### 达标前保持 noindex
+
+| 资产 | 最低样本 |
+| --- | --- |
+| 中国网络/SMS 矩阵 | 30 条复核记录、3 城市、3 设备版本、2 网络环境、最近 90 天 |
+| OTP 状态板 | 50 个复核事件、5 平台、每平台至少 5 条、3 类环境和普通短信基线 |
+| eSIM 兼容检查器 | 20 条精确型号、地区版本、OS 与 App 版本 A/B 记录 |
+
+G0/G2 总成本工具继续 HOLD，直到品牌许可、转售路径、供货证明、账户控制权和实时价格全部通过。样本不足时只能展示 noindex 方法说明和“证据不足”，不得生成假数据。
+
+固定 30 个 GEO 问题每月人工复测：关键事实准确率 100%、边界保留率至少 95%、官方身份混淆为 0。提及、URL 引用、事实支持和 AI referral 必须分开记录。
+
+## 11. 来源登记与版权检查
+
+每次把教程或竞品加入研究库前检查：
+
+- [ ] 只保存公开 URL、标题、作者/发布者、日期、主题、意图、漏斗、CTA、证据类型、独立摘要和许可状态。
+- [ ] 没有许可时不保存或发布第三方全文、截图、图片、视频和附件。
+- [ ] 不做逐段近似改写，不把搜索摘要或竞品商业话术当事实。
+- [ ] 关键规则回到当前官方来源；实测结论必须来自本站公开方法和真实样本。
+- [ ] 竞品研究不声称对方排名、流量或转化，除非有合法、可复核的数据来源。
+
+来源登记表是研究索引，不是内容镜像。违反版权边界的材料不得随部署发布。
+
+## 12. 回滚与止损
+
+任一条件触发立即停止平台提交，并回滚或向前修复：
+
+- manifest 中可索引页面出现 noindex、非 200、跨域 canonical、重定向循环或多跳。
+- sitemap 与当前 `PUBLIC_INDEXABLE_PATHS` 不一致，或 GET/HEAD 语义分裂。
+- 商业 HOLD、G2 CTA、价格、库存、Product/Offer/FAQ Schema 或过期声明重新出现。
+- `/llms-full.txt` 不再返回 410，或 `/llms.txt` 出现暂停声明。
+- Cookie、Authorization、敏感查询、订单或个人信息进入上游、共享缓存或日志。
+- 404 带首页 canonical，或本站被 Schema/正文描述为 giffgaff 官方。
+- Verified 搜索 Bot 被新规则系统性 403/429/5xx。
 
 处理顺序：
 
-1. 保留失败验证输出、部署 ID、时间点和最小必要日志。
-2. 若上一个部署没有本次事故，通过 Cloudflare Pages 回滚到记录的部署并清理相关缓存（需账号权限）。
-3. 若上一个部署就是已知的 32/34 `noindex` 事故版本，不回滚到同一故障；保持内容冻结，发布最小向前修复。
-4. 重新执行本地门禁与生产 34 URL 验证，全部通过后才恢复搜索引擎提交。
+1. 保存失败输出、deployment ID、时间点和不含敏感值的最小日志。
+2. 判断上一部署是否满足 v2 安全和商业门禁；满足才允许回滚。
+3. 如果上一部署会恢复历史 noindex 事故、交易 CTA 或敏感信息风险，不回滚到该版本，发布最小向前修复。
+4. 清理受影响缓存，重跑全部本地与生产门禁。
+5. 只有全绿后才恢复搜索平台提交。
 
-## 10. 首个完整 28 天基线
+## 13. 首个完整 28 天基线
 
-以“生产门禁首次全绿后的下一个完整自然日”为 D1。D1–D7 每日观察，之后每周汇总；28 天内不把短期波动表述成排名承诺。
+以 v2 生产门禁首次全绿后的下一个完整自然日为 D1。D1–D7 每日检查数据质量，之后每周汇总；没有历史数据时不得补算或声称增长。
 
-| 维度 | 最低记录项 | 数据权限/前提 |
+| 维度 | 最低记录项 | 权限/边界 |
 | --- | --- | --- |
-| 索引与抓取 | sitemap 发现数、有效索引数、排除原因、核心 URL 最近抓取时间 | GSC、Bing、百度账号 |
-| 搜索表现 | 品牌/非品牌查询的展示、点击、CTR、平均位置 | 先由业务确认品牌词规则 |
-| 站内结果 | 商品/教程 CTA、人工联系、自助解决、下单转化 | 分析工具权限；事件定义需业务确认 |
-| 爬虫健康 | Verified Bot 的请求量、200/3xx/4xx/5xx、缓存命中 | Cloudflare 日志权限 |
-| AI referral | 来源、落地页、会话及转化 | 分析工具能识别 referral，排除内部/机器人流量 |
-| GEO 固定问题集 | 引擎、问题、日期、是否提及品牌、引用 URL、事实准确率 | 固定问题清单和人工复核标准 |
+| 索引与抓取 | sitemap 发现数、有效索引、排除原因、核心 URL 最近抓取 | GSC/Bing/百度账号 |
+| 搜索表现 | 各引擎品牌/非品牌展示、点击、CTR、位置 | 不跨引擎混算口径 |
+| 站内行为 | page view、工具开始/完成、支持入口点击 | 仅使用 `analytics_event_v1` 批准字段 |
+| 订单结果 | 仅服务端或支付数据可验证的订单 | 没有可信数据时填 N/A，不用 CTA 点击代替 |
+| Bot 健康 | Verified Bot 的状态、延迟、缓存分类 | Cloudflare 日志；无原始 query/凭据 |
+| GEO | 引擎、问题、日期、提及、引用 URL、准确率、边界和官方混淆 | 固定 30 问、人工复核 |
 
-发布记录中同时注明代码变更、内容变更、渠道活动和异常事件，避免把同期外部变化错误归因于 SEO 修复。经营主体、联系方式、SLA、退款结果或“自助解决”口径没有真实资料时，该指标留空并标注“待业务确认”，不能估算填充。
+## 14. 中性域迁移顺序
 
-## 11. 品牌许可与迁域决策门
+第 14 天仍无充分书面许可时，默认进入迁域准备；目标域名必须由业务所有者提供。
 
-在购买外链、大规模扩写内容或启动 programmatic SEO 前，必须二选一：
+1. 对中性域做历史、商标、安全和可持续性核查，并确认注册主体。
+2. 权利允许时，先让当前核心页面保持 2–4 周稳定抓取；若权利方要求立即停用，以其要求为准。
+3. 新域必须使用可复现的正式源码，并先完成信任页、manifest、Claim Registry 和发布测试。
+4. 建立历史 34 路由以及此后新增有效路由的一对一映射；首发阶段不合并 URL。
+5. 切换时只改变域名与 canonical 体系，不同时改版、换 CMS、重写内容或更改 IA。
+6. 每个旧 URL 一跳 301 到对应新 URL；同时更新 canonical、OG、Schema、内部链接、sitemap、robots 和 llms。
+7. 新站及 301 上线后再使用 GSC Change of Address，并向 Bing/百度提交新 sitemap。
+8. 权利允许时保留旧域重定向至少 24 个月；持续检查旧 URL、404、抓取和品牌混淆。
+9. 新域稳定满 28 天后，再单独发布微信/Telegram/GV、重复问答等 URL 合并。
 
-- [ ] 业务负责人提供可核验的 giffgaff 书面品牌许可，法务确认域名、广告、销售与官方关系表述边界；或
-- [ ] 业务负责人批准迁往不含他人商标的独立品牌域，并提供目标域名、经营主体和迁移窗口。
+不要在同一次发布中同时迁域、重做页面、改变 URL、换内容系统和大规模扩写。
 
-未满足任一项时：
+## 15. 历史记录（仅供事故追溯）
 
-- 不购买外链、不造评论、不做国家 × 平台 × 卡种的批量页面；
-- giffgaff 只作为外部 `Brand/about`，不得成为本站 `publisher`、`parentOrganization`、`sameAs` 或官方 `seller`；
-- 不使用“giffgaff 官方教程”“getgiffgaff 官网”等官方身份暗示；
-- 当前域只继续必要的技术维护和真实用户支持。
+以下数字和规则描述 2026-07-15 的旧发布快照，不是 v2 当前常量。
 
-若批准迁域，另立迁移计划：逐 URL 一对一 301、canonical/内部链接/sitemap 同步、搜索平台换址或重新验证、日志监控，并由域名所有者保证旧域至少保留 24 个月。迁移目标域和法律结论必须由业务所有者提供，工程人员不得代为编造或决定。
+### 历史 noindex 事故与第一次修复
+
+- 生产域曾反代带 `X-Robots-Tag:noindex` 的 Pages Preview，历史 sitemap 34 个 URL 中有 32 个受影响。
+- Git commit `4b8ef1b`、Cloudflare deployment `0c6b1933-7bc1-4be5-a574-4603c394c186` 完成当时的响应头修复。
+- 当时的 Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 只覆盖历史 33 个非首页无尾斜杠路径；`ea4cb9d838184b509aae1fd95f78c729` 处理 www。v2 发布前必须重新核对这些规则与当前 manifest，不能照抄旧清单。
+- 当时 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34` 曾验证历史 34/34 通过。
+
+### 历史证据型教程发布
+
+- Git commit `f864e35`、Pages deployment `552d38ec` 重写了 6 个既有 canonical 教程页，未改变当时 sitemap 的 34 URL。
+- 当时本地 52/52 测试和历史 34 URL 生产门禁通过；Preview 保持 noindex。
+
+v2 之后，商业 HOLD、`/research/` noindex 和新增信任页会改变 sitemap 构成。任何新发布都必须以 route manifest 为准，不得用历史 34 覆盖当前真实数量。

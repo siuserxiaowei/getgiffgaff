@@ -28,7 +28,7 @@ test("policyFor classifies public HTML, supporting files, private routes, and no
   assert.equal(policyFor("/llms.txt", 200, "text/plain; charset=utf-8"), "supporting-noindex");
   assert.equal(
     policyFor("/llms-full.txt", 200, "text/plain; charset=utf-8"),
-    "supporting-noindex",
+    "private-noindex",
   );
   assert.equal(
     policyFor("/privacy/", 200, "text/html; charset=utf-8"),
@@ -64,18 +64,27 @@ test("finalizeResponse replaces an inherited noindex header on public HTML", asy
   assert.equal(await response.text(), "upstream body");
 });
 
-test("finalizeResponse sets supporting noindex directives for llms files", async () => {
-  for (const pathname of ["/llms.txt", "/llms-full.txt"]) {
-    const request = new Request(`https://getgiffgaff.com${pathname}`);
-    const upstream = inheritedNoindexResponse({ contentType: "text/plain; charset=utf-8" });
-    const response = await finalizeResponse(
-      request,
-      upstream,
-      policyFor(pathname, upstream.status, upstream.headers.get("content-type")),
-    );
+test("finalizeResponse keeps short llms supporting and retired llms-full private", async () => {
+  const shortRequest = new Request("https://getgiffgaff.com/llms.txt");
+  const shortUpstream = inheritedNoindexResponse({ contentType: "text/plain; charset=utf-8" });
+  const shortResponse = await finalizeResponse(
+    shortRequest,
+    shortUpstream,
+    policyFor("/llms.txt", shortUpstream.status, shortUpstream.headers.get("content-type")),
+  );
+  assert.equal(shortResponse.headers.get("x-robots-tag"), SUPPORTING_DIRECTIVES);
 
-    assert.equal(response.headers.get("x-robots-tag"), SUPPORTING_DIRECTIVES, pathname);
-  }
+  const fullRequest = new Request("https://getgiffgaff.com/llms-full.txt");
+  const fullUpstream = inheritedNoindexResponse({
+    status: 410,
+    contentType: "text/plain; charset=utf-8",
+  });
+  const fullResponse = await finalizeResponse(
+    fullRequest,
+    fullUpstream,
+    policyFor("/llms-full.txt", fullUpstream.status, fullUpstream.headers.get("content-type")),
+  );
+  assert.equal(fullResponse.headers.get("x-robots-tag"), PRIVATE_DIRECTIVES);
 });
 
 test("finalizeResponse keeps 404 and private or sensitive routes out of the index", async () => {

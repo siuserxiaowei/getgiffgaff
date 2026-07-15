@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "release_gate_state_v1",
+  "asOf": "2026-07-15",
+  "deploymentMode": "information-only-commerce-closed",
+  "gates": {
+    "G0": {
+      "status": "PRODUCTION_FAIL_LOCAL_CANDIDATE",
+      "reason": "Local manifest, canonical, robots, security, cache and release tests pass, but the 2026-07-15 live verifier reported 317 issues against the still-unpromoted production site."
+    },
+    "G1": {
+      "status": "BLOCKED_OWNER_EVIDENCE",
+      "reason": "No written permission covering the current domain, region, sale/distribution and G2 flow has been supplied."
+    },
+    "G2": {
+      "status": "BLOCKED_OWNER_EVIDENCE",
+      "reason": "The business owner has not supplied publishable seller identity, address, service contact, shipping/refund facts, or real author/reviewer identities."
+    },
+    "G3": {
+      "status": "BLOCKED_PLATFORM_ACCESS",
+      "reason": "GSC, Bing, Baidu and Cloudflare analytics/log access plus seven clean days of event data have not been supplied."
+    },
+    "G4": {
+      "status": "BLOCKED_EVIDENCE",
+      "reason": "No proposed data asset currently meets its source, method, sample, reviewer and expiry threshold."
+    }
+  },
+  "migration": {
+    "decisionDeadline": "2026-07-29",
+    "neutralDomain": null,
+    "status": "PREPARE_AWAITING_OWNER_DOMAIN",
+    "fallback": "Enter the neutral-brand migration path if adequate written permission is still absent at the deadline."
+  },
+  "externalActions": {
+    "cloudflareVerifiedBotWaf": "PENDING_ACCOUNT_ACCESS",
+    "gsc": "PENDING_ACCOUNT_ACCESS",
+    "bingWebmaster": "PENDING_ACCOUNT_ACCESS",
+    "baiduSearchResource": "PENDING_ACCOUNT_ACCESS",
+    "legalReview": "PENDING_PROFESSIONAL_REVIEW"
+  },
+  "latestLiveVerification": "docs/live-verification-2026-07-15.md"
+}
