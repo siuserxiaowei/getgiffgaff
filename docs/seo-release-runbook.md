@@ -95,6 +95,15 @@ npm run deploy
 - 最终执行 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34`，结果为 34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
 - Cloudflare AI Crawl Control 会在生产 `/robots.txt` 前附加 Managed Content/Content-Signal，因此验收应检查最终指令语义，不能要求与仓库文件逐字节相同。`robots.txt` 不是 HTML canonical 目标，不用它代替本节的 34 个公开 HTML 变体验收。
 
+2026-07-15 证据型内容系统发布记录：
+
+- Git commit：`f864e35`；Cloudflare Pages deployment：`552d38ec`（`https://552d38ec.getgiffgaff.pages.dev`）。
+- 6 个既有 canonical URL 在不增加 sitemap URL 的前提下完成全面重写：`/guides/2-activate/`、`/guides/3-usage/`、`/more/03-esim/`、`/more/04-esim-qrcode/`、`/guides/4-signal/`、`/answers/`。
+- 本地 `npm run verify` 为 52/52 测试通过；6 个来源、40 个竞品、5 个集群/20 个 spoke/6 份 brief/90 条内链计划的结构校验全部通过。
+- 自动 `postdeploy` 再次执行生产门禁：34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
+- 生产抽查确认 6 页均为 200、自指 canonical、显式 index 指令和 `x-getgiffgaff-render-mode: edge-static-tutorial`；首页、Contact 与 QA 不再被注入教程目录，只有 `/guides/` 包含该目录。
+- Preview 上同一教程返回 `noindex, nofollow, noarchive`，生产页返回 `index, follow, max-snippet:-1, max-image-preview:large`。
+
 - [x] 生产别名传播完成后，34 URL 门禁已成功退出；若自动 `postdeploy` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑，仍失败则按第 9 节回滚或向前修复。
 
 - [x] 在 Cloudflare Pages 中确认生产分支和部署 commit 正确。
