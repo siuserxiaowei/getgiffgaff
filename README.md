@@ -6,7 +6,9 @@ getgiffgaff 是独立第三方信息与既有订单支持站，不是 giffgaff L
 
 ## 当前发布状态
 
-本仓库中的 v2 是尚未提升到生产域的候选版本。2026-07-15 的线上 release verifier 仍报告旧站 317 个门禁问题；摘要见 [生产域发布前验证记录](docs/live-verification-2026-07-15.md)。在候选部署、缓存清理和再次零错误验证前，不得把下列本地结果描述为线上已生效。
+本仓库中的 v2 已于 2026-07-15 提升到生产域（提交 `989c9a1`，Cloudflare Pages 部署 `c7ac75a5-90b9-4e26-a1d0-2ac502de9762`）。生产 release verifier 已验证 28 个 sitemap URL 全部通过，Cloudflare 全量边缘缓存随后完成清除；旧站曾报告的 317 个问题是部署前快照，不再代表当前生产状态。完整结果见 [生产域发布与验证记录](docs/live-verification-2026-07-15.md)。
+
+当前外部平台状态：Google Search Console 已接受 `https://getgiffgaff.com/sitemap.xml`，首页实际网址测试为“可编入索引”，并已将首页、激活教程、保号工具、About 与 Contact 加入优先抓取队列；Bing Webmaster 已完成 CNAME 所有权验证并成功读取 28 个 URL；Cloudflare 管理型 robots、AI crawler 策略及控制台权限已核验。百度搜索资源平台仍因账户实名资料、手机号和验证码未完成而阻塞，仓库不会保存或代填这些敏感资料。
 
 当前分支采用 v2 硬门禁，发布顺序是：
 
@@ -109,7 +111,7 @@ npm run verify:seo -- --base-url https://getgiffgaff.com
 - 覆盖当前域名、地区、销售/分发及 G2 流程的 giffgaff 书面许可；普通 Participant 身份或客服聊天不能替代。
 - 不含第三方商标的中性品牌域名、注册主体与迁移窗口。
 - 可公开核验的真实经营主体、卖方身份、联系方式、发货、退款、隐私、作者和审核信息。
-- GSC、Bing Webmaster、百度搜索资源平台和 Cloudflare DNS/WAF/Verified Bot/日志权限。
+- 百度搜索资源平台账户的实名资料、手机号和验证码；GSC、Bing 与 Cloudflare 控制台访问已于 2026-07-15 核验，但 G3 仍需连续 7 天无数据质量问题后才能通过。
 
 第 14 天仍无充分书面许可时，默认进入中性域迁移准备。迁移必须一对一保留 URL，不能同时改域名、重做设计、合并 URL 和更换内容系统；详细顺序见发布手册。
 

@@ -4,8 +4,8 @@
   "deploymentMode": "information-only-commerce-closed",
   "gates": {
     "G0": {
-      "status": "PRODUCTION_FAIL_LOCAL_CANDIDATE",
-      "reason": "Local manifest, canonical, robots, security, cache and release tests pass, but the 2026-07-15 live verifier reported 317 issues against the still-unpromoted production site."
+      "status": "PASS_PRODUCTION",
+      "reason": "Commit 989c9a1 was promoted through Cloudflare Pages deployment c7ac75a5-90b9-4e26-a1d0-2ac502de9762. After cache purge and the final redirect-rule update, the production verifier passed all 28 manifest-derived sitemap URLs and canonical variants with zero release-gate errors."
     },
     "G1": {
       "status": "BLOCKED_OWNER_EVIDENCE",
@@ -16,8 +16,8 @@
       "reason": "The business owner has not supplied publishable seller identity, address, service contact, shipping/refund facts, or real author/reviewer identities."
     },
     "G3": {
-      "status": "BLOCKED_PLATFORM_ACCESS",
-      "reason": "GSC, Bing, Baidu and Cloudflare analytics/log access plus seven clean days of event data have not been supplied."
+      "status": "IN_PROGRESS_BASELINE",
+      "reason": "GSC, Bing and Cloudflare access are verified and both search sitemaps were submitted. Baidu is blocked on owner-only account profile and OTP data; the required seven clean days of measurement data have not elapsed."
     },
     "G4": {
       "status": "BLOCKED_EVIDENCE",
@@ -31,10 +31,10 @@
     "fallback": "Enter the neutral-brand migration path if adequate written permission is still absent at the deadline."
   },
   "externalActions": {
-    "cloudflareVerifiedBotWaf": "PENDING_ACCOUNT_ACCESS",
-    "gsc": "PENDING_ACCOUNT_ACCESS",
-    "bingWebmaster": "PENDING_ACCOUNT_ACCESS",
-    "baiduSearchResource": "PENDING_ACCOUNT_ACCESS",
+    "cloudflareVerifiedBotWaf": "ACCESS_VERIFIED_MANAGED_ROBOTS_VERIFIED_CACHE_PURGED_REDIRECTS_VERIFIED",
+    "gsc": "DOMAIN_PROPERTY_VERIFIED_SITEMAP_SUBMITTED_5_CORE_URLS_QUEUED",
+    "bingWebmaster": "CNAME_VERIFIED_SITEMAP_SUCCESS_28_URLS",
+    "baiduSearchResource": "BLOCKED_OWNER_PROFILE_AND_OTP",
     "legalReview": "PENDING_PROFESSIONAL_REVIEW"
   },
   "latestLiveVerification": "docs/live-verification-2026-07-15.md"

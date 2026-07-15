@@ -49,16 +49,21 @@ test("release instructions cannot push a dirty tree or silently target productio
   assert.match(productionScript, /CONFIRM_PRODUCTION_DEPLOY/);
 });
 
-test("external gates remain explicitly blocked instead of being inferred from code", async () => {
+test("external gates reflect verified production evidence without opening commerce", async () => {
   const state = JSON.parse(await text("docs/external-gate-state.json"));
   assert.equal(state.deploymentMode, "information-only-commerce-closed");
-  assert.equal(state.gates.G0.status, "PRODUCTION_FAIL_LOCAL_CANDIDATE");
-  for (const gate of ["G1", "G2", "G3", "G4"]) {
+  assert.equal(state.gates.G0.status, "PASS_PRODUCTION");
+  for (const gate of ["G1", "G2", "G4"]) {
     assert.match(state.gates[gate].status, /^BLOCKED_/i, gate);
   }
+  assert.equal(state.gates.G3.status, "IN_PROGRESS_BASELINE");
+  assert.match(state.externalActions.gsc, /SITEMAP_SUBMITTED/);
+  assert.match(state.externalActions.bingWebmaster, /SITEMAP_SUCCESS_28_URLS/);
+  assert.match(state.externalActions.baiduSearchResource, /^BLOCKED_/);
   assert.equal(state.migration.neutralDomain, null);
   assert.equal(state.migration.decisionDeadline, "2026-07-29");
   const liveRecord = await text(state.latestLiveVerification);
   assert.match(liveRecord, /317 个问题/);
-  assert.match(liveRecord, /不得.*宣称.*在线生效/);
+  assert.match(liveRecord, /最终生产验证器返回零错误/);
+  assert.match(liveRecord, /不恢复交易/);
 });
