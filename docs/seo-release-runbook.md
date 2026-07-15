@@ -1,6 +1,6 @@
 # getgiffgaff SEO / GEO 发布运维清单
 
-> 状态：待执行的发布 SOP，不代表 Cloudflare、搜索引擎或生产环境操作已经完成。命令不包含任何密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
+> 状态（2026-07-15）：P0 技术修复已发布到生产；搜索引擎重提、Verified Bot 日志复核、真实经营资料和品牌许可仍待业务/平台账号完成。本文同时保留为后续发布 SOP。命令不包含任何密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
 
 ## 1. 发布门槛与责任人
 
@@ -87,9 +87,17 @@ npm run deploy
 
 `npm run deploy` 会先执行仓库的 `predeploy` 门禁。部署完成后：
 
-- [ ] `postdeploy` 自动执行生产 34 URL 门禁并成功退出；失败时本次发布视为失败，立即按第 9 节回滚或向前修复。
+2026-07-15 生产实施记录：
 
-- [ ] 在 Cloudflare Pages 中确认生产分支和部署 commit 正确。
+- Git commit：`4b8ef1b`；Cloudflare Pages deployment：`0c6b1933-7bc1-4be5-a574-4603c394c186`。
+- Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 排在第一位：只匹配 `PUBLIC_INDEXABLE_PATHS` 中除 `/` 外的 33 个无尾斜杠 GET/HEAD 路径，目标为 `concat("https://getgiffgaff.com", http.request.uri.path, "/")`，保留 query。
+- Zone Redirect Rule `ea4cb9d838184b509aae1fd95f78c729` 排在第二位：匹配 `(http.host eq "www.getgiffgaff.com")`，目标为 `concat("https://getgiffgaff.com", http.request.uri.path)`，保留 query。
+- 最终执行 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34`，结果为 34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
+- Cloudflare AI Crawl Control 会在生产 `/robots.txt` 前附加 Managed Content/Content-Signal，因此验收应检查最终指令语义，不能要求与仓库文件逐字节相同。`robots.txt` 不是 HTML canonical 目标，不用它代替本节的 34 个公开 HTML 变体验收。
+
+- [x] 生产别名传播完成后，34 URL 门禁已成功退出；若自动 `postdeploy` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑，仍失败则按第 9 节回滚或向前修复。
+
+- [x] 在 Cloudflare Pages 中确认生产分支和部署 commit 正确。
 - [ ] 清理受影响的 HTML、`/sitemap.xml`、`/robots.txt`、`/llms.txt` 与 `/llms-full.txt` 缓存。本次响应头策略全站变化时优先执行一次受控的全站清缓存，并记录时间（需 Cloudflare 缓存权限）。
 - [ ] 确认公开 HTML 使用预期边缘缓存；API、订单、带敏感参数的请求和含 `Set-Cookie` 的响应不得进入公共缓存。
 - [ ] 在 Cloudflare Custom Domains 中确认 apex 与 `www` 均绑定正确证书；在 DNS 中确认没有绕过 Worker 的旧记录（需 DNS 权限）。
@@ -131,13 +139,13 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
 
 该门禁必须确认：
 
-- [ ] sitemap 有 34 个唯一 URL，且都属于 canonical origin。
-- [ ] 34/34 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
-- [ ] 每页只有一个自指 canonical，且 `og:url` 与 canonical 一致。
-- [ ] HTTP、`www`、无尾斜杠变体均一跳永久重定向。
-- [ ] JSON-LD 可解析，不引用 `pages.dev`，不把本站声明为 giffgaff 官方实体、母公司或官方 seller。
-- [ ] `/llms.txt`、`/llms-full.txt` 保持 supporting `noindex, follow, noarchive`；404、API 和敏感路由保持 `noindex, nofollow, noarchive`；`robots.txt` 不带继承的 X-Robots-Tag。这些固定探针由 `verify:seo` 自动检查。
-- [ ] Product JSON-LD 不包含未经发布证据支持的 `offers`、价格、库存、评价或聚合评分。
+- [x] sitemap 有 34 个唯一 URL，且都属于 canonical origin。
+- [x] 34/34 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
+- [x] 每页只有一个自指 canonical，且 `og:url` 与 canonical 一致。
+- [x] HTTP、`www`、无尾斜杠变体均一跳永久重定向。
+- [x] JSON-LD 可解析，不引用 `pages.dev`，不把本站声明为 giffgaff 官方实体、母公司或官方 seller。
+- [x] `/llms.txt`、`/llms-full.txt` 保持 supporting `noindex, follow, noarchive`；404、API 和敏感路由保持 `noindex, nofollow, noarchive`；`robots.txt` 不带继承的 X-Robots-Tag。这些固定探针由 `verify:seo` 自动检查。
+- [x] Product JSON-LD 不包含未经发布证据支持的 `offers`、价格、库存、评价或聚合评分。
 
 再用真实 Googlebot Smartphone 抓取结果确认核心页面。仅用伪造 UA 的 `curl` 不足以证明真实 Googlebot 可访问；最终以 GSC URL Inspection 的“测试实际网址”和 Cloudflare Verified Bot 日志为准。
 
