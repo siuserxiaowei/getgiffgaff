@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">联系 getgiffgaff</title>
+  <desc id="desc">G0/G2 库存、下单与售后支持的分享图片</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4f8f4"/>
+      <stop offset="1" stop-color="#dcecdf"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#173524" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#background)"/>
+  <circle cx="1070" cy="80" r="205" fill="#9bc8a4" opacity="0.28"/>
+  <circle cx="90" cy="595" r="180" fill="#cbe0cf" opacity="0.72"/>
+  <g filter="url(#shadow)">
+    <rect x="84" y="76" width="1032" height="478" rx="34" fill="#ffffff"/>
+  </g>
+  <rect x="132" y="126" width="86" height="86" rx="24" fill="#2f5e41"/>
+  <text x="175" y="184" text-anchor="middle" fill="#ffffff" font-family="PingFang SC" font-size="34" font-weight="800">GG</text>
+  <text x="246" y="161" fill="#2f5e41" font-family="PingFang SC" font-size="26" font-weight="700">getgiffgaff</text>
+  <text x="246" y="197" fill="#66756c" font-family="PingFang SC" font-size="20">独立第三方服务站</text>
+  <text x="132" y="310" fill="#13261a" font-family="PingFang SC" font-size="58" font-weight="800">联系 getgiffgaff</text>
+  <text x="132" y="382" fill="#2f5e41" font-family="PingFang SC" font-size="35" font-weight="700">G0/G2 库存 · 下单 · 订单售后</text>
+  <rect x="132" y="438" width="636" height="54" rx="27" fill="#eef7ef"/>
+  <text x="164" y="474" fill="#355d43" font-family="PingFang SC" font-size="22" font-weight="600">准备订单号、SKU 与问题截图，沟通更高效</text>
+  <g transform="translate(880 250)">
+    <rect width="150" height="188" rx="24" fill="#2f5e41"/>
+    <rect x="17" y="21" width="116" height="116" rx="14" fill="#ffffff"/>
+    <path d="M42 52h28v28H42zM80 52h28v28H80zM42 90h28v28H42zM85 94h11v11H85zM101 94h9v24H86v-9h15z" fill="#2f5e41"/>
+    <circle cx="75" cy="161" r="8" fill="#cde4d1"/>
+  </g>
+</svg>

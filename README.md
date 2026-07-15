@@ -2,6 +2,8 @@
 
 这里整理 giffgaff 英国手机卡，也就是很多人说的 GG 卡，在国内购买、激活、充值、保号、收短信、eSIM 和排查问题时会用到的中文教程。
 
+getgiffgaff 是独立第三方服务站，不是 giffgaff Limited 官方网站、官方客服或授权代表。涉及运营商账户、号码状态、资费与规则时，请以 giffgaff 当前官方页面为准。
+
 如果你是在 GitHub 搜 giffgaff 中文教程、GG 卡使用教程、giffgaff 保号、giffgaff 收不到验证码、giffgaff eSIM 这些问题，这个仓库可以当作入口和资料索引。
 
 如果你只是想直接看教程或买卡，可以从这里进：
@@ -63,6 +65,25 @@ giffgaff 可以作为英国 +44 手机号和低频短信备用方案，但不要
 ## 重要提醒
 
 getgiffgaff 不是 giffgaff 官方运营商。号码状态、资费、漫游规则、活动、eSIM 流程和账号规则都会变化，购买和操作前请以 giffgaff 官方当前页面为准。
+
+## SEO 边缘发布门禁
+
+`public/worker-logic.js` 是当前生产域的临时边缘修复层。它会统一清理上游预览部署继承的 `X-Robots-Tag`，按显式路由清单设置索引策略，并规范化 HTTPS、apex 域和尾斜杠。当前 sitemap 的 34 个公开 HTML URL 是唯一允许索引的路由清单；未列出的 HTML 默认 `noindex,nofollow`。
+
+本地校验：
+
+```bash
+npm run verify
+npm run test:coverage
+```
+
+部署后校验生产域：
+
+```bash
+npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
+```
+
+发布、缓存清理、搜索平台重提与回滚流程见 [`docs/seo-release-runbook.md`](docs/seo-release-runbook.md)。长期仍应把 Contact 与全站模板修复合并回正式 Next.js 源码，并移除对 Pages 预览快照及字符串级 HTML 重写的依赖。
 
 ## 官方参考
 
