@@ -138,6 +138,9 @@ test("serves the giffgaff pitfalls guide from Pages assets", async () => {
   assert.match(html, /giffgaff 使用教程和避坑清单/);
   assert.match(html, /https:\/\/help\.giffgaff\.com\/en\/articles\/242797-understanding-why-your-number-has-been-deactivated/);
   assert.match(html, /不承诺所有验证码均可送达/);
+  assert.match(html, /Participant SIM\/激活地点/);
+  assert.match(html, /不得使用他人身份或共享账号/);
+  assert.match(html, /本站客服只确认库存、订单、交付和本站售后边界/);
   assert.doesNotMatch(html, /nano-banana|Nano Banana|AI 订阅/);
 });
 
@@ -160,7 +163,9 @@ test("serves the research hub from Pages assets", async () => {
 
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "research-hub");
-  assert.match(html, /giffgaff \/ GG 卡全网资料索引/);
+  assert.match(html, /giffgaff 中文资料库与竞品研究/);
+  assert.match(html, /40 个独立竞品页面/);
+  assert.match(html, /不把第三方文章换词后重新发布/);
   assert.match(html, /github\.com\/siuserxiaowei\/getgiffgaff/);
 });
 
@@ -188,6 +193,17 @@ test("injects the pitfalls guide into the guide directory", async () => {
     assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "guide-pitfalls-link");
     assert.match(html, /href="\/guides\/6-pitfalls\/">giffgaff 使用教程和避坑清单/);
     assert.match(html, /class="doc-list-item" href="\/guides\/6-pitfalls\/"/);
+    for (const pathname of [
+      "/guides/2-activate/",
+      "/guides/3-usage/",
+      "/more/03-esim/",
+      "/more/04-esim-qrcode/",
+      "/guides/4-signal/",
+      "/answers/",
+    ]) {
+      assert.match(html, new RegExp(`href="${pathname}"`), pathname);
+    }
+    assert.equal(countOccurrences(html, /id="evidence-led-guides"/g), 1);
   } finally {
     globalThis.fetch = originalFetch;
   }
@@ -207,7 +223,28 @@ test("injects the hotfix routes into sitemap.xml", async () => {
     assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "sitemap-hotfix-routes");
     assert.match(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//);
     assert.match(xml, /https:\/\/getgiffgaff\.com\/research\//);
-    assert.match(xml, /2026-07-01T00:00:00\.000Z/);
+    assert.match(xml, /2026-07-15T00:00:00\.000Z/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("keeps the evidence-led directory out of non-guide pages", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(guideIndexHtml, {
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+
+  try {
+    for (const pathname of ["/", "/shop/giffgaff-g0/", "/qa/00-username/"]) {
+      const response = await worker.fetch(
+        new Request(`https://getgiffgaff.com${pathname}`),
+        {},
+      );
+      const html = await response.text();
+      assert.doesNotMatch(html, /id="evidence-led-guides"/, pathname);
+    }
   } finally {
     globalThis.fetch = originalFetch;
   }

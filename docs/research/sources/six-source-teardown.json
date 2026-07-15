@@ -1,0 +1,891 @@
+{
+  "schemaVersion": "1.0",
+  "generatedAt": "2026-07-15T17:30:00+08:00",
+  "scope": {
+    "description": "用户指定的 6 个 giffgaff 中文教程来源拆解，仅保存可验证的元数据、结构、流量与转化机制、事实摘要和版权边界。",
+    "checkedAt": "2026-07-15",
+    "methods": [
+      "直接 HTTP 请求与重定向链检查",
+      "HTML title/meta/canonical/robots/heading/link/image/JSON-LD 解析",
+      "robots.txt 与 sitemap.xml 检查",
+      "Git 仓库完整历史与根目录 LICENSE 检查",
+      "与 giffgaff 当前官方条款、中国漫游价格和 eSIM 帮助页交叉验证"
+    ],
+    "notIncluded": [
+      "未保存任何第三方文章的长段或完整正文",
+      "未把搜索结果顺序当成稳定排名数据",
+      "未验证的价格、平台接码兼容性和成功率不作为本站结论"
+    ]
+  },
+  "copyrightBoundary": {
+    "defaultRule": "除明确开放许可外，只可保留 URL、标题、目录、关键词、转化路径、可验证事实和转化性摘要；不可复制正文、截图或页面视觉设计。",
+    "openLicenseException": "AI全书的指定页面明示 CC BY 4.0，可分享和改编，但必须适当署名、链接许可证、标明修改，且不得暗示原作者背书。页内第三方软件、图片和商标的权利需另行核对。",
+    "licenseReferences": [
+      "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository",
+      "https://creativecommons.org/licenses/by/4.0/"
+    ]
+  },
+  "officialFactBaseline": [
+    {
+      "topic": "180 天保号",
+      "currentVerifiedRule": "至少每 6 个月完成一项：向另一号码拨打电话或发送 SMS/MMS（排除紧急服务、会员服务、0800 和免费号码）；使用移动数据连接互联网；或购买话费/Plan。单纯接收短信不在当前条款列出的保号动作内。",
+      "source": "https://www.giffgaff.com/boiler-plate/terms#Our-rights-to-bar-or-disconnect-your-SIM-Card",
+      "evidenceLocation": "当前条款 13.5-13.6"
+    },
+    {
+      "topic": "中国漫游 PAYG 价格",
+      "currentVerifiedRule": "官方中国漫游页当前显示：数据 20p/MB，拨打电话和语音信箱 £1/分钟，接听 £1/分钟，发送短信 30p/条，接收短信免费。价格可变，发布时必须带最后核对日期。",
+      "source": "https://www.giffgaff.com/roaming/china"
+    },
+    {
+      "topic": "官方 eSIM 路径",
+      "currentVerifiedRule": "官方路径依赖兼容 eSIM 的设备和 giffgaff App，并通过 Account > SIM > Replace my SIM > Switch to new eSIM 完成；安全验证可能需要短信 MFA。",
+      "source": "https://help.giffgaff.com/en/articles/240399-continuing-to-use-your-esim-if-you-switch-to-a-different-phone"
+    }
+  ],
+  "sources": [
+    {
+      "id": "ssnhd-github-readme",
+      "name": "ssnhd/giffgaff GitHub README",
+      "url": "https://github.com/ssnhd/giffgaff",
+      "sourceType": "GitHub 仓库长教程",
+      "access": {
+        "status": 200,
+        "finalUrl": "https://github.com/ssnhd/giffgaff",
+        "publiclyReadable": true,
+        "publicationDate": "2023-09-13T14:04:20+08:00",
+        "lastVerifiedUpdate": "2026-07-14T11:51:44+08:00",
+        "updateEvidence": "完整 Git 历史共 159 个 commit；最新 commit bc9a49b5c2fe67c025a35470d36a42047590db4d。"
+      },
+      "searchIntent": {
+        "primary": "英国 giffgaff 实体 SIM 卡激活与使用",
+        "secondary": [
+          "giffgaff 保号",
+          "giffgaff 充值",
+          "giffgaff 漫游资费",
+          "giffgaff 收不到短信",
+          "giffgaff 换号",
+          "giffgaff eSIM",
+          "eSIM 转实体卡"
+        ],
+        "funnelStage": "从购卡后激活到长期使用的全流程，以商品/代充转化收口。"
+      },
+      "metadata": {
+        "htmlTitle": "GitHub - ssnhd/giffgaff · GitHub",
+        "contentH1": "英国实体 SIM 卡 giffgaff 激活使用教程",
+        "metaDescription": "Contribute to ssnhd/giffgaff development by creating an account on GitHub.",
+        "canonical": null,
+        "metaRobots": null,
+        "xRobotsTag": null,
+        "openGraphUrl": "https://github.com/ssnhd/giffgaff"
+      },
+      "structure": {
+        "mainSections": [
+          "激活",
+          "资费",
+          "保号",
+          "发短信/打电话格式",
+          "查询本机号码",
+          "收不到短信",
+          "更改号码",
+          "呼叫限制排障",
+          "查询余额",
+          "充值",
+          "更改邮箱/密码",
+          "激活 eSIM",
+          "eSIM 转实体卡",
+          "常用官方链接"
+        ],
+        "depthSignals": {
+          "readmeLines": 214,
+          "readmeSourceLines": 130,
+          "readmeSize": "7.7 KB",
+          "observedImages": 11,
+          "activationSteps": 11
+        }
+      },
+      "trustSignals": {
+        "positive": [
+          "页面显示约 1.1k stars 和 138 forks，具有可见的社会证明",
+          "159 次提交且 2026-07-14 仍有更新，可追溯修订历史",
+          "多处直链 giffgaff 激活、漫游、eSIM、Wi-Fi Calling、客服和条款页"
+        ],
+        "gaps": [
+          "无独立作者简介、审核者、方法、更新说明或逐条引用",
+          "GitHub 页面 title/description 不针对文章 SEO，无 Article/HowTo Schema",
+          "一页覆盖太多意图，无独立的故障决策树和版本化截图说明"
+        ],
+        "factualOrPolicyRisks": [
+          "教程建议搜索并填写他人英国地址，不应在本站重现；应要求使用者提供真实、有权使用的账单/配送资料",
+          "将保号概括为‘余额变动’不如官方 13.5 准确；发布时应枚举官方允许的三类动作",
+          "收码、代充、换号时段和支付风控等实务性结论需逐条重验"
+        ]
+      },
+      "linksAndConversion": {
+        "internalMechanism": "README 顶部和充值/补卡段落反复链向 ssnhd/sim，把教程流量导向销售与人工客服。",
+        "externalMechanism": "密集链接 giffgaff 官方自助页，降低读者后续操作成本。",
+        "primaryCta": "前往 GitHub ssnhd/sim 联系人工客服购卡/充值/补卡。",
+        "distribution": [
+          "GitHub 域名与站内搜索",
+          "Star/Fork 社会证明",
+          "频繁 commit 带来更新感和订阅通知",
+          "仓库之间互链"
+        ]
+      },
+      "technicalSeo": {
+        "indexability": "200，无 noindex；实际索引与展示受 GitHub 平台模板控制。",
+        "schemaTypes": [],
+        "sitemapControl": "无仓库级 sitemap 控制权",
+        "notableWeakness": "搜索标题以仓库名为主，不是结构化的教程内容中心。"
+      },
+      "copyright": {
+        "license": "未授权（默认版权保留）",
+        "evidence": "仓库根目录仅有 README.md 和 .DS_Store，无 LICENSE，README 也未声明许可。GitHub 官方说明无许可时默认版权法适用。",
+        "allowedCapture": "URL、标题、目录、更新历史、链接图谱与转化机制摘要。",
+        "doNotCopy": [
+          "README 正文和操作截图",
+          "连续的步骤文案",
+          "商家话术和风险未明的地址/支付建议"
+        ]
+      },
+      "transferableLessons": [
+        "用‘激活→资费→保号→排障→eSIM’完成使用周期覆盖，但在本站应拆成一个导航支柱和多个单意图页",
+        "每个操作节点附官方深链，但页内事实必须标最后核对日期",
+        "把人工服务 CTA 放在用户无法自助的断点，不要用官方身份话术"
+      ],
+      "evidenceUrls": [
+        "https://github.com/ssnhd/giffgaff",
+        "https://github.com/ssnhd/giffgaff/blob/main/README.md",
+        "https://github.com/ssnhd/giffgaff/commit/bc9a49b5c2fe67c025a35470d36a42047590db4d",
+        "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository"
+      ]
+    },
+    {
+      "id": "giffgaff-us",
+      "name": "GiffGaff中文使用手册",
+      "url": "https://giffgaff.us/",
+      "sourceType": "独立中文教程站 + 商店/私域转化",
+      "access": {
+        "status": 200,
+        "finalUrl": "https://giffgaff.us/",
+        "publiclyReadable": true,
+        "publicationDate": null,
+        "lastModified": null,
+        "dateLimitation": "首页与样本文章均未显示作者、发布日或更新日，不能根据标题中的‘2026’推定实际更新时间。"
+      },
+      "searchIntent": {
+        "primary": "giffgaff 中文教程/激活/充值/eSIM/保号",
+        "secondary": [
+          "英国 SIM 卡中国使用",
+          "giffgaff 接码",
+          "giffgaff 漫游资费",
+          "giffgaff 修改密码/邮箱",
+          "giffgaff 换号",
+          "giffgaff 注册 Telegram/WeChat",
+          "英国 PayPal 注册"
+        ],
+        "funnelStage": "全漏斗：搜索获客→教程教育→Telegram 咨询/商店购卡/代充。"
+      },
+      "metadata": {
+        "htmlTitle": "Giffgaff中文使用手册 | giffgaff激活教程2026、giffgaff充值、giffgaff eSIM保号全指南",
+        "h1": null,
+        "metaDescription": "Giffgaff中文手册提供2026最新英国giffgaff手机卡在中国激活使用指南。包含：giffgaff快速充值、实体卡一键转eSIM教程、低门槛长效保号策略及漫游资费查询。解决英国PayPal、银行卡、社交平台接码难题。",
+        "canonical": "https://giffgaff.us/",
+        "metaRobots": "index, follow",
+        "xRobotsTag": null,
+        "openGraphUrl": "https://giffgaff.us/",
+        "metaKeywordsPresent": true
+      },
+      "structure": {
+        "homepagePattern": "首页无 H1，用文章卡片直接展开意图集群；卡片锚文本在标题后重复多个目标关键词。",
+        "inventorySummary": {
+          "linkedContentPages": 15,
+          "giffgaffPages": 14,
+          "adjacentPayPalPage": 1,
+          "approxVisibleChineseCharactersAcrossPages": 15469,
+          "observedImagesAcrossPages": 64
+        },
+        "contentInventory": [
+          { "title": "Giffgaff 英国SIM卡简介", "url": "https://giffgaff.us/post/12" },
+          { "title": "英国 PayPal 注册全攻略（Giffgaff 用户必看）", "url": "https://giffgaff.us/post/paypal-gb" },
+          { "title": "Giffgaff 购卡链接", "url": "https://giffgaff.us/post/11" },
+          { "title": "Giffgaff 充值激活（空白卡用户必看）", "url": "https://giffgaff.us/post/10" },
+          { "title": "Giffgaff 修改密码（预付卡用户必看）", "url": "https://giffgaff.us/post/9" },
+          { "title": "Giffgaff 修改邮箱（新人必看）", "url": "https://giffgaff.us/post/8" },
+          { "title": "Giffgaff 常见问题（新人必看）", "url": "https://giffgaff.us/post/7" },
+          { "title": "Giffgaff 常用功能（新人必看）", "url": "https://giffgaff.us/post/6" },
+          { "title": "Giffgaff 中国漫游资费", "url": "https://giffgaff.us/post/5" },
+          { "title": "Giffgaff 注册接码问题汇总", "url": "https://giffgaff.us/post/4" },
+          { "title": "Giffgaff 漫游时保号攻略", "url": "https://giffgaff.us/post/3" },
+          { "title": "Giffgaff 实体卡转 eSIM 指南", "url": "https://giffgaff.us/post/2" },
+          { "title": "Giffgaff 换号操作指南", "url": "https://giffgaff.us/post/1" },
+          { "title": "用 Giffgaff 号码注册 WeChat 账号", "url": "https://giffgaff.us/post/18" },
+          { "title": "用 Giffgaff 号码注册 Telegram 账号", "url": "https://giffgaff.us/post/17" }
+        ],
+        "representativePage": {
+          "url": "https://giffgaff.us/post/10",
+          "h1": "Giffgaff 充值激活（空白卡用户必看）",
+          "sections": [
+            "新卡激活",
+            "实体卡激活步骤",
+            "国内漫游资费",
+            "注意事项",
+            "常见功能"
+          ],
+          "observedImages": 15
+        }
+      },
+      "trustSignals": {
+        "positive": [
+          "采用单问题单页的细分架构，激活、资费、保号、eSIM、换号和接码均有独立 URL",
+          "图文步骤多，激活页有 15 张图",
+          "部分页面直链官方操作页和帮助页",
+          "页尾声明仅供参考、以官方说明为准"
+        ],
+        "gaps": [
+          "无真实作者、审核者、日期、修订记录、经营主体和商业关系披露",
+          "精准商标域名、‘中文手册’与站点视觉可能让用户误以为官方",
+          "无持续的官方来源列表和数据方法，平台兼容性主张无样本/日期",
+          "多个页面内容与 GitHub README 出现长段步骤和措辞重合，但不能仅凭重合确定权利归属"
+        ],
+        "factualOrPolicyRisks": [
+          "‘所有海外 APP/银行均完美支持’类绝对表述不可采用，应用带日期、设备、网络和样本量的状态板替代",
+          "接码、号码注册平台、免实名和‘理论保号 25 年’均有高变动/合规风险",
+          "英国 PayPal 账号跨区注册内容涉及身份、地址和金融平台条款，不应作为本站流量延伸",
+          "教程中的地址和代充建议需求真、合规并经法务审核"
+        ]
+      },
+      "linksAndConversion": {
+        "internalMechanism": "首页以 15 个意图卡片导航；每页保留首页、搜索、Telegram 和购卡入口；并用 PayPal/Telegram/WeChat 使用场景扩展上游需求。",
+        "externalMechanism": "操作页深链 giffgaff 官方，转化链指向 t.me、shop.giffgaff.us，部分页还指向 mysim.cc/shop.mysim.cc。",
+        "primaryCta": "全站导航的 Telegram @giffgaffus 和 shop.giffgaff.us 购卡入口。",
+        "conversionPath": "细分问题页获取自然搜索→页内解决一个任务→持续暴露 Telegram/商店→购卡或人工代办。",
+        "distribution": [
+          "包含商标的精准域名",
+          "首页卡片使用密集长尾关键词锚文本",
+          "Telegram 私域",
+          "商店子域",
+          "使用场景页（WeChat/Telegram/PayPal）"
+        ]
+      },
+      "technicalSeo": {
+        "indexability": "首页和文章均 200，无 X-Robots-Tag:noindex，首页显式 index,follow。",
+        "schemaTypes": {
+          "homepage": ["WebSite", "SearchAction"],
+          "selectedPages": ["HowTo", "Article"],
+          "coverageGap": "只有部分页面有 HowTo/Article，大部分无页级 Schema。"
+        },
+        "robotsTxt": "https://giffgaff.us/robots.txt 返回首页 HTML，不是 robots.txt。",
+        "sitemap": "https://giffgaff.us/sitemap.xml 返回首页 HTML，不是 XML sitemap。",
+        "canonicalIssue": "文章实际 200 URL 为 /post/10 这类无扩展名路径，但 canonical 指向 /post/10.html；.html 又 308 回无扩展名 URL，形成 canonical 指向重定向的技术错误。",
+        "otherWeaknesses": [
+          "首页缺 H1",
+          "保留 meta keywords 和 revisit-after，不应作为可学习项",
+          "无日期与作者机器可读信号"
+        ]
+      },
+      "copyright": {
+        "license": "未找到开放许可",
+        "evidence": "页尾只有版权符号与站点名，未显示可再利用的条款。",
+        "allowedCapture": "页面清单、标题/H1/目录、元数据、转化路径、技术缺陷和事实性摘要。",
+        "doNotCopy": [
+          "15 页教程正文和 64 张图",
+          "站点品牌视觉、商店话术和用户证明",
+          "可能来自其他来源的重合段落"
+        ]
+      },
+      "transferableLessons": [
+        "使用‘一问题一 URL’的任务型集群，把激活、保号、资费、eSIM、排障和平台兼容性分开",
+        "在教程页保留明确的自助和人工两条路径，但必须披露商业关系与独立第三方身份",
+        "对‘平台支持情况’采用日期化状态板和证据等级，不使用绝对化承诺",
+        "不要学习其缺 robots/sitemap、canonical 指向重定向、无 H1/作者/日期和 meta-keywords 堆叠"
+      ],
+      "evidenceUrls": [
+        "https://giffgaff.us/",
+        "https://giffgaff.us/post/10",
+        "https://giffgaff.us/post/3",
+        "https://giffgaff.us/post/4",
+        "https://giffgaff.us/post/2",
+        "https://giffgaff.us/post/17",
+        "https://giffgaff.us/post/18",
+        "https://giffgaff.us/post/paypal-gb"
+      ]
+    },
+    {
+      "id": "wise-sim-complete-guide",
+      "name": "Wise SIM giffgaff 完整教程",
+      "url": "https://www.wise-sim.org/guides/giffgaff-complete-guide",
+      "sourceType": "内容电商长教程",
+      "access": {
+        "status": 200,
+        "finalUrl": "https://www.wise-sim.org/guides/giffgaff-complete-guide",
+        "publiclyReadable": true,
+        "publicationDate": "2026-03-25",
+        "lastModified": null,
+        "dateEvidence": "页面可见文本显示‘30 分钟阅读 2026年3月25日’，无独立更新日。"
+      },
+      "searchIntent": {
+        "primary": "2026 giffgaff 注册开通与保号完整教程",
+        "secondary": [
+          "giffgaff 每年 0.6 英镑保号",
+          "giffgaff 购卡",
+          "giffgaff 支付卡",
+          "giffgaff 防扣费",
+          "giffgaff 中国信号/验证码"
+        ],
+        "funnelStage": "发现和比较→购卡→注册激活→长期保号，同时为支付卡和 eSIM 内容导流。"
+      },
+      "metadata": {
+        "htmlTitle": "2026 年全网最全英国 giffgaff 卡注册开通&保号教程—每年只要 0.6 英镑 | Wise SIM",
+        "h1": "2026 年全网最全英国 giffgaff 卡注册开通&保号教程—每年只要 0.6 英镑",
+        "metaDescription": "从购卡到激活、保号全流程，手把手带你完成 giffgaff 英国手机卡的完整操作，每年仅需 £0.6 即可保号。",
+        "canonical": null,
+        "metaRobots": null,
+        "xRobotsTag": null,
+        "openGraphUrl": null
+      },
+      "structure": {
+        "mainSections": [
+          "写在前面",
+          "前置准备：实体卡/支付方式/eSIM",
+          "注册开卡：14 个图文步骤",
+          "激活与保号",
+          "注意事项：保号/防扣费/信号验证码/其他建议",
+          "三个关键动作摘要",
+          "写在最后与购买 CTA"
+        ],
+        "depthSignals": {
+          "visibleReadTime": "30 分钟",
+          "headingsH1ToH3": 17,
+          "observedImages": 22,
+          "imageAltCoverage": "22 张图中仅封面与卡片图有实质 alt，其余多为空 alt。",
+          "registrationSteps": 14
+        }
+      },
+      "trustSignals": {
+        "positive": [
+          "显示发布日、阅读时长和大量实操截图",
+          "文章中有一致的第一人称作者身份 Wise",
+          "页脚明示部分链接含联盟推广参数",
+          "有针对意外扣费、语音信箱、iMessage 和漫游数据的风险提醒"
+        ],
+        "gaps": [
+          "无标准作者简介、资历、审核者、参考来源列表和修订记录",
+          "无 canonical、Article/HowTo Schema、robots.txt 和 sitemap.xml",
+          "除官方激活页外，关键资费/保号/信号结论少有逐条官方引用",
+          "多数步骤图缺 alt，对无障碍和图片搜索不利"
+        ],
+        "factualOrPolicyRisks": [
+          "建议随意填英国地址/邮编及使用虚拟卡，不能复制为本站指南",
+          "‘未见大规模封中国/香港长期漫游用户’是无方法、样本量和官方来源的安全性推断",
+          "‘一年 £0.6’只是当前 30p 出站短信价格下的静态计算，不是未来成本保证",
+          "直接将所有‘余额变动’视为保号动作不如当前官方 13.5 准确"
+        ]
+      },
+      "linksAndConversion": {
+        "internalLinksObserved": 10,
+        "externalLinksObservedByDomain": {
+          "wise-invest.org": 1,
+          "x.com": 6,
+          "youtube.com": 1,
+          "giffgaff.com": 1
+        },
+        "internalMechanism": "顶部与页脚连接手机卡商城、教程列表和我的订单，将内容与交易系统紧密连接。",
+        "externalMechanism": "用 X 串文承接 Bitget/SafePal/Bybit/Xesim 配套教程，并用 X/YouTube/投资主站构成多渠道分发。",
+        "primaryCta": "文章前部给出微信和 Telegram 购卡联系方式，结尾再次以缺货/备用需求驱动购买。",
+        "conversionPath": "年份+‘最全’+低年成本标题获点击→详细截图建立能力感→在前置准备阶段提供购卡/支付卡/eSIM 方案→私域或商城转化。",
+        "distribution": [
+          "站内教程列表",
+          "X 串文集群",
+          "YouTube 频道",
+          "Wise 投资主站",
+          "微信/Telegram 私域"
+        ]
+      },
+      "technicalSeo": {
+        "indexability": "200，无 noindex。",
+        "schemaTypes": [],
+        "robotsTxt": "404",
+        "sitemap": "404",
+        "canonical": "缺失",
+        "rendering": "Next.js 预渲染，响应头显示 x-nextjs-prerender: 1 且 Vercel cache HIT。",
+        "notableStrength": "title/H1/description 高度对齐年份、品牌、任务和成本结果。",
+        "notableWeakness": "缺 canonical、Schema、sitemap 和 robots，且图片 alt 覆盖差。"
+      },
+      "copyright": {
+        "license": "保留所有权利",
+        "evidence": "页脚明示‘© 2026 Wise SIM. 保留所有权利’。",
+        "allowedCapture": "元数据、目录、链接图谱、CTA 节点、事实性摘要和技术信号。",
+        "doNotCopy": [
+          "正文、22 张截图和微信二维码",
+          "‘全网最全’等无法验证的绝对宣传",
+          "地址、支付卡和长期漫游风险建议"
+        ]
+      },
+      "transferableLessons": [
+        "标题使用‘新鲜度+完整任务+可量化结果’的组合，但本站必须把成本标为核对日和前提",
+        "在激活教程中增加‘防扣费’和‘失败边界’，比只给正常路径更有用",
+        "将购卡 CTA 放在‘前置准备’和文末，但增加独立第三方、利益关系和服务边界披露",
+        "实操图应为自制截图，标注 App/网页版本与截图日期，并提供实质 alt"
+      ],
+      "evidenceUrls": [
+        "https://www.wise-sim.org/guides/giffgaff-complete-guide",
+        "https://www.wise-sim.org/guides",
+        "https://www.wise-sim.org/shop"
+      ]
+    },
+    {
+      "id": "google-sites-shiyongfangfa",
+      "name": "实用方法推荐 - Giffgaff 实体卡保号全攻略",
+      "url": "https://sites.google.com/view/shiyongfangfa/%E8%8B%B1%E5%9B%BD-giffgaff-%E5%AE%9E%E4%BD%93%E5%8D%A1%E4%BF%9D%E5%8F%B7%E5%85%A8%E6%94%BB%E7%95%A5%E6%BF%80%E6%B4%BB%E5%85%85%E5%80%BC%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B",
+      "sourceType": "Google Sites 宽主题联盟内容页",
+      "access": {
+        "status": 200,
+        "finalUrl": "https://sites.google.com/view/shiyongfangfa/%E8%8B%B1%E5%9B%BD-giffgaff-%E5%AE%9E%E4%BD%93%E5%8D%A1%E4%BF%9D%E5%8F%B7%E5%85%A8%E6%94%BB%E7%95%A5%E6%BF%80%E6%B4%BB%E5%85%85%E5%80%BC%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B",
+        "publiclyReadable": true,
+        "publicationDate": null,
+        "lastModified": null,
+        "dateLimitation": "页脚只显示‘Page updated’入口，HTML 中未提供可见日期。"
+      },
+      "searchIntent": {
+        "primary": "英国 Giffgaff 实体卡保号/激活/充值/使用教程",
+        "secondary": [
+          "境外保号电话卡对比",
+          "Giffgaff 怎么买",
+          "Giffgaff 资费",
+          "Giffgaff 常用指令",
+          "Giffgaff 无信号/eSIM/换号"
+        ],
+        "funnelStage": "比较和选卡→激活与保号教育→野卡联盟链接转化。"
+      },
+      "metadata": {
+        "htmlTitle": "实用方法推荐 - 英国 Giffgaff 实体卡保号全攻略：激活、充值及使用教程",
+        "h1": "英国 Giffgaff 实体卡保号全攻略：激活、充值及使用教程",
+        "metaDescription": null,
+        "canonical": null,
+        "metaRobots": null,
+        "xRobotsTag": null,
+        "openGraphUrl": "与页面 URL 一致"
+      },
+      "structure": {
+        "mainSections": [
+          "常用境外保号电话卡对比",
+          "为什么选择 Giffgaff",
+          "如何购买：官网申请/第三方购买",
+          "Giffgaff 激活教程",
+          "费用及保号窍门",
+          "常用功能及技巧",
+          "注意事项及常见问题",
+          "总结"
+        ],
+        "depthSignals": {
+          "headingsH1ToH3": 15,
+          "articleImages": 0,
+          "siteInternalLinksObserved": 91,
+          "affiliateLinksObserved": 2
+        },
+        "navigationPattern": "整个站点约 24 个 AI/订阅/虚拟卡/广告主题页在侧边导航中大量重复，给每页带来高密度站内链接，但与 Giffgaff 的主题关联性弱。"
+      },
+      "trustSignals": {
+        "positive": [
+          "先做多国保号卡类型对比，再进入 Giffgaff 决策，覆盖选择意图",
+          "结构从选卡、购买、激活到保号和 FAQ，信息易扫读",
+          "Google Sites 自带 HTTPS、OG 和稳定静态输出"
+        ],
+        "gaps": [
+          "无作者、审核者、发布/更新日、元描述、官方来源、参考文献和方法说明",
+          "页面无教程截图，不足以支撑细节化操作成功",
+          "91 个站内链主要来自广泛侧边导航，多数与 Giffgaff 弱相关，稀释主题焦点",
+          "联盟链接未在页面上清楚披露关系"
+        ],
+        "factualOrPolicyRisks": [
+          "‘充值一次接码可用超过 20 年’是基于当前价格和长期成功的理论外推，不能当作承诺",
+          "‘无需实名’、全球注册平台通用性和第三方激活卡的安全性均缺少证据和边界",
+          "激活步骤较简化且无版本截图，可能已与当前官网界面不同",
+          "联盟按钮指向虚拟支付卡服务，需独立进行金融与隐私合规评审"
+        ]
+      },
+      "linksAndConversion": {
+        "internalMechanism": "全站菜单把 AI 工具、跨境支付、虚拟卡、广告与 Giffgaff 页互联，捕捉‘国内用户访问/付费海外服务’的广义需求。",
+        "externalMechanism": "页面只观察到 bit.ly/yeka 两次，未观察到直连 giffgaff 官方来源。",
+        "primaryCta": "‘野卡 | 一分钟注册，轻松订阅海外线上服务’短链，在优势段与文末各出现一次。",
+        "conversionPath": "广义 AI/支付内容获客→保号卡对比引出 Giffgaff→用低成本/长周期主张建立需求→导向虚拟支付卡联盟链接。",
+        "distribution": [
+          "Google Sites 托管",
+          "长中文 URL 与精确 H1",
+          "全站菜单交叉链接",
+          "bit.ly 联盟跳转"
+        ]
+      },
+      "technicalSeo": {
+        "indexability": "200，无 noindex 响应头/元标签；但页面级可控 SEO 能力有限。",
+        "schemaTypes": [],
+        "canonical": "缺失",
+        "metaDescription": "缺失",
+        "sitemap": "指定站点路径下 /sitemap.xml 返回 404",
+        "robotsTxt": "指定站点路径下 /robots.txt 返回 404",
+        "notableWeakness": "无 Article/HowTo/FAQ Schema，无 canonical/描述/日期，并有大量弱相关重复导航。"
+      },
+      "copyright": {
+        "license": "未找到开放许可",
+        "evidence": "页面未显示可复用许可或作者授权。Google Sites 平台托管不等于内容开放授权。",
+        "allowedCapture": "URL、标题、目录、链接域、CTA 位置和转化机制摘要。",
+        "doNotCopy": [
+          "正文和列表措辞",
+          "保号年限、平台通用性和免实名等缺证结论",
+          "联盟推广话术"
+        ]
+      },
+      "transferableLessons": [
+        "用‘境外号码方案比较’承接上游选卡意图，再把 Giffgaff 导入为其中一个选项",
+        "将购买、激活、保号和故障分层，但不要把与主题弱相关的 AI/支付页全部塞进全局导航",
+        "如有联盟或自有服务 CTA，必须紧邻披露关系、评估方法和替代方案",
+        "对比表应使用可验证的维度和日期，而非笼统‘最佳/完美支持’"
+      ],
+      "evidenceUrls": [
+        "https://sites.google.com/view/shiyongfangfa/%E8%8B%B1%E5%9B%BD-giffgaff-%E5%AE%9E%E4%BD%93%E5%8D%A1%E4%BF%9D%E5%8F%B7%E5%85%A8%E6%94%BB%E7%95%A5%E6%BF%80%E6%B4%BB%E5%85%85%E5%80%BC%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B",
+        "https://sites.google.com/view/shiyongfangfa/home",
+        "https://bit.ly/yeka"
+      ]
+    },
+    {
+      "id": "aibook-gg-esim",
+      "name": "AI全书 - GG卡开卡教程",
+      "url": "https://aibook.ren/archives/ai-resource-open-giffgaff-esim",
+      "sourceType": "AI 受众实操案例 + eSIM 小白卡教程",
+      "access": {
+        "status": 200,
+        "finalUrl": "https://aibook.ren/archives/ai-resource-open-giffgaff-esim",
+        "publiclyReadable": true,
+        "publicationDate": "2026-06-03",
+        "lastModified": "2026-06-05T23:12:47+08:00",
+        "visibleMetrics": "审查时页面显示访问量 1694，阅读时长 12~16 分钟。"
+      },
+      "searchIntent": {
+        "primary": "国产安卓/不支持 eSIM 设备如何通过小白卡使用 Giffgaff eSIM",
+        "secondary": [
+          "GG卡开卡",
+          "Giffgaff eSIM 激活码",
+          "EasyEUICC",
+          "eSIM 写入小白卡",
+          "海外 AI/社交平台手机号"
+        ],
+        "funnelStage": "问题唤醒（AI 服务需海外号）→硬件/工具准备→实操→站内资源与相关文章留存。"
+      },
+      "metadata": {
+        "htmlTitle": "GG卡开卡教程，开通很简单 - AI全书",
+        "h1": "GG卡开卡教程，开通很简单",
+        "metaDescription": "从 AI 与海外社交产品需要海外手机号的问题引入 GG 卡教程。",
+        "canonical": "https://aibook.ren/archives/ai-resource-open-giffgaff-esim",
+        "metaRobots": null,
+        "xRobotsTag": null,
+        "openGraphUrl": "https://aibook.ren/archives/ai-resource-open-giffgaff-esim"
+      },
+      "structure": {
+        "mainSections": [
+          "GG卡是什么",
+          "三步概览",
+          "购买小白卡",
+          "下载 EasyEUICC 并检测",
+          "激活 eSIM 并写入小白卡",
+          "注册官方 Giffgaff 账号",
+          "写入小白卡",
+          "最后的适用边界"
+        ],
+        "depthSignals": {
+          "headingsH1ToH3": 11,
+          "observedImages": 4,
+          "visibleReadTime": "12~16 分钟",
+          "firstHandSignal": "作者明确描述自己使用旧版华为安卓手机测试，但未公开完整版本、样本或复测方法。"
+        }
+      },
+      "trustSignals": {
+        "positive": [
+          "显示发布/更新日、访问量、阅读时长和第一人称测试边界",
+          "页面有 WebSite、Article 和 Organization JSON-LD，且 canonical 正确",
+          "robots.txt 允许公开页并声明 sitemap；sitemap 包含该页和 2026-06-05 的 lastmod",
+          "有分类、标签、上下篇、相关阅读与社交分享链接",
+          "页面明示 CC BY 4.0"
+        ],
+        "gaps": [
+          "未观察到直接的 giffgaff 官方帮助链接，主要依赖第三方改版 App 教程和工具",
+          "无独立审核者、安全审计、应用包签名/哈希、工具版本锁定或运营商条款审查",
+          "作者只显示站点/标签身份，不是可核验的通信/eSIM 安全资质"
+        ],
+        "factualOrPolicyRisks": [
+          "页面称‘接收一条短信’可满足 180 天保号，与当前 giffgaff 条款 13.5 不符；接收短信不在当前列举的保号动作中",
+          "引导下载改造过的官方 APK、捕获 eSIM 激活码并写入可编程卡，存在供应链安全、账号、eSIM 配置文件泄漏及运营商/设备条款风险",
+          "建议使用随意美国地址和虚拟卡，不可复制为本站建议",
+          "引导用公共二维码服务处理 LPA 字符串可能暴露敏感 eSIM 激活凭证"
+        ]
+      },
+      "linksAndConversion": {
+        "internalLinksObserved": 22,
+        "externalDomainsObserved": [
+          "gitea.angry.im",
+          "simonmy.com",
+          "qrcode.show",
+          "creativecommons.org",
+          "t.me",
+          "facebook.com",
+          "twitter.com"
+        ],
+        "internalMechanism": "分类、标签、相关阅读和上下篇将单篇教程带入 AI 资源/工具/案例内容网络。",
+        "externalMechanism": "把读者导向 OpenEUICC 发布页、第三方 Giffgaff 改版 App 教程和二维码工具。",
+        "primaryCta": "无明显自有商品 CTA；主要是外部工具路径、站内相关文章和 Telegram/Facebook/Twitter 分享。",
+        "conversionPath": "以‘AI 时代需要海外身份号码’绑定目标人群→提供小众实操解法→用工具链接完成任务→借相关阅读与社交分享提升留存/扩散。",
+        "distribution": [
+          "AI 受众站内分类与标签",
+          "上下篇和相关阅读",
+          "Telegram/Facebook/Twitter 分享",
+          "XML sitemap",
+          "Article Schema"
+        ]
+      },
+      "technicalSeo": {
+        "indexability": "200，无 noindex，robots.txt Allow:/ 且页面在 sitemap.xml 中。",
+        "schemaTypes": ["WebSite", "Article", "Organization"],
+        "canonical": "正确自指",
+        "sitemap": "https://aibook.ren/sitemap.xml，该页 lastmod=2026-06-05T23:12:47+08:00。",
+        "robotsTxt": "https://aibook.ren/robots.txt，允许公开页、屏蔽 /console。",
+        "notableStrength": "6 个来源中技术 SEO 最完整：canonical、Article Schema、robots、sitemap、lastmod、日期、分类/标签与相关阅读同时存在。"
+      },
+      "copyright": {
+        "license": "CC BY 4.0",
+        "evidence": "页面明示‘分享协议: CC BY 4.0’并链接 Creative Commons 官方许可证。",
+        "allowedCapture": "可在满足署名、链接许可证、标明修改且不暗示背书的前提下改编。",
+        "requiredAttributionIfAdapted": "建议署名为‘AI全书，《GG卡开卡教程，开通很简单》’，链接原页与 https://creativecommons.org/licenses/by/4.0/，并列明本站的改写、事实更正和删减。",
+        "doNotCopy": [
+          "未单独确认权利的第三方 App、代码、截图、商标和软件资产",
+          "错误的‘接收短信可保号’结论",
+          "改版 APK、LPA 提取/上传和虚假地址操作流程"
+        ]
+      },
+      "transferableLessons": [
+        "从用户真正任务‘在 AI/海外平台中需要可长期管理的手机号’开场，而不只讲 SIM 卡参数",
+        "发布日、更新日、阅读时长、作者亲测设备与适用边界都值得保留",
+        "使用分类、标签、上下篇、相关阅读、canonical、Article Schema 和 sitemap 建立内容分发基础",
+        "不应复制改版 APK/eSIM 凭证提取路径；本站应只提供官方 eSIM 路径、安全风险说明和设备兼容性工具"
+      ],
+      "evidenceUrls": [
+        "https://aibook.ren/archives/ai-resource-open-giffgaff-esim",
+        "https://aibook.ren/robots.txt",
+        "https://aibook.ren/sitemap.xml",
+        "https://creativecommons.org/licenses/by/4.0/"
+      ]
+    },
+    {
+      "id": "feishu-aiyanxishe",
+      "name": "AI研习社飞书知识库 - 充值激活",
+      "url": "https://aiyanxishe.feishu.cn/wiki/Y7utw8thki1akSkkwr3cQNDvned",
+      "sourceType": "飞书知识库文档",
+      "access": {
+        "status": 200,
+        "finalUrl": "https://aiyanxishe.feishu.cn/wiki/Y7utw8thki1akSkkwr3cQNDvned",
+        "publiclyReadable": "部分/不稳定",
+        "publicationDate": null,
+        "lastModified": "2024-07-28",
+        "authorDisplay": "用户7871",
+        "accessLimitation": "直接请求经过 5 次飞书账号登录/trap 重定向后回到原 URL；最终 HTML 包含文档外壳、修改日、H1 和部分正文，但通用 Web 打开工具返回 Internal Error，且静态抽取只到网页激活的第一步，不能声称已获取完整文档。"
+      },
+      "searchIntent": {
+        "primary": "giffgaff 充值激活和国内使用",
+        "secondary": [
+          "giffgaff 漫游资费",
+          "giffgaff 激活流程",
+          "giffgaff 注意事项",
+          "giffgaff 常见功能"
+        ],
+        "funnelStage": "购卡后学习和私域知识分发；静态可见区未观察到明确商业 CTA。"
+      },
+      "metadata": {
+        "htmlTitle": "Docs",
+        "h1": "充值激活",
+        "metaDescription": null,
+        "canonical": null,
+        "metaRobots": null,
+        "xRobotsTag": null,
+        "openGraphUrl": null
+      },
+      "structure": {
+        "visibleOutline": [
+          "漫游资费",
+          "激活流程",
+          "注意事项",
+          "常见功能",
+          "准备工作",
+          "方法一：网页激活"
+        ],
+        "depthSignals": {
+          "visibleH1": 1,
+          "imagesInResponse": 5,
+          "staticExtractionCoverage": "部分，不足以确认完整目录、字数或 CTA。"
+        },
+        "overlapObservation": "可见开头与 giffgaff.us/post/10 出现相同的导语、主题列表和资费顺序。这只能证明文本重合，不能在无发布历史和授权记录时判断原创归属。"
+      },
+      "trustSignals": {
+        "positive": [
+          "显示作者昵称和最近修改日",
+          "导语明确列出漫游资费、激活、注意事项和常用功能四个任务",
+          "可见段落直链 giffgaff 官方激活页"
+        ],
+        "gaps": [
+          "作者仅为默认式昵称，无资历、审核者、来源列表、修订内容或公开经营主体",
+          "标题标签只是‘Docs’，无 canonical、描述、OG 和 JSON-LD",
+          "登录重定向循环和懒加载使搜索/抓取/分享稳定性低",
+          "静态可见文本与其他来源有明显重合，来源与授权不明"
+        ],
+        "factualOrPolicyRisks": [
+          "文档最后修改于 2024-07-28，资费、界面、支付和保号条款需以 2026 官方页重验",
+          "可见区对支付卡类型和风控有强结论，但未给官方支付规则引用",
+          "因不能完整抽取，不应对其未可见部分做事实或版权推断"
+        ]
+      },
+      "linksAndConversion": {
+        "internalMechanism": "飞书 Wiki 容器、分享按钮与知识库权限形成私域文档分发，但对公开搜索不友好。",
+        "externalMechanism": "静态可见区有 giffgaff.com/activate 直链。",
+        "primaryCta": "只观察到飞书‘分享’功能，未观察到购卡/代充 CTA。",
+        "distribution": [
+          "飞书 Wiki 链接分享",
+          "飞书租户/私域用户网络",
+          "文档修订通知"
+        ]
+      },
+      "technicalSeo": {
+        "indexability": "不确定。robots.txt 明确 Allow:/wiki/* 且无 noindex，但实际请求经多次登录/trap 重定向，Web 打开工具失败，标题仅‘Docs’，且无 canonical。",
+        "schemaTypes": [],
+        "robotsTxt": "https://aiyanxishe.feishu.cn/robots.txt 允许 /wiki/*。",
+        "sitemap": "租户域 /sitemap.xml 最终转至飞书 404 页，无租户 XML sitemap。",
+        "canonical": "缺失",
+        "notableWeakness": "发现、抓取和结构化数据三方面都弱，不适合作为本站 SEO 主页架构范本。"
+      },
+      "copyright": {
+        "license": "未找到开放许可",
+        "evidence": "文档可见区和页面元数据未声明许可复制/改编。",
+        "allowedCapture": "URL、文档标题、作者昵称、修改日、可见大纲、访问限制和技术信号。",
+        "doNotCopy": [
+          "可见或登录后的正文与图片",
+          "与其他来源重合但无法确定授权的段落",
+          "未完整抓取内容的推测性补写"
+        ]
+      },
+      "transferableLessons": [
+        "用四项短目录先告诉读者可解决的任务，这种开场可用于本站的快速答案卡",
+        "飞书可作为内部编辑/审核底稿，不应作为公开 SEO 落地页",
+        "公开站必须使用独立 title/description/canonical/Article Schema/可抓取 HTML，且不经登录重定向"
+      ],
+      "evidenceUrls": [
+        "https://aiyanxishe.feishu.cn/wiki/Y7utw8thki1akSkkwr3cQNDvned",
+        "https://aiyanxishe.feishu.cn/robots.txt"
+      ]
+    }
+  ],
+  "crossSourceFindings": {
+    "dominantIntentClusters": [
+      {
+        "cluster": "购卡/激活/充值",
+        "userJob": "从无卡或空白卡到可用英国号码",
+        "bestObservedMechanisms": [
+          "步骤化截图",
+          "前置资料清单",
+          "官方操作页深链",
+          "失败状态与处理时间边界",
+          "自助/人工双路径 CTA"
+        ]
+      },
+      {
+        "cluster": "180 天保号/漫游成本/防扣费",
+        "userJob": "在中国长期保留号码并控制风险",
+        "bestObservedMechanisms": [
+          "用年成本钩子获取点击",
+          "保号动作清单",
+          "语音信箱/数据漫游/iMessage 风险卡",
+          "邮件/日历提醒"
+        ],
+        "requiredCorrection": "不得把接收短信写成当前官方承认的保号动作；成本计算需标记价格核对日和不保证未来结果。"
+      },
+      {
+        "cluster": "eSIM/设备兼容/实体卡替换",
+        "userJob": "判断自己的设备是否能使用官方 eSIM，并安全迁移",
+        "bestObservedMechanisms": [
+          "设备兼容性检查",
+          "官方 App 路径",
+          "MFA/无信号失败边界",
+          "实体卡与 eSIM 可逆性说明"
+        ],
+        "requiredSafetyBoundary": "不提供改版 APK、捕获/上传 LPA 凭证或绕过官方兼容检测的步骤。"
+      },
+      {
+        "cluster": "信号/短信/验证码/平台兼容",
+        "userJob": "区分网络、号码、平台风控和设备设置问题",
+        "bestObservedMechanisms": [
+          "问题决策树",
+          "平台支持/不支持清单",
+          "运营商手动选择",
+          "号码格式示例"
+        ],
+        "requiredEvidenceBoundary": "兼容性状态必须公开测试时间、设备、网络、样本数和用户报告与官方证据的等级；不做‘完美支持’承诺。"
+      }
+    ],
+    "commonTrafficPatterns": [
+      "年份+‘最全/全攻略’+低成本结果型标题",
+      "从一页完整教程过渡到激活、保号、eSIM、资费、排障和平台使用的长尾集群",
+      "用截图和第一人称实操降低读者的操作不确定性",
+      "将购卡、代充、支付卡、eSIM 工具放在‘前置准备’或失败节点中转化",
+      "用 GitHub Star/Fork、页面访问量、阅读时长、发布/修改日和大量图解构成不同形式的信任信号",
+      "借 Telegram、微信、X、YouTube、飞书、社交分享和平台域名将搜索流量转为私域或复访"
+    ],
+    "commonWeaknessesToOutperform": [
+      "六个来源中只有 AI全书同时具备自指 canonical、Article Schema、有效 robots、sitemap 与 lastmod；技术卫生是明显突破口",
+      "作者资历、审核者、官方来源、取样方法和修订记录普遍缺失",
+      "大量教程存在互相重合的步骤文案，缺乏原创数据、决策工具、失败概率和可复现测试",
+      "‘免实名’、‘保号 20/25 年’、‘所有平台完美支持’和‘长期漫游安全’等过度承诺普遍存在",
+      "商业关系、联盟链接、独立第三方身份和无法代表运营商的边界披露不足",
+      "多数页面将价格和流程当成静态事实，没有‘最后核对日’和自动过期策略"
+    ],
+    "recommendedApplicationToGetgiffgaff": {
+      "contentArchitecture": [
+        "建立一个‘中国用户 Giffgaff 使用导航’支柱页，只给出选卡/购卡/激活/保号/eSIM/排障的快速答案与分流",
+        "建立独立支柱页：购买与风险检查、激活与充值、180 天保号、中国漫游成本/防扣费、官方 eSIM 兼容与迁移、无信号/短信/验证码决策树",
+        "平台兼容性使用一个状态板，而不是每个平台批量生成无独特数据的 SEO 页",
+        "禁止用购买页与教程页同时竞争同一意图；商品价格归 /shop/，操作流程归 guides，实时事实归状态/数据页"
+      ],
+      "pageTemplate": [
+        "40~70 字的结论先行答案，明示适用人群和不适用人群",
+        "最后官方核对日、作者、审核者、测试设备/网络/地区和修订记录",
+        "前置条件、成功路径、失败分支、不可承诺边界和升级到官方/人工服务的条件",
+        "短答案卡、可比较表、决策树和带来源的数据块，方便搜索摘要与 AI 引用",
+        "直链当前 giffgaff 官方条款/价格/帮助，并对高变动事实设置内容过期日",
+        "只在相关节点显示 CTA：无卡用户去购买，支付失败用户看合规充值方案，无法自助用户联系人工支持"
+      ],
+      "originalAssetsToBuild": [
+        "按官方当前价格计算的 G0/G2/保号总成本工具，输出前提与价格核对日",
+        "180 天保号提醒生成器，不存储敏感号码时也可使用",
+        "中国移动/联通网络与短信实测矩阵，公开城市、设备、测试时间、样本数和失败记录",
+        "验证码兼容性状态板，区分官方支持、编辑复测、用户报告和未验证",
+        "官方 eSIM 设备兼容检查器和 MFA/换机前风险清单",
+        "每张自制截图都标注拍摄日期、App/页面版本和可替代的文字步骤"
+      ],
+      "trustAndBrandRules": [
+        "首屏、页尾、商品与 Schema 一致声明本站为独立第三方，不是 giffgaff 官方",
+        "不将 giffgaff 写成本站 publisher/parentOrganization/sameAs；商品 seller 必须是真实经营主体",
+        "不发布随意地址、虚假身份、改版 APK、eSIM 凭证提取或绕过平台风控的教程",
+        "不使用‘官网’、‘官方教程’、‘完美支持’、‘保号 25 年’或‘绝对稳定’等无证承诺",
+        "商品或联盟 CTA 附近必须披露利益关系，教程的排序不能由佣金高低决定"
+      ],
+      "schemaAndIndexing": [
+        "每页使用唯一自指 canonical、Article 和 BreadcrumbList；只有页面完整展示逐步操作时才使用 HowTo",
+        "FAQPage 只用于可见且真实的 FAQ，不为搜索展示堆标记",
+        "在 Article 中使用真实 author、reviewedBy/dateModified/citation/about，并把 giffgaff 只标为外部 Brand/about",
+        "sitemap、响应头索引策略、canonical 和发布测试共用同一路由数据源",
+        "对价格、条款、App 界面和兼容性设置内容过期日与定期复审任务"
+      ],
+      "copyrightImplementation": [
+        "仓库只存来源卡（URL、标题、发布/更新日、目录、关键词、事实摘要、CTA、许可），不存第三方全文或图片",
+        "对 AI全书页如做 CC BY 4.0 改编，在文末显示原题、AI全书、原 URL、CC BY 4.0 链接和改动清单",
+        "即使可改编，也不采用其高风险操作或错误保号结论，并另行核对图片/软件/商标权利",
+        "对其他 5 个来源只做转化性研究和事实复核，全部页面用本站自主表达和自制素材"
+      ]
+    }
+  }
+}

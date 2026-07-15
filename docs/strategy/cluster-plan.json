@@ -1,0 +1,522 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-15",
+  "seedKeyword": "giffgaff 中文教程",
+  "scope": "中国用户从选卡、下单、激活到长期保号、漫游、短信和 eSIM 的独立第三方使用路径",
+  "methodology": {
+    "mode": "existing-url-first intent clustering",
+    "serpOverlap": {
+      "status": "qualitative evidence only",
+      "matrixAvailable": false,
+      "reason": "40 个竞品证据卡包含查询角度和搜索结果观察，但没有完整的逐关键词 Top-10 URL 两两重合矩阵。因此不伪造 overlap 分数。",
+      "releaseRule": "任何新的相似教程 URL 上线前，必须先抽样复核当日搜索结果并检查是否应合并到现有 canonical。"
+    },
+    "rankingOrTrafficEstimatesUsed": false,
+    "copyrightBoundary": "只使用来源 URL、标题、信息结构、独立摘要、可核验事实与转化机制；不保存或重发第三方全文、连续步骤、截图、视频或版式。",
+    "templateFallback": "seo-cluster 技能引用的 templates/cluster-map.html 在当前安装中缺失；cluster-map.html 使用本仓库自主编写的无依赖、可访问降级模板。"
+  },
+  "researchEvidence": {
+    "sixSourceCorpus": "../research/sources/six-source-teardown.json",
+    "competitorCorpora": [
+      "../research/competitors/competitors-01-20.json",
+      "../research/competitors/competitors-21-40.json"
+    ],
+    "sample": {
+      "userProvidedSources": 6,
+      "competitorPagesOrChannels": 40,
+      "claimsTrafficOrRank": false
+    },
+    "observedPatterns": [
+      {
+        "pattern": "支柱页负责导航，单任务页负责完成一个作业",
+        "evidenceRefs": [
+          "c03-giffgaff-shop-guide-hub",
+          "c05-larksim-activate-guide",
+          "c08-ggwiki-topical-cluster"
+        ]
+      },
+      {
+        "pattern": "结论先行，同时展示适用边界、失败分支和下一步",
+        "evidenceRefs": [
+          "c01-giffgaff-official-getting-started",
+          "c05-larksim-activate-guide",
+          "21",
+          "34"
+        ]
+      },
+      {
+        "pattern": "原创实测、公开方法和可复现计算比泛教程更适合被引用",
+        "evidenceRefs": [
+          "22",
+          "23",
+          "27",
+          "37",
+          "ssnhd-github-readme",
+          "aibook-gg-esim"
+        ]
+      },
+      {
+        "pattern": "CTA 应与当前任务阶段匹配，并披露独立第三方与销售关系",
+        "evidenceRefs": [
+          "c04-giffgaff-gg-complete-guide",
+          "c12-gafish-activation",
+          "c14-duoplus-keep-number",
+          "30"
+        ]
+      }
+    ]
+  },
+  "guardrails": {
+    "oneIntentOnePrimaryUrl": true,
+    "canonicalOwners": {
+      "giffgaff 国内激活": "/guides/2-activate/",
+      "giffgaff 保号": "/guides/3-usage/",
+      "giffgaff eSIM 转换": "/more/03-esim/",
+      "giffgaff 收不到验证码": "/guides/4-signal/",
+      "giffgaff G0 G2 区别": "/answers/",
+      "giffgaff 手机卡购买": "/shop/",
+      "giffgaff 国内下单流程": "/guides/1-order/",
+      "giffgaff 自助充值": "/qa/02-topup/",
+      "giffgaff 充值服务": "/guides/4-recharge-service/"
+    },
+    "forbiddenContent": [
+      "修改版 APK、Cookie 导出、LPA/eSIM 凭证捕获或上传",
+      "第三方写卡、规避设备兼容检查或绕过平台风控的操作步骤",
+      "虚假地址、虚假身份、付款或 KYC 绕过",
+      "永久保号、一定有信号、所有平台验证码必到等无证承诺",
+      "无实时证据的 Offer、AggregateRating、Review、价格或库存 Schema"
+    ],
+    "brandRule": "getgiffgaff 必须作为独立组织；giffgaff 只能作为外部 Brand/about，不得是 publisher、parentOrganization 或 sameAs。"
+  },
+  "pillar": {
+    "id": "pillar",
+    "title": "giffgaff 中国用户使用教程和避坑清单",
+    "primaryKeyword": "giffgaff 中文教程",
+    "secondaryKeywords": [
+      "giffgaff 使用指南",
+      "giffgaff 中国用户指南",
+      "giffgaff 避坑"
+    ],
+    "intent": "全生命周期导航 / 广义信息",
+    "template": "ultimate-guide",
+    "wordCountTarget": {
+      "min": 2500,
+      "max": 4000
+    },
+    "url": "/guides/6-pitfalls/",
+    "status": "written",
+    "implementationState": "existing-needs-cluster-expansion",
+    "queryOwnership": "只回答全局选路、共性风险和下一步；不在此复制激活、保号、eSIM、OTP 或 G0/G2 的完整流程。",
+    "requiredUpgrade": [
+      "按 5 个集群增加可扫读摘要和全部核心 spoke 的正文入链",
+      "增加 ItemList JSON-LD，仅列出页面实际可见的集群项",
+      "每季度或每次新工具/数据资产上线时复审"
+    ]
+  },
+  "clusters": [
+    {
+      "id": "decision-purchase",
+      "name": "选卡、下单与总成本",
+      "color": "#e8590c",
+      "clusterIntent": "比较选型、交易和购买流程",
+      "posts": [
+        {
+          "id": "answers-g0-g2",
+          "title": "G0 与 G2 怎么选：状态、总成本与风险对比",
+          "primaryKeyword": "giffgaff G0 G2 区别",
+          "secondaryKeywords": ["G0 新卡", "G2 有余额卡", "giffgaff 选卡"],
+          "intent": "商业调研 / 对比",
+          "template": "comparison",
+          "wordCountTarget": {"min": 1400, "max": 1900},
+          "url": "/answers/",
+          "status": "written",
+          "implementationState": "evidence-led-v1",
+          "queryOwnership": "独占 G0/G2 exact 对比；/shop 只做交易，/order 只做流程。",
+          "evidenceRefs": ["c15-shuziyoumin-guide", "27", "29"],
+          "evidenceRequirements": ["G0/G2 明示为本站库存分类", "核对账号注册责任、条款适用与买方是否能以本人资料合法取得控制", "库存与价格必须实时核验", "不得承诺验证码必到"]
+        },
+        {
+          "id": "shop",
+          "title": "giffgaff G0/G2 手机卡购买",
+          "primaryKeyword": "giffgaff 手机卡购买",
+          "secondaryKeywords": ["giffgaff 国内购买", "G0 购买", "G2 购买"],
+          "intent": "交易",
+          "template": "landing-page",
+          "wordCountTarget": {"min": 700, "max": 1200},
+          "url": "/shop/",
+          "status": "written",
+          "implementationState": "existing-needs-trust-audit",
+          "queryOwnership": "交易、库存、交付和售后边界；不复制 G0/G2 决策文或下单教程。",
+          "evidenceRefs": ["c04-giffgaff-gg-complete-guide", "c12-gafish-activation", "30"],
+          "evidenceRequirements": ["真实经营主体与 seller", "实时库存/价格", "发货、退款和售后链接"]
+        },
+        {
+          "id": "order-guide",
+          "title": "giffgaff 国内下单与收货流程",
+          "primaryKeyword": "giffgaff 国内下单流程",
+          "secondaryKeywords": ["giffgaff 收货验收", "giffgaff 下单准备"],
+          "intent": "操作教程",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1200, "max": 1700},
+          "url": "/guides/1-order/",
+          "status": "written",
+          "implementationState": "existing-needs-evidence-audit",
+          "queryOwnership": "从决定购买到收货验收；不发布重复商品报价。",
+          "evidenceRefs": ["c05-larksim-activate-guide", "c12-gafish-activation", "40"],
+          "evidenceRequirements": ["本站原创验收图", "物流时效核对日", "不收集密码、验证码或完整卡号"]
+        },
+        {
+          "id": "g0-g2-cost-tool",
+          "title": "G0/G2 总成本计算器",
+          "primaryKeyword": "giffgaff G0 G2 总成本",
+          "secondaryKeywords": ["giffgaff 购卡成本", "G0 G2 费用对比"],
+          "intent": "决策工具",
+          "template": "interactive-calculator",
+          "wordCountTarget": {"min": 900, "max": 1400},
+          "url": "/tools/g0-g2-total-cost/",
+          "status": "planned",
+          "implementationState": "new-original-asset",
+          "queryOwnership": "只负责可调参的总成本输入与结果；选型解释回链 /answers/。",
+          "brief": "cluster-briefs/g0-g2-total-cost-calculator.md",
+          "evidenceRefs": ["21", "23", "27", "wise-sim-complete-guide"],
+          "evidenceRequirements": ["公开公式与输入项", "所有默认价格带来源和核验日", "允许用户覆盖值", "不做收益或成功率承诺"]
+        }
+      ]
+    },
+    {
+      "id": "activation-account",
+      "name": "激活、账号与 App",
+      "color": "#2f9e44",
+      "clusterIntent": "完成首次激活并保持账号可恢复",
+      "posts": [
+        {
+          "id": "activation",
+          "title": "giffgaff 国内激活：激活码、账号与失败排查",
+          "primaryKeyword": "giffgaff 国内激活",
+          "secondaryKeywords": ["giffgaff 激活码", "giffgaff 激活失败", "giffgaff 13 位序列号"],
+          "intent": "操作教程 / 故障排查",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1500, "max": 2000},
+          "url": "/guides/2-activate/",
+          "status": "written",
+          "implementationState": "evidence-led-v1",
+          "queryOwnership": "激活 happy path 与当前已知故障分支使用同一 canonical；无新证据前不另建激活失败页。",
+          "evidenceRefs": ["c01-giffgaff-official-getting-started", "c05-larksim-activate-guide", "25", "40"],
+          "evidenceRequirements": ["当前官方激活页和帮助页", "SIM swap 风险", "处理窗口与不承诺边界"]
+        },
+        {
+          "id": "account",
+          "title": "giffgaff 账号安全与恢复",
+          "primaryKeyword": "giffgaff 账号安全",
+          "secondaryKeywords": ["giffgaff 忘记密码", "giffgaff 邮箱恢复"],
+          "intent": "账号管理",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1200, "max": 1700},
+          "url": "/guides/3-account/",
+          "status": "written",
+          "implementationState": "existing-needs-evidence-audit",
+          "queryOwnership": "账号控制权、恢复和信息安全；不复制 SIM 激活。",
+          "evidenceRefs": ["c01-giffgaff-official-getting-started", "c17-notion-complete-guide"],
+          "evidenceRequirements": ["官方账号恢复入口", "禁止索取密码、Cookie 或 OTP", "脱敏证据清单"]
+        },
+        {
+          "id": "app",
+          "title": "giffgaff App 安装、登录与常用入口",
+          "primaryKeyword": "giffgaff App 使用",
+          "secondaryKeywords": ["giffgaff App 登录", "giffgaff App eSIM"],
+          "intent": "操作教程",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1000, "max": 1500},
+          "url": "/guides/3-app/",
+          "status": "written",
+          "implementationState": "existing-needs-versioned-screenshots",
+          "queryOwnership": "只讲 App 可用入口与版本差异；eSIM 切换细节归 /more/03-esim/。",
+          "evidenceRefs": ["c01-giffgaff-official-getting-started", "38"],
+          "evidenceRequirements": ["自制截图带 App/OS 版本和拍摄日期", "同时提供文字步骤", "应用商店地区限制实时复核"]
+        },
+        {
+          "id": "activation-expiration",
+          "title": "giffgaff 激活码有效期与无法识别时怎么办",
+          "primaryKeyword": "giffgaff 激活码有效期",
+          "secondaryKeywords": ["giffgaff 激活码不能用", "giffgaff SIM 序列号"],
+          "intent": "精确问答",
+          "template": "explainer",
+          "wordCountTarget": {"min": 800, "max": 1200},
+          "url": "/qa/06-activation-expiration/",
+          "status": "written",
+          "implementationState": "existing-needs-cannibalization-check",
+          "queryOwnership": "只回答激活码/序列号状态；完整激活流程回链 /guides/2-activate/。",
+          "evidenceRefs": ["c12-gafish-activation", "25", "40"],
+          "evidenceRequirements": ["不猜测未公开的固定有效期", "显示官方入口与 13 位序列号备选", "异常时不引导高频重试"]
+        }
+      ]
+    },
+    {
+      "id": "keep-credit",
+      "name": "保号、余额与充值",
+      "color": "#1971c2",
+      "clusterIntent": "保持号码活跃并区分自助充值与人工服务",
+      "posts": [
+        {
+          "id": "keep-number",
+          "title": "giffgaff 保号：6 个月 inactive 前要做什么",
+          "primaryKeyword": "giffgaff 保号",
+          "secondaryKeywords": ["giffgaff 6 个月 inactive", "giffgaff 号码停用"],
+          "intent": "规则解释 / 操作清单",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1400, "max": 1900},
+          "url": "/guides/3-usage/",
+          "status": "written",
+          "implementationState": "evidence-led-v1",
+          "queryOwnership": "只负责号码活跃规则和维护清单；不将只收短信写成官方有效动作。",
+          "evidenceRefs": ["c14-duoplus-keep-number", "28", "google-sites-shiyongfangfa", "ssnhd-github-readme"],
+          "evidenceRequirements": ["当前官方 inactive 动作列表", "第 5 个月明示为本站缓冲建议", "收短信不作为唯一保号依据"]
+        },
+        {
+          "id": "self-topup",
+          "title": "giffgaff 自助充值方式与失败边界",
+          "primaryKeyword": "giffgaff 自助充值",
+          "secondaryKeywords": ["giffgaff Credit 充值", "giffgaff voucher"],
+          "intent": "自助操作",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1100, "max": 1600},
+          "url": "/qa/02-topup/",
+          "status": "written",
+          "implementationState": "existing-needs-current-payment-audit",
+          "queryOwnership": "只讲用户自助 Credit/plan/voucher 路径和错误；人工代充归 /guides/4-recharge-service/。",
+          "evidenceRefs": ["c01-giffgaff-official-getting-started", "c05-larksim-activate-guide", "28", "33"],
+          "evidenceRequirements": ["实时官方 Credit/plan 入口", "不推荐虚假地址或付款绕过", "错误码和解决窗口带核验日"]
+        },
+        {
+          "id": "recharge-service",
+          "title": "giffgaff 充值服务：适用范围、资料和售后边界",
+          "primaryKeyword": "giffgaff 充值服务",
+          "secondaryKeywords": ["giffgaff 代充", "giffgaff 充值咨询"],
+          "intent": "服务落地页",
+          "template": "landing-page",
+          "wordCountTarget": {"min": 800, "max": 1300},
+          "url": "/guides/4-recharge-service/",
+          "status": "written",
+          "implementationState": "existing-needs-service-and-privacy-audit",
+          "queryOwnership": "只讲人工服务边界、交付和升级路径；自助充值步骤归 /qa/02-topup/。",
+          "evidenceRefs": ["c04-giffgaff-gg-complete-guide", "c14-duoplus-keep-number", "30", "32"],
+          "evidenceRequirements": ["不索取密码、OTP 或完整支付卡资料", "明示服务 SLA 和不可承诺项", "销售关系披露"]
+        },
+        {
+          "id": "keep-reminder",
+          "title": "giffgaff 保号提醒与维护记录工具",
+          "primaryKeyword": "giffgaff 保号提醒",
+          "secondaryKeywords": ["giffgaff 180 天提醒", "giffgaff 保号日历"],
+          "intent": "提醒工具",
+          "template": "interactive-tool",
+          "wordCountTarget": {"min": 800, "max": 1200},
+          "url": "/tools/keep-number-reminder/",
+          "status": "planned",
+          "implementationState": "new-original-asset",
+          "queryOwnership": "只计算缓冲提醒日并生成日历/记录；规则解释回链 /guides/3-usage/。",
+          "brief": "cluster-briefs/keep-number-reminder.md",
+          "evidenceRefs": ["c14-duoplus-keep-number", "28", "google-sites-shiyongfangfa"],
+          "evidenceRequirements": ["默认在第 4 和第 5 个月提醒，而非第 180 天", "明示本站提醒不是官方规则", "默认本地计算且不存储号码/账号", "可导出 .ics 和维护日志"]
+        }
+      ]
+    },
+    {
+      "id": "network-sms-roaming",
+      "name": "中国网络、短信、OTP 与漫游成本",
+      "color": "#7048e8",
+      "clusterIntent": "将运营商网络故障、平台 OTP 风控和漫游价格分开诊断",
+      "posts": [
+        {
+          "id": "signal-otp-troubleshooting",
+          "title": "giffgaff 收不到验证码：从无信号到平台风控的排查树",
+          "primaryKeyword": "giffgaff 收不到验证码",
+          "secondaryKeywords": ["giffgaff 无信号", "giffgaff 收不到短信", "giffgaff OTP 排查"],
+          "intent": "故障排查",
+          "template": "diagnostic-guide",
+          "wordCountTarget": {"min": 1500, "max": 2100},
+          "url": "/guides/4-signal/",
+          "status": "written",
+          "implementationState": "evidence-led-v1",
+          "queryOwnership": "回答“现在收不到怎么排查”；不发布永久平台支持列表。",
+          "evidenceRefs": ["c08-ggwiki-topical-cluster", "c11-giffgaff-cc-ai-assistant", "24", "39"],
+          "evidenceRequirements": ["运营商层与平台层决策树", "当前官方网络排查/手动选网页", "不承诺 OTP 必到"]
+        },
+        {
+          "id": "roaming-cost-tool",
+          "title": "giffgaff 中国漫游成本计算与防误扣费",
+          "primaryKeyword": "giffgaff 中国漫游成本",
+          "secondaryKeywords": ["giffgaff 中国漫游资费", "giffgaff 防误扣费"],
+          "intent": "价格查询 / 成本工具",
+          "template": "interactive-calculator",
+          "wordCountTarget": {"min": 1000, "max": 1500},
+          "url": "/guides/5-travel-data/",
+          "status": "planned",
+          "implementationState": "rewrite-existing-url-as-original-tool",
+          "queryOwnership": "只负责当前费率、用量输入、试算和防扣费；无信号排查归 /guides/4-signal/。",
+          "brief": "cluster-briefs/china-roaming-cost-tool.md",
+          "evidenceRefs": ["21", "22", "24", "wise-sim-complete-guide"],
+          "evidenceRequirements": ["官方中国漫游页直接来源与核验时间", "公开计算公式", "用户可覆盖所有费率", "不保证未来价格"]
+        },
+        {
+          "id": "china-network-sms-matrix",
+          "title": "giffgaff 中国网络与短信实测矩阵",
+          "primaryKeyword": "giffgaff 中国网络短信实测",
+          "secondaryKeywords": ["giffgaff 中国信号实测", "giffgaff 中国收短信"],
+          "intent": "原创数据查询",
+          "template": "research-dataset",
+          "wordCountTarget": {"min": 1200, "max": 1800},
+          "url": "/research/china-network-sms-matrix/",
+          "status": "planned",
+          "implementationState": "new-original-asset-data-gated",
+          "queryOwnership": "只展示城市×设备×当地网络×SIM 类型的本站原始实测；操作建议回链排查页。",
+          "brief": "cluster-briefs/china-network-sms-matrix.md",
+          "evidenceRefs": ["22", "23", "27", "37", "ssnhd-github-readme"],
+          "evidenceRequirements": ["城市、日期、设备/系统、SIM 类型、当地网络、测试次数和失败记录", "公开方法和原始记录版本", "至少有真实样本才上线结论", "不保证未来结果"]
+        },
+        {
+          "id": "otp-status-board",
+          "title": "giffgaff 验证码兼容性状态板",
+          "primaryKeyword": "giffgaff 验证码兼容性状态",
+          "secondaryKeywords": ["giffgaff OTP 平台实测", "giffgaff 哪些平台能收码"],
+          "intent": "平台状态查询",
+          "template": "status-board",
+          "wordCountTarget": {"min": 900, "max": 1400},
+          "url": "/research/otp-compatibility-status/",
+          "status": "planned",
+          "implementationState": "new-original-asset-data-gated",
+          "queryOwnership": "只展示带日期、环境、样本数和证据等级的状态；不为每个平台批量生成无数据页。",
+          "brief": "cluster-briefs/otp-compatibility-status-board.md",
+          "evidenceRefs": ["c18-wechat-eu-use-case", "c19-10100-crossborder-guide", "37", "39"],
+          "evidenceRequirements": ["平台、测试日期、国家/网络、设备、SIM 类型、请求次数和结果", "区分官方支持、编辑复测、用户线索与未验证", "样本不足时显示不足", "禁止绕过 KYC/风控教程"]
+        }
+      ]
+    },
+    {
+      "id": "esim-device",
+      "name": "eSIM、设备兼容与换卡安全",
+      "color": "#d6336c",
+      "clusterIntent": "判断是否应切换 eSIM，并在官方支持边界内处理设备与换卡问题",
+      "posts": [
+        {
+          "id": "esim-switch",
+          "title": "giffgaff eSIM 转换：兼容、切换与失败边界",
+          "primaryKeyword": "giffgaff eSIM 转换",
+          "secondaryKeywords": ["giffgaff 实体卡转 eSIM", "giffgaff eSIM 切换失败"],
+          "intent": "操作教程 / 风险检查",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1500, "max": 2000},
+          "url": "/more/03-esim/",
+          "status": "written",
+          "implementationState": "evidence-led-v1",
+          "queryOwnership": "只提供官方 App 切换路径和恢复边界；不提供凭证提取或第三方写卡。",
+          "evidenceRefs": ["c06-algieba-esim-guide", "c16-e5im-community", "38", "aibook-gg-esim"],
+          "evidenceRequirements": ["当前官方 App 流程", "旧 SIM 失效边界", "时区/处理窗口不写死", "禁止第三方凭证操作"]
+        },
+        {
+          "id": "esim-qr-safety",
+          "title": "giffgaff eSIM 二维码与第三方写卡：支持和安全边界",
+          "primaryKeyword": "giffgaff eSIM 二维码安全",
+          "secondaryKeywords": ["giffgaff eSIM 二维码", "giffgaff 第三方写卡风险"],
+          "intent": "安全解释 / 风险边界",
+          "template": "safety-explainer",
+          "wordCountTarget": {"min": 1000, "max": 1500},
+          "url": "/more/04-esim-qrcode/",
+          "status": "written",
+          "implementationState": "evidence-led-safety-boundary-v1",
+          "queryOwnership": "仅解释官方支持边界、凭证泄露和第三方写卡风险；实际 eSIM 切换回链 /more/03-esim/。",
+          "safetyDirective": "禁止提供修改版 APK、Cookie 导出、LPA/eSIM 凭证提取/上传、第三方写卡或绕过兼容检查的可操作步骤。",
+          "evidenceRefs": ["c16-e5im-community", "38", "ssnhd-github-readme", "aibook-gg-esim"],
+          "evidenceRequirements": ["只使用官方 eSIM 帮助页作规则来源", "解释二维码/激活凭证是敏感资产", "提供不泄露凭证的官方恢复路径", "不展示第三方操作截图"]
+        },
+        {
+          "id": "esim-compatibility",
+          "title": "giffgaff eSIM 设备兼容检查器",
+          "primaryKeyword": "giffgaff eSIM 设备兼容检查",
+          "secondaryKeywords": ["giffgaff eSIM 支持手机", "giffgaff eSIM 兼容性"],
+          "intent": "兼容决策工具",
+          "template": "interactive-checker",
+          "wordCountTarget": {"min": 900, "max": 1400},
+          "url": "/tools/esim-compatibility/",
+          "status": "planned",
+          "implementationState": "new-original-asset-data-gated",
+          "queryOwnership": "只给出设备型号/地区版本/OS/App 的 Go-No-Go 检查；切换步骤回链 /more/03-esim/。",
+          "brief": "cluster-briefs/esim-compatibility-checker.md",
+          "evidenceRefs": ["c06-algieba-esim-guide", "c08-ggwiki-topical-cluster", "27", "38"],
+          "evidenceRequirements": ["具体型号和地区版本，不将同系列当作本机证据", "官方/制造商来源与核验日", "实测记录和证据等级", "结果可为未验证，不强行给支持结论"]
+        },
+        {
+          "id": "sim-reissue",
+          "title": "giffgaff SIM 丢失、损坏与补卡路径",
+          "primaryKeyword": "giffgaff SIM 补卡",
+          "secondaryKeywords": ["giffgaff SIM 丢失", "giffgaff 换卡"],
+          "intent": "故障恢复",
+          "template": "how-to",
+          "wordCountTarget": {"min": 1000, "max": 1500},
+          "url": "/qa/03-reissue/",
+          "status": "written",
+          "implementationState": "existing-needs-official-process-audit",
+          "queryOwnership": "实体 SIM 丢失/损坏/换卡的恢复；eSIM 切换与设备兼容不在本页展开。",
+          "evidenceRefs": ["c01-giffgaff-official-getting-started", "c11-giffgaff-cc-ai-assistant"],
+          "evidenceRequirements": ["官方当前 SIM swap/补卡入口", "账号控制权前置检查", "防止误伤现有有效 SIM"]
+        }
+      ]
+    }
+  ],
+  "plannedAssetBriefs": [
+    "cluster-briefs/g0-g2-total-cost-calculator.md",
+    "cluster-briefs/keep-number-reminder.md",
+    "cluster-briefs/china-roaming-cost-tool.md",
+    "cluster-briefs/china-network-sms-matrix.md",
+    "cluster-briefs/otp-compatibility-status-board.md",
+    "cluster-briefs/esim-compatibility-checker.md"
+  ],
+  "evidenceGatedExistingPages": [
+    {
+      "url": "/more/00-wechat/",
+      "rule": "只有微信场景的真实、带日期测试数据才能维持独立主意图；否则合并到 OTP 状态板并避免复制通用排查。"
+    },
+    {
+      "url": "/more/02-telegram/",
+      "rule": "只有 Telegram 特有的实测数据或官方平台政策才保留独立价值；不发布必到承诺。"
+    },
+    {
+      "url": "/qa/08-gv/",
+      "rule": "仅保留与该平台特有政策/测试相关的内容；通用号段、IP、设备和频率排查归 /guides/4-signal/。"
+    }
+  ],
+  "excludedFromCoreCluster": [
+    {
+      "url": "/guides/0-intro/",
+      "reason": "仅作品牌/服务入门，不与完整教程支柱页竞争。"
+    },
+    {
+      "url": "/qa/07-voicemail-switch/",
+      "reason": "这是独立微任务，可从漫游防误扣费页定向链接，无需为达到页数硬塞入核心集群。"
+    },
+    {
+      "url": "/qa/09-spread/",
+      "reason": "推广/邀请规则与中国用户使用主意图分离，且受商标与推广条款高风险约束。"
+    }
+  ],
+  "qualityGates": [
+    "所有索引页 200、自指 canonical、无 noindex，og:url 等于 canonical",
+    "Title、H1、直接答案和主关键词与其他页意图唯一",
+    "每个 spoke 从支柱页两次点击内可达，且至少有 3 个正文入链",
+    "价格、库存、漫游、设备兼容和平台送达均有核验日，无证据时显示未验证",
+    "只有页面可见内容才使用 Article、BreadcrumbList、ItemList 或 FAQPage Schema",
+    "真实作者、审核人、方法、修订记录、独立第三方披露和纠错入口齐全",
+    "新数据页在有真实样本前不发布结论，不用占位数据或用户传闻补空"
+  ],
+  "scorecard": {
+    "pillarCount": 1,
+    "clusterCount": 5,
+    "spokeCount": 20,
+    "totalPlannedArchitecturePages": 21,
+    "currentlyWrittenOrExisting": 15,
+    "plannedOriginalAssetsOrRewrites": 6,
+    "duplicatePrimaryKeywords": 0,
+    "trafficOrRankingEstimates": 0,
+    "orphanTarget": 0,
+    "minimumIncomingBodyLinksPerSpoke": 3
+  }
+}

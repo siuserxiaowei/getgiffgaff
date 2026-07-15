@@ -1,0 +1,502 @@
+{
+  "generated_at": "2026-07-15",
+  "scope": "20 个未计入用户给定 6 个链接的中文 giffgaff/英国 SIM/eSIM/境外保号与验证码 SERP 直接或间接竞品。",
+  "methodology": {
+    "queries": [
+      "giffgaff 教程 激活 充值 保号",
+      "giffgaff eSIM 教程 中国",
+      "英国手机卡 保号 验证码 giffgaff",
+      "giffgaff G0 G2 教程",
+      "giffgaff 接码 长期保号 教程"
+    ],
+    "evidence": "2026-07-15 对页面进行搜索结果核验，并对可访问页面直接抓取 HTTP、title、H1/H2/H3、链接与 JSON-LD 类型；不把搜索排序位置当作稳定排名数据。",
+    "copyright_boundary": "仅保存页面级元数据、原创结构摘要、流量机制与可核验事实，不复制第三方教程正文。"
+  },
+  "competitors": [
+    {
+      "id": "c01-giffgaff-official-getting-started",
+      "name": "giffgaff Help — Getting started",
+      "url": "https://help.giffgaff.com/en/articles/240912-getting-started-on-giffgaff",
+      "type": "官方运营商帮助中心",
+      "directness": "直接：以第一方权威覆盖激活、套餐、充值、APN 和帮助类查询",
+      "target_query": ["giffgaff getting started", "giffgaff 激活", "giffgaff APN", "giffgaff 充值"],
+      "ranking_content_angle": "按用户完成任务的顺序组织一站式新手引导，并由大量官方子文档承接具体问题；权威域和持续更新是核心优势。",
+      "title": "Getting started on giffgaff | giffgaff Help",
+      "h1": "Getting started on giffgaff",
+      "sections": ["Activate your SIM", "Insert the SIM card", "Set up data and MMS", "Transfer your number", "Useful numbers", "Buy a plan", "Add credit", "Get help", "Find your number", "Download the app"],
+      "trust_and_citations": "官方 help.giffgaff.com；页面署名 Andy，并显示 2026-06-09；直接链接激活、覆盖、套餐和社区等第一方页面。JSON-LD 含 Article、Person、Organization、BreadcrumbList。",
+      "lead_magnet_or_cta": "Activate my SIM、下载 App、查看套餐、进入社区或 HelpBot；内容直接导向产品激活与自助解决。",
+      "internal_links_schema_distribution": "帮助中心 collection → 综合入门页 → 单任务文档；Article/Person/Organization/BreadcrumbList；站内社区和 App 形成分发闭环。",
+      "one_thing_to_learn": "每个关键步骤都链接唯一官方任务页，并在一篇总入口中按真实操作顺序串起来。",
+      "risk": "主要面向英国本地语境，不直接回答中国漫游、国内收码和支付限制；规则与界面变化后需同步复核。",
+      "date": {"page_published_or_updated": "2026-06-09", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://help.giffgaff.com/en/articles/240912-getting-started-on-giffgaff",
+        "https://www.giffgaff.com/activate",
+        "https://community.giffgaff.com/"
+      ]
+    },
+    {
+      "id": "c02-giffgaff-china-instructions",
+      "name": "giffgaff 中国 — 玩家指南",
+      "url": "https://www.giffgaff-china.com/instructions",
+      "type": "中文商业教程中心",
+      "directness": "直接：围绕中国用户的 giffgaff 购买后使用与接码问题",
+      "target_query": ["giffgaff 中国", "giffgaff 保号规则", "giffgaff 注册接码", "giffgaff eSIM 指南"],
+      "ranking_content_angle": "把完整教程拆成可视化卡片入口，以『产品简介—新手入门—漫游—保号—eSIM—充值—接码—封号—FAQ』覆盖用户全生命周期。",
+      "title": "giffgaff 中国 | 官方资讯与服务",
+      "h1": "玩家指南（搜索引擎渲染结果；初始 HTML 为 SPA 空壳）",
+      "sections": ["产品简介", "新手入门", "漫游资费", "保号规则", "eSIM 指南", "充值续费", "话费账单", "换号补卡", "科学上网工具", "注册接码", "关于封号", "常见问题"],
+      "trust_and_citations": "页面可访问且主题覆盖完整，但初始 HTML 未见作者、更新时间或 JSON-LD；部分卡片链接 giffgaff 官方登录、激活和官网，也包含 Telegram 与第三方工具链接。",
+      "lead_magnet_or_cta": "每张主题卡『点击阅读』；Telegram 客服、激活入口以及第三方工具是主要转化点。",
+      "internal_links_schema_distribution": "单页 SPA 用 slug/卡片切换内容；初始 HTML 未见结构化数据，内容依赖 JavaScript；Telegram 承接咨询。",
+      "one_thing_to_learn": "用任务卡片把复杂长教程变成明确的自助分流入口，降低新手选择成本。",
+      "risk": "标题中的『官方』容易造成身份误解；作者、来源和更新日期不透明；页面内若干接码、合规和稳定性说法需要官方文件或实测复核。",
+      "date": {"page_published_or_updated": null, "evidence_checked": "2026-07-15", "availability": "HTTP 200；SPA/JS 渲染"},
+      "source_urls": [
+        "https://www.giffgaff-china.com/instructions",
+        "https://www.giffgaff.com/activate",
+        "https://www.giffgaff.com/"
+      ]
+    },
+    {
+      "id": "c03-giffgaff-shop-guide-hub",
+      "name": "giffgaff 非官方中文网 — 快速开始目录",
+      "url": "https://www.giffgaff.shop/guides/",
+      "type": "中文教程集群与交易站",
+      "directness": "直接：与激活、保号、信号和充值服务查询高度重合",
+      "target_query": ["giffgaff 教程", "giffgaff 激活", "giffgaff 保号", "giffgaff 代充值", "giffgaff 无信号"],
+      "ranking_content_angle": "以目录页做 pillar，按编号步骤连接介绍、购买、激活、账号、App、保号、代充值、信号和旅行流量包。",
+      "title": "快速开始 - 目录 | giffgaff 非官方中文网",
+      "h1": "快速开始 - 目录",
+      "sections": ["giffgaff 手机卡介绍", "获取和购买", "手机卡激活", "账号管理", "App 使用", "保号和使用", "代充值", "信号问题", "旅行流量包"],
+      "trust_and_citations": "页面明确标注『非官方中文网』并显示最近更新 2026-03-28；每个主题有独立 URL，但目录页未观察到 JSON-LD。",
+      "lead_magnet_or_cta": "教程内链导向代充值/交易页面；Telegram 与 RSS 分别承接咨询和回访。",
+      "internal_links_schema_distribution": "强 hub-and-spoke：/guides/ → 编号子教程；另有 /pages/、新闻、RSS 和 Telegram；页面未见 JSON-LD。",
+      "one_thing_to_learn": "用稳定的编号路径和总目录表达操作顺序，同时让每个故障问题拥有独立落地页。",
+      "risk": "教程与交易服务相邻，价格和支付建议需披露利益关系并持续更新；缺少结构化数据和更明确的作者/审核信息。",
+      "date": {"page_published_or_updated": "2026-03-28", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://www.giffgaff.shop/guides/",
+        "https://www.giffgaff.shop/guides/2-activate/",
+        "https://www.giffgaff.shop/guides/3-usage/"
+      ]
+    },
+    {
+      "id": "c04-giffgaff-gg-complete-guide",
+      "name": "Giffgaff 充值 — giffgaff 指南",
+      "url": "https://www.giffgaff.gg/blog/giffgaff-tutor",
+      "type": "中文交易站长篇指南",
+      "directness": "直接：教程获取流量，充值券、代充和 SIM 购买完成转化",
+      "target_query": ["giffgaff 指南", "giffgaff 资费", "giffgaff 获取", "giffgaff 保号", "giffgaff 常见问题"],
+      "ranking_content_angle": "一篇长文覆盖特点、用途、资费、获取、激活、保号、扣费、查询与 FAQ；页面导航同时暴露充值、SIM 和充值券。",
+      "title": "giffgaff指南 | Giffgaff 充值",
+      "h1": "giffgaff指南",
+      "sections": ["特点", "用途", "资费", "获取途径", "激活", "注意事项", "保号", "意外扣费", "常用操作", "常见问题"],
+      "trust_and_citations": "链接 giffgaff 官方首页、漫游费率、号码停用、账户和账单页面；JSON-LD 含 Article、Organization、ImageObject、BreadcrumbList。",
+      "lead_magnet_or_cta": "导航和文末导向『充值』『购买 SIM 卡』『购买充值券』；邀请链接和 Telegram/飞书教程承担额外转化。",
+      "internal_links_schema_distribution": "长文锚点 + 博客列表 + 三个交易入口；Article/Organization/BreadcrumbList；以站内教程持续承接使用问题。",
+      "one_thing_to_learn": "在每个关键规则旁放官方深链，让商业教程的事实链更容易核验。",
+      "risk": "商业利益显著，部分经验性保号、信号和成本结论不等于官方保证；需要标明实测时间、地区和失败边界。",
+      "date": {"page_published_or_updated": "2026-04（搜索结果显示约 3 个月前）", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://www.giffgaff.gg/blog/giffgaff-tutor",
+        "https://www.giffgaff.com/roaming-charges",
+        "https://www.giffgaff.com/help/articles/why-is-my-phone-number-deactivated"
+      ]
+    },
+    {
+      "id": "c05-larksim-activate-guide",
+      "name": "LarkSim — giffgaff 激活、充值与保号完整教程",
+      "url": "https://larksim.com/guide/giffgaff-activate",
+      "type": "SIM 商店证据型教程",
+      "directness": "直接：高意图教程自然导向实体卡商品和结账",
+      "target_query": ["giffgaff 激活教程 2026", "giffgaff 充值", "giffgaff voucher", "giffgaff 保号", "giffgaff eSIM"],
+      "ranking_content_angle": "年份化标题 + 9 步实拍 + plan/credit 决策 + eSIM + 插卡检查 + 保号 + 故障排查 + 官方来源 + FAQ，覆盖搜索和 AI 摘要所需的答案单元。",
+      "title": "giffgaff 激活与注册教程：充值、插卡与保号全流程（2026） · LarkSim",
+      "h1": "英国实体 SIM 卡 giffgaff 激活、充值与保号完整教程（2026）",
+      "sections": ["激活前准备", "9 步实拍", "plan 和 credit 怎么选", "充值与 voucher", "eSIM", "插卡后 4 个检查", "长期保号", "常见问题排查", "官方来源", "FAQ", "相关文章"],
+      "trust_and_citations": "页面显示最近更新 2026-06-15，列出官方来源与核验日期，并链接官方激活页；作者/实拍素材有 X 原帖佐证。JSON-LD 含 Organization、WebSite、Article、Person、FAQPage、BreadcrumbList。",
+      "lead_magnet_or_cta": "『查看 giffgaff 实体卡』『立即订购』『购物车/结账』；相关教程把信息流量导回商品页。",
+      "internal_links_schema_distribution": "Guide hub → 激活/套餐/eSIM/故障页 → 商品页；Article + FAQPage + Person + Organization + BreadcrumbList，是本组结构化最完整的样本。",
+      "one_thing_to_learn": "把实拍、核验日期、官方来源、FAQ schema 和相关教程同时放在页面上，兼顾 E-E-A-T、SEO、GEO 与转化。",
+      "risk": "商店教程仍需清楚披露销售关系；库存、支付、费用和中国漫游表现必须以当前证据为准，不能把个例写成承诺。",
+      "date": {"page_published_or_updated": "2026-06-15", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://larksim.com/guide/giffgaff-activate",
+        "https://larksim.com/guide/giffgaff-esim-guide",
+        "https://www.giffgaff.com/activate"
+      ]
+    },
+    {
+      "id": "c06-algieba-esim-guide",
+      "name": "阿尔的代码屋 — Giffgaff eSIM 申请与激活",
+      "url": "https://blog.algieba12.cn/giffgaff-esim/",
+      "type": "个人技术博客教程",
+      "directness": "直接：覆盖申请、激活、转 eSIM 与语音信箱这一窄而明确的长尾",
+      "target_query": ["Giffgaff eSIM 申请", "Giffgaff eSIM 激活", "giffgaff 关闭语音信箱", "giffgaff 漫游扣费"],
+      "ranking_content_angle": "用短教程解决一个完整操作链，特别突出『激活后关闭语音信箱』这个防意外扣费差异点。",
+      "title": "Giffgaff eSIM 卡申请与激活教程 - 工具推荐 | 阿尔的代码屋",
+      "h1": "Giffgaff eSIM 卡申请与激活教程 - 工具推荐 | 阿尔的代码屋",
+      "sections": ["申请 SIM 卡", "注册账户流程", "激活与 eSIM 转换", "激活后的关键设置", "取消语音信箱", "客服回复示例"],
+      "trust_and_citations": "个人作者语境和截图提供一定一手性；页面显示 2025-07-08，站点有 About/Privacy，并关联 GitHub、CSDN、掘金；未观察到 JSON-LD。",
+      "lead_magnet_or_cta": "使用 giffgaff 推荐申请链接；站内标签、合集与社交账号用于留存，没有强结账路径。",
+      "internal_links_schema_distribution": "博客分类/标签/归档/合集 + GitHub/CSDN/掘金跨平台分发；未见结构化数据。",
+      "one_thing_to_learn": "围绕一个真实损失点做窄主题教程，比重复完整入门文更容易占据长尾。",
+      "risk": "推荐链接涉及利益关系应披露；eSIM 与语音信箱流程会变，旧截图和费用提示需用官方帮助页复核。",
+      "date": {"page_published_or_updated": "2025-07-08", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://blog.algieba12.cn/giffgaff-esim/",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+        "https://www.giffgaff.com/help/articles/how-do-i-turn-voicemail-on-or-off"
+      ]
+    },
+    {
+      "id": "c07-newbie-village-guide",
+      "name": "Newbie Village — Giffgaff 实体 SIM/eSIM 全攻略",
+      "url": "https://blog.nbvil.com/sim/giffgaff/",
+      "type": "个人博客 + 视频内容",
+      "directness": "直接：覆盖国内接码、长期保号、实体卡与 eSIM 的综合搜索意图",
+      "target_query": ["Giffgaff 英国真实号码", "Giffgaff 国内接码", "0 月租长期保号", "Giffgaff eSIM"],
+      "ranking_content_angle": "标题密集覆盖核心关键词，正文从运营商身份、性价比、优缺点、申请方式、激活、国内资费延伸，并嵌入视频。",
+      "title": "免费领取 Giffgaff 英国真实号码 | 0月租长期保号首选 | 适用各平台注册验证 | 支持eSIM | Newbie Village",
+      "h1": "免费领取 Giffgaff 英国真实号码…；页面另有『Giffgaff 英国实体SIM eSIM 手机卡全攻略』第二个 H1",
+      "sections": ["视频教程", "什么是 giffgaff", "为什么性价比高", "优缺点", "三种申请方式", "激活教程", "eSIM 说明", "国内使用资费"],
+      "trust_and_citations": "页面显示发表于 2025-12-15、更新于 2026-07-14，并有作者和 BlogPosting/Person schema；视频提供跨媒介说明，但若干稳定性和平台兼容说法未见逐条官方证据。",
+      "lead_magnet_or_cta": "邀请链接、eSIM/实体卡获取方式、视频教程和留言互动；内容将搜索流量导向视频与申请路径。",
+      "internal_links_schema_distribution": "博客分类/标签/归档 + YouTube 视频嵌入；BlogPosting/Person；站内共有大量服务器与工具内容，跨主题分发能力强。",
+      "one_thing_to_learn": "一篇教程同时提供图文与视频，满足不同学习偏好并获得两套搜索入口。",
+      "risk": "『最稳定』『不会封号』『各平台注册』等绝对或泛化表述风险高，必须改成带样本、日期和失败边界的实测结论；双 H1 也应修正。",
+      "date": {"page_published_or_updated": "2026-07-14", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://blog.nbvil.com/sim/giffgaff/",
+        "https://help.giffgaff.com/en/articles/229548-using-your-mobile-phone-in-the-rest-of-the-world",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff"
+      ]
+    },
+    {
+      "id": "c08-ggwiki-topical-cluster",
+      "name": "ggwiki — 英国 giffgaff 手机卡使用指南",
+      "url": "https://ggwiki.comtesla.com/",
+      "type": "垂直内容集群 + 商品站",
+      "directness": "直接：用大量问题页覆盖使用故障并导向 SIM 卡下单",
+      "target_query": ["giffgaff 是不是虚拟号码", "giffgaff 中国长期漫游", "giffgaff WiFi Calling", "giffgaff 支持哪些手机", "giffgaff 接码排查"],
+      "ranking_content_angle": "首页直接列出十多个超具体长尾：漫游 R 标识、设备兼容、语音信箱、180 天保号、平台注册、漫游资费等，形成密集 topical cluster。",
+      "title": "英国 giffgaff 手机卡使用指南|未激活卡与已激活卡现货发货",
+      "h1": "英国 giffgaff 手机卡使用指南|未激活卡与已激活卡现货发货（页面出现重复 H1）",
+      "sections": ["MVNO 与虚拟号码区别", "中国长期漫游", "R 漫游标识", "WiFi Calling/VoLTE", "设备兼容", "关闭语音信箱", "180 天保号", "注册接码排查", "漫游资费", "WhatsApp 指南"],
+      "trust_and_citations": "文章卡片显示作者 airyea 与 2026-07-05；主题具体，但首页未观察到 JSON-LD，作者资历、审核与来源政策不明显。",
+      "lead_magnet_or_cta": "全局『在线下单 giffgaff 卡』把信息流量导向独立 shop 子域；相关文章推荐形成连续浏览。",
+      "internal_links_schema_distribution": "首页/分类 hub → 每个精确问题 URL → 商品站；无 JSON-LD；文章批量集中发布形成覆盖面。",
+      "one_thing_to_learn": "把用户在购买后真正会搜索的故障拆成一问题一页，而不是全部塞入『完整教程』。",
+      "risk": "短期集中发布容易显得模板化；重复 H1、缺 schema 与信任页面削弱可信度；商品与教程关系应披露，资费和平台可达性需实测。",
+      "date": {"page_published_or_updated": "2026-07-05（首页所列文章）", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://ggwiki.comtesla.com/",
+        "https://ggwiki.comtesla.com/giffgaff-keep-number-active-180-days-low-cost-guide/",
+        "https://ggwiki.comtesla.com/giffgaff-registration-sms-verification-apps-troubleshooting-guide/"
+      ]
+    },
+    {
+      "id": "c09-cnblogs-dsyr-guide",
+      "name": "博客园 — 英国手机号 Giffgaff 获取与激活教程",
+      "url": "https://www.cnblogs.com/DSYR/p/18991953",
+      "type": "平台型个人经验教程",
+      "directness": "直接：以个人申请和激活过程覆盖中文新手查询",
+      "target_query": ["英国手机号 Giffgaff 获取", "Giffgaff 激活教程", "Giffgaff Wi-Fi Calling"],
+      "ranking_content_angle": "借助博客园域名分发个人实测，强调平邮等待、多次申请、手机号格式、PAYG 激活和 Wi-Fi Calling。",
+      "title": "英国手机号Giffgaff获取与激活教程 - 落花人独立微雨燕双飞 - 博客园",
+      "h1": "英国手机号Giffgaff获取与激活教程",
+      "sections": ["重点", "申请", "激活", "开启 Wi-Fi Calling"],
+      "trust_and_citations": "页面有个人作者、发布日期和申请经历；JSON-LD 含 BlogPosting、Person、Organization、Blog。平台评论和作者主页增加身份连续性，但官方引用有限。",
+      "lead_magnet_or_cta": "无明显商品结账；通过作者博客、评论、附件/资源和博客园关注沉淀流量。",
+      "internal_links_schema_distribution": "博客园作者页、标签和平台推荐分发；BlogPosting/Person/Organization/Blog。",
+      "one_thing_to_learn": "加入真实邮寄时间、失败次数和设备设置等过程证据，比纯转述官方步骤更有信息增益。",
+      "risk": "个人经历的邮寄、支付和网络结果不可泛化；页面中的当前可用性与费用须按 2026 官方页面重新核验。",
+      "date": {"page_published_or_updated": "2025（搜索结果显示约 1 年前）", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://www.cnblogs.com/DSYR/p/18991953",
+        "https://www.giffgaff.com/activate",
+        "https://help.giffgaff.com/en/articles/258841-wifi-calling-and-volte"
+      ]
+    },
+    {
+      "id": "c10-mingnify-digital-nomad-guide",
+      "name": "Mingnify — Giffgaff 终极指南",
+      "url": "https://mingnify.com/zh/blog/p/giffgaff-uk-sim-guide/",
+      "type": "数字游民/独立开发者博客",
+      "directness": "直接：用境外账号与长期号码痛点切入 giffgaff",
+      "target_query": ["Giffgaff 终极指南", "低成本英国手机卡", "数字游民英国手机号", "海外 App 注册手机号"],
+      "ranking_content_angle": "先定义独立开发者和数字游民的具体痛点，再用四个核心优势、两种获取方案、激活防坑、180 天规则和海外 App 注意事项讲故事。",
+      "title": "Giffgaff终极指南：如何低成本长期拥有一张畅通无阻的英国手机卡？ | 明立非|Mingnify的博客",
+      "h1": "Giffgaff终极指南：如何低成本长期拥有一张畅通无阻的英国手机卡？",
+      "sections": ["引言", "四大核心优势", "官网申请与电商购买", "激活与防坑设置", "保号与注册", "更多玩法", "结论"],
+      "trust_and_citations": "显示发表于 2025-10-14、更新于 2026-04-16，作者强调亲身申请和踩坑；JSON-LD 含 BlogPosting/Person，但外部官方来源密度不高。",
+      "lead_magnet_or_cta": "以作者品牌、工具站、分类/标签/归档承接；没有强购物车，主要目标是订阅与站内继续阅读。",
+      "internal_links_schema_distribution": "多语言博客、数字游民分类、工具子站；BlogPosting/Person；归档规模较大，可从其他技术主题导流。",
+      "one_thing_to_learn": "把教程写给一个明确职业/场景，而不是写给抽象的『所有人』，自然带出差异化关键词。",
+      "risk": "『充值一次保号三十年』和平台注册畅通等强表述会受规则、余额和平台风控变化影响，必须改成计算假设与不保证说明。",
+      "date": {"page_published_or_updated": "2026-04-16", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://mingnify.com/zh/blog/p/giffgaff-uk-sim-guide/",
+        "https://www.giffgaff.com/help/articles/why-is-my-phone-number-deactivated",
+        "https://www.giffgaff.com/roaming-charges"
+      ]
+    },
+    {
+      "id": "c11-giffgaff-cc-ai-assistant",
+      "name": "giffgaff 小助手",
+      "url": "https://www.giffgaff.cc/",
+      "type": "中文 AI 问答/FAQ 导购页",
+      "directness": "直接：以搜索框和问题库承接全生命周期问题",
+      "target_query": ["giffgaff 小助手", "giffgaff 收不到验证码", "giffgaff 无信号", "giffgaff 保号", "giffgaff eSIM 恢复"],
+      "ranking_content_angle": "首页就是问题搜索和分类 FAQ，覆盖购买、激活、充值、漫游、短信格式、无信号、APN、保号、补卡、eSIM、账号安全等高频问法。",
+      "title": "giffgaff 小助手 - 用户问答与 AI 支持",
+      "h1": "giffgaff 小助手（搜索引擎渲染；初始 HTML 未暴露语义标题）",
+      "sections": ["AI 咨询搜索", "为什么选择 giffgaff", "激活", "套餐", "漫游", "SIM 卡", "常见问题解答"],
+      "trust_and_citations": "HTTP 可访问且搜索结果可读到大量问题，但初始 HTML 为客户端渲染，未见作者、更新日期、来源政策或 JSON-LD。",
+      "lead_magnet_or_cta": "『中文网店购买（国内发货）』『官网免费领卡』；问题搜索承担自助筛选并把高意图用户导向购买。",
+      "internal_links_schema_distribution": "SPA/JS 问题库 + 商品和官方领卡双 CTA；未观察到 schema；FAQ 文案有被 AI/搜索摘要抽取的潜力。",
+      "one_thing_to_learn": "将站内搜索日志和客服问题沉淀为可浏览的问题库，再反向决定教程选题。",
+      "risk": "客户端渲染、无可见来源与更新时间削弱可索引性和可信度；『AI 支持』回答必须标证据和更新时间，不能替代官方客服。",
+      "date": {"page_published_or_updated": null, "evidence_checked": "2026-07-15", "availability": "HTTP 200；JS 渲染"},
+      "source_urls": [
+        "https://www.giffgaff.cc/",
+        "https://help.giffgaff.com/en/",
+        "https://www.giffgaff.com/activate"
+      ]
+    },
+    {
+      "id": "c12-gafish-activation",
+      "name": "鱼哥 giffgaff — 激活教程",
+      "url": "https://gg.gafish.me/activation",
+      "type": "交易商极简图文教程",
+      "directness": "直接：专攻收到实体卡后的激活动作",
+      "target_query": ["giffgaff 激活教程", "空卡激活", "giffgaff 6 位激活码", "giffgaff PAYG 激活"],
+      "ranking_content_angle": "用约 12 个编号截图逐屏展示官网操作，几乎不做概念扩写，适合强任务型搜索。",
+      "title": "giffgaff 激活教程｜鱼哥 giffgaff",
+      "h1": "激活教程",
+      "sections": ["输入激活码", "邮箱验证", "注册密码", "选择 PAYG", "充值付款", "获取号码", "插卡接收欢迎短信"],
+      "trust_and_citations": "直接链接 giffgaff 官方站并提供逐步截图；页面未见作者资历、更新日期、来源列表或 JSON-LD。",
+      "lead_magnet_or_cta": "返回首页继续购买/使用服务；教程本身降低售后咨询成本。",
+      "internal_links_schema_distribution": "单页线性流程，仅有返回首页和官方站链接；未见 schema，外部分发能力较弱。",
+      "one_thing_to_learn": "对『我现在就要完成激活』的用户，逐屏截图和清晰完成状态比长背景介绍更重要。",
+      "risk": "页面较薄且缺更新时间；支付、最低充值与界面内容可能变化，不能长期依赖静态截图。",
+      "date": {"page_published_or_updated": null, "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://gg.gafish.me/activation",
+        "https://www.giffgaff.com/activate",
+        "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim"
+      ]
+    },
+    {
+      "id": "c13-invest-nav-mainland-guide",
+      "name": "投资导航 — Giffgaff 英国手机卡教程",
+      "url": "https://invest-nav.com/tutorials/overseas-sim/text/giffgaff-uk-sim/",
+      "type": "会员内容平台/跨境工具教程",
+      "directness": "直接：用大陆用户、海外号码和接码需求吸引跨境投资/出海受众",
+      "target_query": ["Giffgaff 大陆用户开通", "海外保号神卡", "英国手机卡接码", "Giffgaff 购买激活"],
+      "ranking_content_angle": "用『大陆用户无门槛』和海外账号痛点做钩子，比较虚拟号码方案，再讲优缺点、购买/激活和注意事项；部分后续内容要求登录。",
+      "title": "Giffgaff 英国手机卡教程：大陆用户无门槛开通 - 海外电话卡 | 投资导航",
+      "h1": "Giffgaff 英国手机卡教程：大陆用户无门槛开通",
+      "sections": ["介绍与优缺点", "购买/激活流程", "注意事项", "继续学习", "登录解锁更多", "评论讨论"],
+      "trust_and_citations": "页面有作者实体和 Article、Person、Organization、WebPage、BreadcrumbList schema；包含第一人称使用描述和截图，但若干运营商、KYC、库存及平台风控判断缺少逐条官方引用。",
+      "lead_magnet_or_cta": "登录解锁、评论、投资工具和教程库；把公开长文作为会员与站内工具获客入口。",
+      "internal_links_schema_distribution": "海外 SIM 教程目录、视频/文字教程、计算工具、会员页；Article/Person/Organization/WebPage/BreadcrumbList/SiteNavigationElement。",
+      "one_thing_to_learn": "在免费内容中交付完整第一阶段价值，再用相关教程、工具和评论社区做二次留存。",
+      "risk": "『无门槛』『稳定靠谱』等营销表述需限定条件；电商库存、邮寄与政策会变，不能从单次体验推断所有用户。",
+      "date": {"page_published_or_updated": null, "evidence_checked": "2026-07-15", "availability": "HTTP 200；部分内容需登录"},
+      "source_urls": [
+        "https://invest-nav.com/tutorials/overseas-sim/text/giffgaff-uk-sim/",
+        "https://www.giffgaff.com/activate",
+        "https://help.giffgaff.com/en/articles/229548-using-your-mobile-phone-in-the-rest-of-the-world"
+      ]
+    },
+    {
+      "id": "c14-duoplus-keep-number",
+      "name": "DuoPlus — 2026 Giffgaff 保号操作指南",
+      "url": "https://www.duoplus.cn/blog/giffgaff-keep-number-guide-2026/",
+      "type": "B2B 内容营销/替代方案页",
+      "directness": "间接：先回答 giffgaff 保号，再引向云号码与云手机产品",
+      "target_query": ["2026 Giffgaff 保号", "Giffgaff 多号码管理", "海外号码批量管理", "Giffgaff 号码停用"],
+      "ranking_content_angle": "从个人保号规则扩展到多号码运营问题，再把『物理卡管理成本』桥接到自家云号码、云手机和 API 方案。",
+      "title": "2026 Giffgaff 保号操作指南：从个人维护到多号码管理",
+      "h1": "2026 Giffgaff 保号操作指南：从个人维护到多号码管理",
+      "sections": ["文章要点", "为什么要保号", "如何有效保号", "停用后补救", "多号码问题", "云号码新思路", "FAQ", "结语"],
+      "trust_and_citations": "显示作者 DuoPlus、日期 2026-06-22；FAQ 回答明确，但直接抓取未观察到 JSON-LD。页面把自身产品能力写入比较，需视为厂商内容。",
+      "lead_magnet_or_cta": "登录/免费试用/立即体验/定价；一键把文章发送到 ChatGPT、Google AI、Grok、Perplexity、Claude 获取摘要。",
+      "internal_links_schema_distribution": "博客 → 产品能力/定价 → 试用；相关文章继续覆盖跨境账号运营；无可见 schema，但 AI 分享按钮是显著分发设计。",
+      "one_thing_to_learn": "给 AI 搜索工具提供预填摘要入口，并把信息查询自然过渡到一个明确的业务痛点。",
+      "risk": "替代方案比较由卖方撰写，不能据此断言云号码优于实体 SIM；批量账号、验证码与平台风控涉及合规和安全边界。",
+      "date": {"page_published_or_updated": "2026-06-22", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://www.duoplus.cn/blog/giffgaff-keep-number-guide-2026/",
+        "https://www.giffgaff.com/help/articles/why-is-my-phone-number-deactivated",
+        "https://www.duoplus.cn/pricing/"
+      ]
+    },
+    {
+      "id": "c15-shuziyoumin-guide",
+      "name": "数字游民 — giffgaff 0 月租申请与激活全攻略",
+      "url": "https://shuziyoumin.vip/posts/giffgaff.html",
+      "type": "联盟营销博客/海外通信集群",
+      "directness": "直接：教程通过 affiliate 领卡链接转化",
+      "target_query": ["giffgaff 0 月租", "giffgaff 免费申请", "giffgaff 包邮国内", "giffgaff 激活全攻略"],
+      "ranking_content_angle": "完整覆盖认识、优势、领取、激活、账户、号码格式、余额、换号、保号、资费、防扣费、eSIM；并与 VOXI、AIS、Helium、One NZ 等教程形成海外号码比较集群。",
+      "title": "『giffgaff』2025 年英国的 0 月租手机卡申请与激活全攻略：免费申请，包邮国内 | 数字游民",
+      "h1": "『giffgaff』2025 年英国的 0 月租手机卡申请与激活全攻略：免费申请，包邮国内（页面出现重复 H1）",
+      "sections": ["初步认识", "核心优势", "如何领取", "如何激活", "如何使用", "管理账户", "保号方式", "资费说明", "避免额外扣费", "eSIM"],
+      "trust_and_citations": "页面链接官方漫游费率、语音信箱、Wi-Fi Calling、eSIM 和账户页，来源深链较丰富；未观察到 JSON-LD。文章标注原创，但作者资历与审核流程不明显。",
+      "lead_magnet_or_cta": "多个 giffgaff affiliate 领卡/激活链接；社交分享和相邻海外 SIM 教程继续导流。",
+      "internal_links_schema_distribution": "海外 SIM 比较集群 + tags/categories/archives + 微博等分享；无 schema；工具箱和导航扩展站内留存。",
+      "one_thing_to_learn": "围绕『海外长期号码』建设跨运营商比较集群，让单一品牌教程获得更宽的上游需求。",
+      "risk": "affiliate 关系应醒目披露；标题中的免费、包邮和奖励可能随地区/时间失效；重复 H1 和无 schema 可优化。",
+      "date": {"page_published_or_updated": "2025（标题年份）", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://shuziyoumin.vip/posts/giffgaff.html",
+        "https://www.giffgaff.com/roaming-charges",
+        "https://help.giffgaff.com/en/articles/258841-wifi-calling-and-volte"
+      ]
+    },
+    {
+      "id": "c16-e5im-community",
+      "name": "e5im — eSIM 技术社区",
+      "url": "https://e5im.com/",
+      "type": "eSIM 论坛/技术内容聚合",
+      "directness": "间接到直接：覆盖 giffgaff 实体转 eSIM、小白卡和设备兼容的极窄技术查询",
+      "target_query": ["giffgaff 实体卡转 eSIM", "giffgaff eSIM 小白卡", "Giffgaff eSIM 激活码", "OpenEUICC giffgaff"],
+      "ranking_content_angle": "聚合论坛用户的设备、eSIM 适配器、实体转 eSIM、直装与故障经验，填补官方文档不会覆盖的折腾型长尾。",
+      "title": "e5im 你的esim专家",
+      "h1": "页面当前首个 H1 为一篇小白卡教程标题，首页语义结构随最新内容变化",
+      "sections": ["giffgaff 实体卡转 eSIM", "小白卡开通", "eSIM 直装版", "海外 eSIM 心得", "国外电话卡平台", "论坛注册与分类"],
+      "trust_and_citations": "用户经验可发现真实故障，但首页无统一作者/审核/官方来源，也未观察到 JSON-LD；论坛帖子质量不一。",
+      "lead_magnet_or_cta": "注册、登录、发帖、评论和论坛分类；通过持续 UGC 获得回访与长尾页面。",
+      "internal_links_schema_distribution": "论坛首页 → 单帖 → 分类/标签/作者；无 schema；UGC 和新帖形成持续索引入口。",
+      "one_thing_to_learn": "把官方文档之外的设备兼容和失败案例沉淀为可检索的问题库，但必须有安全审核。",
+      "risk": "部分内容涉及导出 Cookie、修改版 APK 或第三方 eSIM 工具，存在账户、隐私和供应链安全风险；不应直接复刻为本站操作指南。",
+      "date": {"page_published_or_updated": "持续更新；2026-07-15 仍有近期帖", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://e5im.com/",
+        "https://e5im.com/2-androidgiffgaff-esim.html",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff"
+      ]
+    },
+    {
+      "id": "c17-notion-complete-guide",
+      "name": "Notion — giffgaff 保姆级使用教程 2026",
+      "url": "https://giffgaffsim.notion.site/",
+      "type": "公共 Notion 教程/导购页",
+      "directness": "直接：面向拿到卡后的激活和保号",
+      "target_query": ["giffgaff 保姆级教程 2026", "giffgaff 官网激活", "giffgaff 180 天保号", "giffgaff 先激活再插卡"],
+      "ranking_content_angle": "首屏用『省流』提示框给出一段完整操作摘要，再进入电脑端官网激活的详细图文；适合 AI 摘要和快速阅读。",
+      "title": "giffgaff保姆级使用教程2026（搜索索引标题；原始 HTML title 为 Notion）",
+      "h1": "giffgaff保姆级使用教程2026（搜索渲染结果）",
+      "sections": ["省流步骤摘要", "电脑端官网激活", "注册新账号", "输入 6 位激活码", "选择 PAYG", "充值", "插卡", "180 天保号"],
+      "trust_and_citations": "搜索引擎可以读取公开页面正文，但原始 HTML 只暴露 Notion 通用 metadata；未见作者、审核、更新时间、独立 schema 或清晰来源列表。",
+      "lead_magnet_or_cta": "快速摘要降低阅读门槛；后续具体购买/联系 CTA 需在浏览器渲染态进一步核验。",
+      "internal_links_schema_distribution": "依赖 Notion 公共页渲染和分享传播；无独立站内容集群、品牌实体或 JSON-LD。",
+      "one_thing_to_learn": "开头先给 30 秒可执行摘要，下面再提供完整解释与截图，兼顾急用用户和深读用户。",
+      "risk": "第三方平台可索引性、canonical 和稳定性不可控；作者与来源不透明；价格、PAYG 和保号表述须回到官方规则。",
+      "date": {"page_published_or_updated": "2026（页面标题）", "evidence_checked": "2026-07-15", "availability": "HTTP 200；Notion JS 渲染，搜索索引可读"},
+      "source_urls": [
+        "https://giffgaffsim.notion.site/",
+        "https://www.giffgaff.com/activate",
+        "https://www.giffgaff.com/help/articles/why-is-my-phone-number-deactivated"
+      ]
+    },
+    {
+      "id": "c18-wechat-eu-use-case",
+      "name": "冒险岛 — WeChat EU + Giffgaff 实战",
+      "url": "https://wp.2008.in/2022/09/16/5226/",
+      "type": "平台场景型个人博客",
+      "directness": "间接：以 WeChat EU 注册需求截获英国手机号/验证码查询",
+      "target_query": ["Giffgaff 注册 WeChat EU", "英国手机号注册微信", "Giffgaff 验证码", "WeChat EU 风控"],
+      "ranking_content_angle": "不写通用激活，而是给出设备、系统、地区、网络环境、辅助验证和账号初始化的具体场景教程。",
+      "title": "WeChat EU 注册和避免风控实战 使用Giffgaff 英国手机卡 – 冒险岛",
+      "h1": "WeChat EU 注册和避免风控实战 使用Giffgaff 英国手机卡（页面有多个 H1）",
+      "sections": ["前言", "环境", "注册参考教程", "辅助验证", "初始化配置", "防风控参考", "参考资料"],
+      "trust_and_citations": "提供具体设备/系统环境和操作截图，具备一手案例价值；发布日期 2022-09-16；未见 JSON-LD，参考资料有限。",
+      "lead_magnet_or_cta": "通过电话卡、eSIM、安全技术等相关文章、分类、标签和评论吸引继续阅读。",
+      "internal_links_schema_distribution": "WordPress 分类/标签/归档/近期文章/评论；无 JSON-LD；场景页可从网络技术与电子产品受众获得分发。",
+      "one_thing_to_learn": "为每个高价值平台建立单独的『适用条件 + 测试环境 + 失败排查』页面，而不是发布泛化兼容列表。",
+      "risk": "页面较旧，平台政策和风控机制随时变化；不得把规避平台安全机制作为卖点，应强调遵守平台条款、账号安全与不保证成功。",
+      "date": {"page_published_or_updated": "2022-09-16", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://wp.2008.in/2022/09/16/5226/",
+        "https://help.giffgaff.com/en/articles/229548-using-your-mobile-phone-in-the-rest-of-the-world"
+      ]
+    },
+    {
+      "id": "c19-10100-crossborder-guide",
+      "name": "大数跨境 — Giffgaff 保号申请攻略",
+      "url": "https://www.10100.com/article/28121979",
+      "type": "跨境电商媒体教程",
+      "directness": "直接：以跨境经营和海外账号需求切入 giffgaff",
+      "target_query": ["Giffgaff 英国手机卡保号教程", "Giffgaff 图文申请攻略", "Giffgaff 免费申请", "Giffgaff 支持 eSIM"],
+      "ranking_content_angle": "超长精确匹配标题 + 多步骤截图，将申请、App、激活、付款和保号建议一次讲完，借跨境媒体域覆盖出海人群。",
+      "title": "Giffgaff英国手机卡保号教程图文申请攻略：0月租、免费申请、激活及充值指南！支持 eSIM- 大数跨境",
+      "h1": "Giffgaff英国手机卡保号教程图文申请攻略：0月租、免费申请、激活及充值指南！支持 eSIM",
+      "sections": ["申请/获取", "下载 App", "账号登录", "输入激活码", "选择 PAYG", "支付", "保号攻略"],
+      "trust_and_citations": "页面 HTTP 200，含 Article/Person schema，并由跨境知识平台分发；正文截图丰富，但官方来源、实测边界和作者专业背景需进一步补强。",
+      "lead_magnet_or_cta": "文中推荐支付工具/购买路径；站内『出海平台、流量密码、跨境支付、实操手册、企业会员』承接更广的商业线索。",
+      "internal_links_schema_distribution": "跨境知识分类与百科/招聘/活动/企业会员矩阵；Article/Person；平台级导航可为单篇文章持续导流。",
+      "one_thing_to_learn": "把 giffgaff 放进『跨境业务基础设施』而非纯通信分类，可触达更大的上游出海需求。",
+      "risk": "支付工具推荐、费用和平台使用场景存在商业利益与时效性；『免费』『0 月租』应说明适用条件，不能承诺验证码可达。",
+      "date": {"page_published_or_updated": "2025（搜索结果显示约 9 个月前）", "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://www.10100.com/article/28121979",
+        "https://www.giffgaff.com/activate",
+        "https://www.giffgaff.com/help/articles/why-is-my-phone-number-deactivated"
+      ]
+    },
+    {
+      "id": "c20-paragraph-fengdie-guide",
+      "name": "Paragraph — 英国 Giffgaff 国内激活与保号",
+      "url": "https://paragraph.com/%40fengdie/giffgaff",
+      "type": "创作者平台教程/联盟内容",
+      "directness": "直接：覆盖国内购买、激活与保号",
+      "target_query": ["英国 Giffgaff 国内激活", "Giffgaff 保号技巧", "Giffgaff 购买方式"],
+      "ranking_content_angle": "篇幅不长但结构完整：购买方式、准备工作、激活流程、保号技巧和总结；平台的作者页与发现流提供额外分发。",
+      "title": "【保号卡】英国 Giffgaff 国内激活流程与保号技巧",
+      "h1": "【保号卡】英国 Giffgaff 国内激活流程与保号技巧",
+      "sections": ["Giffgaff 卡的购买方式", "激活详细流程", "准备工作", "保号技巧", "总结"],
+      "trust_and_citations": "页面链接官方激活页；JSON-LD 含 Organization、Article、Person、WebPage、BreadcrumbList。作者身份有平台主页，但缺少明确更新时间和系统来源清单。",
+      "lead_magnet_or_cta": "链接第三方购卡/支付服务与官方激活页；Paragraph 作者页、Popular/Trending 提供平台发现。",
+      "internal_links_schema_distribution": "创作者主页 + 平台 Explore/Trending；Article/Person/WebPage/BreadcrumbList/Organization；借平台域获得分发。",
+      "one_thing_to_learn": "用标准五段式完成单一任务，并把官方操作入口直接放在步骤旁，减少跳失。",
+      "risk": "第三方购卡和支付链接需披露关系并做安全审查；教程较薄，规则/费用/可用性仍要官方复核。",
+      "date": {"page_published_or_updated": null, "evidence_checked": "2026-07-15", "availability": "HTTP 200"},
+      "source_urls": [
+        "https://paragraph.com/%40fengdie/giffgaff",
+        "https://www.giffgaff.com/activate"
+      ]
+    }
+  ],
+  "strongest_patterns": [
+    {
+      "pattern": "Pillar + 一问题一页的售前/售后全生命周期集群",
+      "evidence_ids": ["c03-giffgaff-shop-guide-hub", "c05-larksim-activate-guide", "c08-ggwiki-topical-cluster"],
+      "application": "总教程只负责导航与决策；激活、保号、eSIM、无信号、验证码、语音信箱、设备兼容各用独立 URL，并设双向内链。"
+    },
+    {
+      "pattern": "截图或实测证据 + 官方深链 + 核验日期",
+      "evidence_ids": ["c01-giffgaff-official-getting-started", "c05-larksim-activate-guide", "c09-cnblogs-dsyr-guide"],
+      "application": "每个步骤标注界面截图日期和适用设备；价格、规则、eSIM、漫游等事实旁直接链接官方来源，页面顶部显示作者、审核人和最后核验日。"
+    },
+    {
+      "pattern": "答案优先与 FAQ/GEO 单元",
+      "evidence_ids": ["c05-larksim-activate-guide", "c11-giffgaff-cc-ai-assistant", "c17-notion-complete-guide"],
+      "application": "首屏先给 30 秒结论、准备清单和失败边界；下方用可独立引用的问答块并添加 FAQPage/Article/Person/BreadcrumbList schema。"
+    },
+    {
+      "pattern": "搜索内容 → 明确下一步 → 商业转化",
+      "evidence_ids": ["c04-giffgaff-gg-complete-guide", "c05-larksim-activate-guide", "c14-duoplus-keep-number", "c15-shuziyoumin-guide"],
+      "application": "教程 CTA 必须与当前任务对应：没有卡去商品页、已有卡去激活、失败去排障、需人工再去联系；同时清楚披露商业关系。"
+    },
+    {
+      "pattern": "跨渠道与跨场景扩展，而不是复制同一篇文章",
+      "evidence_ids": ["c07-newbie-village-guide", "c14-duoplus-keep-number", "c18-wechat-eu-use-case", "c19-10100-crossborder-guide"],
+      "application": "图文页做证据母版，视频演示步骤，平台场景页发布测试结果，AI 分享入口提供结构化摘要；每个渠道保留独特信息增益。"
+    }
+  ]
+}

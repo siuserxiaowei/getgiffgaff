@@ -10,6 +10,7 @@ import worker, {
 const INDEXABLE_DIRECTIVES =
   "index, follow, max-snippet:-1, max-image-preview:large";
 const PRIVATE_DIRECTIVES = "noindex, nofollow, noarchive";
+const EXPECTED_PUBLIC_URL_COUNT = 34;
 
 function parseAttributes(tag) {
   const attributes = new Map();
@@ -188,8 +189,8 @@ function extractSitemapLocations(xml) {
 }
 
 test("the production indexable allowlist contains exactly 34 unique canonical paths", () => {
-  assert.equal(PUBLIC_INDEXABLE_PATHS.length, 34);
-  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 34);
+  assert.equal(PUBLIC_INDEXABLE_PATHS.length, EXPECTED_PUBLIC_URL_COUNT);
+  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, EXPECTED_PUBLIC_URL_COUNT);
 
   for (const pathname of PUBLIC_INDEXABLE_PATHS) {
     assert.match(pathname, /^\//, pathname);
@@ -241,8 +242,8 @@ test("sitemap.xml is rebuilt as exactly the 34 unique canonical public URLs", as
 
     assert.equal(response.status, 200);
     assert.equal(response.headers.has("x-robots-tag"), false);
-    assert.equal(locations.length, 34);
-    assert.equal(new Set(locations).size, 34);
+    assert.equal(locations.length, EXPECTED_PUBLIC_URL_COUNT);
+    assert.equal(new Set(locations).size, EXPECTED_PUBLIC_URL_COUNT);
     assert.deepEqual(locations, expected);
   });
 });

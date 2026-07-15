@@ -1,0 +1,1427 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-15T18:30:00+08:00",
+  "retrieved_at": "2026-07-15",
+  "scope": "Competitors and competing distribution channels 21-40: English giffgaff reviews/help, UK travel/student SIM guides, Reddit, YouTube and Zhihu.",
+  "methodology": {
+    "collection": "Live web search, direct page inspection, HTML structured-data inspection where accessible, and public YouTube metadata inspection.",
+    "ranking_boundary": "This is a search-result snapshot, not a ranking or traffic estimate. No position, volume, authority or conversion claim is inferred.",
+    "copyright_boundary": "Only titles, headings, short factual summaries, information architecture, trust signals and conversion patterns are recorded. No third-party article is reproduced.",
+    "freshness_rule": "Prices, allowances, roaming destinations, activation flows and platform compatibility must be rechecked against current official sources before publication.",
+    "deduplication": "Domains reserved by competitors-01-20 and all six user-supplied seed sources were excluded."
+  },
+  "competitors": [
+    {
+      "id": 21,
+      "name": "SIM Only Finder — giffgaff roaming guide",
+      "url": "https://www.simonlyfinder.co.uk/guides/giffgaff-roaming",
+      "type": "independent SIM comparison guide",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff roaming",
+        "giffgaff EU roaming limit",
+        "giffgaff roaming outside Europe",
+        "giffgaff roaming China"
+      ],
+      "search_intent": "Commercial investigation plus pre-travel problem prevention.",
+      "title": "giffgaff Roaming Explained: EU Charges & Limits | SIM Only Finder",
+      "h1": "giffgaff Roaming Explained: EU Charges & Limits",
+      "sections": [
+        "How the guide was produced",
+        "Included roaming and covered destinations",
+        "Data allowance and over-limit outcomes",
+        "Outside-Europe roaming",
+        "Fair-use duration",
+        "Worked trip-cost example",
+        "Competitor comparison",
+        "Management steps and FAQ"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named reviewer with UK mobile retail background",
+          "Last-reviewed date",
+          "Explicit editorial policy",
+          "Methodology says official giffgaff terms/help, RootMetrics and Ofcom were checked",
+          "Boundary reminder to confirm current terms before travel"
+        ],
+        "citation_style": "Inline links to official/network and independent measurement sources, followed by a methodology/editorial-policy section."
+      },
+      "cta": [
+        "Compare giffgaff SIM-only deals",
+        "Deal cards with retailer choice",
+        "Related roaming guides",
+        "Social sharing"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Links to PAC transfer, competing network roaming guides, network hubs and deal pages.",
+        "schema": [
+          "Organization",
+          "Person",
+          "ContactPoint",
+          "Article",
+          "WebPage",
+          "ImageObject"
+        ],
+        "distribution": "Search-first evergreen guide, comparison/deal funnel and social sharing."
+      },
+      "learnable_pattern": "Answer the expensive mistake first, show a worked cost scenario, define who the product is and is not for, then place a comparison CTA after the decision evidence.",
+      "risk": "Commercial comparison page; fees and allowances are volatile secondary-source facts. Recalculate examples and cite current official tariff pages rather than copying figures.",
+      "date": {
+        "page_date": "Last reviewed May 2026",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.simonlyfinder.co.uk/guides/giffgaff-roaming",
+        "https://www.giffgaff.com/roaming-charges"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Expert Reviews — giffgaff review",
+      "url": "https://www.expertreviews.co.uk/technology/broadband-mobile-networks/giffgaff-review",
+      "type": "technology publisher review",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff review",
+        "is giffgaff good",
+        "giffgaff coverage speed",
+        "giffgaff roaming review"
+      ],
+      "search_intent": "Commercial investigation before choosing a network.",
+      "title": "Giffgaff review: Simply the best",
+      "h1": "Giffgaff review: Simply the best",
+      "sections": [
+        "Pros and cons",
+        "Mobile network deals",
+        "What you get",
+        "Customer service",
+        "Coverage, reliability and speed",
+        "Roaming",
+        "Other features and spending caps",
+        "Verdict"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named author with long technology-review biography",
+          "Original customer survey and awards framing",
+          "Survey recommendation percentages",
+          "RootMetrics referenced for host-network performance",
+          "Pros/cons and reviewed starting price"
+        ],
+        "citation_style": "Own survey evidence combined with links to related rankings and third-party network measurements."
+      },
+      "cta": [
+        "Check prices at giffgaff",
+        "Compare mobile network deals",
+        "Read best-mobile-networks ranking"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Awards, best networks, broadband reviews and roaming deal guides.",
+        "schema": "Not verified: direct automated fetch returned 405, although the public page was readable through search-page inspection.",
+        "distribution": "Publisher search footprint, annual awards/survey content and affiliate deal links."
+      },
+      "learnable_pattern": "Lead with a compact verdict and original survey evidence, then reconcile customer-reported experience with independent network benchmarks instead of pretending one metric tells the whole story.",
+      "risk": "Survey results depend on sample composition and year; product prices and roaming details change. Avoid reusing the superlative verdict without equivalent original evidence.",
+      "date": {
+        "page_date": "2026 review; exact publication date was not exposed in the parsed page segment",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.expertreviews.co.uk/technology/broadband-mobile-networks/giffgaff-review"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Which? — giffgaff review 2026",
+      "url": "https://www.which.co.uk/reviews/mobile-phone-providers/article/mobile-phone-provider-reviews/giffgaff-mobile-review-aDkPd2m9vJnT",
+      "type": "consumer-research review and paywalled comparison",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff review 2026",
+        "giffgaff customer score",
+        "giffgaff coverage",
+        "giffgaff roaming"
+      ],
+      "search_intent": "Independent validation before purchase.",
+      "title": "Giffgaff review 2026 - Which?",
+      "h1": "Giffgaff review",
+      "sections": [
+        "Is Giffgaff any good",
+        "Provider score and survey table",
+        "Host network and coverage map",
+        "SIM-only deals",
+        "Deals and incentives",
+        "Price increases",
+        "Roaming",
+        "Stores"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "January 2026 survey of 5,137 mobile-provider customers",
+          "Published survey methodology sentence",
+          "Consumer-independence statement",
+          "Coverage checker",
+          "Clear separation between free summary and member-only scores"
+        ],
+        "citation_style": "Survey methodology, internal evidence pages and links to the official roaming-rate finder."
+      },
+      "cta": [
+        "Join or log in to unlock detailed scores",
+        "Compare deals",
+        "Enter postcode for signal quality",
+        "Browse other provider reviews"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Best/worst network hub, savings guides, coverage map, eSIM guide and a full provider-review directory.",
+        "schema": [
+          "BreadcrumbList",
+          "Article",
+          "WebPage",
+          "ImageObject",
+          "Person",
+          "Organization"
+        ],
+        "distribution": "Search, consumer membership/paywall, interactive coverage tool and social sharing."
+      },
+      "learnable_pattern": "Publish sample size and study date next to the score, expose a useful free answer, and reserve deeper tables/tools for conversion without hiding the basic conclusion.",
+      "risk": "Most detailed ratings are paywalled and the survey is UK-market focused; its score cannot be generalized to Chinese roaming or verification-code use cases.",
+      "date": {
+        "page_date": "2026 review; survey conducted January 2026",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.which.co.uk/reviews/mobile-phone-providers/article/mobile-phone-provider-reviews/giffgaff-mobile-review-aDkPd2m9vJnT"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "DavWheat unofficial giffgaff community help",
+      "url": "https://giffgaff.davwheat.dev/kb/roaming-in-eu",
+      "type": "unofficial community knowledge base",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff EU roaming guide",
+        "giffgaff roaming APN",
+        "giffgaff roaming not working"
+      ],
+      "search_intent": "How-to and troubleshooting.",
+      "title": "EU roaming guide | giffgaff community help",
+      "h1": "Roaming in the EU",
+      "sections": [
+        "Background",
+        "Things to note",
+        "Before you go",
+        "APN settings",
+        "While you are there"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Specific APN configuration table",
+          "Links to account eligibility check",
+          "Printable PDF version"
+        ],
+        "citation_style": "Sparse links to official account tools; no visible named author, update date or editorial policy."
+      },
+      "cta": [
+        "Download guide as PDF",
+        "Check roaming eligibility in giffgaff account"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Small knowledge-base navigation and same-guide PDF.",
+        "schema": [],
+        "distribution": "Searchable lightweight knowledge base plus offline PDF."
+      },
+      "learnable_pattern": "A compact pre-departure checklist and copyable settings table solve the task faster than a long narrative; an offline version is useful when connectivity fails.",
+      "risk": "High freshness risk: the page still says giffgaff had not announced whether free EU roaming would continue after Brexit, which is visibly outdated. Treat configuration details as leads only and verify every item officially.",
+      "date": {
+        "page_date": "No visible update date; content contains pre-2021 framing",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://giffgaff.davwheat.dev/kb/roaming-in-eu",
+        "https://giffgaff.davwheat.dev/kb/pdf/roaming-in-eu.pdf"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "giffgaff Europa activation tutorial",
+      "url": "https://www.giffgaffeuropa.com/en/faq/activate-giffgaff-sim",
+      "type": "multilingual affiliate/reseller tutorial",
+      "directness": "direct",
+      "target_query": [
+        "activate giffgaff SIM outside UK",
+        "giffgaff activation steps",
+        "giffgaff SIM Europe"
+      ],
+      "search_intent": "Activation how-to with referral conversion.",
+      "title": "How to activate your giffgaff SIM card",
+      "h1": "How to activate a giffgaff SIM card",
+      "sections": [
+        "Requirements",
+        "Open activation page",
+        "Enter code",
+        "Register email and password",
+        "Select plan",
+        "Payment",
+        "Confirmation and dashboard"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Eight numbered steps",
+          "Annotated screenshots",
+          "Links to official secure activation and dashboard",
+          "Email support"
+        ],
+        "citation_style": "Operational outbound links to giffgaff; no visible author, evidence policy or update date."
+      },
+      "cta": [
+        "Order your free SIM",
+        "Activate on official site",
+        "Choose a qualifying plan for referral credit",
+        "Email for help"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Prices, About, Help and language variants in English, Spanish, German, French, Italian and Portuguese.",
+        "schema": [],
+        "distribution": "Multilingual SEO pages, screenshots and referral funnel."
+      },
+      "learnable_pattern": "One screen/decision per numbered step, with a button exactly where the user needs to leave for the official transaction; language variants capture non-English demand.",
+      "risk": "Official-looking branding may blur independent status; referral incentives and activation availability change. Our site must state independent seller/support identity prominently and never imply official giffgaff status.",
+      "date": {
+        "page_date": "No visible article date; site footer shows 2026",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.giffgaffeuropa.com/en/faq/activate-giffgaff-sim",
+        "https://www.giffgaff.com/activate"
+      ]
+    },
+    {
+      "id": 26,
+      "name": "4G.co.uk giffgaff review",
+      "url": "https://www.4g.co.uk/giffgaff-4g-coverage-network-summary/",
+      "type": "mobile network review and deal comparison",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff review",
+        "giffgaff coverage",
+        "giffgaff speed",
+        "giffgaff plans"
+      ],
+      "search_intent": "Commercial investigation.",
+      "title": "Giffgaff Review - is Giffgaff a good choice?",
+      "h1": "Giffgaff Review",
+      "sections": [
+        "Summary pros and cons",
+        "Plans and value",
+        "Benefits and policies",
+        "Network, coverage, speed and frequencies",
+        "Customer service",
+        "Conclusion and alternatives"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Visible update date",
+          "Pros/cons and rating",
+          "References to Uswitch awards, Opensignal, Speedtest, Ofcom and Trustpilot",
+          "Comparison tables"
+        ],
+        "citation_style": "Named third-party datasets and provider facts embedded in a review/deal page."
+      },
+      "cta": [
+        "View SIM-only deals",
+        "Compare mobile deals",
+        "Read alternative-network reviews"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Network reviews, coverage explainers, deal categories and related policy guides.",
+        "schema": [
+          "Organization",
+          "PostalAddress",
+          "Review",
+          "Product",
+          "Person",
+          "Rating"
+        ],
+        "distribution": "Search-led review hub, social accounts and affiliate deal modules."
+      },
+      "learnable_pattern": "Use a stable review scorecard across price, roaming, coverage, speed and support, then connect each criterion to a deeper guide and an alternative.",
+      "risk": "Host-network measurements are used as a proxy for an MVNO and may not establish identical real-world performance. Dynamic plan prices should not be copied into evergreen prose.",
+      "date": {
+        "page_date": "2026-05-07",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.4g.co.uk/giffgaff-4g-coverage-network-summary/"
+      ]
+    },
+    {
+      "id": 27,
+      "name": "SIM Sherpa giffgaff review and comparison cluster",
+      "url": "https://www.simsherpa.com/networks/giffgaff/review-and-guide",
+      "type": "hands-on network review and affiliate comparison hub",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff review",
+        "giffgaff eSIM review",
+        "giffgaff WiFi calling",
+        "giffgaff vs O2",
+        "giffgaff alternatives"
+      ],
+      "search_intent": "Commercial investigation and provider comparison.",
+      "title": "giffgaff review 2026: now with eSIM and WiFi calling!",
+      "h1": "giffgaff review 2026: now with eSIM and WiFi calling!",
+      "sections": [
+        "Overall verdict",
+        "Three best and three worst points",
+        "Coverage and measured speed experience",
+        "WiFi calling and eSIM",
+        "Roaming and benefits",
+        "Pricing and deals",
+        "Customer service",
+        "FAQ"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "States that the publisher joined as a real customer",
+          "Reports hands-on speed and feature tests",
+          "Balanced negative and positive verdict",
+          "Affiliate disclosure",
+          "Links to official feature pages and industry datasets"
+        ],
+        "citation_style": "First-hand test narrative plus official feature links and external measurement references."
+      },
+      "cta": [
+        "Visit giffgaff",
+        "Compare deals with filters",
+        "Email a deal to yourself",
+        "Navigate to eight head-to-head giffgaff comparison pages"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Large review/deal/comparison graph: giffgaff versus O2, SMARTY, Three, VOXI, Sky, spusu, Talkmobile and 1pMobile.",
+        "schema": [
+          "Review",
+          "Product",
+          "Person",
+          "ItemList",
+          "ListItem",
+          "Rating",
+          "Organization"
+        ],
+        "distribution": "SERP comparison cluster, interactive deal filters and affiliate outbound links."
+      },
+      "learnable_pattern": "Build one evidence-rich review hub, then create only genuinely distinct head-to-head pages that link back to it; show failed tests and limitations as well as successes.",
+      "risk": "The title says 2026 while the visible last-updated note in the search extract says 6 January 2025. Some device-support and network claims can age quickly; hands-on findings are not universal.",
+      "date": {
+        "page_date": "Visible extract says last updated 2025-01-06; title currently says 2026",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.simsherpa.com/networks/giffgaff/review-and-guide",
+        "https://www.simsherpa.com/networks/compare/giffgaff-vs-o2"
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Ken's Tech Tips giffgaff plans guide",
+      "url": "https://kenstechtips.com/index.php/giffgaff-review",
+      "type": "expert-authored tariff guide and affiliate review",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff SIM only plans",
+        "giffgaff goodybag deals",
+        "giffgaff PAYG",
+        "giffgaff keep number"
+      ],
+      "search_intent": "Plan comparison and switching research.",
+      "title": "giffgaff SIM Only Plans: Flexible Goodybag Deals With O2 Coverage",
+      "h1": "giffgaff SIM Only Plans: Flexible Deals With O2 Coverage",
+      "sections": [
+        "18-month contracts",
+        "Monthly rolling plans",
+        "Pay As You Go plans and rates",
+        "Handset deals",
+        "Flexible plans and credit checks",
+        "Coverage and roaming",
+        "App and community",
+        "Keeping your phone number"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named author",
+          "Publication date",
+          "95 visible comments",
+          "Detailed funding/affiliate disclosure",
+          "Side-by-side plan tables and official outbound links"
+        ],
+        "citation_style": "Inline provider/deal links and related explanatory articles; reader comments add questions but are not verified evidence."
+      },
+      "cta": [
+        "See deal buttons inside plan tables",
+        "Read related PAYG and unlimited-data guides",
+        "Comment discussion"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Plan subtopics, PAYG expiry, unlimited data, free SIM and broader network-review directory.",
+        "schema": [
+          "WebPage",
+          "ReadAction",
+          "ImageObject",
+          "BreadcrumbList",
+          "WebSite",
+          "SearchAction",
+          "Organization"
+        ],
+        "distribution": "Evergreen search guide, email/social site ecosystem, comments and affiliate offers."
+      },
+      "learnable_pattern": "A comparison table can explain contract types faster than prose; use comments as a recurring source of FAQ updates, while keeping the factual answer editorially verified.",
+      "risk": "The visible publication date is 2023 and multiple tariff tables are volatile. A page can look maintained while old facts remain; all figures need a current verification timestamp.",
+      "date": {
+        "page_date": "2023-06-26",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://kenstechtips.com/index.php/giffgaff-review"
+      ]
+    },
+    {
+      "id": 29,
+      "name": "MoneySuperMarket giffgaff review",
+      "url": "https://www.moneysupermarket.com/mobile-phones/networks/reviews/giffgaff/",
+      "type": "large comparison marketplace review",
+      "directness": "direct",
+      "target_query": [
+        "is giffgaff any good 2026",
+        "giffgaff review",
+        "giffgaff pricing coverage roaming",
+        "giffgaff alternatives"
+      ],
+      "search_intent": "Commercial investigation followed by deal comparison.",
+      "title": "giffgaff review: is giffgaff any good in 2026?",
+      "h1": "giffgaff review: is giffgaff any good in 2026?",
+      "sections": [
+        "Summary",
+        "SIM-only and phone plans",
+        "Coverage",
+        "Roaming",
+        "Customer service and offline experience",
+        "Deals and pricing",
+        "Pros and cons",
+        "Alternatives and comparisons"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named author and publication date",
+          "Pros/cons",
+          "Links to Ofcom and official roaming",
+          "Explicit alternatives"
+        ],
+        "citation_style": "Internal provider explainers plus official and regulator links where relevant."
+      },
+      "cta": [
+        "Compare giffgaff SIM-only deals",
+        "Compare phones and other networks",
+        "Read related decision guides"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Full mobile-provider review directory, roaming, SIM-only versus monthly, refurbished-phone and handset hubs.",
+        "schema": "Not verified: direct automated fetch returned 403; public search-page rendering was inspectable.",
+        "distribution": "High-authority comparison marketplace, provider landing pages and cross-category deal funnel."
+      },
+      "learnable_pattern": "Cover the whole decision in a predictable order and always end with alternatives; a user who rejects the product should still remain inside the site.",
+      "risk": "Commercial comparison context and some statements use older Ofcom data. Coverage percentages and roaming wording should be tied to dated primary evidence.",
+      "date": {
+        "page_date": "2026-02-26",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.moneysupermarket.com/mobile-phones/networks/reviews/giffgaff/"
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Uswitch giffgaff SIM-only comparison",
+      "url": "https://www.uswitch.com/mobiles/compare/sim_only_deals/giffgaff/",
+      "type": "dynamic deal comparison and provider guide",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff SIM only deals",
+        "giffgaff plans 2026",
+        "giffgaff activation",
+        "is giffgaff good"
+      ],
+      "search_intent": "Transactional comparison with supporting education.",
+      "title": "Giffgaff SIM Only Deals: Compare Contracts 2026 - Uswitch",
+      "h1": "giffgaff SIM only deals",
+      "sections": [
+        "Live deal list",
+        "How to choose a plan",
+        "Unlimited, 5G, PAYG and cheap options",
+        "Network verdict",
+        "Switching and number transfer",
+        "Activation",
+        "Roaming",
+        "Customer service"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Deal last-updated timestamp",
+          "Commission and promoted-placement disclosure",
+          "Uswitch award context",
+          "FAQ-style supporting content"
+        ],
+        "citation_style": "Live comparison inventory plus links to official roaming and internal switching guides."
+      },
+      "cta": [
+        "Buy now on each deal",
+        "Load more deals",
+        "Use switching guides"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Number transfer, network pages, awards, mobile comparison and support topics.",
+        "schema": [
+          "WebPage",
+          "BreadcrumbList",
+          "ListItem",
+          "FAQPage",
+          "Question",
+          "Answer"
+        ],
+        "distribution": "Dynamic comparison engine, awards PR, search FAQ coverage and affiliate referrals."
+      },
+      "learnable_pattern": "Put a freshness timestamp directly beside dynamic inventory, then attach concise education below it; label commercial placement rules before asking for the click.",
+      "risk": "Plan inventory changes continuously and the commercial ranking model is not applicable to an independent tutorial site. Do not mark editorial FAQs as FAQ schema unless all answers are visible and policy-compliant.",
+      "date": {
+        "page_date": "Deals last updated 2026-07-15",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.uswitch.com/mobiles/compare/sim_only_deals/giffgaff/"
+      ]
+    },
+    {
+      "id": 31,
+      "name": "Choose giffgaff mobile review",
+      "url": "https://www.choose.co.uk/mobile/giffgaff/reviews/",
+      "type": "independent comparison review",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff review",
+        "giffgaff mobile speed",
+        "giffgaff tariffs",
+        "giffgaff customer service"
+      ],
+      "search_intent": "Commercial investigation.",
+      "title": "giffgaff review: are their SIM only goodybags any good?",
+      "h1": "giffgaff mobile review: are they any good?",
+      "sections": [
+        "Best deals",
+        "Coverage and 5G",
+        "Mobile speed",
+        "Tariffs",
+        "Customer service",
+        "Verdict"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named author and explicit update date",
+          "Category rating scorecard",
+          "References to Opensignal, RootMetrics, Ofcom and UKCSI",
+          "Independence and comparison-order promise"
+        ],
+        "citation_style": "Inline source links and related evidence guides."
+      },
+      "cta": [
+        "Get a free SIM",
+        "Compare handset deals",
+        "Read latest guides",
+        "Social sharing"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Coverage, WiFi calling, hotspot and unlimited-data guides plus provider/category hubs.",
+        "schema": [
+          "Article",
+          "WebPage",
+          "Organization",
+          "ImageObject",
+          "Person",
+          "BreadcrumbList",
+          "ListItem"
+        ],
+        "distribution": "Evergreen comparison library and social sharing."
+      },
+      "learnable_pattern": "A consistent category scorecard helps scanning, but every score should link to a dated evidence block rather than float as an unexplained star rating.",
+      "risk": "Last updated in 2021; the page contains old plan structures, measurements and future projections that are now historical. Useful for architecture, not facts.",
+      "date": {
+        "page_date": "2021-02-02",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.choose.co.uk/mobile/giffgaff/reviews/"
+      ]
+    },
+    {
+      "id": 32,
+      "name": "Compare the Market giffgaff deals guide",
+      "url": "https://www.comparethemarket.com/mobile-phones/giff-gaff/",
+      "type": "comparison marketplace landing page",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff deals",
+        "compare giffgaff SIM only",
+        "giffgaff phone deals",
+        "keep number switching to giffgaff"
+      ],
+      "search_intent": "Transactional comparison.",
+      "title": "Compare Our BEST Giffgaff Deals 2026 | Compare the Market",
+      "h1": "Giffgaff deals",
+      "sections": [
+        "What is giffgaff",
+        "Related mobile guides",
+        "How to compare SIM-only deals",
+        "SIM-only versus phone contract",
+        "Keeping an existing number"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Plain-language overview",
+          "Commercial model and partner-policy links",
+          "Legal and consumer-support footer"
+        ],
+        "citation_style": "Mostly internal comparison guidance and direct provider handoff; limited visible primary sourcing on this landing page."
+      },
+      "cta": [
+        "Start comparing",
+        "Compare mobile deals now",
+        "Navigate to SIM-only, unlimited-data and network guides"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Mobile-network, data-usage, 5G, SIM-only and contract-choice guides.",
+        "schema": "Not verified: automated request returned a blocking page, while public search-page rendering was readable.",
+        "distribution": "Brand search landing page into a comparison engine and loyalty-rewards ecosystem."
+      },
+      "learnable_pattern": "Keep the transactional landing page short, answer the three conversion objections, and route deeper education to dedicated guides instead of inflating one page.",
+      "risk": "Low editorial depth and strong commercial funnel; not a model for evidence-heavy GEO content. Terms and offers can change without the prose changing.",
+      "date": {
+        "page_date": "Current title targets 2026; no visible article date in inspected output",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.comparethemarket.com/mobile-phones/giff-gaff/"
+      ]
+    },
+    {
+      "id": 33,
+      "name": "TechRadar giffgaff goodybag explainer",
+      "url": "https://www.techradar.com/sim-only/giffgaff-sims-and-goodybags",
+      "type": "technology publisher explainer and affiliate deals page",
+      "directness": "direct",
+      "target_query": [
+        "what are giffgaff goodybags",
+        "are giffgaff SIMs good",
+        "giffgaff 5G",
+        "giffgaff alternatives"
+      ],
+      "search_intent": "Commercial investigation and concept explanation.",
+      "title": "Giffgaff SIMs: what are goodybags and are they good deals? | TechRadar",
+      "h1": "Giffgaff SIMs: what are goodybags and are they good deals?",
+      "sections": [
+        "Is it a good network",
+        "Coverage",
+        "Benefits",
+        "SIM sizes",
+        "One-month contracts",
+        "5G",
+        "Alternative providers",
+        "Current deals"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named author biography",
+          "Affiliate disclosure",
+          "Why-you-can-trust-us link",
+          "Links to Trustpilot and related explainers"
+        ],
+        "citation_style": "Editorial explanation with provider/affiliate links; little dated first-hand evidence on this older page."
+      },
+      "cta": [
+        "View affiliate deals",
+        "Newsletter signup",
+        "Follow as preferred Google source",
+        "Share through Facebook, X, WhatsApp, Reddit, Pinterest, Flipboard and Threads"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "SIM-only, MVNO, eSIM and network-provider content across a large technology-publisher graph.",
+        "schema": [
+          "Article",
+          "SpeakableSpecification",
+          "ImageObject",
+          "Organization",
+          "Person",
+          "WebPage",
+          "BreadcrumbList",
+          "SiteNavigationElement",
+          "ItemList"
+        ],
+        "distribution": "Google preferred-source prompt, newsletter, extensive social sharing, related-news modules and affiliate syndication."
+      },
+      "learnable_pattern": "Distribution is part of the content product: offer preferred-source following, email and multiple share formats, while linking the explainer into a broader topical graph.",
+      "risk": "Published in 2021 and visibly stale: its statement that 5G is limited to specific Golden Goodybags may no longer reflect current plans. Use only its structure/distribution pattern.",
+      "date": {
+        "page_date": "2021-02-19",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.techradar.com/sim-only/giffgaff-sims-and-goodybags"
+      ]
+    },
+    {
+      "id": 34,
+      "name": "Selectra giffgaff review 2026",
+      "url": "https://selectra.co.uk/mobile/networks/giff-gaff",
+      "type": "comparison publisher review and micro-hub",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff review 2026",
+        "giffgaff goodybag prices",
+        "giffgaff Trustpilot",
+        "giffgaff customer service"
+      ],
+      "search_intent": "Commercial investigation with current-plan lookup.",
+      "title": "giffgaff review 2026: goodybag prices, O2 coverage, is it any good?",
+      "h1": "giffgaff review 2026",
+      "sections": [
+        "Answer-first verdict",
+        "At-a-glance facts",
+        "Company and regulation",
+        "Current goodybags with best-for labels",
+        "Pros and cons",
+        "Customer-review snapshot",
+        "Expert verdict",
+        "FAQ"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Pricing verification date",
+          "Page update date",
+          "Links to corporate ownership, Ofcom and Ombudsman sources",
+          "Customer-review collection date",
+          "Independence statement"
+        ],
+        "citation_style": "Dense inline references, explicit checked-on dates and FAQ restatements."
+      },
+      "cta": [
+        "See giffgaff goodybags",
+        "Read top-up, login and contact pages",
+        "Compare other networks"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "A compact giffgaff entity cluster covering overview, top-up, account login and contact, connected to broader network comparisons.",
+        "schema": [
+          "Organization",
+          "Article",
+          "FAQPage",
+          "Product",
+          "Brand",
+          "AggregateRating",
+          "Review",
+          "ItemList"
+        ],
+        "distribution": "Search hub with answer-first snippets, provider subpages and comparison CTAs."
+      },
+      "learnable_pattern": "Attach a checked-on date to every volatile module and label each option by user fit, not just specs; create a small entity cluster for recurring tasks such as top-up and contact.",
+      "risk": "Some claims, such as identical performance to the host network, require stronger evidence. Product/review/aggregate-rating schema is high-risk without direct, policy-compliant review data and should not be copied.",
+      "date": {
+        "page_date": "Last updated 2026-06-26; headline prices checked 2026-05-19",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://selectra.co.uk/mobile/networks/giff-gaff"
+      ]
+    },
+    {
+      "id": 35,
+      "name": "Too Many Adapters UK SIM/eSIM travel guide",
+      "url": "https://toomanyadapters.com/buying-sim-card-united-kingdom/",
+      "type": "travel technology guide",
+      "directness": "adjacent",
+      "target_query": [
+        "best SIM card UK tourist",
+        "UK eSIM travel",
+        "buy prepaid SIM UK",
+        "UK SIM coverage roaming"
+      ],
+      "search_intent": "Pre-trip commercial investigation and setup planning.",
+      "title": "Buying a SIM Card or eSIM for United Kingdom in 2026",
+      "h1": "Buying a SIM Card or eSIM for Travel in the United Kingdom",
+      "sections": [
+        "Travel eSIM options",
+        "How to buy a prepaid SIM",
+        "Prepaid SIM costs by provider",
+        "Topping up",
+        "Coverage and data speeds",
+        "EU roaming",
+        "Reader comments"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named author Dave Dean",
+          "Published and modified dates",
+          "Travel-specific decision scope",
+          "44 reader comments",
+          "Author profile"
+        ],
+        "citation_style": "Provider comparisons and experience-led recommendations; outbound commercial links should be checked individually."
+      },
+      "cta": [
+        "Buy recommended travel eSIM/SIM",
+        "Travel insurance affiliate prompt",
+        "Newsletter signup",
+        "Read country-specific SIM guides",
+        "Comment"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Country-by-country SIM templates, travel eSIM explainers, hotspot reviews and remote-work technology.",
+        "schema": [
+          "Article",
+          "CommentAction",
+          "WebPage",
+          "ReadAction",
+          "ImageObject",
+          "BreadcrumbList",
+          "WebSite",
+          "SearchAction",
+          "Organization"
+        ],
+        "distribution": "Country-template SEO, newsletter, social channels and long-running comment community."
+      },
+      "learnable_pattern": "Frame network advice around a traveller's complete job—buying, price, top-up, coverage and return travel—then reuse a consistent country template only when each page has genuinely local evidence.",
+      "risk": "Giffgaff is only one option on a broader travel page. Affiliate recommendations and provider prices are volatile; do not imitate country-scale programmatic SEO without unique verified data.",
+      "date": {
+        "page_date": "Published 2021-10-16; modified 2026-04-23",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://toomanyadapters.com/buying-sim-card-united-kingdom/"
+      ]
+    },
+    {
+      "id": 36,
+      "name": "Save the Student giffgaff deal page",
+      "url": "https://www.savethestudent.org/student-deals/mobile-phones/250-minutes-unlimited-texts-unlimited-data-12.html",
+      "type": "student deal and audience-specific acquisition page",
+      "directness": "direct-audience",
+      "target_query": [
+        "giffgaff student deal",
+        "cheap UK SIM international student",
+        "free giffgaff SIM student"
+      ],
+      "search_intent": "Transactional bargain seeking.",
+      "title": "20GB data, unlimited texts & calls – £10pm - Save the Student",
+      "h1": "20GB data, unlimited texts & calls – £10pm",
+      "sections": [
+        "Offer summary",
+        "Three-step redemption",
+        "Device-lock warning",
+        "Deal expiry/status",
+        "Similar offers",
+        "Newsletter"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Named deal finder",
+          "Visible update date",
+          "Affiliate disclosure",
+          "Deal-not-working feedback path",
+          "Editorial disclaimer"
+        ],
+        "citation_style": "Short deal copy with direct offer link; limited primary evidence on-page."
+      },
+      "cta": [
+        "Click to get this deal",
+        "Report deal not working",
+        "Subscribe to weekly deals",
+        "View similar student offers"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Student bills, international-student resources, SIM comparison, discounts and broader money-saving content.",
+        "schema": "Not verified: automated fetch returned 403, while public search-page rendering was inspectable.",
+        "distribution": "Audience-specific SEO, email deal list, social media and repeat deal modules."
+      },
+      "learnable_pattern": "For high-intent offers, show the exact eligibility/redemption steps and a failure-report mechanism; connect the offer to the audience's wider setup journey.",
+      "risk": "Updated in 2024 and the displayed allowance may be stale despite 'ongoing' status. Never publish an offer without a checked-on timestamp, evidence and automatic/manual expiry review.",
+      "date": {
+        "page_date": "Updated 2024-11-20",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.savethestudent.org/student-deals/mobile-phones/250-minutes-unlimited-texts-unlimited-data-12.html"
+      ]
+    },
+    {
+      "id": 37,
+      "name": "Reddit r/NoContract travel experience thread",
+      "url": "https://www.reddit.com/r/NoContract/comments/1tc9fy9/uk_paris_trip_giffgaff_esim_worked_surprisingly/",
+      "type": "user-generated discussion and first-hand anecdote",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff eSIM travel experience",
+        "giffgaff UK Paris roaming",
+        "does giffgaff eSIM work abroad"
+      ],
+      "search_intent": "Experience validation and troubleshooting through peers.",
+      "title": "UK & Paris Trip: Giffgaff eSIM Worked Surprisingly Well",
+      "h1": "UK & Paris Trip: Giffgaff eSIM Worked Surprisingly Well",
+      "sections": [
+        "Original trip report",
+        "Device/setup context",
+        "Coverage and roaming anecdote",
+        "Questions and comments"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "First-person trip context",
+          "Public replies can challenge or qualify the report",
+          "Visible account/community history on platform"
+        ],
+        "citation_style": "Anecdotal UGC; no editorial fact-check or primary-source citations."
+      },
+      "cta": [
+        "Comment",
+        "Upvote/downvote",
+        "Join r/NoContract",
+        "Open related threads"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Subreddit feed, user profiles, related no-contract and travel threads.",
+        "schema": "Platform-native discussion metadata; JSON-LD was not independently verified.",
+        "distribution": "Community feed, search indexing, repost/share and comment recirculation."
+      },
+      "learnable_pattern": "Readers value a compact field report with route, device, setup timing, what worked and what failed. Convert this into a controlled test-log format with methodology rather than borrowing anonymous claims.",
+      "risk": "Anonymous anecdote, small sample and possible undisclosed promotion. Do not treat coverage or compatibility as universal; cite only as user experience and pair with official/current evidence.",
+      "date": {
+        "page_date": "Search index showed approximately two months old at retrieval",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.reddit.com/r/NoContract/comments/1tc9fy9/uk_paris_trip_giffgaff_esim_worked_surprisingly/"
+      ]
+    },
+    {
+      "id": 38,
+      "name": "Official giffgaff YouTube eSIM tutorial",
+      "url": "https://www.youtube.com/watch?v=acY6suWosq4",
+      "type": "official short-form video tutorial",
+      "directness": "direct-official",
+      "target_query": [
+        "how to install giffgaff eSIM",
+        "giffgaff eSIM new members",
+        "giffgaff eSIM video"
+      ],
+      "search_intent": "Visual setup how-to.",
+      "title": "How to install an eSIM on giffgaff for new members",
+      "h1": "How to install an eSIM on giffgaff for new members",
+      "sections": [
+        "App setup and eSIM selection",
+        "Plan selection and purchase",
+        "Installing the eSIM",
+        "Post-installation and support"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Official verified giffgaff channel",
+          "On-screen first-party workflow",
+          "Public upload date and engagement metrics",
+          "Links to official website, community and social accounts"
+        ],
+        "citation_style": "First-party demonstration rather than third-party citations."
+      },
+      "cta": [
+        "Subscribe to giffgaff channel",
+        "Visit giffgaff site/community",
+        "Follow TikTok, Facebook, Instagram and X"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Channel library and YouTube recommendations; description links the wider official social ecosystem.",
+        "schema": "YouTube platform video metadata; page JSON-LD was not separately inspected.",
+        "distribution": "YouTube search/recommendations plus cross-platform official social links."
+      },
+      "learnable_pattern": "Pair each high-friction tutorial with a sub-two-minute screen recording and the same four chapter labels used in the article; embed the video near the relevant steps, not only at the top.",
+      "risk": "Uploaded in 2024 and app UI can change. It is first-party marketing, not independent validation; our derivative tutorial must use our own recording and screenshots with current app version/date.",
+      "date": {
+        "page_date": "Uploaded 2024-04-10",
+        "retrieved": "2026-07-15",
+        "public_metadata_at_retrieval": "98 seconds; 61,697 views; 256 likes"
+      },
+      "source_urls": [
+        "https://www.youtube.com/watch?v=acY6suWosq4",
+        "https://www.youtube.com/@giffgaff"
+      ]
+    },
+    {
+      "id": 39,
+      "name": "Zhihu current long-term overseas SIM answer",
+      "url": "https://www.zhihu.com/tardis/jm/ans/2039507496453285600",
+      "type": "Chinese Q&A answer and recommendation funnel",
+      "directness": "adjacent-direct",
+      "target_query": [
+        "长期使用海外实体电话卡",
+        "2026 国内怎么办 giffgaff",
+        "giffgaff eSIM 国内激活",
+        "giffgaff 实体卡购买"
+      ],
+      "search_intent": "Chinese-market acquisition, choice and setup guidance.",
+      "title": "如何获取一个可以长期使用海外实体电话卡？ - 知乎",
+      "h1": "如何获取一个可以长期使用海外实体电话卡？",
+      "sections": [
+        "2026 current-route summary",
+        "Three routes ranked by recommendation",
+        "Outdated routes to avoid",
+        "Use-case boundaries in China",
+        "eSIM path",
+        "Physical SIM and forwarding path",
+        "Activation checklist"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Current-year framing",
+          "Explicit ranking of routes",
+          "Calls out obsolete tutorials",
+          "Failure boundaries and account-ownership risk"
+        ],
+        "citation_style": "Mostly creator assertions and experience; official links are present for activation but a formal source list/methodology is not visible in the search extract."
+      },
+      "cta": [
+        "Follow/read related Zhihu answers",
+        "Use recommended acquisition route",
+        "Platform engagement"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Zhihu question graph, recommended answers, creator profile and topic feeds.",
+        "schema": [
+          "QAPage",
+          "Question",
+          "Answer",
+          "Person"
+        ],
+        "distribution": "Search indexing, Q&A recommendations, topic feed and creator-follow graph."
+      },
+      "learnable_pattern": "Start with a dated decision tree, explicitly retire obsolete routes, and separate 'best path' from 'fallback path'; this directly addresses the Chinese SERP's stale-tutorial problem.",
+      "risk": "UGC claims about shipping availability, activation region, marketplace supply and verification use can change or be commercially motivated. Verify against official ordering/help pages and disclose any seller relationship.",
+      "date": {
+        "page_date": "Search index showed approximately one month old; body frames routes as May 2026",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.zhihu.com/tardis/jm/ans/2039507496453285600",
+        "https://www.giffgaff.com/activate"
+      ]
+    },
+    {
+      "id": 40,
+      "name": "giffgaff SIM Only Deals activation affiliate",
+      "url": "https://www.giffgaff-sim-only-deals.co.uk/giffgaff-activate/",
+      "type": "giffgaff-focused affiliate tutorial site",
+      "directness": "direct",
+      "target_query": [
+        "giffgaff activate",
+        "how to activate giffgaff SIM",
+        "giffgaff activation troubleshooting",
+        "keep old number giffgaff"
+      ],
+      "search_intent": "Step-by-step activation with transactional referral intent.",
+      "title": "How to Activate Your giffgaff SIM | Step-by-Step Guide",
+      "h1": "How to Activate Your giffgaff SIM Card",
+      "sections": [
+        "Prerequisites",
+        "Signal check",
+        "Activation code",
+        "Account creation",
+        "Plan or credit choice",
+        "Confirmation",
+        "Number transfer",
+        "Troubleshooting",
+        "FAQ"
+      ],
+      "trust_and_citations": {
+        "signals": [
+          "Visible publication date",
+          "Detailed task checklist",
+          "Independent-site and official-affiliate disclosure",
+          "Official activation/support links",
+          "Contact and legal pages"
+        ],
+        "citation_style": "Mostly unsourced procedural assertions with operational links to official giffgaff pages."
+      },
+      "cta": [
+        "Order a free SIM",
+        "Activate SIM",
+        "See SIM-only deals",
+        "Download app",
+        "Browse related PIN, PUK, voicemail, top-up and APN guides"
+      ],
+      "internal_links_schema_distribution": {
+        "internal_links": "Tightly focused guide cluster around activation, switching, PIN/PUK, voicemail, top-up and APN, with global deal CTAs.",
+        "schema": [
+          "Article",
+          "Organization"
+        ],
+        "distribution": "Exact-match tutorial SEO, affiliate links and social profiles."
+      },
+      "learnable_pattern": "A task-focused hub with prerequisites, numbered actions, troubleshooting and FAQ captures both happy-path and failure-path searches; identity disclosure belongs in the header as well as the footer.",
+      "risk": "High verification and branding risk. The page contains claims such as an eSIM QR-code prerequisite and abroad-use boundaries that may conflict with current official app-only activation. The official-looking domain/branding can confuse users; do not emulate that positioning.",
+      "date": {
+        "page_date": "2026-03-03",
+        "retrieved": "2026-07-15"
+      },
+      "source_urls": [
+        "https://www.giffgaff-sim-only-deals.co.uk/giffgaff-activate/",
+        "https://www.giffgaff.com/activate"
+      ]
+    }
+  ],
+  "serp_observations": [
+    {
+      "query": "giffgaff review 2026",
+      "intent": "Current commercial investigation.",
+      "visible_result_mix": "Consumer survey/review brands, specialist mobile reviewers, comparison marketplaces and a current answer-first review all surface for the same broad intent.",
+      "evidence_urls": [
+        "https://www.which.co.uk/reviews/mobile-phone-providers/article/mobile-phone-provider-reviews/giffgaff-mobile-review-aDkPd2m9vJnT",
+        "https://www.expertreviews.co.uk/technology/broadband-mobile-networks/giffgaff-review",
+        "https://www.4g.co.uk/giffgaff-4g-coverage-network-summary/",
+        "https://selectra.co.uk/mobile/networks/giff-gaff",
+        "https://www.moneysupermarket.com/mobile-phones/networks/reviews/giffgaff/"
+      ],
+      "overlap_recommendation": "Use one canonical review/decision page. Put pricing, coverage, roaming, support, pros/cons and dated verdict there; do not create separate 'is it good' and 'review 2026' URLs."
+    },
+    {
+      "query": "giffgaff roaming China 2026",
+      "intent": "Current price/availability check and bill-shock prevention.",
+      "visible_result_mix": "Official country tariff, specialist roaming guide and broader network reviews answer different parts of the task.",
+      "evidence_urls": [
+        "https://www.giffgaff.com/roaming/china",
+        "https://www.simonlyfinder.co.uk/guides/giffgaff-roaming",
+        "https://www.expertreviews.co.uk/technology/broadband-mobile-networks/giffgaff-review"
+      ],
+      "overlap_recommendation": "Create a China-specific roaming page whose lead answer cites the live official tariff and whose worked examples are timestamped. Link out to a general roaming explainer rather than duplicating it."
+    },
+    {
+      "query": "giffgaff eSIM activation guide",
+      "intent": "Visual setup plus compatibility and failure recovery.",
+      "visible_result_mix": "Official help, first-party YouTube, affiliate tutorials and Reddit problem threads coexist; users need both happy path and exception handling.",
+      "evidence_urls": [
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+        "https://www.youtube.com/watch?v=acY6suWosq4",
+        "https://www.reddit.com/r/giffgaff/comments/1qjxpv0/esim_uk_activation_does_not_work/",
+        "https://www.giffgaff-sim-only-deals.co.uk/giffgaff-activate/"
+      ],
+      "overlap_recommendation": "Use one eSIM setup guide with device/version prerequisites and an embedded original video; create a separate activation-failure page only if it owns diagnostic queries and links back to setup."
+    },
+    {
+      "query": "giffgaff keep number active",
+      "intent": "Prevent number expiry at minimum cost.",
+      "visible_result_mix": "Official account/cancellation content does not fully satisfy the minimum-action question, so recent Reddit threads fill the practical gap.",
+      "evidence_urls": [
+        "https://help.giffgaff.com/en/articles/243836-how-to-cancel-your-giffgaff-mobile-account",
+        "https://www.reddit.com/r/UKFrugal/comments/1swzmtx/giffgaff_mobile_number_expiring/",
+        "https://www.reddit.com/r/giffgaff/comments/1nftsbk/question_about_payg_on_giffgaff_minimal_use/"
+      ],
+      "overlap_recommendation": "Own this as a dated checklist/reminder page, distinguish number activity from roaming eligibility, and quote only official inactivity rules. Community suggestions should be labeled anecdotal."
+    },
+    {
+      "query": "giffgaff SIM activation problem",
+      "intent": "Immediate troubleshooting after a failed transaction/setup.",
+      "visible_result_mix": "Official help/transaction pages dominate the correct flow, while Reddit and news pages expose edge cases such as porting delays, wrong accounts and no signal.",
+      "evidence_urls": [
+        "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+        "https://www.giffgaff.com/activate",
+        "https://www.ispreview.co.uk/index.php/2024/11/giffgaff-uk-customers-face-sim-activation-and-number-porting-delays.html",
+        "https://www.reddit.com/r/giffgaff/comments/1tz82nk/can_not_activate_account/"
+      ],
+      "overlap_recommendation": "Separate the purchase/activation walkthrough from a symptom-based diagnostic page: invalid code, wrong account, payment, stuck under 24 hours, no signal, and porting delay."
+    },
+    {
+      "query": "giffgaff vs O2 review",
+      "intent": "Direct provider choice.",
+      "visible_result_mix": "Specialist comparison pages and general reviews overlap on price, coverage, speed, support and perks.",
+      "evidence_urls": [
+        "https://www.simsherpa.com/networks/compare/giffgaff-vs-o2",
+        "https://www.simsherpa.com/networks/giffgaff/review-and-guide",
+        "https://www.4g.co.uk/giffgaff-4g-coverage-network-summary/"
+      ],
+      "overlap_recommendation": "Create a single comparison URL only after collecting dated, source-backed comparison rows. Link to the main review and avoid repeating its full narrative."
+    },
+    {
+      "query": "best UK SIM for international students 2026",
+      "intent": "Audience-specific network selection and first-week setup.",
+      "visible_result_mix": "Student deal publishers, university onboarding PDFs and tourist/expat SIM guides compete, often with different freshness standards.",
+      "evidence_urls": [
+        "https://www.savethestudent.org/student-deals/mobile-phones/250-minutes-unlimited-texts-unlimited-data-12.html",
+        "https://www.new.ox.ac.uk/sites/default/files/2025-08/Guide%20for%20International%20Students%202025.pdf",
+        "https://www.physics.swansea.ac.uk/media/Information-Guide-%28143-%C3%97-205mm%29.pdf",
+        "https://toomanyadapters.com/buying-sim-card-united-kingdom/"
+      ],
+      "overlap_recommendation": "Build a broader UK-arrival decision guide rather than forcing a giffgaff-only answer. The giffgaff page should be one evaluated option and receive internal links from the student guide."
+    },
+    {
+      "query": "giffgaff verification code SMS China",
+      "intent": "Determine whether a specific cross-border OTP use case will work.",
+      "visible_result_mix": "The observed result set had weak exact-answer fit: general China roaming, Chinese acquisition tutorials and broad SMS-security material appear instead of a maintained compatibility dataset.",
+      "evidence_urls": [
+        "https://www.giffgaff.com/roaming/china",
+        "https://www.zhihu.com/tardis/jm/ans/2039507496453285600",
+        "https://arxiv.org/abs/2306.14497"
+      ],
+      "overlap_recommendation": "This is a defensible content gap only if backed by an original status board: platform, test date, card/SIM type, country/network, result, sample count and a no-guarantee warning. Do not mass-produce platform pages from hearsay."
+    },
+    {
+      "query": "best SIM card UK tourist giffgaff",
+      "intent": "Choose and acquire connectivity before or after arrival.",
+      "visible_result_mix": "Travel-tech guides, specialist mobile visitor guides and Reddit trip reports answer purchase convenience, local number, coverage and EU side-trip concerns.",
+      "evidence_urls": [
+        "https://toomanyadapters.com/buying-sim-card-united-kingdom/",
+        "https://www.simsherpa.com/networks/best-for-uk-visitors",
+        "https://www.reddit.com/r/uktravel/comments/1c1l0n6/giffgaff_is_awesome/",
+        "https://www.reddit.com/r/NoContract/comments/1tc9fy9/uk_paris_trip_giffgaff_esim_worked_surprisingly/"
+      ],
+      "overlap_recommendation": "Keep tourist choice separate from China long-term-number ownership. Link between them only where travel/roaming needs overlap."
+    },
+    {
+      "query": "giffgaff EU roaming guide",
+      "intent": "Allowance, eligibility and troubleshooting.",
+      "visible_result_mix": "Official policy pages, a current specialist cost guide and an outdated unofficial help page can all surface, making freshness a major differentiator.",
+      "evidence_urls": [
+        "https://www.giffgaff.com/boiler-plate/using-your-mobile-abroad",
+        "https://www.simonlyfinder.co.uk/guides/giffgaff-roaming",
+        "https://giffgaff.davwheat.dev/kb/roaming-in-eu"
+      ],
+      "overlap_recommendation": "Use explicit reviewed/verified dates, archive superseded guidance and separate policy facts from device/APN troubleshooting."
+    }
+  ],
+  "intent_overlap_recommendations": [
+    {
+      "decision": "merge",
+      "topics": [
+        "giffgaff review",
+        "is giffgaff good",
+        "giffgaff pros and cons"
+      ],
+      "reason": "Same evaluation intent and same evidence set; separate URLs would cannibalize."
+    },
+    {
+      "decision": "hub-and-spoke",
+      "topics": [
+        "SIM activation walkthrough",
+        "eSIM setup",
+        "activation troubleshooting",
+        "number transfer"
+      ],
+      "reason": "Shared onboarding journey but distinct task/failure intents. Use an onboarding hub with tightly linked task pages."
+    },
+    {
+      "decision": "split",
+      "topics": [
+        "roaming cost in China",
+        "receiving SMS in China",
+        "verification-code compatibility"
+      ],
+      "reason": "Tariff lookup, network operation and platform-specific OTP behavior require different evidence and answer different questions."
+    },
+    {
+      "decision": "split-with-crosslinks",
+      "topics": [
+        "keep number active",
+        "keep roaming eligibility",
+        "cancel or port number"
+      ],
+      "reason": "Users frequently confuse these states; separate checklists should explicitly link and contrast them."
+    },
+    {
+      "decision": "broader-parent",
+      "topics": [
+        "best UK SIM for students",
+        "best UK SIM for tourists",
+        "giffgaff for Chinese users"
+      ],
+      "reason": "Audience choice queries expect alternatives. Put them under a neutral UK-SIM decision hub; do not make every page a giffgaff sales pitch."
+    },
+    {
+      "decision": "conditional-only",
+      "topics": [
+        "country x platform x card verification pages"
+      ],
+      "reason": "Publish only where there is unique, dated, reproducible test data and manual review; otherwise keep a single status board to avoid thin programmatic SEO."
+    }
+  ],
+  "keyword_cluster_recommendations": [
+    {
+      "cluster": "中国用户完整决策中心",
+      "pillar": "/guides/giffgaff-complete-guide/",
+      "primary_intent": "从是否适合、怎么买、怎么激活到怎么长期维护的一站式决策",
+      "spokes": [
+        "/guides/giffgaff-g0-vs-g2/",
+        "/guides/buy-giffgaff-sim-in-china/",
+        "/guides/giffgaff-esim-guide/",
+        "/guides/giffgaff-activation-in-china/"
+      ],
+      "evidence_requirement": "每个变化性结论标明核验日期与官方来源；不得暗示官方身份。"
+    },
+    {
+      "cluster": "中国漫游、短信与验证码",
+      "pillar": "/guides/giffgaff-in-china/",
+      "primary_intent": "在中国能否联网、收发短信、收验证码，以及成本和边界",
+      "spokes": [
+        "/guides/giffgaff-china-roaming-cost/",
+        "/guides/giffgaff-sms-verification-troubleshooting/",
+        "/guides/giffgaff-verification-code-platforms/",
+        "/guides/giffgaff-no-signal-in-china/"
+      ],
+      "evidence_requirement": "兼容性页必须有测试日期、设备、SIM 类型、所在网络、样本量、失败状态与不保证未来结果声明。"
+    },
+    {
+      "cluster": "激活与迁移诊断",
+      "pillar": "/guides/giffgaff-activation/",
+      "primary_intent": "完成激活或定位激活失败原因",
+      "spokes": [
+        "/guides/giffgaff-esim-guide/",
+        "/guides/giffgaff-domestic-activation-failure/",
+        "/guides/giffgaff-transfer-number/",
+        "/guides/giffgaff-apn-settings/"
+      ],
+      "evidence_requirement": "用自有截图/录屏并标注 app 版本；把正常等待窗口与真正异常分开。"
+    },
+    {
+      "cluster": "长期保号与账户维护",
+      "pillar": "/guides/giffgaff-keep-number-active/",
+      "primary_intent": "避免号码回收和账户维护失误",
+      "spokes": [
+        "/guides/giffgaff-number-preservation-checklist/",
+        "/guides/giffgaff-top-up-options/",
+        "/guides/giffgaff-roaming-eligibility/",
+        "/guides/giffgaff-port-or-cancel/"
+      ],
+      "evidence_requirement": "明确区分号码活跃、余额、套餐、账户可登录与漫游资格五种状态。"
+    },
+    {
+      "cluster": "英国到达与选卡",
+      "pillar": "/guides/uk-sim-card-for-chinese-students-and-travellers/",
+      "primary_intent": "在 giffgaff、O2、Lebara、SMARTY 等选择中做适合场景的判断",
+      "spokes": [
+        "/guides/giffgaff-vs-o2/",
+        "/guides/giffgaff-for-international-students/",
+        "/guides/giffgaff-for-uk-travel/"
+      ],
+      "evidence_requirement": "保持中立比较，动态价格模块加核验日期，不为联盟收益扭曲排序。"
+    }
+  ],
+  "cross_sample_patterns": [
+    "最强页面不是最长页面，而是把日期、适用对象、失败边界和下一步放在答案附近。",
+    "当前英文强页普遍用评测主页面承接广泛品牌词，再用对比、漫游、充值、联系等子页承接单一任务。",
+    "原创调查、真实客户测试、可复现成本例子和公开方法，比泛泛的完整教程更容易形成可引用证据。",
+    "交易 CTA 应出现在决策证据之后；帮助页 CTA 应指向官方操作或人工升级路径。",
+    "可见更新时间不等于事实都新；必须对价格、漫游、eSIM、寄送和保号规则做字段级核验。",
+    "Reddit/知乎提供问题语言和失败场景，官方页面提供规则，两者应分别标注证据等级。",
+    "视频适合演示界面操作，正文适合兼容性、异常分支和更新记录；两者应互补而非重复。",
+    "不要复制竞品正文或官方式品牌包装；复用的是信息架构、证据纪律和分发机制。"
+  ]
+}

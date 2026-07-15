@@ -21,7 +21,7 @@
 下单前按这个清单确认：
 
 1. 明确用途：长期保留英国号码、低频收短信、账号备用，还是短期注册。
-2. 选择卡种：会自己激活和充值可以看 G0；第一次买、急用或担心支付失败，优先看 G2。
+2. 选择卡种：愿意用本人资料完成官方激活和充值可以看 G0；考虑 G2 前先核对来源、激活状态、登记责任、买方控制方式与当前条款，不能因急用跳过。
 3. 确认库存：不要只看旧截图，付款前问当前是否有货。
 4. 确认余额：购买 G2 时，问清当前余额范围，不要默认每张都一样。
 5. 确认发货：从哪里发、用什么快递、是否能加急、丢件怎么处理。
@@ -36,7 +36,7 @@
 
 第一坑是只比价格。便宜不等于适合你，G0 和 G2 的操作难度、付款环节和到手状态不同。
 
-第二坑是没有问余额和库存。G2 有余额卡的余额范围和库存可能变化，付款前确认比付款后争论更有效。
+第二坑是只问余额和库存。G2 还涉及卡来源、账号归属、本人登记、Participant SIM/激活地点、个人使用限制和控制权；无法验证这些条件就不要付款。
 
 第三坑是把售后当成“保证所有平台成功”。售后通常能帮你排查卡状态、信号、账号和基础短信，但平台风控不完全由卖家或 SIM 决定。
 
@@ -51,6 +51,8 @@ giffgaff 官方激活说明：[Activating your giffgaff SIM](https://help.giffga
 号码 inactive 和停用说明：[Understanding why your number has been deactivated](https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated)。
 
 WiFi Calling 和 VoLTE 边界：[Understanding WiFi Calling and VoLTE](https://help.giffgaff.com/en/articles/258841-understanding-wifi-calling-and-volte)。
+
+推广、账号与个人使用边界：[giffgaff Terms & Conditions](https://www.giffgaff.com/boiler-plate/terms)。
 
 本站总览：[giffgaff 使用教程和避坑清单](https://getgiffgaff.com/guides/6-pitfalls/)。
 

@@ -1,3 +1,5 @@
+import { renderTutorialPage, TUTORIAL_PAGES } from "./tutorial-pages.js";
+
 export const HOTFIX_ORIGIN = "https://3c237a37.getgiffgaff.pages.dev";
 export const CANONICAL_ORIGIN = "https://getgiffgaff.com";
 
@@ -79,7 +81,14 @@ const PITFALLS_PATH = "/guides/6-pitfalls/";
 const PITFALLS_ASSET_PATH = "/guides/6-pitfalls-page.txt";
 const RESEARCH_PATH = "/research/";
 const RESEARCH_ASSET_PATH = "/research/index-page.txt";
+const TUTORIAL_PATHS = new Set(Object.keys(TUTORIAL_PAGES));
+const LOCALLY_MANAGED_INDEXABLE_PATHS = new Set([
+  PITFALLS_PATH,
+  RESEARCH_PATH,
+  ...TUTORIAL_PATHS,
+]);
 const LOCAL_ASSET_PATHS = new Set([KTT_IMAGE_PATH, KTT_OG_IMAGE_PATH, "/robots.txt"]);
+const PUBLIC_READ_METHODS = new Set(["GET", "HEAD"]);
 const BODYLESS_STATUSES = new Set([101, 204, 205, 304]);
 const SENSITIVE_QUERY_PARAMETERS = new Set([
   "access_token",
@@ -103,6 +112,14 @@ const SENSITIVE_QUERY_PARAMETERS = new Set([
 const PITFALLS_NAV_ITEM =
   '<li><a href="/guides/6-pitfalls/">giffgaff 使用教程和避坑清单</a></li>';
 const PITFALLS_DOC_LIST_ITEM = `<a class="doc-list-item" href="/guides/6-pitfalls/"><span>giffgaff 使用教程和避坑清单</span><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>`;
+const TUTORIAL_DIRECTORY_BLOCK = `<section id="evidence-led-guides" class="doc-section" aria-labelledby="evidence-led-guides-title"><h2 id="evidence-led-guides-title">证据型专题教程</h2><p>每篇都列出官方来源、适用边界、复核日期和修订记录。</p><div class="doc-list">${Object.entries(
+  TUTORIAL_PAGES,
+)
+  .map(
+    ([pathname, page]) =>
+      `<a class="doc-list-item" href="${pathname}"><span>${page.headline}</span><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>`,
+  )
+  .join("")}</div></section>`;
 
 function routePath(pathname) {
   if (pathname === "/") return pathname;
@@ -868,17 +885,22 @@ export function rewriteContactHtml(html) {
 }
 
 function injectPitfallsGuideLinks(html) {
-  if (html.includes('href="/guides/6-pitfalls/"')) return html;
+  let rewritten = html;
+  if (!rewritten.includes('href="/guides/6-pitfalls/"')) {
+    rewritten = rewritten.replace(
+      /(<li><a(?: aria-current="page")? href="\/guides\/5-travel-data\/">giffgaff 旅行流量包使用指南<\/a><\/li>)/g,
+      `$1${PITFALLS_NAV_ITEM}`,
+    );
 
-  let rewritten = html.replace(
-    /(<li><a(?: aria-current="page")? href="\/guides\/5-travel-data\/">giffgaff 旅行流量包使用指南<\/a><\/li>)/g,
-    `$1${PITFALLS_NAV_ITEM}`,
-  );
+    rewritten = rewritten.replace(
+      /(<a class="doc-list-item" href="\/guides\/5-travel-data\/">[\s\S]*?<\/a>)/g,
+      `$1${PITFALLS_DOC_LIST_ITEM}`,
+    );
+  }
 
-  rewritten = rewritten.replace(
-    /(<a class="doc-list-item" href="\/guides\/5-travel-data\/">[\s\S]*?<\/a>)/g,
-    `$1${PITFALLS_DOC_LIST_ITEM}`,
-  );
+  if (!rewritten.includes('id="evidence-led-guides"')) {
+    rewritten = injectBeforeClosingTag(rewritten, "main", TUTORIAL_DIRECTORY_BLOCK);
+  }
 
   return rewritten
     .replace(/>9 篇教程</g, ">10 篇教程<")
@@ -897,9 +919,11 @@ function escapeXml(value) {
 function defaultSitemapEntry(pathname) {
   const extras =
     pathname === PITFALLS_PATH
-      ? "<lastmod>2026-07-01T00:00:00.000Z</lastmod><changefreq>monthly</changefreq><priority>0.78</priority>"
+      ? "<lastmod>2026-07-15T00:00:00.000Z</lastmod><changefreq>monthly</changefreq><priority>0.78</priority>"
       : pathname === RESEARCH_PATH
-        ? "<lastmod>2026-07-01T00:00:00.000Z</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>"
+        ? "<lastmod>2026-07-15T00:00:00.000Z</lastmod><changefreq>monthly</changefreq><priority>0.7</priority>"
+        : TUTORIAL_PATHS.has(pathname)
+          ? "<lastmod>2026-07-15T00:00:00.000Z</lastmod><changefreq>monthly</changefreq><priority>0.8</priority>"
         : "";
   return `<url><loc>${escapeXml(`${CANONICAL_ORIGIN}${pathname}`)}</loc>${extras}</url>`;
 }
@@ -925,8 +949,10 @@ export function reconcileSitemap(xml) {
     }
   }
 
-  const entries = PUBLIC_INDEXABLE_PATHS.map(
-    (pathname) => existingEntries.get(pathname) || defaultSitemapEntry(pathname),
+  const entries = PUBLIC_INDEXABLE_PATHS.map((pathname) =>
+    LOCALLY_MANAGED_INDEXABLE_PATHS.has(pathname)
+      ? defaultSitemapEntry(pathname)
+      : existingEntries.get(pathname) || defaultSitemapEntry(pathname),
   ).join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>`;
@@ -938,6 +964,27 @@ function shouldRewriteHtmlPath(pathname) {
 
 async function routeRequest(request, env) {
   const url = new URL(request.url);
+
+  if (TUTORIAL_PATHS.has(url.pathname)) {
+    if (!PUBLIC_READ_METHODS.has(request.method)) {
+      return new Response("Method Not Allowed", {
+        status: 405,
+        headers: {
+          allow: "GET, HEAD",
+          "content-type": "text/plain; charset=utf-8",
+        },
+      });
+    }
+    const html = renderTutorialPage(url.pathname);
+    return new Response(request.method === "HEAD" ? null : html, {
+      status: 200,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "x-getgiffgaff-hotfix": "tutorial-library",
+        "x-getgiffgaff-render-mode": "edge-static-tutorial",
+      },
+    });
+  }
 
   if (LOCAL_ASSET_PATHS.has(url.pathname) && env?.ASSETS) {
     return env.ASSETS.fetch(assetRequestFor(request, url.pathname));
@@ -986,7 +1033,7 @@ async function routeRequest(request, env) {
   }
 
   let html = rewriteGlobalSeoHtml(await upstreamResponse.text(), url.pathname);
-  html = injectPitfallsGuideLinks(html);
+  if (url.pathname === "/guides/") html = injectPitfallsGuideLinks(html);
   const isContactPage = CONTACT_PATHS.has(url.pathname);
   if (isContactPage) html = rewriteContactHtml(html);
 

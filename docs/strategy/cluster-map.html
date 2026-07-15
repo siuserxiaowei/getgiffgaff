@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>getgiffgaff SEO / GEO 内容集群地图</title>
+  <style>
+    :root { color-scheme: light; --ink:#17201b; --muted:#5d6a62; --line:#d9e3dc; --soft:#f5f8f5; --green:#2f5e41; --planned:#fff6dc; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:#fff; font-family:Inter,"Noto Sans SC",system-ui,sans-serif; line-height:1.6; }
+    main { width:min(1180px,calc(100% - 32px)); margin:auto; padding:44px 0 72px; }
+    h1 { margin:0; font-size:clamp(32px,5vw,58px); line-height:1.1; }
+    .lede { max-width:850px; color:var(--muted); font-size:18px; }
+    .note,.pillar { border:1px solid var(--line); border-radius:16px; padding:20px; }
+    .note { margin:24px 0; background:var(--soft); }
+    .pillar { margin:28px auto 34px; max-width:720px; border-width:2px; border-color:var(--green); text-align:center; }
+    .pillar a { color:var(--green); font-size:22px; font-weight:900; }
+    .clusters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; }
+    section { border:1px solid var(--line); border-top:6px solid var(--accent); border-radius:16px; padding:20px; background:#fff; }
+    section:last-child { grid-column:1 / -1; }
+    h2 { margin:0 0 6px; font-size:24px; }
+    section > p { margin-top:0; color:var(--muted); }
+    .cards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .card { border:1px solid var(--line); border-radius:12px; padding:13px; background:var(--soft); }
+    .card.planned { background:var(--planned); border-style:dashed; }
+    .card strong,.card a { display:block; color:var(--ink); font-weight:850; }
+    .card small { color:var(--muted); }
+    .status { display:inline-block; margin-top:8px; border-radius:999px; padding:3px 8px; background:#e6f4e9; color:#265a36; font-size:12px; font-weight:800; }
+    .planned .status { background:#ffe8a3; color:#775500; }
+    footer { margin-top:30px; color:var(--muted); }
+    @media (max-width:760px) { .clusters,.cards { grid-template-columns:1fr; } section:last-child { grid-column:auto; } }
+  </style>
+</head>
+<body>
+<main>
+  <p>SEO / GEO STRATEGY · 2026-07-15</p>
+  <h1>1 个支柱页、5 个任务集群、20 个 spoke</h1>
+  <p class="lede">每个任务只有一个主 URL。绿色状态为现有页面，黄色虚线为数据或工具门禁；计划 URL 在真正返回 200 之前不得加入生产正文。</p>
+  <div class="note"><strong>模板说明：</strong>`seo-cluster` 技能引用的 <code>templates/cluster-map.html</code> 在当前安装中缺失，因此这里使用自主编写、无外部依赖、可键盘访问且无 JavaScript 也可阅读的最小替代地图。</div>
+
+  <div class="pillar">
+    <small>PILLAR · 全生命周期导航</small>
+    <a href="../../public/guides/6-pitfalls-page.txt">/guides/6-pitfalls/</a>
+    <p>只负责选路、共性风险和下一步，不复制任何 spoke 的完整流程。</p>
+  </div>
+
+  <div class="clusters">
+    <section style="--accent:#e8590c">
+      <h2>选卡、下单与总成本</h2><p>比较、交易、流程和公式分别归属。</p>
+      <div class="cards">
+        <div class="card"><a href="https://getgiffgaff.com/answers/">/answers/</a><small>G0/G2 状态、登记责任、条款与总成本</small><span class="status">证据型 v1</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/shop/">/shop/</a><small>交易、库存、交付与售后</small><span class="status">现有</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/guides/1-order/">/guides/1-order/</a><small>下单与收货验收</small><span class="status">现有</span></div>
+        <div class="card planned"><strong>/tools/g0-g2-total-cost/</strong><small>公开公式的总成本计算器</small><span class="status">计划</span></div>
+      </div>
+    </section>
+
+    <section style="--accent:#2f9e44">
+      <h2>激活、账号与 App</h2><p>完整激活只归一个 owner，窄问题留在支持页。</p>
+      <div class="cards">
+        <div class="card"><a href="https://getgiffgaff.com/guides/2-activate/">/guides/2-activate/</a><small>激活与失败排查</small><span class="status">证据型 v1</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/guides/3-account/">/guides/3-account/</a><small>账号控制与恢复</small><span class="status">现有</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/guides/3-app/">/guides/3-app/</a><small>App 入口与版本化截图</small><span class="status">现有</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/qa/06-activation-expiration/">/qa/06-activation-expiration/</a><small>激活码有效期窄问答</small><span class="status">现有</span></div>
+      </div>
+    </section>
+
+    <section style="--accent:#1c7ed6">
+      <h2>保号、余额与充值</h2><p>规则、充值动作、人工服务和提醒工具不互相争词。</p>
+      <div class="cards">
+        <div class="card"><a href="https://getgiffgaff.com/guides/3-usage/">/guides/3-usage/</a><small>6 个月 inactive 与有效动作</small><span class="status">证据型 v1</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/qa/02-topup/">/qa/02-topup/</a><small>自助 Credit/plan/voucher</small><span class="status">现有</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/guides/4-recharge-service/">/guides/4-recharge-service/</a><small>人工充值服务与 SLA</small><span class="status">现有</span></div>
+        <div class="card planned"><strong>/tools/keep-number-reminder/</strong><small>本地日期计算与 .ics</small><span class="status">计划</span></div>
+      </div>
+    </section>
+
+    <section style="--accent:#7048e8">
+      <h2>网络、SMS、OTP 与漫游</h2><p>故障、成本、运营商层实测和平台层状态分开。</p>
+      <div class="cards">
+        <div class="card"><a href="https://getgiffgaff.com/guides/4-signal/">/guides/4-signal/</a><small>无信号与收不到验证码诊断树</small><span class="status">证据型 v1</span></div>
+        <div class="card planned"><strong>/guides/5-travel-data/</strong><small>在原 URL 重写漫游成本工具</small><span class="status">计划重写</span></div>
+        <div class="card planned"><strong>/research/china-network-sms-matrix/</strong><small>城市×设备×网络原始样本</small><span class="status">数据门禁</span></div>
+        <div class="card planned"><strong>/research/otp-compatibility-status/</strong><small>平台×环境×时间样本</small><span class="status">数据门禁</span></div>
+      </div>
+    </section>
+
+    <section style="--accent:#d6336c">
+      <h2>eSIM、设备兼容与换卡安全</h2><p>官方切换、安全边界、设备证据和补卡恢复各有唯一任务。</p>
+      <div class="cards">
+        <div class="card"><a href="https://getgiffgaff.com/more/03-esim/">/more/03-esim/</a><small>官方 App 切换与恢复</small><span class="status">证据型 v1</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/more/04-esim-qrcode/">/more/04-esim-qrcode/</a><small>二维码与第三方写卡安全边界</small><span class="status">安全边界 v1</span></div>
+        <div class="card planned"><strong>/tools/esim-compatibility/</strong><small>精确型号、地区版本与证据等级</small><span class="status">数据门禁</span></div>
+        <div class="card"><a href="https://getgiffgaff.com/qa/03-reissue/">/qa/03-reissue/</a><small>丢失、损坏与换卡恢复</small><span class="status">现有</span></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>机读计划：<a href="cluster-plan.json">cluster-plan.json</a> · 90 条内链计划：<a href="internal-links.json">internal-links.json</a> · 详细说明：<a href="cluster-plan.md">cluster-plan.md</a></footer>
+</main>
+</body>
+</html>
