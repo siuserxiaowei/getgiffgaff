@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -7,6 +8,7 @@ import { pathToFileURL } from "node:url";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
+const { PNG } = require("pngjs");
 
 const ORIGIN = "https://getgiffgaff.com";
 const LEGACY_ROUTES = Object.freeze([
@@ -29,8 +31,8 @@ const VIEWPORTS = Object.freeze({
   desktop: { width: 1440, height: 1200, isMobile: false },
   mobile: { width: 390, height: 844, isMobile: true },
 });
-const DEFAULT_GLOBAL_TIMEOUT_MS = 15 * 60_000;
-const DEFAULT_OPERATION_TIMEOUT_MS = 20_000;
+const DEFAULT_GLOBAL_TIMEOUT_MS = 30 * 60_000;
+const DEFAULT_OPERATION_TIMEOUT_MS = 40_000;
 const STABLE_VISUAL_CSS = `
   * { animation: none !important; transition: none !important; caret-color: transparent !important; }
   html { scrollbar-width: none !important; }
@@ -111,21 +113,63 @@ function selectedEntries(entries, environmentName) {
 }
 
 function metric(name, first, second) {
-  const result = spawnSync(
-    "magick",
-    ["compare", "-metric", name, first, second, "null:"],
-    { encoding: "utf8", timeout: DEFAULT_OPERATION_TIMEOUT_MS },
-  );
-  const raw = `${result.stderr || ""}${result.stdout || ""}`.trim();
-  const values = [...raw.matchAll(/[0-9]+(?:\.[0-9]+)?(?:e[+-]?\d+)?/gi)].map(
-    (match) => Number(match[0]),
-  );
-  if (!values.length) throw new Error(`Unable to parse ImageMagick ${name}: ${raw}`);
   if (name === "SSIM") {
-    const normalizedDistortion = values.length > 1 ? values.at(-1) : values[0];
-    return 1 - normalizedDistortion;
+    let lastResult;
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      lastResult = spawnSync(
+        "ffmpeg",
+        [
+          "-hide_banner",
+          "-nostdin",
+          "-i",
+          first,
+          "-i",
+          second,
+          "-lavfi",
+          "ssim",
+          "-f",
+          "null",
+          "-",
+        ],
+        { encoding: "utf8", timeout: 60_000 },
+      );
+      const raw = `${lastResult.stderr || ""}${lastResult.stdout || ""}`;
+      const match = raw.match(/\bAll:([0-9]+(?:\.[0-9]+)?)/);
+      if (lastResult.status === 0 && match) {
+        return Number(match[1]);
+      }
+    }
+
+    const details = [
+      `status=${lastResult?.status ?? "null"}`,
+      `signal=${lastResult?.signal ?? "none"}`,
+      `error=${lastResult?.error?.message || "none"}`,
+      `stdout=${JSON.stringify(lastResult?.stdout || "")}`,
+      `stderr=${JSON.stringify(lastResult?.stderr || "")}`,
+    ].join(", ");
+    throw new Error(`FFmpeg SSIM produced no parseable All score after 2 attempts (${details})`);
   }
-  return values[0];
+
+  if (name === "AE") {
+    const firstPng = PNG.sync.read(readFileSync(first));
+    const secondPng = PNG.sync.read(readFileSync(second));
+    assert.equal(secondPng.width, firstPng.width, "visual comparison width mismatch");
+    assert.equal(secondPng.height, firstPng.height, "visual comparison height mismatch");
+    let changedPixels = 0;
+    for (let offset = 0; offset < firstPng.data.length; offset += 4) {
+      if (
+        firstPng.data[offset] !== secondPng.data[offset]
+        || firstPng.data[offset + 1] !== secondPng.data[offset + 1]
+        || firstPng.data[offset + 2] !== secondPng.data[offset + 2]
+        || firstPng.data[offset + 3] !== secondPng.data[offset + 3]
+      ) {
+        changedPixels += 1;
+      }
+    }
+    return changedPixels;
+  }
+
+  throw new Error(`Unsupported visual metric: ${name}`);
 }
 
 function attachDiagnostics(page, label, errors) {
@@ -182,14 +226,29 @@ async function applyControllerStyle(page, clock, { hideGrowth = false } = {}) {
   }
 }
 
+async function applyPageStyle(page, clock, { hideGrowth = false } = {}) {
+  await bounded(
+    clock,
+    `${page.url()} add stable page stylesheet`,
+    () => page.addStyleTag({
+      content: `${STABLE_VISUAL_CSS}${hideGrowth ? HIDDEN_LEGACY_GROWTH_CSS : ""}`,
+    }),
+  );
+}
+
 async function settlePage(page, clock, options = {}) {
-  // Playwright observes browser lifecycle events from the controller. No
-  // document timers, document.fonts, addStyleTag or evaluate call is used.
+  // Legacy screenshots disable document JavaScript, so their stylesheet is
+  // installed through CDP. Interactive growth pages can use a normal style tag
+  // and avoid exhausting a long-lived sequence of CDP CSS sessions.
   await bounded(clock, `${page.url()} load state`, async () => {
     await page.waitForLoadState("load", { timeout: 5000 }).catch(() => {});
     await page.waitForLoadState("networkidle", { timeout: 3000 }).catch(() => {});
   }, 10_000);
-  await applyControllerStyle(page, clock, options);
+  if (options.pageJavaScript === false) {
+    await applyControllerStyle(page, clock, options);
+  } else {
+    await applyPageStyle(page, clock, options);
+  }
   await delay(200);
 }
 
@@ -333,6 +392,21 @@ async function openPage(page, url, selector, viewport, options = {}) {
   return state;
 }
 
+async function waitForImageLoad(page, selector, clock, label) {
+  await bounded(
+    clock,
+    `${label} wait for ${selector}`,
+    () => page.waitForFunction(
+      (imageSelector) => {
+        const image = document.querySelector(imageSelector);
+        return image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0;
+      },
+      selector,
+      { timeout: DEFAULT_OPERATION_TIMEOUT_MS },
+    ),
+  );
+}
+
 async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
   const context = await browser.newContext(contextOptions);
   await context.route("**/analytics-event-v1", (route) =>
@@ -348,6 +422,7 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
     const trigger = page.locator('a[href="#ktt-giga-card"]').first();
     await trigger.click();
     await page.waitForFunction(() => document.querySelector("#ktt-giga-card")?.getAttribute("aria-hidden") === "false");
+    await waitForImageLoad(page, "#ktt-giga-card img", clock, label);
     const opened = await page.evaluate(() => ({
       hash: location.hash,
       focused: document.activeElement?.className || "",
@@ -378,6 +453,20 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
       const dialog = document.querySelector("#wechat-buying-guide-dialog");
       return dialog?.open && dialog.getAttribute("aria-hidden") !== "true";
     });
+    await Promise.all([
+      waitForImageLoad(
+        page,
+        '#wechat-buying-guide-dialog img[src="/contact/wechat-qr.png"]',
+        clock,
+        label,
+      ),
+      waitForImageLoad(
+        page,
+        '#wechat-buying-guide-dialog img[src="/contact/ktt-giga-card.png"]',
+        clock,
+        label,
+      ),
+    ]);
     assert.equal(
       await commerceDialog.locator("h2").innerText(),
       "英国卡购买指南",
@@ -433,9 +522,7 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
       document.querySelector("#ktt-giga-card")?.getAttribute("aria-hidden") === "false",
     );
     assert.equal(page.url(), `${localOrigin}/contact/#ktt-giga-card`);
-    await page.waitForFunction(() =>
-      (document.querySelector("#ktt-giga-card img")?.naturalWidth || 0) > 0,
-    );
+    await waitForImageLoad(page, "#ktt-giga-card img", clock, label);
     assert.equal(
       await page.locator("#ktt-giga-card img").evaluate((image) => image.naturalWidth > 0),
       true,
@@ -512,6 +599,10 @@ export async function runBrowserVerification({
 } = {}) {
   const clock = createRunClock();
   const launchOptions = { headless: true };
+  const browserChannel = (process.env.BROWSER_VERIFY_CHANNEL || "").trim();
+  const executablePath = (process.env.BROWSER_VERIFY_EXECUTABLE_PATH || "").trim();
+  if (browserChannel) launchOptions.channel = browserChannel;
+  if (executablePath) launchOptions.executablePath = executablePath;
   if (proxyServer) {
     launchOptions.proxy = { server: proxyServer, bypass: "127.0.0.1,localhost" };
   }

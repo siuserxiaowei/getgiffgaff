@@ -1,0 +1,36 @@
+{
+  "engine": "playwright-chromium",
+  "viewports": {
+    "desktop": {
+      "width": 1440,
+      "height": 1200,
+      "isMobile": false
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "isMobile": true
+    }
+  },
+  "comparedScreenshots": 14,
+  "growthScreenshots": 10,
+  "interactionChecks": 34,
+  "localConsoleErrors": 0,
+  "thresholdFailures": [],
+  "comparisons": [
+    { "viewport": "desktop", "route": "/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "desktop", "route": "/guides/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "desktop", "route": "/guides/1-order/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "desktop", "route": "/shop/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "desktop", "route": "/shop/giffgaff-g0/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "desktop", "route": "/shop/giffgaff-g2/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "desktop", "route": "/contact/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "mobile", "route": "/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "mobile", "route": "/guides/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "mobile", "route": "/guides/1-order/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "mobile", "route": "/shop/", "ssim": 1, "changedPixels": 6, "changedRatio": 0.00001822821728034998 },
+    { "viewport": "mobile", "route": "/shop/giffgaff-g0/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "mobile", "route": "/shop/giffgaff-g2/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 },
+    { "viewport": "mobile", "route": "/contact/", "ssim": 1, "changedPixels": 0, "changedRatio": 0 }
+  ]
+}

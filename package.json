@@ -9,11 +9,16 @@
     "test": "node --test test/*.test.mjs",
     "test:coverage": "node --experimental-test-coverage --test test/*.test.mjs",
     "verify": "npm test && npm run build && node scripts/verify-release-artifact.mjs",
+    "verify:browser": "node scripts/browser-verify.mjs",
     "verify:preview": "node scripts/verify-preview-release.mjs",
     "verify:seo": "node scripts/verify-seo-release.mjs",
     "submit:indexnow": "node scripts/submit-indexnow.mjs",
     "predeploy": "npm run verify && node scripts/assert-clean-worktree.mjs",
     "deploy": "wrangler pages deploy .release --project-name getgiffgaff --branch main",
     "postdeploy": "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39"
+  },
+  "devDependencies": {
+    "playwright": "1.61.1",
+    "pngjs": "7.0.0"
   }
 }

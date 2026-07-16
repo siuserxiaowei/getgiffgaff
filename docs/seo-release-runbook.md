@@ -1,6 +1,6 @@
 # getgiffgaff SEO / GEO 发布运维清单
 
-> 状态（2026-07-15）：P0 技术修复已发布到生产；搜索引擎重提、Verified Bot 日志复核、真实经营资料和品牌许可仍待业务/平台账号完成。本文同时保留为后续发布 SOP。命令不包含任何密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
+> 状态（2026-07-16）：追加式增长层已发布到生产，34 个旧页面保持冻结，当前 manifest 为 42 个页面、sitemap 为 39 个可索引 URL。生产功能与缓存门禁已通过；Cloudflare 第一条规范化规则仍需补入 5 个新增无尾斜杠路径，因此完整生产 SEO 门禁尚有 15 个一跳变体失败。Google/Bing 所有权验证仍有效，IndexNow 已接收本批 39 URL；百度验证与搜索平台后台回执仍待账号所有者完成。本文同时保留为后续发布 SOP。命令不包含任何密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
 
 ## 1. 发布门槛与责任人
 
@@ -19,12 +19,12 @@
 - [ ] 冻结新增内容、URL、导航和模板改版，只允许本次索引修复及其测试变更。
 - [ ] 记录待发布 Git commit、当前生产部署 ID、上一个可恢复部署 ID、执行人和时间。
 - [ ] 保存发布前 `/sitemap.xml`、`/robots.txt`、核心页面响应头及验证脚本输出；日志中不得保存 Cookie、订单参数或个人信息。
-- [ ] 确认 sitemap 预期为 **34 个唯一 URL**；如业务已批准变更数量，先同步更新测试和发布记录，不能临时跳过计数检查。
+- [ ] 确认 sitemap 预期为 **39 个唯一 URL**；如业务已批准变更数量，先同步更新测试和发布记录，不能临时跳过计数检查。
 
 生产发布前的基线命令：
 
 ```bash
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
+npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 ```
 
 该命令调用 [`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs)。如果当前线上正是待修复的 `noindex` 事故版本，预发布基线可以失败，但只允许记录已经确认的事故项；出现新的 5xx、跨域 canonical、重定向环或 sitemap 数量变化时停止发布。发布后必须全部通过，不得继续豁免。
@@ -41,9 +41,18 @@ npm run verify
 git diff --check
 ```
 
+视觉与交互门禁需先安装 Chromium，并在另一个终端用当前 `.release` 启动只读本地服务器：
+
+```bash
+npx playwright install chromium
+python3 -m http.server 4173 --bind 127.0.0.1 --directory .release
+npm run verify:browser -- http://127.0.0.1:4173 /tmp/getgiffgaff-visual-release
+```
+
 - [ ] `npm test` 全绿；重点覆盖 [`test/seo-response-policy.test.mjs`](../test/seo-response-policy.test.mjs)、[`test/contact-seo.test.mjs`](../test/contact-seo.test.mjs)、[`test/worker-seo-integration.test.mjs`](../test/worker-seo-integration.test.mjs) 和 [`test/verify-seo-release.test.mjs`](../test/verify-seo-release.test.mjs)。
 - [ ] `npm run verify` 通过，其中 [`scripts/verify-contact-hotfix.mjs`](../scripts/verify-contact-hotfix.mjs) 验证 Contact 热修复资产与交互。
 - [ ] 覆盖率下降有明确解释；新增响应策略、重定向或验证逻辑必须有回归测试。
+- [ ] `verify:browser` 生成 `report.json`，14 组旧页面截图均达到 SSIM ≥ 0.995、变化像素比例 ≤ 0.1%，10 张新增页截图和 34 项交互完成，且无浏览器错误。
 - [ ] diff 中没有密钥、令牌、真实订单数据、个人联系方式草稿或无关改动。
 
 任一项失败即停止，不执行部署。
@@ -75,7 +84,7 @@ npx wrangler pages deploy public --project-name getgiffgaff --branch seo-release
 - [ ] `.pages.dev` Preview 按设计应返回 `noindex, nofollow, noarchive`，防止预览环境被收录。
 - [ ] 不把 Pages Preview 上的 `noindex` 当作生产公开页策略，也不把 Preview URL 提交给搜索引擎。
 
-注意：[`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs) 要求 sitemap、canonical 与被测 origin 完全一致，因此 `.pages.dev` Preview 不应被强行跑成“绿色”。候选版本的预发布门禁由本地测试、Preview 人工检查和生产发布前基线共同组成；生产域发布后再执行完整 34 URL 验证。
+注意：[`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs) 要求 sitemap、canonical 与被测 origin 完全一致，因此 `.pages.dev` Preview 不应被强行跑成“绿色”。候选版本的预发布门禁由本地测试、Preview 人工检查和生产发布前基线共同组成；生产域发布后再执行完整 39 URL 验证。
 
 ## 5. 发布、缓存与域名
 
@@ -103,6 +112,18 @@ npm run deploy
 - 自动 `postdeploy` 再次执行生产门禁：34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
 - 生产抽查确认 6 页均为 200、自指 canonical、显式 index 指令和 `x-getgiffgaff-render-mode: edge-static-tutorial`；首页、Contact 与 QA 不再被注入教程目录，只有 `/guides/` 包含该目录。
 - Preview 上同一教程返回 `noindex, nofollow, noarchive`，生产页返回 `index, follow, max-snippet:-1, max-image-preview:large`。
+
+2026-07-16「保留旧站、追加增长层」发布记录：
+
+- 基线为 `7cac06f`；追加式增长提交依次为 `e15f6dc`、`50f252a`、`2e1f076`、`1269ff5`、`77dc29d`、`6075cef`。当前生产 deployment 为 `639a0f0a-4be2-4634-9eb1-96971ad307e6`，source 为 `6075cef`。
+- 34 个旧页面的可见正文、Title、Description、H1、导航、紫色视觉、卖卡入口、G0/G2、微信“小玉”和快团团保持冻结；新增 5 个可索引教程/工具、3 个 `noindex` 证据预览页面。manifest 共 42 个页面，sitemap 共 39 个可索引 URL。
+- 本地自动测试为 80/80；Preview `abf2abb6-90ba-4377-9724-90355c107e63` 的发布门禁结果为 42 个路由、14 个资产、39 个 sitemap URL、0 个失败。
+- 最新生产浏览器 QA：42 路由乘桌面/手机共 84/84；业务与工具链 35/35；首页购买指南入口 9/9。微信与快团团二维码、键盘焦点、Esc 关闭、焦点归还、G0/G2、Contact、总成本、保号日历及漫游工具均通过，浏览器错误为 0。该检查只能证明快团团二维码入口和站内链路，不能替代微信内真实扫码付款、SKU、金额及退款链路验收。
+- 正式视觉报告见 [`docs/qa/browser-visual-report-2026-07-16.json`](qa/browser-visual-report-2026-07-16.json)：14/14 旧页双视口比较、10/10 新增页截图、34/34 交互，错误 0、阈值失败 0；13 组无像素变化，手机商城 6 个像素变化（0.001823%），SSIM 全部为 1。
+- 公开 canonical HTML 已启用版本化 Cache API：同一路由生产实测 `MISS → HIT → HIT`；Cookie 请求绕过公共缓存并返回 `private, no-store`。
+- IndexNow key 已部署到 `/indexnow-key.txt`；2026-07-16 向 `api.indexnow.org` 提交 39 个可索引 canonical URL，回执为 HTTP 202。该状态只表示批次已接收、key 校验待完成，不表示已经抓取或收录。
+- 当前唯一技术发布阻断是 Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 仍只有 2026-07-15 的 33 个旧路径。需在其 `http.request.uri.path in {...}` 集合中追加 `/guides/7-arrival-checklist`、`/guides/8-uk-sim-choice`、`/tools/keep-number-reminder`、`/tools/china-roaming-cost`、`/tools/g0-g2-total-cost`，保持规则第一优先级、动态目标与 301 设置不变。未补齐前，生产 `postdeploy` 会对这 5 个路由的 `www`、HTTP apex、HTTP www 无尾斜杠组合报告 15 个两跳失败，不能宣称完整 SEO 门禁全绿。
+- GSC apex TXT 和 Bing CNAME 所有权验证仍在公网解析；同一个 sitemap URL 曾在两平台提交。当前 39 URL 是否已被平台后台重新读取仍需登录后台确认。百度尚无可核验证明，仍需账号所有者完成实名、手机号和验证码流程。
 
 - [x] 生产别名传播完成后，34 URL 门禁已成功退出；若自动 `postdeploy` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑，仍失败则按第 9 节回滚或向前修复。
 
@@ -136,22 +157,22 @@ https://getgiffgaff.com/contact/
 
 不得出现 `www` 200、临时重定向、两跳链、跨域跳转或循环。
 
-如果 Cloudflare 在 Pages Worker 之前先把 HTTP 跳到 HTTPS，单靠 Worker 无法消除 `HTTP → HTTPS www → HTTPS apex` 链。此时需在 Cloudflare Redirect Rules / Bulk Redirects 中配置优先级更高的规范化规则（需 Zone Rules 权限）：`www.getgiffgaff.com` 指向 `https://getgiffgaff.com`，保留 query、子路径和 path suffix；对无尾斜杠的 34 个已批准 HTML 路由，规则目标必须直接是最终带 `/` URL。以生产 `verify:seo` 的组合变体结果为准，不能只验证 HTTPS www。
+如果 Cloudflare 在 Pages Worker 之前先把 HTTP 跳到 HTTPS，单靠 Worker 无法消除 `HTTP → HTTPS www → HTTPS apex` 链。此时需在 Cloudflare Redirect Rules / Bulk Redirects 中配置优先级更高的规范化规则（需 Zone Rules 权限）：`www.getgiffgaff.com` 指向 `https://getgiffgaff.com`，保留 query、子路径和 path suffix；对 39 个可索引 HTML 路由中除 `/` 外的 38 个无尾斜杠路径，规则目标必须直接是最终带 `/` URL。以生产 `verify:seo` 的组合变体结果为准，不能只验证 HTTPS www。
 
-## 6. 发布后 34 URL 强制验收
+## 6. 发布后 39 URL 强制验收
 
 缓存清理后立即执行：
 
 ```bash
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
+npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 ```
 
 该门禁必须确认：
 
-- [x] sitemap 有 34 个唯一 URL，且都属于 canonical origin。
-- [x] 34/34 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
+- [x] sitemap 有 39 个唯一 URL，且都属于 canonical origin。
+- [x] 39/39 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
 - [x] 每页只有一个自指 canonical，且 `og:url` 与 canonical 一致。
-- [x] HTTP、`www`、无尾斜杠变体均一跳永久重定向。
+- [ ] HTTP、`www`、无尾斜杠变体均一跳永久重定向。当前 5 个新增路径的 15 个组合变体仍需更新 Zone Redirect Rule 后重跑。
 - [x] JSON-LD 可解析，不引用 `pages.dev`，不把本站声明为 giffgaff 官方实体、母公司或官方 seller。
 - [x] `/llms.txt`、`/llms-full.txt` 保持 supporting `noindex, follow, noarchive`；404、API 和敏感路由保持 `noindex, nofollow, noarchive`；`robots.txt` 不带继承的 X-Robots-Tag。这些固定探针由 `verify:seo` 自动检查。
 - [x] Product JSON-LD 不包含未经发布证据支持的 `offers`、价格、库存、评价或聚合评分。
@@ -182,7 +203,7 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
 任一条件触发立即停止后续提交，并进入回滚或紧急向前修复：
 
 - 公开 sitemap URL 出现 `noindex`、非 200、跨域 canonical、重定向循环或两跳以上规范化。
-- sitemap 不再是批准的 34 个唯一 URL。
+- sitemap 不再是批准的 39 个唯一 URL。
 - JSON-LD 无法解析、含 `pages.dev`，或出现本站是 giffgaff 官方实体的错误声明。
 - 5xx、403/429、缓存错误或核心 CTA 故障明显上升。
 - 订单、Cookie、个人信息或敏感参数进入公共缓存/日志。
@@ -193,7 +214,7 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34
 1. 保留失败验证输出、部署 ID、时间点和最小必要日志。
 2. 若上一个部署没有本次事故，通过 Cloudflare Pages 回滚到记录的部署并清理相关缓存（需账号权限）。
 3. 若上一个部署就是已知的 32/34 `noindex` 事故版本，不回滚到同一故障；保持内容冻结，发布最小向前修复。
-4. 重新执行本地门禁与生产 34 URL 验证，全部通过后才恢复搜索引擎提交。
+4. 重新执行本地门禁与生产 39 URL 验证，全部通过后才恢复搜索引擎提交。
 
 ## 10. 首个完整 28 天基线
 
