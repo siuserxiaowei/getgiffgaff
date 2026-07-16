@@ -1,8 +1,5 @@
 # GG 卡是什么？giffgaff 英国手机卡适合谁用
 
-> [!CAUTION]
-> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
-
 GG 卡通常指 giffgaff 英国手机卡。它是英国 +44 手机号方案之一，适合需要长期备用海外号码、低频接收短信、或注册部分海外平台的人。
 
 线上教程：[getgiffgaff.com](https://getgiffgaff.com/)  

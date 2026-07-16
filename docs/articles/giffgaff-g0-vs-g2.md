@@ -1,8 +1,5 @@
 # G0 新卡和 G2 有余额卡怎么选
 
-> [!CAUTION]
-> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
-
 买 giffgaff / GG 卡时，最常见的问题就是 G0 新卡和 G2 有余额卡怎么选。简单说：愿意用本人资料完成官方激活和充值可以评估 G0；G2 不是新手或急用的默认选项，必须先证明来源、登记责任、买方控制方式和当前条款都可接受。
 
 购买入口：[G0 / G2 手机卡商城](https://getgiffgaff.com/shop/)

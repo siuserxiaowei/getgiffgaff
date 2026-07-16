@@ -1,190 +1,293 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 
-import worker, {
-  CANONICAL_ORIGIN,
-  PUBLIC_INDEXABLE_PATHS,
-} from "../public/worker-logic.js";
+import worker, { HOTFIX_ORIGIN } from "../public/worker-logic.js";
 
-const pitfallsHtml = await readFile(
-  new URL("../public/guides/6-pitfalls-page.txt", import.meta.url),
-  "utf8",
-);
-const researchHtml = await readFile(
-  new URL("../public/research/index-page.txt", import.meta.url),
-  "utf8",
-);
+const brokenContactHtml = `
+<!doctype html>
+<html>
+  <body>
+    <main>
+      <a class="btn btn-primary contact-action-button" href="/contact/"><span>确认 G0 库存</span></a>
+      <a class="btn btn-primary contact-action-button" href="/contact/"><span>确认 G2 库存</span></a>
+      <div class="wechat-name">小玉</div>
+    </main>
+  </body>
+</html>`;
+
+const guideIndexHtml = `
+<!doctype html>
+<html>
+  <body>
+    <nav>
+      <li><a href="/guides/5-travel-data/">giffgaff 旅行流量包使用指南</a></li>
+    </nav>
+    <main>
+      <a class="doc-list-item" href="/guides/5-travel-data/"><span>giffgaff 旅行流量包使用指南</span></a>
+    </main>
+  </body>
+</html>`;
+
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://getgiffgaff.com/guides/5-travel-data/</loc>
+</url>
+</urlset>`;
+
+const sitemapXmlWithHotfixRoutes = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://getgiffgaff.com/guides/6-pitfalls/</loc>
+</url>
+<url>
+<loc>https://getgiffgaff.com/research/</loc>
+</url>
+</urlset>`;
 
 function countOccurrences(text, pattern) {
   return (text.match(pattern) || []).length;
 }
 
-function assetEnv() {
+async function assetEnv() {
+  const pitfallsHtml = await readFile(
+    new URL("../public/guides/6-pitfalls-page.txt", import.meta.url),
+    "utf8",
+  );
+  const researchHtml = await readFile(
+    new URL("../public/research/index-page.txt", import.meta.url),
+    "utf8",
+  );
+
   return {
     ASSETS: {
-      async fetch(request) {
-        const pathname = new URL(request.url).pathname;
-        if (pathname === "/guides/6-pitfalls-page.txt") {
+      fetch: async (request) => {
+        const url = new URL(request.url);
+        if (url.pathname === "/guides/6-pitfalls-page.txt") {
           return new Response(pitfallsHtml, {
-            headers: {
-              "content-type": "text/plain; charset=utf-8",
-              "x-robots-tag": "noindex",
-            },
+            headers: { "content-type": "text/html; charset=utf-8" },
           });
         }
-        if (pathname === "/research/index-page.txt") {
+        if (url.pathname === "/research/index-page.txt") {
           return new Response(researchHtml, {
-            headers: {
-              "content-type": "text/plain; charset=utf-8",
-              "x-robots-tag": "noindex",
-            },
+            headers: { "content-type": "text/html; charset=utf-8" },
           });
         }
+
         return new Response("missing", { status: 404 });
       },
     },
   };
 }
 
-test("serves Contact locally without inventory UI or a network fallback", async () => {
+test("rewrites contact inventory buttons to the Kuaituantuan modal", async () => {
   const originalFetch = globalThis.fetch;
-  let networkCalls = 0;
-  globalThis.fetch = async () => {
-    networkCalls += 1;
-    throw new Error("network must not be used");
-  };
+  globalThis.fetch = async () =>
+    new Response(brokenContactHtml, {
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
 
   try {
-    const response = await worker.fetch(
-      new Request(`${CANONICAL_ORIGIN}/contact/`),
-      {},
-    );
+    const response = await worker.fetch(new Request("https://getgiffgaff.com/contact/"), {});
     const html = await response.text();
 
-    assert.equal(networkCalls, 0);
-    assert.equal(response.status, 200);
-    assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "local-trust-page");
-    assert.equal(
-      response.headers.get("x-robots-tag"),
-      "index, follow, max-snippet:-1, max-image-preview:large",
-    );
-    assert.match(html, /<title>联系 getgiffgaff｜订单、发货与使用支持<\/title>/);
-    assert.match(html, /<h1>联系 getgiffgaff：订单、发货与使用支持<\/h1>/);
-    assert.equal(countOccurrences(html, /<main\b/gi), 1);
-    assert.equal(countOccurrences(html, /<h1\b/gi), 1);
-    assert.match(html, /仅处理已有订单与使用问题/);
-    assert.match(html, /非 giffgaff Limited 官方网站、官方客服或授权代表/);
-    assert.match(html, /账户密码/);
-    assert.match(html, /短信验证码/);
-    assert.match(html, /完整支付卡/);
-    assert.match(html, /eSIM 二维码/);
-    assert.doesNotMatch(html, /ktt-giga-card|快团团|客服小玉/i);
-    assert.doesNotMatch(html, /确认\s*G[02]\s*库存|立即购买|下单购买/);
+    assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "contact-ktt-modal");
+    assert.match(html, /id="ktt-giga-card"/);
+    assert.match(html, /href="#ktt-giga-card"[^>]*>[\s\S]*确认 G0 库存/);
+    assert.match(html, /href="#ktt-giga-card"[^>]*>[\s\S]*确认 G2 库存/);
+    assert.doesNotMatch(html, /href="\/contact\/"[^>]*>[\s\S]*确认 G0 库存/);
+    assert.doesNotMatch(html, /href="\/contact\/"[^>]*>[\s\S]*确认 G2 库存/);
+    assert.match(html, /客服小玉/);
+    assert.match(html, /\/contact\/ktt-giga-card\.png/);
   } finally {
     globalThis.fetch = originalFetch;
   }
 });
 
-test("ordinary query variants redirect and unknown documents fail locally", async () => {
-  const redirect = await worker.fetch(
-    new Request(`${CANONICAL_ORIGIN}/contact/?from=test`),
-    {},
-  );
-  assert.equal(redirect.status, 301);
-  assert.equal(redirect.headers.get("location"), `${CANONICAL_ORIGIN}/contact/`);
+test("proxies non-contact requests to the immutable previous deployment", async () => {
+  const originalFetch = globalThis.fetch;
+  let requestedUrl = "";
+  globalThis.fetch = async (request) => {
+    requestedUrl = request.url;
+    return new Response("ok");
+  };
 
-  const missing = await worker.fetch(
-    new Request(`${CANONICAL_ORIGIN}/tutorial/`),
-    {},
-  );
-  assert.equal(missing.status, 404);
-  assert.equal(
-    missing.headers.get("x-robots-tag"),
-    "noindex, nofollow, noarchive",
-  );
-  assert.doesNotMatch(await missing.text(), /rel="canonical"|property="og:url"/i);
-});
-
-test("serves the pitfalls guide as an immutable same-deployment HTML source", async () => {
-  const response = await worker.fetch(
-    new Request(`${CANONICAL_ORIGIN}/guides/6-pitfalls/`),
-    assetEnv(),
-  );
-  const html = await response.text();
-
-  assert.equal(response.status, 200);
-  assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "local-html-asset");
-  assert.equal(
-    response.headers.get("x-robots-tag"),
-    "index, follow, max-snippet:-1, max-image-preview:large",
-  );
-  assert.match(html, /giffgaff 使用避坑总览/);
-  assert.match(html, /G0\/G2 不是官方产品名称/);
-  assert.match(html, /不提供 G2 销售或推荐/);
-  assert.match(html, /不要上传到群聊、网盘、第三方写卡站/);
-  assert.doesNotMatch(html, /确认库存|点此购买|立即购买|快团团/i);
-});
-
-test("redirects local HTML assets to their canonical trailing slash", async () => {
-  for (const pathname of ["/guides/6-pitfalls", "/research"]) {
+  try {
     const response = await worker.fetch(
-      new Request(`${CANONICAL_ORIGIN}${pathname}`),
-      assetEnv(),
+      new Request("https://getgiffgaff.com/tutorial/?from=test"),
+      {},
     );
-    assert.equal(response.status, 301, pathname);
-    assert.equal(response.headers.get("location"), `${CANONICAL_ORIGIN}${pathname}/`);
+
+    assert.equal(await response.text(), "ok");
+    assert.equal(requestedUrl, `${HOTFIX_ORIGIN}/tutorial/?from=test`);
+  } finally {
+    globalThis.fetch = originalFetch;
   }
 });
 
-test("keeps the research registry public to users but out of search indexes", async () => {
+test("serves the giffgaff pitfalls guide from Pages assets", async () => {
   const response = await worker.fetch(
-    new Request(`${CANONICAL_ORIGIN}/research/`),
-    assetEnv(),
+    new Request("https://getgiffgaff.com/guides/6-pitfalls/"),
+    await assetEnv(),
   );
   const html = await response.text();
 
   assert.equal(response.status, 200);
-  assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "local-html-asset");
-  assert.equal(
-    response.headers.get("x-robots-tag"),
-    "noindex, follow, noarchive",
+  assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "pitfalls-guide");
+  assert.match(html, /giffgaff 使用教程和避坑清单/);
+  assert.match(html, /https:\/\/help\.giffgaff\.com\/en\/articles\/242797-understanding-why-your-number-has-been-deactivated/);
+  assert.match(html, /不承诺所有验证码均可送达/);
+  assert.match(html, /Participant SIM\/激活地点/);
+  assert.match(html, /不得使用他人身份或共享账号/);
+  assert.match(html, /本站客服只确认库存、订单、交付和本站售后边界/);
+  assert.doesNotMatch(html, /nano-banana|Nano Banana|AI 订阅/);
+});
+
+test("redirects the pitfalls guide to the canonical trailing slash", async () => {
+  const response = await worker.fetch(
+    new Request("https://getgiffgaff.com/guides/6-pitfalls"),
+    await assetEnv(),
   );
+
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get("location"), "https://getgiffgaff.com/guides/6-pitfalls/");
+});
+
+test("serves the research hub from Pages assets", async () => {
+  const response = await worker.fetch(
+    new Request("https://getgiffgaff.com/research/"),
+    await assetEnv(),
+  );
+  const html = await response.text();
+
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "research-hub");
   assert.match(html, /giffgaff 中文资料库与竞品研究/);
   assert.match(html, /40 个独立竞品页面/);
   assert.match(html, /不把第三方文章换词后重新发布/);
+  assert.match(html, /github\.com\/siuserxiaowei\/getgiffgaff/);
 });
 
-test("the local guide directory already contains every evidence-led route", async () => {
+test("redirects the research hub to the canonical trailing slash", async () => {
   const response = await worker.fetch(
-    new Request(`${CANONICAL_ORIGIN}/guides/`),
-    {},
+    new Request("https://getgiffgaff.com/research"),
+    await assetEnv(),
   );
-  const html = await response.text();
 
-  assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "local-core-page");
-  for (const pathname of [
-    "/guides/0-intro/",
-    "/guides/2-activate/",
-    "/guides/3-usage/",
-    "/guides/4-signal/",
-    "/guides/5-travel-data/",
-    "/guides/6-pitfalls/",
-  ]) {
-    assert.match(html, new RegExp(`href="${pathname}"`), pathname);
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get("location"), "https://getgiffgaff.com/research/");
+});
+
+test("injects the pitfalls guide into the guide directory", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(guideIndexHtml, {
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+
+  try {
+    const response = await worker.fetch(new Request("https://getgiffgaff.com/guides/"), {});
+    const html = await response.text();
+
+    assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "guide-pitfalls-link");
+    assert.match(html, /href="\/guides\/6-pitfalls\/">giffgaff 使用教程和避坑清单/);
+    assert.match(html, /class="doc-list-item" href="\/guides\/6-pitfalls\/"/);
+    for (const pathname of [
+      "/guides/2-activate/",
+      "/guides/3-usage/",
+      "/more/03-esim/",
+      "/more/04-esim-qrcode/",
+      "/guides/4-signal/",
+      "/answers/",
+    ]) {
+      assert.match(html, new RegExp(`href="${pathname}"`), pathname);
+    }
+    assert.equal(countOccurrences(html, /id="evidence-led-guides"/g), 1);
+  } finally {
+    globalThis.fetch = originalFetch;
   }
 });
 
-test("generates one unique sitemap entry per index route", async () => {
-  const response = await worker.fetch(
-    new Request(`${CANONICAL_ORIGIN}/sitemap.xml`),
-    {},
-  );
-  const xml = await response.text();
+test("injects the hotfix routes into sitemap.xml", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(sitemapXml, {
+      headers: { "content-type": "application/xml; charset=utf-8" },
+    });
 
-  assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "manifest-sitemap");
-  assert.equal(countOccurrences(xml, /<url>/g), PUBLIC_INDEXABLE_PATHS.length);
-  assert.equal(countOccurrences(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//g), 1);
-  assert.equal(countOccurrences(xml, /https:\/\/getgiffgaff\.com\/research\//g), 0);
-  assert.match(xml, /<lastmod>2026-07-15<\/lastmod>/);
+  try {
+    const response = await worker.fetch(new Request("https://getgiffgaff.com/sitemap.xml"), {});
+    const xml = await response.text();
+
+    assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "sitemap-hotfix-routes");
+    assert.match(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//);
+    assert.match(xml, /https:\/\/getgiffgaff\.com\/research\//);
+    assert.match(xml, /2026-07-15T00:00:00\.000Z/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("keeps the evidence-led directory out of non-guide pages", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(guideIndexHtml, {
+      headers: { "content-type": "text/html; charset=utf-8" },
+    });
+
+  try {
+    for (const pathname of ["/", "/shop/giffgaff-g0/", "/qa/00-username/"]) {
+      const response = await worker.fetch(
+        new Request(`https://getgiffgaff.com${pathname}`),
+        {},
+      );
+      const html = await response.text();
+      assert.doesNotMatch(html, /id="evidence-led-guides"/, pathname);
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("does not duplicate hotfix routes already present in sitemap.xml", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () =>
+    new Response(sitemapXmlWithHotfixRoutes, {
+      headers: { "content-type": "application/xml; charset=utf-8" },
+    });
+
+  try {
+    const response = await worker.fetch(new Request("https://getgiffgaff.com/sitemap.xml"), {});
+    const xml = await response.text();
+
+    assert.equal(response.headers.get("x-getgiffgaff-hotfix"), "sitemap-hotfix-routes");
+    assert.equal(countOccurrences(xml, /https:\/\/getgiffgaff\.com\/guides\/6-pitfalls\//g), 1);
+    assert.equal(countOccurrences(xml, /https:\/\/getgiffgaff\.com\/research\//g), 1);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("serves the local Kuaituantuan image through Pages assets", async () => {
+  let assetRequested = "";
+  const env = {
+    ASSETS: {
+      fetch: async (request) => {
+        assetRequested = request.url;
+        return new Response("image-bytes", {
+          headers: { "content-type": "image/png" },
+        });
+      },
+    },
+  };
+
+  const response = await worker.fetch(
+    new Request("https://getgiffgaff.com/contact/ktt-giga-card.png"),
+    env,
+  );
+
+  assert.equal(await response.text(), "image-bytes");
+  assert.equal(response.headers.get("content-type"), "image/png");
+  assert.equal(assetRequested, "https://getgiffgaff.com/contact/ktt-giga-card.png");
 });

@@ -1,8 +1,5 @@
 # giffgaff / GG 卡使用教程和避坑清单
 
-> [!CAUTION]
-> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
-
 更新日期：2026-07-01  
 线上完整版：[https://getgiffgaff.com/guides/6-pitfalls/](https://getgiffgaff.com/guides/6-pitfalls/)
 

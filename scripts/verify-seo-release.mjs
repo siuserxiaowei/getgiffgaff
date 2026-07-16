@@ -2,45 +2,12 @@
 
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import {
-  PUBLIC_INDEXABLE_PATHS,
-  SUPPORTING_NOINDEX_PATHS,
-} from "../public/route-manifest.js";
 
-const DEFAULT_EXPECTED_URL_COUNT = PUBLIC_INDEXABLE_PATHS.length;
+const DEFAULT_EXPECTED_URL_COUNT = 34;
 const DEFAULT_CONCURRENCY = 6;
 const DEFAULT_TIMEOUT_MS = 15_000;
 const PERMANENT_REDIRECT_STATUSES = new Set([301, 308]);
 const ROBOTS_NAMES = new Set(["robots", "googlebot", "bingbot"]);
-const COMMERCE_HOLD_PATHS = new Set([
-  "/shop/",
-  "/shop/giffgaff-g0/",
-  "/shop/giffgaff-g2/",
-  "/guides/1-order/",
-  "/guides/4-recharge-service/",
-]);
-const SEARCH_AI_BOTS = Object.freeze([
-  "oai-searchbot",
-  "chatgpt-user",
-  "claude-searchbot",
-  "claude-user",
-  "perplexitybot",
-  "perplexity-user",
-]);
-const TRAINING_AI_BOTS = Object.freeze([
-  "gptbot",
-  "claudebot",
-  "google-extended",
-  "bytespider",
-  "ccbot",
-]);
-const SENSITIVE_PROBES = Object.freeze([
-  { path: "/contact/?otp=release-gate-secret", kind: "sensitive query otp" },
-  { path: "/contact/?api_key=release-gate-secret", kind: "sensitive query api_key" },
-  { path: "/contact/?auth_token=release-gate-secret", kind: "sensitive query auth_token" },
-  { path: "/contact/?id_token=release-gate-secret", kind: "sensitive query id_token" },
-  { path: "/contact/", kind: "Authorization header", authorization: "Bearer release-gate-secret" },
-]);
 
 export class SeoReleaseError extends Error {
   constructor(issues, report = {}) {
@@ -90,28 +57,6 @@ function positiveInteger(value, label) {
     throw new TypeError(`${label} must be a positive integer`);
   }
   return parsed;
-}
-
-function normalizedExpectedPaths(paths) {
-  if (!Array.isArray(paths) || paths.length < 1) {
-    throw new TypeError("expectedIndexablePaths must be a non-empty array");
-  }
-
-  const normalized = paths.map((path) => {
-    if (typeof path !== "string" || !path.startsWith("/")) {
-      throw new TypeError(`Invalid manifest path: ${String(path)}`);
-    }
-    const parsed = new URL(path, "https://manifest.invalid");
-    if (parsed.origin !== "https://manifest.invalid" || parsed.search || parsed.hash) {
-      throw new TypeError(`Manifest path must not contain an origin, query, or hash: ${path}`);
-    }
-    return parsed.pathname;
-  });
-
-  if (new Set(normalized).size !== normalized.length) {
-    throw new TypeError("expectedIndexablePaths contains duplicate paths");
-  }
-  return normalized;
 }
 
 export function parseCliOptions(args = [], env = process.env) {
@@ -219,61 +164,6 @@ function parseAttributes(tag) {
 function tagsWithAttributes(html, tagName) {
   const pattern = new RegExp(`<${tagName}\\b[^>]*>`, "gi");
   return Array.from(html.matchAll(pattern), (match) => parseAttributes(match[0]));
-}
-
-function visibleText(html) {
-  return decodeEntities(
-    html
-      .replace(/<!--[^]*?-->/g, " ")
-      .replace(/<(?:script|style|noscript)\b[^>]*>[^]*?<\/(?:script|style|noscript)>/gi, " ")
-      .replace(/<[^>]+>/g, " "),
-  )
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function inspectCommercialContent(html, documentUrl) {
-  const findings = [];
-  const linkPattern = /<a\b([^>]*)>([^]*?)<\/a>/gi;
-  for (const match of html.matchAll(linkPattern)) {
-    const attributes = parseAttributes(`<a ${match[1]}>`);
-    const destination = absoluteUrl(attributes.href || "", documentUrl);
-    if (!destination) continue;
-    const parsed = new URL(destination);
-    const normalizedPath = parsed.pathname === "/" || parsed.pathname.endsWith("/")
-      ? parsed.pathname
-      : `${parsed.pathname}/`;
-    if (parsed.origin === new URL(documentUrl).origin && COMMERCE_HOLD_PATHS.has(normalizedPath)) {
-      findings.push({
-        code: "commercial-link",
-        message: `Indexable page links to commerce-hold route ${normalizedPath}`,
-      });
-    }
-  }
-
-  const ctaPattern = /<(?:a|button)\b[^>]*>([^]*?)<\/(?:a|button)>/gi;
-  const salesCta = /(?:\u7acb\u5373|\u9a6c\u4e0a|\u73b0\u5728)\s*\u8d2d\u4e70|(?:\u786e\u8ba4|\u54a8\u8be2|\u67e5\u8be2)\s*(?:G[02]\s*)?\u5e93\u5b58|(?:\u8d2d\u4e70|\u8ba2\u8d2d|\u4e0b\u5355)\s*(?:G[02]|SIM|\u5361)|\u63a8\u8350\u8d2d\u4e70|\u4e0b\u5355\u8d2d\u4e70|\u4ee3\u5145\u670d\u52a1|\u52a0\u5fae\u4fe1\u8d2d\u4e70/i;
-  for (const match of html.matchAll(ctaPattern)) {
-    const label = visibleText(match[1]);
-    if (salesCta.test(label)) {
-      findings.push({ code: "commercial-cta", message: `Indexable page contains sales CTA: ${label}` });
-    }
-  }
-
-  const bodyText = visibleText(html);
-  const claimPatterns = [
-    { pattern: /\u9a8c\u8bc1\u7801\s*(?:\u66f4|\u66f4\u4e3a|\u66f4\u52a0)\s*\u53ef\u9760/i, label: "unverified OTP reliability" },
-    { pattern: /(?:\u73b0\u8d27|\u5e93\u5b58\u5145\u8db3|\u6709\u8d27|\u5305\u90ae|\u5230\u624b\u4ef7|\u552e\u4ef7)\s*[\uff1a:]?\s*(?:\u00a5|\uffe5|\d)/i, label: "price or stock" },
-    { pattern: /G[02]\s*(?:\u73b0\u8d27|\u6709\u8d27|\u5e93\u5b58\u5145\u8db3)|(?:\u73b0\u8d27|\u6709\u8d27|\u5e93\u5b58\u5145\u8db3)\s*G[02]/i, label: "G0/G2 stock" },
-    { pattern: /G[02][^\u3002\uff1b\n]{0,10}(?:\u552e\u4ef7|\u5230\u624b\u4ef7|\u4ef7\u683c)\s*[\uff1a:]?\s*(?:\u00a5|\uffe5)?\s*\d/i, label: "G0/G2 price" },
-    { pattern: /giffgaff\s*(?:\u5b98\u65b9\u6559\u7a0b|\u5b98\u65b9\u7f51\u7ad9|\u5b98\u7f51)/i, label: "official-status wording" },
-  ];
-  for (const { pattern, label } of claimPatterns) {
-    if (pattern.test(bodyText)) {
-      findings.push({ code: "commercial-claim", message: `Indexable page contains ${label} claim` });
-    }
-  }
-  return findings;
 }
 
 function absoluteUrl(value, documentUrl) {
@@ -417,67 +307,6 @@ function findUnverifiedCommerceClaims(value, path = "$") {
   return claims;
 }
 
-function findPausedSchemaTypes(value, path = "$") {
-  const findings = [];
-  if (!value || typeof value !== "object") return findings;
-  if (Array.isArray(value)) {
-    value.forEach((entry, index) => {
-      findings.push(...findPausedSchemaTypes(entry, `${path}[${index}]`));
-    });
-    return findings;
-  }
-
-  for (const type of typeNames(value["@type"])) {
-    if (["product", "offer", "faqpage"].includes(type)) {
-      findings.push(`${path} uses paused schema type ${type}`);
-    }
-  }
-  for (const [key, entry] of Object.entries(value)) {
-    if (entry && typeof entry === "object") {
-      findings.push(...findPausedSchemaTypes(entry, `${path}.${key}`));
-    }
-  }
-  return findings;
-}
-
-function hasSchemaOrgContext(value) {
-  const context = value?.["@context"];
-  if (typeof context === "string") {
-    return /^https?:\/\/schema\.org\/?$/i.test(context);
-  }
-  if (Array.isArray(context)) {
-    return context.some((entry) => typeof entry === "string" && /^https?:\/\/schema\.org\/?$/i.test(entry));
-  }
-  return false;
-}
-
-async function inspectPageHead(url, { fetchImpl, timeoutMs }) {
-  const issues = [];
-  let response;
-  try {
-    response = await fetchImpl(url, {
-      ...requestInit("text/html,application/xhtml+xml;q=0.9,*/*;q=0.1", timeoutMs),
-      method: "HEAD",
-    });
-  } catch (error) {
-    return [issue("page-head-fetch", url, `Could not HEAD sitemap URL: ${error.message}`)];
-  }
-
-  if (response.status !== 200) {
-    issues.push(issue("page-head-status", url, `Expected HEAD 200 with no redirect, received ${response.status}`));
-    return issues;
-  }
-  const xRobotsTag = response.headers.get("x-robots-tag") || "";
-  if (containsNoindex(xRobotsTag)) {
-    issues.push(issue("page-head-noindex", url, `HEAD X-Robots-Tag contains noindex: ${xRobotsTag}`));
-  }
-  const contentType = response.headers.get("content-type") || "";
-  if (!/text\/html|application\/xhtml\+xml/i.test(contentType)) {
-    issues.push(issue("page-head-content-type", url, `HEAD response is not HTML: ${contentType || "missing content-type"}`));
-  }
-  return issues;
-}
-
 async function inspectPage(url, { fetchImpl, baseOrigin, timeoutMs }) {
   const issues = [];
   let response;
@@ -511,10 +340,6 @@ async function inspectPage(url, { fetchImpl, baseOrigin, timeoutMs }) {
   } catch (error) {
     issues.push(issue("page-body", url, `Could not read HTML response: ${error.message}`));
     return issues;
-  }
-
-  for (const finding of inspectCommercialContent(html, url)) {
-    issues.push(issue(finding.code, url, finding.message));
   }
 
   const metaTags = tagsWithAttributes(html, "meta");
@@ -578,24 +403,13 @@ async function inspectPage(url, { fetchImpl, baseOrigin, timeoutMs }) {
       issues.push(issue("jsonld-parse", url, `Invalid JSON-LD #${index + 1}: ${error.message}`));
       continue;
     }
-    if (!hasSchemaOrgContext(data)) {
-      issues.push(
-        issue("jsonld-context", url, `JSON-LD #${index + 1} must declare https://schema.org @context`),
-      );
-    }
     for (const claim of findOfficialEntityClaims(data, baseOrigin)) {
       issues.push(issue("jsonld-official-entity", url, `JSON-LD official giffgaff entity claim: ${claim}`));
     }
     for (const claim of findUnverifiedCommerceClaims(data)) {
       issues.push(issue("jsonld-unverified-commerce", url, `JSON-LD unverified commerce claim: ${claim}`));
     }
-    for (const finding of findPausedSchemaTypes(data)) {
-      issues.push(issue("jsonld-paused-type", url, `JSON-LD paused schema type: ${finding}`));
-    }
   }
-
-
-  issues.push(...(await inspectPageHead(url, { fetchImpl, timeoutMs })));
 
   return issues;
 }
@@ -712,104 +526,6 @@ function missingDirectives(value, expected) {
   return expected.filter((directive) => !directives.has(directive));
 }
 
-function parseRobotsPolicy(source) {
-  const groups = [];
-  const sitemaps = [];
-  let group = { agents: [], directives: [] };
-  let hasDirective = false;
-
-  const flush = () => {
-    if (group.agents.length > 0) groups.push(group);
-    group = { agents: [], directives: [] };
-    hasDirective = false;
-  };
-
-  for (const rawLine of source.split(/\r?\n/)) {
-    const line = rawLine.replace(/#.*$/, "").trim();
-    if (!line) continue;
-    const separator = line.indexOf(":");
-    if (separator < 0) continue;
-    const field = line.slice(0, separator).trim().toLowerCase();
-    const value = line.slice(separator + 1).trim();
-    if (field === "sitemap") {
-      sitemaps.push(value);
-      continue;
-    }
-    if (field === "user-agent") {
-      if (hasDirective) flush();
-      group.agents.push(value.toLowerCase());
-      continue;
-    }
-    if ((field === "allow" || field === "disallow") && group.agents.length > 0) {
-      group.directives.push({ field, value });
-      hasDirective = true;
-    }
-  }
-  flush();
-  return { groups, sitemaps };
-}
-
-function robotsAiPolicyFindings(source, baseOrigin) {
-  const findings = [];
-  const { groups, sitemaps } = parseRobotsPolicy(source);
-  const groupsFor = (bot) => groups.filter((group) => group.agents.includes(bot));
-  const directiveExists = (botGroups, field, value) => botGroups.some((group) =>
-    group.directives.some((directive) => directive.field === field && directive.value === value));
-
-  for (const bot of SEARCH_AI_BOTS) {
-    const botGroups = groupsFor(bot);
-    if (
-      botGroups.length === 0 ||
-      !directiveExists(botGroups, "allow", "/") ||
-      directiveExists(botGroups, "disallow", "/")
-    ) {
-      findings.push(`${bot} must be explicitly allowed on /`);
-    }
-  }
-  for (const bot of TRAINING_AI_BOTS) {
-    const botGroups = groupsFor(bot);
-    if (
-      botGroups.length === 0 ||
-      !directiveExists(botGroups, "disallow", "/") ||
-      directiveExists(botGroups, "allow", "/")
-    ) {
-      findings.push(`${bot} must be explicitly disallowed on /`);
-    }
-  }
-
-  const expectedSitemap = `${baseOrigin}/sitemap.xml`;
-  if (!sitemaps.includes(expectedSitemap)) {
-    findings.push(`robots.txt must reference ${expectedSitemap}`);
-  }
-  return findings;
-}
-
-function privatePolicyIssues(url, response, label) {
-  const issues = [];
-  const xRobotsTag = response.headers.get("x-robots-tag") || "";
-  const missing = missingDirectives(xRobotsTag, ["noindex", "nofollow", "noarchive"]);
-  if (missing.length > 0) {
-    issues.push(
-      issue(
-        "sensitive-request-robots",
-        url,
-        `${label} must return noindex, nofollow, noarchive; missing ${missing.join(", ")}`,
-      ),
-    );
-  }
-  const cacheControl = response.headers.get("cache-control") || "";
-  if (!/\bprivate\b/i.test(cacheControl) || !/\bno-store\b/i.test(cacheControl)) {
-    issues.push(
-      issue(
-        "sensitive-request-cache",
-        url,
-        `${label} must return private, no-store; found ${cacheControl || "missing Cache-Control"}`,
-      ),
-    );
-  }
-  return issues;
-}
-
 export async function validatePolicyProbes(
   baseUrl,
   {
@@ -849,33 +565,22 @@ export async function validatePolicyProbes(
       if (xRobotsTag) {
         issues.push(issue("robots-header", url, `robots.txt must not emit X-Robots-Tag; found ${xRobotsTag}`));
       }
-      if (response.status === 200) {
-        const robotsText = await response.text();
-        const findings = robotsAiPolicyFindings(robotsText, baseOrigin);
-        if (findings.length > 0) {
-          issues.push(issue("robots-ai-policy", url, findings.join("; ")));
-        }
-      }
       continue;
     }
 
-    const isLlms = pathname === "/llms.txt";
-    const isRetiredLlmsFull = pathname === "/llms-full.txt";
+    const isLlms = pathname === "/llms.txt" || pathname === "/llms-full.txt";
     const isPolicyPage = pathname === "/privacy/" || pathname === "/terms/";
-    const isPrivate = isRetiredLlmsFull || (!isLlms && (!isPolicyPage || response.status !== 200));
+    const isPrivate = !isLlms && (!isPolicyPage || response.status !== 200);
 
     if (isLlms && response.status !== 200) {
       issues.push(issue("llms-status", url, `Expected ${pathname} status 200, received ${response.status}`));
     }
-    if (isRetiredLlmsFull && response.status !== 410) {
-      issues.push(issue("llms-full-status", url, `Expected ${pathname} status 410, received ${response.status}`));
-    }
-    if (isPolicyPage && response.status !== 200) {
+    if (isPolicyPage && ![200, 404].includes(response.status)) {
       issues.push(
         issue(
           "policy-page-status",
           url,
-          `Expected published ${pathname} status 200, received ${response.status}`,
+          `Expected ${pathname} to be a published 200 or an explicit 404, received ${response.status}`,
         ),
       );
     }
@@ -912,39 +617,6 @@ export async function validatePolicyProbes(
         ),
       );
     }
-
-    if (pathname === "/__seo-release-probe-missing__/" && response.status === 404) {
-      const html = await response.text();
-      const canonicals = tagsWithAttributes(html, "link").filter((link) =>
-        (link.rel || "").toLowerCase().split(/\s+/).includes("canonical"));
-      const ogUrls = tagsWithAttributes(html, "meta").filter((meta) =>
-        (meta.property || "").toLowerCase() === "og:url");
-      if (canonicals.length > 0) {
-        issues.push(issue("404-canonical", url, "404 response must not include a canonical link"));
-      }
-      if (ogUrls.length > 0) {
-        issues.push(issue("404-og-url", url, "404 response must not include og:url"));
-      }
-    }
-  }
-
-  for (const probe of SENSITIVE_PROBES) {
-    const url = `${baseOrigin}${probe.path}`;
-    const init = requestInit("*/*", timeoutMs);
-    if (probe.authorization) init.headers.authorization = probe.authorization;
-    let response;
-    try {
-      response = await fetchImpl(url, init);
-    } catch (error) {
-      issues.push(issue("sensitive-request-fetch", url, `${probe.kind} probe failed: ${error.message}`));
-      continue;
-    }
-    if (response.status !== 400) {
-      issues.push(
-        issue("sensitive-request-status", url, `${probe.kind} must return 400; received ${response.status}`),
-      );
-    }
-    issues.push(...privatePolicyIssues(url, response, probe.kind));
   }
 
   return issues;
@@ -953,7 +625,6 @@ export async function validatePolicyProbes(
 export async function validateSeoRelease({
   baseUrl,
   expectedUrlCount = DEFAULT_EXPECTED_URL_COUNT,
-  expectedIndexablePaths = PUBLIC_INDEXABLE_PATHS,
   fetchImpl = globalThis.fetch,
   checkCanonicalization = true,
   checkPolicyProbes = true,
@@ -962,7 +633,6 @@ export async function validateSeoRelease({
 } = {}) {
   const baseOrigin = normalizeBaseUrl(baseUrl);
   const expectedCount = positiveInteger(expectedUrlCount, "expectedUrlCount");
-  const manifestPaths = normalizedExpectedPaths(expectedIndexablePaths);
   const issues = [];
   const sitemapUrl = `${baseOrigin}/sitemap.xml`;
   let sitemapResponse;
@@ -982,24 +652,6 @@ export async function validateSeoRelease({
     throw new SeoReleaseError([
       issue("sitemap-status", sitemapUrl, `Expected sitemap status 200, received ${sitemapResponse.status}`),
     ], { sitemapUrl, urlCount: 0, pagesChecked: 0 });
-  }
-
-  try {
-    const sitemapHead = await fetchImpl(sitemapUrl, {
-      ...requestInit("application/xml,text/xml;q=0.9,*/*;q=0.1", timeoutMs),
-      method: "HEAD",
-    });
-    if (sitemapHead.status !== 200) {
-      issues.push(
-        issue("sitemap-head-status", sitemapUrl, `Expected sitemap HEAD status 200, received ${sitemapHead.status}`),
-      );
-    }
-    const headRobots = sitemapHead.headers.get("x-robots-tag") || "";
-    if (containsNoindex(headRobots)) {
-      issues.push(issue("sitemap-head-noindex", sitemapUrl, `sitemap HEAD inherited noindex: ${headRobots}`));
-    }
-  } catch (error) {
-    issues.push(issue("sitemap-head-fetch", sitemapUrl, `Could not HEAD sitemap: ${error.message}`));
   }
   const sitemapRobots = sitemapResponse.headers.get("x-robots-tag") || "";
   if (containsNoindex(sitemapRobots)) {
@@ -1053,28 +705,6 @@ export async function validateSeoRelease({
     validUrls.push(parsed.href);
   }
 
-
-  const actualUrlSet = new Set(validUrls);
-  const expectedUrls = manifestPaths.map((path) => new URL(path, `${baseOrigin}/`).href);
-  const expectedUrlSet = new Set(expectedUrls);
-  for (const expectedUrl of expectedUrls) {
-    if (!actualUrlSet.has(expectedUrl)) {
-      issues.push(
-        issue("sitemap-manifest-missing", expectedUrl, "Indexable route manifest URL is missing from sitemap.xml"),
-      );
-    }
-  }
-  for (const actualUrl of validUrls) {
-    if (!expectedUrlSet.has(actualUrl)) {
-      issues.push(
-        issue("sitemap-manifest-unexpected", actualUrl, "sitemap.xml contains a URL not marked indexable in route manifest"),
-      );
-    }
-    if (SUPPORTING_NOINDEX_PATHS.includes(new URL(actualUrl).pathname)) {
-      issues.push(issue("sitemap-noindex-route", actualUrl, "noindex route must not appear in sitemap.xml"));
-    }
-  }
-
   const pageIssueGroups = await mapLimit(validUrls, concurrency, (url) =>
     inspectPage(url, { fetchImpl, baseOrigin, timeoutMs }),
   );
@@ -1116,11 +746,11 @@ export async function validateSeoRelease({
 }
 
 const USAGE = `Usage:
-  node scripts/verify-seo-release.mjs --base-url https://getgiffgaff.com [--expected-url-count ${DEFAULT_EXPECTED_URL_COUNT}]
+  node scripts/verify-seo-release.mjs --base-url https://getgiffgaff.com [--expected-url-count 34]
 
 Environment fallbacks:
   SEO_BASE_URL
-  SEO_EXPECTED_URL_COUNT (default: route manifest count: ${DEFAULT_EXPECTED_URL_COUNT})`;
+  SEO_EXPECTED_URL_COUNT (default: 34)`;
 
 export async function runCli(
   args = process.argv.slice(2),

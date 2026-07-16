@@ -1,5 +1,3 @@
-import { ogImageUrlFor } from "./og-images.js";
-
 const CANONICAL_ORIGIN = "https://getgiffgaff.com";
 const PUBLISHED = "2026-07-15";
 const EDITOR = "getgiffgaff";
@@ -9,12 +7,12 @@ const official = {
   activation: {
     title: "giffgaff 官方：Activating your giffgaff SIM",
     url: "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
-    scope: "激活码、SIM 序列号、账号与 SIM swap 边界；具体处理时间需在操作当日复核。",
+    scope: "激活码、13 位 SIM 序列号、激活耗时、一个账号一张有效 SIM 与 SIM swap 边界。",
   },
   deactivation: {
     title: "giffgaff 官方：Understanding why your number has been deactivated",
     url: "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",
-    scope: "inactive 判断、有效使用类型与停用后的处理入口；具体周期和时间窗需在操作当日复核。",
+    scope: "6 个月 inactive 规则、有效使用动作、停用后的号码处理时间窗。",
   },
   credit: {
     title: "giffgaff 官方：Everything to know about Credit",
@@ -51,7 +49,7 @@ const official = {
 const commonRelated = [
   { title: "giffgaff 使用教程和避坑清单", url: "/guides/6-pitfalls/" },
   { title: "G0/G2 对比与选卡", url: "/answers/" },
-  { title: "既有订单与使用支持", url: "/contact/" },
+  { title: "库存、下单与售后联系", url: "/contact/" },
 ];
 
 export const TUTORIAL_PAGES = Object.freeze({
@@ -97,7 +95,7 @@ export const TUTORIAL_PAGES = Object.freeze({
           "为这张 SIM 建立对应账号；每张有效 SIM 应有自己的账号。",
           "只按官方当前页面完成付款、Credit 或 plan 步骤，不使用虚假个人资料去绕过校验。",
           "保存号码、账号邮箱和官方确认页，然后再插卡检查网络。",
-          "等待时间以官方当前页面和账号状态为准。处理中不要反复提交同一流程；超出官方当日列明的正常范围后再收集证据联系支持。",
+          "官方说明激活可能需要最多 24 小时。等待期间间隔重启，不要反复提交同一流程。",
         ],
       },
       {
@@ -150,7 +148,7 @@ export const TUTORIAL_PAGES = Object.freeze({
       },
       {
         question: "激活后多久有信号？",
-        answer: "本站当前没有通过真实作者与复核人门禁的处理时长声明，因此不展示缓存数字。请查看操作当日的官方激活页和账号状态；任何时长都不是到点必然成功的承诺。",
+        answer: "官方说明通常更快，但可能需要最多 24 小时。这不是到点必然成功的承诺。",
       },
       {
         question: "多张卡可以放在一个账号吗？",
@@ -174,43 +172,43 @@ export const TUTORIAL_PAGES = Object.freeze({
 
   "/guides/3-usage/": {
     primaryKeyword: "giffgaff 保号",
-    title: "giffgaff 保号规则：如何核对 inactive 状态",
-    description: "说明如何在操作当日核对 giffgaff inactive 规则、记录有效动作与处理停用；未通过复核的周期和时间窗不在本站展示。",
+    title: "giffgaff 保号规则：6 个月 inactive 前要做什么",
+    description: "按 giffgaff 官方 2026 年帮助页解释 6 个月 inactive 规则、有效使用、提醒记录和停用后的处理边界。",
     headline: "giffgaff 保号：不要把“收到短信”当成有效使用",
-    deck: "保号页只解释核对方法，不承诺号码继续有效或任何第三方平台验证码送达。",
+    deck: "保号页只解决号码是否继续有效，不承诺任何第三方平台验证码送达。",
     intent: "规则解释 / 操作清单",
     answer:
-      "本站当前没有通过真实作者与复核人门禁的保号周期、有效动作列表或停用恢复时间窗声明，因此不展示缓存数字，也不开放提醒导出。实际操作前请直接打开本页列出的 giffgaff 官方 inactive 帮助页，核对当日规则、账号状态和可验证动作；收到短信本身不能被本站当成保号成功证明。",
+      "giffgaff 官方帮助页说明，SIM 在过去 6 个月没有使用时可被认定为 inactive 并停用。为避免停用，至少每 6 个月做一次官方列明的动作：向另一号码拨打电话或发送 SMS/MMS、使用移动数据建立网络连接，或购买 Airtime Credit/plan。官方列表不包含“只收短信”。",
     author: EDITOR,
     reviewMethod: REVIEW_METHOD,
     dateModified: PUBLISHED,
     sections: [
       {
         id: "official-rule",
-        title: "先确认当前声明状态",
+        title: "官方规则能确认什么",
         paragraphs: [
-          "运营商可能调整 inactive 判断、有效动作和停用后的处理窗口。本站的周期声明目前因缺少真实作者与复核人而 fail closed。",
-          "任何保号操作前，都应打开本文下方的官方来源，查看页面当前文字，并以账号里的实际状态为准。",
+          "官方 2026-06-05 标注更新的停用说明将“过去 6 个月没有使用”列为 inactive 情形。官方用的是至少每 6 个月一次，不是“每年做一次”。",
+          "这个规则可能更新。任何保号操作前，都应打开本文下方的官方来源重新核对。",
         ],
         items: [
-          "记录官方页面的查看日期与页面地址。",
-          "区分主动使用、购买记录与单纯收到消息，不自行把不同事件视为等价。",
-          "选择动作前核对当前资费、余额、网络条件和官方列明的排除项。",
+          "向另一号码完成至少一次通话、SMS 或 MMS；官方同时列明了不计入的免费或特殊号码。",
+          "用移动数据至少建立一次互联网连接。",
+          "购买至少一次 Airtime Credit 或 plan。",
         ],
-        callout: "没有当前 ACTIVE 声明时，本站不告诉你一个固定周期或把某个动作写成保证。",
+        callout: "收到普通短信或验证码不在官方列出的保活动作中，不要单独依赖它。",
       },
       {
-        id: "review-workflow",
-        title: "怎样建立可复核的保号记录",
+        id: "five-month-workflow",
+        title: "为什么建议第 5 个月就处理",
         paragraphs: [
-          "提醒应根据你当日核对到的官方规则自行设置，并保留安全缓冲。本站不会在声明门禁失败时替你计算日期。",
+          "“第 5 个月”是本站的风险缓冲建议，不是 giffgaff 官方的新规则。它给信号、余额、设备、时差和账号恢复留出处理时间。",
         ],
         steps: [
-          "登录正确账号，确认号码、邮箱与恢复方式仍由本人控制。",
-          "打开官方 inactive 规则和当前费用页，记录查看日期。",
-          "按官方当日规则选择可验证、且成本与风险可接受的动作。",
-          "完成后记录时间、账号可见结果和必要的交易确认；不要保存密码或验证码。",
-          "根据刚刚核对到的规则自行设置下一次复核提醒。",
+          "记录上次官方可识别的使用或购买日期。",
+          "在第 4 个月设预提醒，第 5 个月设操作提醒，不要等到第 180 天。",
+          "登录账号，确认号码仍在、余额可查和邮箱可用。",
+          "打开官方 inactive 规则和当前漫游费用页，选择可以验证、且成本可接受的动作。",
+          "完成后保留时间、余额变化或购买确认的记录，然后重新设置下一次提醒。",
         ],
       },
       {
@@ -231,8 +229,8 @@ export const TUTORIAL_PAGES = Object.freeze({
         id: "after-deactivation",
         title: "已经停用时的处理边界",
         paragraphs: [
-          "停用后的恢复资格、号码转移和处理窗口属于高变动性规则。本站当前没有通过复核的时间窗声明，不转述具体天数。",
-          "如果账号或官方页面显示已停用，应立即打开官方帮助页并使用官方支持入口，保存当前状态与时间线，不要依赖搜索摘要或旧教程数字。",
+          "官方帮助页说明，停用后 SIM 不能重新激活。当前页面还提到，在停用后 30 天内可联系官方 agent 申请 PAC，尝试把号码转移到其他网络；超过当前页面列明的时限后，号码可能被回收。",
+          "这个时间窗属于高变动性规则。如果真的已停用，立即打开官方帮助页并联系官方支持，不要依赖本文缓存的数字。",
         ],
       },
       {
@@ -250,11 +248,11 @@ export const TUTORIAL_PAGES = Object.freeze({
     faq: [
       {
         question: "收到验证码算保号吗？",
-        answer: "本站不会把收到验证码单独当成保号成功证明。请以操作当日官方 inactive 页面列出的有效动作和账号记录为准。",
+        answer: "官方当前列出的动作是主动通话/SMS/MMS、移动数据连接或购买 Credit/plan，未列出单纯收短信。",
       },
       {
-        question: "本站为什么不直接给一个固定周期？",
-        answer: "因为当前声明缺少真实作者与复核人，且运营商规则可能变化。门禁恢复前，本站只提供核对方法，不展示缓存周期或生成提醒。",
+        question: "一定要等到 6 个月才操作吗？",
+        answer: "不需要。本站建议第 5 个月就处理，给异常留出缓冲时间；这是风险管理建议，不是官方新规则。",
       },
     ],
     sources: [official.deactivation, official.credit, official.roaming],
@@ -267,7 +265,7 @@ export const TUTORIAL_PAGES = Object.freeze({
     revisions: [
       {
         date: PUBLISHED,
-        note: "把具体周期、动作列表与恢复时间窗改为 fail closed；待真实作者、复核人和复核日期齐全后再由 Claim Registry 控制发布。",
+        note: "证据型版本全面重写；根据官方 2026-06-05 版 inactive 帮助页和 2026-07-15 可见的 Credit/漫游页复核。",
       },
     ],
   },
@@ -316,9 +314,9 @@ export const TUTORIAL_PAGES = Object.freeze({
       },
       {
         id: "time-window",
-        title: "如何理解处理窗口与等待状态",
+        title: "激活窗口和等待时间怎么理解",
         paragraphs: [
-          "官方页面会显示当前 eSIM switching 的可用条件与处理提示。本站没有通过真实作者与复核人门禁的时长声明，因此不展示缓存小时数；开始前必须直接查看官方页当时显示。",
+          "官方当前页面列出了 eSIM switching 的可用时段，并说明已有用户的切换通常少于一小时，繁忙时可达 24 小时。时区、窗口和界面都可能变化，开始前必须直接看官方页当时显示。",
           "不要把第三方教程换算的“北京时间”当成永久规则，英国夏令时和官方运营窗口都会使固定换算失效。",
         ],
         callout: "这也是本页不写死北京时间的原因。",
@@ -569,13 +567,13 @@ export const TUTORIAL_PAGES = Object.freeze({
 
   "/answers/": {
     primaryKeyword: "giffgaff G0 G2 区别",
-    title: "G0 与 G2：状态、账户控制权与风险边界",
-    description: "解释 G0/G2 这组市场分类的来源、账户控制权与条款风险；不提供库存、报价或购买推荐。",
-    headline: "G0 与 G2：先看来源、账户控制权与条款边界",
-    deck: "G0/G2 是本站及部分市场资料使用的状态分类，不是 giffgaff 官方产品名称，也不代表运营商认可预激活、余额或账号交付方式。",
-    intent: "风险解释 / 决策边界",
+    title: "G0 与 G2 怎么选：状态、总成本与风险对比",
+    description: "G0 新卡与 G2 有余额卡的独立第三方对比：先看卡状态、账号归属、激活和首次付款，再计算总成本，不写死库存与价格。",
+    headline: "G0 与 G2 怎么选：不要只比商品价格",
+    deck: "G0/G2 是本站销售与教程中的库存分类，不是 giffgaff 官方产品名称，也不代表运营商认可某种预激活或账号交付方式。",
+    intent: "商业调研 / 选型对比",
     answer:
-      "G0 通常指由使用者按官方流程自行激活的新卡；G2 通常指卖家声称已做前置处理或带有某种账户状态的卡。两者都不是 giffgaff 官方产品名称。本站当前不提供库存、报价或购买建议；这里只解释来源、登记责任、账户控制权和条款风险，也不承诺任何平台验证码送达。",
+      "如果你愿意用自己的资料完成官方激活、建立账号和处理首次 Credit/plan 支付，可优先评估 G0 新卡。如果考虑 G2，不能只看‘有余额’：必须确认来源、激活状态、账户登记责任、买方能否以本人资料取得合法控制，以及当前 giffgaff 条款是否允许该流程。无法确认时不要购买。两者都不承诺某平台验证码必到。",
     author: EDITOR,
     reviewMethod: REVIEW_METHOD,
     dateModified: PUBLISHED,
@@ -584,42 +582,43 @@ export const TUTORIAL_PAGES = Object.freeze({
         id: "definitions",
         title: "先把名词说清楚",
         paragraphs: [
-          "在本站风险说明中，G0 通常表示由使用者按官方流程完成激活和首次账号设置的新卡；G2 只是部分市场资料对已做前置处理、或声称带有某种余额和号码状态的卡所用称呼。",
-          "“通常”不代表任何具体交付状态，也不表示这种前置处理获得 giffgaff 认可。本站未核验当前商品、余额、库存或价格，因此不发布相关承诺。",
+          "在本站语境中，G0 通常表示需要购买者按官方流程完成激活和首次账号设置的新卡；G2 只是卖家对某类已做前置处理、并声明有当前余额或号码状态的库存称呼。",
+          "“通常”不等于每批库存都相同，也不代表这种前置处理获得 giffgaff 认可。页面不发布无法实时证明的余额、库存、价格、合规性或必到承诺。",
         ],
         callout: "G0/G2 不是 giffgaff 官方 SKU、plan 或账户等级。",
       },
       {
         id: "comparison",
-        title: "核心对比：状态链路和新增风险",
+        title: "核心对比：你买的是什么状态",
         table: {
-          headers: ["风险项", "所谓 G0 新卡", "所谓 G2 前置处理卡"],
+          headers: ["决策项", "G0 新卡", "G2 有余额/前置处理卡"],
           rows: [
-            ["状态起点", "通常由使用者从官方激活流程建立状态链路", "已有前置处理，但具体步骤和责任可能无法独立核验"],
-            ["必须核对", "激活入口、本人资料、账号恢复方式与首次入网状态", "来源、激活状态、登记责任、条款边界与买方控制权"],
+            ["核心价值", "自己从官方激活开始，状态链路由自己建立", "降低部分首次激活/支付操作的门槛"],
+            ["购买者要做的事", "用本人资料激活、建账号、处理 Credit/plan 与首次入网", "先核对来源、激活状态、登记责任、条款边界、余额与 SIM 状态"],
             ["主要风险", "激活码、支付、网页、账号与 SIM swap 操作错误", "预处理不符合当前条款、登记资料不属于买方，或交付状态与声明不一致"],
-            ["本站立场", "只解释官方流程和操作风险，不提供购买推荐", "证据和许可不足，销售与推荐保持关闭"],
+            ["适合人群", "时间充足、愿意按官方流程操作的人", "更看重交付后少走前置流程，并会主动验收的人"],
             ["不会因此改变的事", "保号、漫游、平台验证码仍存在外部不确定性", "保号、漫游、平台验证码仍存在外部不确定性"],
           ],
         },
       },
       {
         id: "total-cost",
-        title: "为什么本页不展示总成本或报价",
+        title: "总成本不是“卡价 + 0”",
         paragraphs: [
-          "总成本会随卡的真实状态、Credit/plan、物流、支付、漫游和维护动作变化。当前缺少可持续核验的供货、账户控制权与实时价格证据，因此不能把静态数字包装成可靠结论。",
-          "只有品牌、交易和证据门禁全部通过后，本站才可能发布可复核的计算器；在此之前，本节只列出风险变量，不产生购买结果。",
+          "正确的对比方法是把卡本身、激活或前置处理、当前 Credit/plan、国内物流、付款失败重试、个人时间、后续保号和漫游操作放在同一张表里。",
+          "后续会把这个框架做成总成本计算器。在计算器上线前，可以手动记录以下字段，价格一律以付款当日官方或销售页为准。",
         ],
         items: [
-          "卡的真实激活状态与账户登记责任。",
-          "官方流程当日要求的 Credit/plan 与付款条件。",
-          "物流、失败重试、时间和售后边界。",
-          "未来保号、漫游与账号维护的不确定成本。",
+          "当前商品价与运费。",
+          "官方激活时实际需要购买的 Credit/plan。",
+          "已有付款工具还是需要另行处理。",
+          "从下单到可用的时间成本与急用风险。",
+          "未来一年保号、漫游和账号维护预算。",
         ],
       },
       {
         id: "checkout-checklist",
-        title: "接触第三方交付说法时要核验什么",
+        title: "付款前必须得到的答案",
         items: [
           "当批卡到底是未激活、已激活，还是只做了某些前置处理。",
           "号码和账户当前登记在谁名下；买方是否能按 giffgaff 当前规则使用本人资料取得控制，不能接受他人身份或共享账号。",
@@ -632,17 +631,17 @@ export const TUTORIAL_PAGES = Object.freeze({
       },
       {
         id: "recommendation",
-        title: "当前结论：不做购买推荐",
+        title: "最后的选择不是“新手一定选 G2”",
         paragraphs: [
-          "G0 让使用者从官方激活起点建立自己的状态链路，但仍有激活、支付和账号操作风险。所谓 G2 可能声称减少部分前置步骤，却新增来源、登记资料、条款适用与控制权风险。",
-          "在书面品牌许可、供货证明、登记责任和账户控制权证据通过前，本站不恢复 G2 销售、推荐或购买入口。任何第三方无法说明这些边界时，都不应仅凭 G0/G2 标签作决定。",
+          "对比的关键是你最想消除哪种不确定性。G0 让你从官方激活起点建立自己的状态链路，但要承担更多前置操作。G2 可能减少部分操作，却新增来源、登记资料、条款适用与控制权风险。",
+          "如果卖家无法对当批卡的来源、激活状态、登记责任、余额、交付内容和售后边界给出可验证答案，无论它叫 G0 还是 G2，都不应付款。",
         ],
       },
     ],
     faq: [
       {
         question: "G0/G2 是 giffgaff 官方分类吗？",
-        answer: "不是。它们是本站及部分市场资料使用的状态分类，不能替代对来源、登记责任与账户控制权的核验。",
+        answer: "不是。它们是本站购买和教程语境中的库存/状态分类，付款前需再确认当批卡的精确交付状态。",
       },
       {
         question: "G2 是否保证某个平台验证码能到？",
@@ -654,13 +653,13 @@ export const TUTORIAL_PAGES = Object.freeze({
       commonRelated[0],
       { title: "giffgaff 国内激活流程", url: "/guides/2-activate/" },
       { title: "giffgaff 保号规则", url: "/guides/3-usage/" },
-      { title: "giffgaff 短信与信号排查", url: "/guides/4-signal/" },
+      { title: "当前 G0/G2 购买入口", url: "/shop/" },
       commonRelated[2],
     ],
     revisions: [
       {
         date: PUBLISHED,
-        note: "改为纯风险解释；删除商品、库存和购买导向，并用官方激活、Credit、inactive 与条款页限定决策边界。",
+        note: "证据型版本全面重写；将 G0/G2 明确标注为本站库存分类，并用官方激活、Credit、inactive 与条款页限定决策边界。",
       },
     ],
   },
@@ -681,10 +680,9 @@ function renderList(items, ordered = false) {
   return `<${tag}>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</${tag}>`;
 }
 
-function renderTable(table, fallbackCaption = "本节对照表") {
+function renderTable(table) {
   if (!table) return "";
-  const caption = table.caption || fallbackCaption;
-  return `<div class="table-scroll" tabindex="0" role="region" aria-label="${escapeHtml(caption)}"><table><caption>${escapeHtml(caption)}</caption><thead><tr>${table.headers
+  return `<div class="table-scroll"><table><thead><tr>${table.headers
     .map((header) => `<th scope="col">${escapeHtml(header)}</th>`)
     .join("")}</tr></thead><tbody>${table.rows
     .map(
@@ -706,7 +704,7 @@ function renderSection(section) {
     ${(section.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join("")}
     ${renderList(section.items)}
     ${renderList(section.steps, true)}
-    ${renderTable(section.table, section.title)}
+    ${renderTable(section.table)}
     ${section.callout ? `<p class="callout">${escapeHtml(section.callout)}</p>` : ""}
   </section>`;
 }
@@ -774,6 +772,19 @@ function renderBreadcrumbs(pathname, page) {
     .join("");
 }
 
+function faqSchema(page) {
+  if (!page.faq?.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: page.faq.map(({ question, answer }) => ({
+      "@type": "Question",
+      name: question,
+      acceptedAnswer: { "@type": "Answer", text: answer },
+    })),
+  };
+}
+
 function jsonLd(value) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
@@ -784,8 +795,6 @@ const styles = `<style>
   html { scroll-behavior: smooth; }
   body { margin:0; color:var(--ink); background:#fff; font-family:Inter,"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
   a { color:var(--green); }
-  .skip-link { position:fixed; left:16px; top:12px; z-index:10000; transform:translateY(-180%); border-radius:8px; background:#122019; padding:10px 14px; color:#fff; font-weight:800; }
-  .skip-link:focus { transform:translateY(0); }
   .site-header { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:72px; padding:14px max(20px,calc((100vw - 1120px)/2)); border-bottom:1px solid var(--line); background:#fff; }
   .brand { display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; }
   .brand-mark { display:grid; place-items:center; width:38px; height:38px; border-radius:10px; background:var(--green); color:#fff; font-weight:900; }
@@ -815,9 +824,7 @@ const styles = `<style>
   li { margin:8px 0; }
   .callout { border-left:4px solid var(--green); background:var(--soft); padding:14px 16px; color:var(--green); font-weight:800; }
   .table-scroll { overflow-x:auto; margin:18px 0; }
-  .table-scroll:focus { outline:3px solid #2f5e41; outline-offset:3px; }
   table { width:100%; min-width:680px; border-collapse:collapse; border:1px solid var(--line); }
-  caption { padding:10px 0; color:var(--muted); font-weight:800; text-align:left; }
   th,td { border-bottom:1px solid var(--line); padding:12px 14px; text-align:left; vertical-align:top; }
   thead th { background:var(--soft); color:var(--green); }
   tbody th { width:24%; background:#fbfdfb; }
@@ -835,15 +842,11 @@ const styles = `<style>
   @media (max-width:800px) { .site-header { align-items:flex-start; flex-direction:column; } .layout { grid-template-columns:1fr; } .toc { position:static; } .related-grid { grid-template-columns:1fr; } }
 </style>`;
 
-export function renderTutorialPage(
-  pathname,
-  { articleAddon = "", headAddon = "" } = {},
-) {
+export function renderTutorialPage(pathname) {
   const page = TUTORIAL_PAGES[pathname];
   if (!page) return null;
   const canonical = `${CANONICAL_ORIGIN}${pathname}`;
-  const ogImage = ogImageUrlFor(CANONICAL_ORIGIN, pathname);
-  const schema = [articleSchema(pathname, page), breadcrumbSchema(pathname, page)];
+  const schema = [articleSchema(pathname, page), breadcrumbSchema(pathname, page), faqSchema(page)].filter(Boolean);
 
   return `<!doctype html>
 <html lang="zh-CN">
@@ -860,25 +863,21 @@ export function renderTutorialPage(
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
   <meta property="og:url" content="${canonical}">
-  <meta property="og:image" content="${ogImage}">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
+  <meta property="og:image" content="${CANONICAL_ORIGIN}/gg-card-hero.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
-  <meta name="twitter:image" content="${ogImage}">
+  <meta name="twitter:image" content="${CANONICAL_ORIGIN}/gg-card-hero.png">
   <link rel="icon" href="/favicon.svg">
-  ${headAddon}
   ${styles}
   ${schema.map((entry) => `<script type="application/ld+json">${jsonLd(entry)}</script>`).join("\n  ")}
 </head>
 <body>
-  <a class="skip-link" href="#main-content">跳到主要内容</a>
   <header class="site-header">
-    <a class="brand" href="/" aria-label="getgiffgaff 首页"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>独立第三方使用与风险信息</small></span></a>
-    <nav aria-label="主导航"><a href="/guides/6-pitfalls/">使用总览</a><a href="/guides/">教程</a><a href="/research/">资料库</a><a href="/contact/">联系</a></nav>
+    <a class="brand" href="/" aria-label="getgiffgaff 首页"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>独立第三方购买与使用信息</small></span></a>
+    <nav aria-label="主导航"><a href="/shop/">手机卡</a><a href="/guides/">教程</a><a href="/research/">资料库</a><a href="/contact/">联系</a></nav>
   </header>
-  <main id="main-content" tabindex="-1">
+  <main>
     <section class="hero">
       <div class="hero-inner">
         <nav class="breadcrumbs" aria-label="面包屑">${renderBreadcrumbs(pathname, page)}</nav>
@@ -896,7 +895,6 @@ export function renderTutorialPage(
         <div class="answer"><strong>直接答案</strong><p>${escapeHtml(page.answer)}</p></div>
         <div class="trust-box"><strong>编辑责任与复核方法</strong><p>编辑责任主体：${escapeHtml(page.author)}；复核方法：${escapeHtml(page.reviewMethod)}。当前未公开个人作者或复核者，本站不使用虚构署名；本文未经 giffgaff Limited 审核或背书。发现规则变化可<a href="/contact/">提交纠错</a>。</p></div>
         ${page.sections.map(renderSection).join("\n")}
-        ${articleAddon}
         <section class="faq" id="faq"><h2>常见问题</h2>${page.faq
           .map(({ question, answer }) => `<details><summary>${escapeHtml(question)}</summary><p>${escapeHtml(answer)}</p></details>`)
           .join("")}</section>

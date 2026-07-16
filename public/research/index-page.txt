@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>giffgaff 中文资料库：6 个来源、40 个竞品与原创教程</title>
     <meta name="description" content="getgiffgaff 公开研究方法、6 个指定来源拆解、40 个竞品证据卡和原创专题教程；只保存结构化观察，不复制第三方全文。">
-    <meta name="robots" content="noindex, follow, noarchive">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1">
     <link rel="canonical" href="https://getgiffgaff.com/research/">
     <meta property="og:title" content="giffgaff 中文资料库：6 个来源与 40 个竞品研究">
     <meta property="og:description" content="公开研究边界、内容集群、证据卡与 6 个原创专题页。">
@@ -14,16 +15,8 @@
     <meta property="og:locale" content="zh_CN">
     <meta property="og:type" content="website">
     <link rel="icon" href="/favicon.svg">
+    <link rel="stylesheet" href="/_next/static/chunks/0zd-htgp-~j4m.css">
     <style>
-      * { box-sizing: border-box; }
-      body { margin: 0; color: #102019; background: #fff; font-family: Inter, "Noto Sans SC", "PingFang SC", system-ui, sans-serif; }
-      .skip-link { position: fixed; z-index: 1000; left: 16px; top: 12px; transform: translateY(-180%); padding: 10px 14px; border-radius: 8px; background: #102019; color: #fff; }
-      .skip-link:focus { transform: none; }
-      .site-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; padding: 14px max(20px, calc((100vw - 1120px) / 2)); border-bottom: 1px solid rgba(47, 94, 65, 0.16); }
-      .brand { color: #102019; font-weight: 900; text-decoration: none; }
-      .brand small { display: block; color: #4f5f55; font-weight: 500; }
-      .site-header nav { display: flex; flex-wrap: wrap; gap: 16px; }
-      .site-header nav a { color: #102019; font-weight: 750; text-decoration: none; }
       .research-hero {
         border-bottom: 1px solid rgba(47, 94, 65, 0.16);
         background: linear-gradient(135deg, #f7fbf5 0%, #eef7ef 58%, #fff7df 100%);
@@ -140,22 +133,46 @@
         }
       }
     </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "giffgaff 中文资料库：6 个来源、40 个竞品与原创教程",
+        "description": "getgiffgaff 公开研究方法、6 个指定来源拆解、40 个竞品证据卡和原创专题教程；只保存结构化观察，不复制第三方全文。",
+        "url": "https://getgiffgaff.com/research/",
+        "inLanguage": "zh-CN",
+        "datePublished": "2026-07-01",
+        "dateModified": "2026-07-15",
+        "publisher": {
+          "@type": "Organization",
+          "@id": "https://getgiffgaff.com/#organization",
+          "name": "getgiffgaff",
+          "url": "https://getgiffgaff.com"
+        },
+        "about": {
+          "@type": "Brand",
+          "name": "giffgaff",
+          "url": "https://www.giffgaff.com/"
+        }
+      }
+    </script>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">跳到主要内容</a>
     <header class="site-header">
       <a class="brand" aria-label="getgiffgaff 首页" href="/">
-        <span><strong>getgiffgaff</strong><small>独立第三方使用与风险信息</small></span>
+        <span class="brand-mark">GG</span>
+        <span><strong>getgiffgaff</strong><small>独立第三方购买与教程</small></span>
       </a>
       <nav aria-label="主导航">
+        <a href="/shop/">手机卡</a>
         <a href="/guides/">教程</a>
         <a href="/more/">更多玩法</a>
         <a href="/qa/">常见问题</a>
-        <a href="/about/">关于</a>
-        <a href="/contact/">支持</a>
+        <a href="/contact/">联系我</a>
+        <a class="btn btn-primary btn-compact" href="/shop/">点此购买</a>
       </nav>
     </header>
-    <main id="main-content" tabindex="-1">
+    <main>
       <section class="research-hero">
         <div class="research-hero-inner">
           <div>
@@ -199,8 +216,8 @@
             <p>没有增加一组同义 URL，而是升级原有页面并让每个查询只归一个主 URL。</p>
             <ul>
               <li><a href="/guides/2-activate/">国内激活、账号归属与 SIM swap 排查</a></li>
-              <li><a href="/guides/3-usage/">保号规则、证据复核与本地提醒边界</a></li>
-              <li><a href="/more/03-esim/">giffgaff eSIM 切换、兼容与恢复边界</a></li>
+              <li><a href="/guides/3-usage/">6 个月 inactive、有效动作与保号记录</a></li>
+              <li><a href="/more/03-esim/">官方 eSIM 切换、兼容与恢复边界</a></li>
               <li><a href="/more/04-esim-qrcode/">二维码、激活凭证与第三方写卡安全边界</a></li>
               <li><a href="/guides/4-signal/">无信号、普通短信与单平台 OTP 诊断树</a></li>
               <li><a href="/answers/">G0/G2 状态、条款、总成本与风险对比</a></li>
@@ -209,18 +226,19 @@
           </article>
         </div>
 
-        <p class="research-note">下一阶段的信息增益优先来自本地保号提醒、漫游成本工具、网络/SMS 实测矩阵和验证码状态板。总成本计算器继续暂停，直到品牌许可、供货、账户控制权与实时价格门禁全部通过。任何数据上线前都必须公开方法、样本量、设备、地区、日期和失败边界。</p>
+        <p class="research-note">下一阶段的真正信息增益来自本站自己的总成本计算器、180 天提醒、网络/SMS 实测矩阵和验证码状态板。数据上线前必须公开方法、样本量、设备、地区、日期和失败边界，不用空白表格制造“已经验证”的错觉。</p>
       </section>
     </main>
     <footer class="site-footer">
       <div>
         <a class="brand brand-footer" href="/">
-          <span><strong>getgiffgaff</strong><small>独立第三方使用与风险信息</small></span>
+          <span class="brand-mark">GG</span>
+          <span><strong>getgiffgaff</strong><small>英国手机卡购买、激活和使用教程</small></span>
         </a>
         <p>getgiffgaff 是独立第三方服务站，不是 giffgaff Limited 官方网站、官方客服或授权代表。</p>
       </div>
       <div class="footer-warning"><span>不承诺长期保号，不承诺所有验证码均可送达。</span></div>
-      <p class="footer-contact">风险说明：<a href="/answers/">G0/G2 分类与使用边界</a></p>
+      <p class="footer-contact">购买要点：<a href="/answers/">G0/G2 对比与常见结论</a></p>
     </footer>
   </body>
 </html>

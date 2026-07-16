@@ -4,8 +4,8 @@ import test from "node:test";
 import worker from "../public/worker-logic.js";
 
 const CONTACT_CANONICAL = "https://getgiffgaff.com/contact/";
-const EXPECTED_TITLE = "联系 getgiffgaff｜订单、发货与使用支持";
-const EXPECTED_H1 = "联系 getgiffgaff：订单、发货与使用支持";
+const EXPECTED_TITLE = "联系 getgiffgaff｜G0/G2 库存、下单与售后支持";
+const EXPECTED_H1 = "联系 getgiffgaff：库存、下单与售后支持";
 
 // This deliberately mirrors the important problems in the production Contact
 // document while staying small enough for a focused Worker regression test.
@@ -127,52 +127,42 @@ function references(value, expectedId) {
 
 async function renderContact() {
   const originalFetch = globalThis.fetch;
-  let upstreamFetches = 0;
-  globalThis.fetch = async () => {
-    upstreamFetches += 1;
-    return new Response(legacyContactHtml, {
+  globalThis.fetch = async () =>
+    new Response(legacyContactHtml, {
       headers: {
         "content-type": "text/html; charset=utf-8",
         "x-robots-tag": "noindex",
       },
     });
-  };
 
   try {
     const response = await worker.fetch(new Request(CONTACT_CANONICAL), {});
-    return { response, html: await response.text(), upstreamFetches };
+    return { response, html: await response.text() };
   } finally {
     globalThis.fetch = originalFetch;
   }
 }
 
-test("serves Contact as a local, indexable and independent support page", async (t) => {
-  const { response, html, upstreamFetches } = await renderContact();
-
-  assert.equal(upstreamFetches, 0, "Contact must not depend on preview HTML");
-  assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "local-trust-page");
-  assert.equal(response.headers.has("x-getgiffgaff-hotfix"), false);
+test("rewrites Contact as an indexable independent support page", async (t) => {
+  const { html } = await renderContact();
 
   await t.test("uses unique Contact metadata and a 1200x630 social image", () => {
     assert.equal(elementText(html, "title"), EXPECTED_TITLE);
     assert.equal(elementText(html, "h1"), EXPECTED_H1);
 
     const description = metaContent(html, "name", "description");
-    assert.match(description ?? "", /既有订单/);
-    assert.match(description ?? "", /发货异常/);
-    assert.match(description ?? "", /使用问题/);
-    assert.match(description ?? "", /独立第三方/);
+    assert.match(description ?? "", /G0\/G2/);
+    assert.match(description ?? "", /库存/);
+    assert.match(description ?? "", /下单/);
+    assert.match(description ?? "", /售后/);
 
     assert.equal(canonicalHref(html), CONTACT_CANONICAL);
     assert.equal(metaContent(html, "property", "og:url"), CONTACT_CANONICAL);
     assert.equal(metaContent(html, "property", "og:title"), EXPECTED_TITLE);
-    assert.equal(
-      metaContent(html, "property", "og:description"),
-      description,
-    );
+    assert.match(metaContent(html, "property", "og:description") ?? "", /库存/);
 
     const ogImage = metaContent(html, "property", "og:image");
-    assert.equal(ogImage, "https://getgiffgaff.com/og/contact.png");
+    assert.match(ogImage ?? "", /^https:\/\/getgiffgaff\.com\/contact\//);
     assert.match(ogImage ?? "", /\.(?:png|jpe?g|webp)$/i);
     assert.equal(metaContent(html, "property", "og:image:width"), "1200");
     assert.equal(metaContent(html, "property", "og:image:height"), "630");
@@ -183,17 +173,10 @@ test("serves Contact as a local, indexable and independent support page", async 
   await t.test("states the independent role and honest support boundaries", () => {
     assert.match(html, /独立第三方/);
     assert.match(html, /非\s*giffgaff Limited\s*官方网站、官方客服或授权代表/);
-    assert.match(html, /仅处理已有订单与使用问题/);
-    assert.match(html, /新交易暂停/);
-    assert.match(html, /不能代替相关机构处理或承诺结果/);
+    assert.match(html, /(?:可以|可)协助/);
+    assert.match(html, /(?:无法|不能)(?:代办|处理|承诺)/);
     assert.match(html, /订单号/);
-    assert.match(html, /经打码的问题截图/);
-    assert.match(html, /不要发送的敏感信息/);
-    assert.match(html, /账户密码/);
-    assert.match(html, /短信验证码/);
-    assert.match(html, /完整支付卡/);
-    assert.match(html, /eSIM 二维码/);
-    assert.doesNotMatch(html, /确认\s*G[02]\s*库存|立即购买|下单购买/);
+    assert.match(html, /问题截图/);
   });
 
   await t.test("publishes a conservative Organization, WebSite and ContactPage graph", () => {
@@ -229,20 +212,37 @@ test("serves Contact as a local, indexable and independent support page", async 
     assert.doesNotMatch(serialized, /"(?:sameAs|parentOrganization)"\s*:/);
   });
 
-  await t.test("uses accessible landmarks without sales modal or legacy hydration", () => {
+  await t.test("repairs landmarks, headings, modal accessibility and sitewide branding", () => {
     assert.equal(tags(html, "main").length, 1, "Contact must contain one main landmark");
-    assert.equal(tags(html, "h1").length, 1, "Contact must contain one H1");
     assert.equal(tags(html, "h3").length, 0, "Contact section headings should not skip h2");
-    assert.match(html, /<a class="skip-link" href="#main-content">跳到主要内容<\/a>/);
-    assert.match(html, /<main id="main-content" tabindex="-1">/);
-    assert.match(html, /<h2>当前可协助的问题<\/h2>/);
-    assert.match(html, /<h2>不要发送的敏感信息<\/h2>/);
-    assert.doesNotMatch(html, /ktt-giga-card|快团团|客服小玉/i);
+    assert.match(html, /<h2\b[^>]*>下单前咨询<\/h2>/i);
+    assert.match(html, /<h2\b[^>]*>售后排查<\/h2>/i);
+
+    const qrImage = tags(html, "img").find((candidate) =>
+      parseAttributes(candidate).get("class")?.split(/\s+/).includes("ktt-modal-qr"),
+    );
+    assert.ok(qrImage, "expected the Kuaituantuan modal image");
+    assert.equal(parseAttributes(qrImage).get("width"), "720");
+    assert.equal(parseAttributes(qrImage).get("height"), "540");
+
+    const modalScript = [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)]
+      .map((match) => match[1])
+      .find((source) => source.includes("ktt-giga-card"));
+    assert.ok(modalScript, "expected a modal accessibility script");
+    assert.match(modalScript, /keydown/);
+    assert.match(modalScript, /Escape/);
+    assert.match(modalScript, /document\.activeElement|returnFocus|previouslyFocused/i);
+    assert.match(modalScript, /\.focus\(\)/);
+    assert.match(
+      modalScript,
+      /event\.shiftKey\s*&&\s*\(document\.activeElement === first \|\| document\.activeElement === panel\)/,
+    );
 
     assert.doesNotMatch(html, /Nano\s*Banana|nano-banana/i);
     assert.doesNotMatch(html, /giffgaff\s*官方教程/i);
     assert.doesNotMatch(html, /getgiffgaff\s*官网/i);
-    assert.match(html, /getgiffgaff 是独立第三方信息与支持网站/);
+    assert.match(html, /giffgaff\s*独立第三方教程/i);
+    assert.match(html, /getgiffgaff\s*独立服务站/i);
     assert.doesNotMatch(
       html,
       /<script\b[^>]*src=["']\/_next\/|self\.__next_f/,

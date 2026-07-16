@@ -1,8 +1,5 @@
 # giffgaff eSIM 转换前要注意什么
 
-> [!CAUTION]
-> 状态：`ARCHIVED / NOT FOR PUBLISHING`（2026-07-15）。本文保留用于历史研究，可能包含已暂停的交易链接、旧周期或未通过 Claim Registry 的声明；不得复制到网站、OG、Schema、CTA 或 `/llms.txt`。现行内容以 `public/route-manifest.js`、`public/claim-registry.js` 和本地页面渲染器为准。
-
 giffgaff 支持 eSIM，但把实体 SIM 转成 eSIM 前一定要想清楚。新 eSIM 生效后，旧实体 SIM 或旧 eSIM 会停止工作。
 
 官方参考：[Switching to an eSIM with giffgaff](https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff)

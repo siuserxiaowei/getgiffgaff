@@ -8,11 +8,8 @@
     "test:coverage": "node --experimental-test-coverage --test test/*.test.mjs",
     "verify": "npm test && node scripts/verify-contact-hotfix.mjs",
     "verify:seo": "node scripts/verify-seo-release.mjs",
-    "verify:production": "npm run verify:seo -- --base-url https://getgiffgaff.com",
-    "generate:og": "node scripts/generate-og-images.mjs",
-    "migration:map": "node scripts/generate-site-move-map.mjs",
     "predeploy": "npm run verify",
-    "deploy": "wrangler pages deploy public --project-name getgiffgaff --branch seo-geo-candidate",
-    "deploy:production": "node scripts/deploy-production.mjs"
+    "deploy": "wrangler pages deploy public --project-name getgiffgaff --branch main --commit-dirty=true",
+    "postdeploy": "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34"
   }
 }
