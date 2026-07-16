@@ -1,5 +1,6 @@
 import {
   PUBLIC_INDEXABLE_PATHS,
+  PUBLIC_STATIC_ASSET_PATHS,
   ROUTE_MANIFEST,
   routeFor,
 } from "./route-manifest.js";
@@ -15,6 +16,7 @@ const ANALYTICS_EVENT_PATH = "/analytics-event-v1";
 const ANALYTICS_EVENT_VERSION = "analytics_event_v1";
 const ANALYTICS_MAX_BYTES = 1024;
 const PUBLIC_READ_METHODS = new Set(["GET", "HEAD"]);
+const PUBLIC_STATIC_ASSETS = new Set(PUBLIC_STATIC_ASSET_PATHS);
 const BODYLESS_STATUSES = new Set([101, 204, 205, 304]);
 
 const SUPPORTING_NOINDEX_PATHS = new Set([
@@ -413,8 +415,13 @@ async function handleRequest(request, env) {
   }
 
   const normalizedPath = normalizePathname(url.pathname);
-  const pathname = routeFor(normalizedPath) ? normalizedPath : url.pathname;
-  return fetchStaticAsset(request, env, pathname);
+  if (routeFor(normalizedPath)) {
+    return fetchStaticAsset(request, env, normalizedPath);
+  }
+  if (PUBLIC_STATIC_ASSETS.has(url.pathname)) {
+    return fetchStaticAsset(request, env, url.pathname);
+  }
+  return privateError(request, 404, "Not found");
 }
 
 const worker = { fetch: handleRequest };

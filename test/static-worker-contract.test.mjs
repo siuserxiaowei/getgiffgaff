@@ -12,6 +12,7 @@ import {
   LEGACY_ROUTES,
   NOINDEX_GROWTH_ROUTES,
   PUBLIC_INDEXABLE_PATHS,
+  PUBLIC_STATIC_ASSET_PATHS,
   ROUTE_MANIFEST,
   routeFor,
 } from "../public/route-manifest.js";
@@ -36,20 +37,6 @@ const ADDITIVE_SLOT_ROUTES = Object.freeze([
   "/guides/5-travel-data/",
   "/more/03-esim/",
 ]);
-const STATIC_ASSET_PATHS = Object.freeze([
-  "/assets/site.css",
-  "/gg-card-hero.png",
-  "/favicon.svg",
-  "/contact/wechat-qr.png",
-  "/contact/ktt-giga-card.png",
-  "/contact/getgiffgaff-contact-og.png",
-  "/growth-assets/growth.css",
-  "/growth-assets/growth-ui.js",
-  "/growth-assets/tools.js",
-  "/growth-assets/commerce-ui.js",
-  "/growth-assets/analytics.js",
-]);
-
 const ORIGINAL_FETCH = globalThis.fetch;
 globalThis.fetch = async (input) => {
   throw new Error(`Worker attempted forbidden network fetch: ${String(input)}`);
@@ -281,6 +268,7 @@ test("route manifest owns 39 indexable and three noindex routes with real source
   assert.equal(Object.keys(ROUTE_MANIFEST).length, 42);
   assert.equal(PUBLIC_INDEXABLE_PATHS.length, 39);
   assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 39);
+  assert.equal(new Set(PUBLIC_STATIC_ASSET_PATHS).size, PUBLIC_STATIC_ASSET_PATHS.length);
 
   const noindexRoutes = Object.values(ROUTE_MANIFEST)
     .filter((record) => record.indexPolicy === "noindex")
@@ -532,23 +520,38 @@ test("404 responses are private noindex documents without another page canonical
   assert.equal(canonicalHref(body), "");
   assert.equal(metaContent(body, "property", "og:url"), "");
   assert.doesNotMatch(response.headers.get("link") || "", /rel=["']?canonical/i);
+  assert.equal(env.calls.length, 0, "unknown routes must fail before Pages ASSETS fallback");
 
   const head = await worker.fetch(new Request(url, { method: "HEAD" }), env, {});
   assert.equal(head.status, 404);
   assert.equal(await head.text(), "");
   assertDirectives(head, PRIVATE_DIRECTIVES, `${url} HEAD`);
+  assert.equal(env.calls.length, 0, "unknown HEAD routes must fail before Pages ASSETS fallback");
+
+  const missingAsset = await worker.fetch(
+    new Request(`${ORIGIN}/growth-assets/not-real.js`),
+    env,
+    {},
+  );
+  assert.equal(missingAsset.status, 404);
+  assertDirectives(missingAsset, PRIVATE_DIRECTIVES, "unknown static asset");
+  assert.equal(env.calls.length, 0, "unknown assets must fail before Pages ASSETS fallback");
 });
 
 test("legacy and growth static resources retain their public URLs and never inherit robots headers", async () => {
   const root = await releaseRoot();
-  for (const pathname of STATIC_ASSET_PATHS) {
+  for (const pathname of PUBLIC_STATIC_ASSET_PATHS) {
     const expected = await readFile(publicFile(root, pathname));
     const env = createAssetsEnvironment(root);
     const response = await worker.fetch(new Request(`${ORIGIN}${pathname}`), env, {});
     const actual = Buffer.from(await response.arrayBuffer());
 
     assert.equal(response.status, 200, pathname);
-    assert.equal(response.headers.get("x-robots-tag"), null, pathname);
+    if (pathname === "/llms.txt") {
+      assertDirectives(response, new Set(["noindex", "follow", "noarchive"]), pathname);
+    } else {
+      assert.equal(response.headers.get("x-robots-tag"), null, pathname);
+    }
     assert.equal(sha256(actual), sha256(expected), pathname);
     assert.ok(!env.calls.some((call) => /\/_next(?:\/|$)/i.test(call.pathname)), pathname);
     if (/\.(?:css|js)$/.test(pathname)) {
@@ -562,7 +565,11 @@ test("legacy and growth static resources retain their public URLs and never inhe
     const head = await worker.fetch(new Request(`${ORIGIN}${pathname}`, { method: "HEAD" }), env, {});
     assert.equal(head.status, 200, `${pathname} HEAD`);
     assert.equal(await head.text(), "", `${pathname} HEAD body`);
-    assert.equal(head.headers.get("x-robots-tag"), null, `${pathname} HEAD robots`);
+    if (pathname === "/llms.txt") {
+      assertDirectives(head, new Set(["noindex", "follow", "noarchive"]), `${pathname} HEAD`);
+    } else {
+      assert.equal(head.headers.get("x-robots-tag"), null, `${pathname} HEAD robots`);
+    }
     assert.equal(head.headers.get("content-length"), String(expected.length), `${pathname} HEAD length`);
   }
 });

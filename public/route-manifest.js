@@ -53,6 +53,25 @@ export const NOINDEX_GROWTH_ROUTES = Object.freeze([
   "/research/otp-status/",
 ]);
 
+// Exact public files that are not HTML routes. Keeping this list beside the
+// route manifest prevents Cloudflare Pages' SPA fallback from turning unknown
+// paths into a 200 response containing the home page.
+export const PUBLIC_STATIC_ASSET_PATHS = Object.freeze([
+  "/assets/site.css",
+  "/gg-card-hero.png",
+  "/favicon.svg",
+  "/contact/wechat-qr.png",
+  "/contact/ktt-giga-card.png",
+  "/contact/getgiffgaff-contact-og.png",
+  "/growth-assets/growth.css",
+  "/growth-assets/growth-ui.js",
+  "/growth-assets/tools.js",
+  "/growth-assets/commerce-ui.js",
+  "/growth-assets/analytics.js",
+  "/robots.txt",
+  "/llms.txt",
+]);
+
 const EVIDENCE_LEGACY_ROUTES = new Set([
   "/answers/",
   "/guides/2-activate/",
