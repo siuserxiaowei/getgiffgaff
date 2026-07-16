@@ -4,6 +4,7 @@
 .superpowers
 .superpowers/
 node_modules/
+.release/
 npm-debug.log*
 .DS_Store
 *.local

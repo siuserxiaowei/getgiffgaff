@@ -1,0 +1,53 @@
+{
+  "/guides/0-intro/": [
+    { "label": "了解 G0/G2 怎么选", "href": "/answers/" },
+    { "label": "查看国内购买流程", "href": "/guides/1-order/" },
+    { "label": "购买 G0 新卡", "href": "/shop/giffgaff-g0/" },
+    { "label": "购买 G2 有余额卡", "href": "/shop/giffgaff-g2/" },
+    { "label": "按场景选择英国手机卡", "href": "/guides/8-uk-sim-choice/" }
+  ],
+  "/guides/1-order/": [
+    { "label": "对比 G0 与 G2", "href": "/answers/" },
+    { "label": "查看 G0 新卡", "href": "/shop/giffgaff-g0/" },
+    { "label": "查看 G2 有余额卡", "href": "/shop/giffgaff-g2/" },
+    { "label": "微信咨询库存与发货", "href": "/contact/" },
+    { "label": "收到 G0/G2 后逐项验收", "href": "/guides/7-arrival-checklist/" }
+  ],
+  "/answers/": [
+    { "label": "查看国内购买教程", "href": "/guides/1-order/" },
+    { "label": "购买 G0 新卡", "href": "/shop/giffgaff-g0/" },
+    { "label": "购买 G2 有余额卡", "href": "/shop/giffgaff-g2/" },
+    { "label": "微信确认当前库存", "href": "/contact/" },
+    { "label": "手动试算 G0/G2 总成本", "href": "/tools/g0-g2-total-cost/" }
+  ],
+  "/guides/2-activate/": [
+    { "label": "继续设置账号", "href": "/guides/3-account/" },
+    { "label": "查看 App 使用说明", "href": "/guides/3-app/" },
+    { "label": "排查无信号与短信", "href": "/guides/4-signal/" },
+    { "label": "联系微信售后", "href": "/contact/" }
+  ],
+  "/guides/3-usage/": [
+    { "label": "生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" },
+    { "label": "查看自助充值问答", "href": "/qa/02-topup/" },
+    { "label": "设置或关闭语音信箱", "href": "/qa/07-voicemail-switch/" },
+    { "label": "使用异常时联系微信", "href": "/contact/" }
+  ],
+  "/guides/4-signal/": [
+    { "label": "查看短信与网络实测方法", "href": "/research/china-network-sms/" },
+    { "label": "查看 OTP 状态板方法", "href": "/research/otp-status/" },
+    { "label": "检查旅行漫游设置", "href": "/guides/5-travel-data/" },
+    { "label": "整理信息后联系微信售后", "href": "/contact/" }
+  ],
+  "/guides/5-travel-data/": [
+    { "label": "估算中国漫游费用", "href": "/tools/china-roaming-cost/" },
+    { "label": "查看实体卡转 eSIM", "href": "/more/03-esim/" },
+    { "label": "排查漫游信号", "href": "/guides/4-signal/" },
+    { "label": "购买前咨询卡片选择", "href": "/contact/" }
+  ],
+  "/more/03-esim/": [
+    { "label": "查看 eSIM 兼容证据门槛", "href": "/tools/esim-compatibility/" },
+    { "label": "回到实体卡激活教程", "href": "/guides/2-activate/" },
+    { "label": "切换后排查信号", "href": "/guides/4-signal/" },
+    { "label": "购买实体卡备用", "href": "/shop/" }
+  ]
+}

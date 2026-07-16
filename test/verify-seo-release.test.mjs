@@ -263,8 +263,9 @@ test("validates supporting, private and non-HTML policy probes", async () => {
     [`${BASE_URL}/llms.txt`, jsonResponse("llms", {
       headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
-    [`${BASE_URL}/llms-full.txt`, jsonResponse("llms full", {
-      headers: { "x-robots-tag": "noindex, follow, noarchive" },
+    [`${BASE_URL}/llms-full.txt`, jsonResponse("retired", {
+      status: 410,
+      headers: privateHeaders,
     })],
     [`${BASE_URL}/privacy/`, jsonResponse("missing", {
       status: 404,

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>G0 与 G2 怎么选：状态、总成本与风险对比 · getgiffgaff</title>
+  <meta name="description" content="G0 新卡与 G2 有余额卡的独立第三方对比：先看卡状态、账号归属、激活和首次付款，再计算总成本，不写死库存与价格。">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+  <link rel="canonical" href="https://getgiffgaff.com/answers/">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="getgiffgaff">
+  <meta property="og:title" content="G0 与 G2 怎么选：状态、总成本与风险对比">
+  <meta property="og:description" content="G0 新卡与 G2 有余额卡的独立第三方对比：先看卡状态、账号归属、激活和首次付款，再计算总成本，不写死库存与价格。">
+  <meta property="og:url" content="https://getgiffgaff.com/answers/">
+  <meta property="og:image" content="https://getgiffgaff.com/gg-card-hero.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="G0 与 G2 怎么选：状态、总成本与风险对比">
+  <meta name="twitter:description" content="G0 新卡与 G2 有余额卡的独立第三方对比：先看卡状态、账号归属、激活和首次付款，再计算总成本，不写死库存与价格。">
+  <meta name="twitter:image" content="https://getgiffgaff.com/gg-card-hero.png">
+  <link rel="icon" href="/favicon.svg">
+  <style>
+  :root { color-scheme: light; --ink:#122019; --muted:#536159; --green:#2f5e41; --line:#dce7df; --soft:#f3f8f2; --gold:#fff6dc; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; color:var(--ink); background:#fff; font-family:Inter,"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
+  a { color:var(--green); }
+  .site-header { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:72px; padding:14px max(20px,calc((100vw - 1120px)/2)); border-bottom:1px solid var(--line); background:#fff; }
+  .brand { display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; }
+  .brand-mark { display:grid; place-items:center; width:38px; height:38px; border-radius:10px; background:var(--green); color:#fff; font-weight:900; }
+  .brand small { display:block; color:var(--muted); }
+  .site-header nav { display:flex; flex-wrap:wrap; gap:16px; }
+  .site-header nav a { color:var(--ink); font-weight:700; text-decoration:none; }
+  .hero { border-bottom:1px solid var(--line); background:linear-gradient(135deg,#f8fbf7 0%,#edf6ee 56%,var(--gold) 100%); }
+  .hero-inner,.layout,.footer-inner { width:min(1120px,calc(100% - 32px)); margin:0 auto; }
+  .hero-inner { padding:56px 0 40px; }
+  .breadcrumbs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; color:var(--muted); font-size:14px; }
+  .eyebrow { margin:0 0 10px; color:var(--green); font-size:13px; font-weight:900; letter-spacing:.09em; text-transform:uppercase; }
+  h1 { max-width:900px; margin:0; font-size:clamp(34px,5vw,58px); line-height:1.1; letter-spacing:-.02em; }
+  .deck { max-width:820px; margin:18px 0 0; color:var(--muted); font-size:18px; line-height:1.8; }
+  .meta { display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
+  .meta span { border:1px solid rgba(47,94,65,.18); border-radius:999px; background:rgba(255,255,255,.8); padding:8px 11px; color:var(--green); font-size:14px; font-weight:800; }
+  .layout { display:grid; grid-template-columns:240px minmax(0,1fr); gap:38px; padding:40px 0 72px; }
+  .toc { position:sticky; top:18px; align-self:start; border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff; }
+  .toc strong { display:block; margin-bottom:9px; }
+  .toc a { display:block; margin:9px 0; font-size:14px; line-height:1.45; text-decoration:none; }
+  article { min-width:0; font-size:17px; line-height:1.85; }
+  .answer { margin:0 0 28px; border:1px solid rgba(47,94,65,.2); border-radius:16px; background:var(--soft); padding:22px; }
+  .answer strong { display:block; margin-bottom:8px; color:var(--green); font-size:20px; }
+  article section { scroll-margin-top:20px; }
+  h2 { margin:42px 0 14px; font-size:clamp(26px,3vw,36px); line-height:1.25; }
+  h3 { margin:26px 0 8px; font-size:22px; }
+  p { margin:12px 0; }
+  li { margin:8px 0; }
+  .callout { border-left:4px solid var(--green); background:var(--soft); padding:14px 16px; color:var(--green); font-weight:800; }
+  .table-scroll { overflow-x:auto; margin:18px 0; }
+  table { width:100%; min-width:680px; border-collapse:collapse; border:1px solid var(--line); }
+  th,td { border-bottom:1px solid var(--line); padding:12px 14px; text-align:left; vertical-align:top; }
+  thead th { background:var(--soft); color:var(--green); }
+  tbody th { width:24%; background:#fbfdfb; }
+  .trust-box,.sources,.related,.revisions,.faq { margin-top:42px; border-top:1px solid var(--line); padding-top:10px; }
+  .trust-box { border:1px solid var(--line); border-radius:14px; background:#fbfdfb; padding:20px; }
+  .source-item { margin:14px 0; padding:16px; border:1px solid var(--line); border-radius:12px; }
+  .source-item a { font-weight:900; }
+  .source-item p { margin:5px 0 0; color:var(--muted); font-size:15px; }
+  .related-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .related-grid a { display:block; border:1px solid var(--line); border-radius:12px; padding:14px; font-weight:800; text-decoration:none; }
+  .faq details { border-bottom:1px solid var(--line); padding:14px 0; }
+  .faq summary { cursor:pointer; font-weight:900; }
+  footer { border-top:1px solid var(--line); background:#f8faf8; }
+  .footer-inner { padding:28px 0; color:var(--muted); line-height:1.7; }
+  @media (max-width:800px) { .site-header { align-items:flex-start; flex-direction:column; } .layout { grid-template-columns:1fr; } .toc { position:static; } .related-grid { grid-template-columns:1fr; } }
+</style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","@id":"https://getgiffgaff.com/answers/#article","mainEntityOfPage":"https://getgiffgaff.com/answers/","headline":"G0 与 G2 怎么选：不要只比商品价格","description":"G0 新卡与 G2 有余额卡的独立第三方对比：先看卡状态、账号归属、激活和首次付款，再计算总成本，不写死库存与价格。","url":"https://getgiffgaff.com/answers/","inLanguage":"zh-CN","dateModified":"2026-07-15","author":{"@type":"Organization","@id":"https://getgiffgaff.com/#organization","name":"getgiffgaff","url":"https://getgiffgaff.com/"},"publisher":{"@id":"https://getgiffgaff.com/#organization"},"isPartOf":{"@id":"https://getgiffgaff.com/#website"},"about":{"@type":"Brand","@id":"https://www.giffgaff.com/#brand","name":"giffgaff","url":"https://www.giffgaff.com/"},"citation":["https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim","https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit","https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated","https://www.giffgaff.com/boiler-plate/terms"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://getgiffgaff.com/"},{"@type":"ListItem","position":2,"name":"G0 与 G2 怎么选：不要只比商品价格","item":"https://getgiffgaff.com/answers/"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"G0/G2 是 giffgaff 官方分类吗？","acceptedAnswer":{"@type":"Answer","text":"不是。它们是本站购买和教程语境中的库存/状态分类，付款前需再确认当批卡的精确交付状态。"}},{"@type":"Question","name":"G2 是否保证某个平台验证码能到？","acceptedAnswer":{"@type":"Answer","text":"不保证。平台 OTP 还受号段、账号、IP、设备、请求频率和平台路由影响。"}}]}</script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="getgiffgaff 首页"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>独立第三方购买与使用信息</small></span></a>
+    <nav aria-label="主导航"><a href="/shop/">手机卡</a><a href="/guides/">教程</a><a href="/research/">资料库</a><a href="/contact/">联系</a></nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <nav class="breadcrumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><span>giffgaff G0 G2 区别</span></nav>
+        <p class="eyebrow">Evidence-led guide</p>
+        <h1>G0 与 G2 怎么选：不要只比商品价格</h1>
+        <p class="deck">G0/G2 是本站销售与教程中的库存分类，不是 giffgaff 官方产品名称，也不代表运营商认可某种预激活或账号交付方式。</p>
+        <div class="meta"><span>搜索意图：商业调研 / 选型对比</span><span>证据型版本：2026-07-15</span><span>规则可能变化，请操作前复核</span></div>
+      </div>
+    </section>
+    <div class="layout">
+      <aside class="toc" aria-label="本页目录"><strong>本页目录</strong><a href="#definitions">先把名词说清楚</a><a href="#comparison">核心对比：你买的是什么状态</a><a href="#total-cost">总成本不是“卡价 + 0”</a><a href="#checkout-checklist">付款前必须得到的答案</a><a href="#recommendation">最后的选择不是“新手一定选 G2”</a><a href="#official-sources">官方来源</a><a href="#revision-log">修订记录</a></aside>
+      <article>
+        <div class="answer"><strong>直接答案</strong><p>如果你愿意用自己的资料完成官方激活、建立账号和处理首次 Credit/plan 支付，可优先评估 G0 新卡。如果考虑 G2，不能只看‘有余额’：必须确认来源、激活状态、账户登记责任、买方能否以本人资料取得合法控制，以及当前 giffgaff 条款是否允许该流程。无法确认时不要购买。两者都不承诺某平台验证码必到。</p></div>
+        <div class="trust-box"><strong>编辑责任与复核方法</strong><p>编辑责任主体：getgiffgaff；复核方法：逐项对照本页列明的 giffgaff 官方页面并记录修订日期。当前未公开个人作者或复核者，本站不使用虚构署名；本文未经 giffgaff Limited 审核或背书。发现规则变化可<a href="/contact/">提交纠错</a>。</p></div>
+        <section id="definitions">
+    <h2>先把名词说清楚</h2>
+    <p>在本站语境中，G0 通常表示需要购买者按官方流程完成激活和首次账号设置的新卡；G2 只是卖家对某类已做前置处理、并声明有当前余额或号码状态的库存称呼。</p><p>“通常”不等于每批库存都相同，也不代表这种前置处理获得 giffgaff 认可。页面不发布无法实时证明的余额、库存、价格、合规性或必到承诺。</p>
+    
+    
+    
+    <p class="callout">G0/G2 不是 giffgaff 官方 SKU、plan 或账户等级。</p>
+  </section>
+<section id="comparison">
+    <h2>核心对比：你买的是什么状态</h2>
+    
+    
+    
+    <div class="table-scroll"><table><thead><tr><th scope="col">决策项</th><th scope="col">G0 新卡</th><th scope="col">G2 有余额/前置处理卡</th></tr></thead><tbody><tr><th scope="row">核心价值</th><td>自己从官方激活开始，状态链路由自己建立</td><td>降低部分首次激活/支付操作的门槛</td></tr><tr><th scope="row">购买者要做的事</th><td>用本人资料激活、建账号、处理 Credit/plan 与首次入网</td><td>先核对来源、激活状态、登记责任、条款边界、余额与 SIM 状态</td></tr><tr><th scope="row">主要风险</th><td>激活码、支付、网页、账号与 SIM swap 操作错误</td><td>预处理不符合当前条款、登记资料不属于买方，或交付状态与声明不一致</td></tr><tr><th scope="row">适合人群</th><td>时间充足、愿意按官方流程操作的人</td><td>更看重交付后少走前置流程，并会主动验收的人</td></tr><tr><th scope="row">不会因此改变的事</th><td>保号、漫游、平台验证码仍存在外部不确定性</td><td>保号、漫游、平台验证码仍存在外部不确定性</td></tr></tbody></table></div>
+    
+  </section>
+<section id="total-cost">
+    <h2>总成本不是“卡价 + 0”</h2>
+    <p>正确的对比方法是把卡本身、激活或前置处理、当前 Credit/plan、国内物流、付款失败重试、个人时间、后续保号和漫游操作放在同一张表里。</p><p>后续会把这个框架做成总成本计算器。在计算器上线前，可以手动记录以下字段，价格一律以付款当日官方或销售页为准。</p>
+    <ul><li>当前商品价与运费。</li><li>官方激活时实际需要购买的 Credit/plan。</li><li>已有付款工具还是需要另行处理。</li><li>从下单到可用的时间成本与急用风险。</li><li>未来一年保号、漫游和账号维护预算。</li></ul>
+    
+    
+    
+  </section>
+<section id="checkout-checklist">
+    <h2>付款前必须得到的答案</h2>
+    
+    <ul><li>当批卡到底是未激活、已激活，还是只做了某些前置处理。</li><li>号码和账户当前登记在谁名下；买方是否能按 giffgaff 当前规则使用本人资料取得控制，不能接受他人身份或共享账号。</li><li>若卖家称已激活或已预处理，依据哪条当前规则操作，是否涉及推广 Participant SIM、激活地点或个人使用限制。</li><li>余额是精确值、范围，还是不承诺；以何时的账号截图为准。</li><li>物流从哪里发、预计时间、丢件或外观损坏的处理规则。</li><li>收货后无信号、账号无法登录或余额不符时，需要什么证据与多久内反馈。</li><li>卖家能处理的是订单/交付问题，还是运营商账号问题；哪些必须转 giffgaff 官方 agent。</li></ul>
+    
+    
+    
+  </section>
+<section id="recommendation">
+    <h2>最后的选择不是“新手一定选 G2”</h2>
+    <p>对比的关键是你最想消除哪种不确定性。G0 让你从官方激活起点建立自己的状态链路，但要承担更多前置操作。G2 可能减少部分操作，却新增来源、登记资料、条款适用与控制权风险。</p><p>如果卖家无法对当批卡的来源、激活状态、登记责任、余额、交付内容和售后边界给出可验证答案，无论它叫 G0 还是 G2，都不应付款。</p>
+    
+    
+    
+    
+  </section>
+        <section class="faq" id="faq"><h2>常见问题</h2><details><summary>G0/G2 是 giffgaff 官方分类吗？</summary><p>不是。它们是本站购买和教程语境中的库存/状态分类，付款前需再确认当批卡的精确交付状态。</p></details><details><summary>G2 是否保证某个平台验证码能到？</summary><p>不保证。平台 OTP 还受号段、账号、IP、设备、请求频率和平台路由影响。</p></details></section>
+        <section class="sources" id="official-sources"><h2>官方来源</h2><p>下列页面用于核对规则。界面、价格、时间窗和流程可能更新，操作当日请再打开原页。</p><div class="source-item"><a href="https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim" target="_blank" rel="noopener noreferrer">giffgaff 官方：Activating your giffgaff SIM</a><p>激活码、13 位 SIM 序列号、激活耗时、一个账号一张有效 SIM 与 SIM swap 边界。</p></div><div class="source-item"><a href="https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit" target="_blank" rel="noopener noreferrer">giffgaff 官方：Everything to know about Credit</a><p>Airtime Credit 的用途、充值渠道、余额查询与海外使用边界。</p></div><div class="source-item"><a href="https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated" target="_blank" rel="noopener noreferrer">giffgaff 官方：Understanding why your number has been deactivated</a><p>6 个月 inactive 规则、有效使用动作、停用后的号码处理时间窗。</p></div><div class="source-item"><a href="https://www.giffgaff.com/boiler-plate/terms" target="_blank" rel="noopener noreferrer">giffgaff 官方：Terms &amp; Conditions</a><p>个人使用、滥用、服务、品牌与推广边界。</p></div></section>
+        <section class="related"><h2>继续阅读</h2><div class="related-grid"><a href="/guides/6-pitfalls/">giffgaff 使用教程和避坑清单</a><a href="/guides/2-activate/">giffgaff 国内激活流程</a><a href="/guides/3-usage/">giffgaff 保号规则</a><a href="/shop/">当前 G0/G2 购买入口</a><a href="/contact/">库存、下单与售后联系</a></div></section>
+        <section class="revisions" id="revision-log"><h2>修订记录</h2><ul><li>2026-07-15：证据型版本全面重写；将 G0/G2 明确标注为本站库存分类，并用官方激活、Credit、inactive 与条款页限定决策边界。</li></ul></section>
+      </article>
+    </div>
+  </main>
+  <footer><div class="footer-inner"><strong>getgiffgaff 是独立第三方服务站，不是 giffgaff Limited 官方网站、官方客服或授权代表。</strong><p>本页不承诺号码永久有效、实时库存、静态价格或第三方平台验证码送达。运营商规则以操作当日官方页面为准。</p></div></footer>
+</body>
+</html>

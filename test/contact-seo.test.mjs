@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
-
-import worker from "../public/worker-logic.js";
 
 const CONTACT_CANONICAL = "https://getgiffgaff.com/contact/";
 const EXPECTED_TITLE = "联系 getgiffgaff｜G0/G2 库存、下单与售后支持";
@@ -126,24 +125,14 @@ function references(value, expectedId) {
 }
 
 async function renderContact() {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () =>
-    new Response(legacyContactHtml, {
-      headers: {
-        "content-type": "text/html; charset=utf-8",
-        "x-robots-tag": "noindex",
-      },
-    });
-
-  try {
-    const response = await worker.fetch(new Request(CONTACT_CANONICAL), {});
-    return { response, html: await response.text() };
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
+  const html = await readFile(
+    new URL("../site/legacy/contact/index.html", import.meta.url),
+    "utf8",
+  );
+  return { html };
 }
 
-test("rewrites Contact as an indexable independent support page", async (t) => {
+test("preserves the frozen indexable Contact support and commerce page", async (t) => {
   const { html } = await renderContact();
 
   await t.test("uses unique Contact metadata and a 1200x630 social image", () => {
@@ -212,11 +201,11 @@ test("rewrites Contact as an indexable independent support page", async (t) => {
     assert.doesNotMatch(serialized, /"(?:sameAs|parentOrganization)"\s*:/);
   });
 
-  await t.test("repairs landmarks, headings, modal accessibility and sitewide branding", () => {
+  await t.test("preserves landmarks, modal accessibility and sitewide branding", () => {
     assert.equal(tags(html, "main").length, 1, "Contact must contain one main landmark");
     assert.equal(tags(html, "h3").length, 0, "Contact section headings should not skip h2");
-    assert.match(html, /<h2\b[^>]*>下单前咨询<\/h2>/i);
-    assert.match(html, /<h2\b[^>]*>售后排查<\/h2>/i);
+    assert.match(html, /<h2\b[^>]*>快团团下单<\/h2>/i);
+    assert.match(html, /<h2\b[^>]*>扫码确认库存<\/h2>/i);
 
     const qrImage = tags(html, "img").find((candidate) =>
       parseAttributes(candidate).get("class")?.split(/\s+/).includes("ktt-modal-qr"),

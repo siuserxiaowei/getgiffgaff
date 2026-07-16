@@ -1,205 +1,150 @@
 import assert from "node:assert/strict";
-import test from "node:test";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
+import test from "node:test";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
-import worker, {
-  PUBLIC_INDEXABLE_PATHS,
-  reconcileSitemap,
-} from "../public/worker-logic.js";
-import { TUTORIAL_PAGES } from "../public/tutorial-pages.js";
+import { GROWTH_PAGES } from "../site/growth/content-registry.js";
+import {
+  INDEXABLE_GROWTH_ROUTES,
+  NOINDEX_GROWTH_ROUTES,
+} from "../public/route-manifest.js";
 
-const REQUIRED_TUTORIAL_PATHS = [
-  "/guides/2-activate/",
-  "/guides/3-usage/",
-  "/more/03-esim/",
-  "/more/04-esim-qrcode/",
-  "/guides/4-signal/",
-  "/answers/",
-];
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-function occurrences(value, pattern) {
-  return (value.match(pattern) || []).length;
+function routeFile(route) {
+  return path.join(ROOT, "site", "growth", route.slice(1), "index.html");
 }
 
-function jsonLdEntries(html) {
-  return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map(
-    (match) => JSON.parse(match[1]),
+function jsonLd(html) {
+  const documents = [];
+  for (const match of html.matchAll(
+    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  )) {
+    documents.push(JSON.parse(match[1]));
+  }
+  return documents;
+}
+
+function allNodes(documents) {
+  return documents.flatMap((document) =>
+    Array.isArray(document?.["@graph"])
+      ? document["@graph"]
+      : Array.isArray(document)
+        ? document
+        : [document],
   );
 }
 
-function isOfficialGiffgaffUrl(value) {
-  const hostname = new URL(value).hostname;
-  return hostname === "giffgaff.com" || hostname.endsWith(".giffgaff.com");
-}
-
-test("publishes six evidence-led tutorial routes from one content registry", () => {
-  assert.deepEqual(Object.keys(TUTORIAL_PAGES).sort(), REQUIRED_TUTORIAL_PATHS.sort());
-
-  for (const pathname of REQUIRED_TUTORIAL_PATHS) {
-    assert.ok(PUBLIC_INDEXABLE_PATHS.includes(pathname), `${pathname} must be indexable`);
-  }
-});
-
-test("keeps the static pillar guide synchronized with the tutorial registry", async () => {
-  const pillar = await readFile(
-    new URL("../public/guides/6-pitfalls-page.txt", import.meta.url),
-    "utf8",
+test("growth registry owns five indexable pages and three evidence-gated previews", () => {
+  assert.equal(GROWTH_PAGES.length, 8);
+  assert.deepEqual(
+    GROWTH_PAGES.filter((page) => page.indexPolicy === "index").map((page) => page.path),
+    INDEXABLE_GROWTH_ROUTES,
   );
-  const deepGuides = pillar.match(/<section id="deep-guides">([\s\S]*?)<\/section>/)?.[1] ?? "";
-  const linkedTutorials = [...deepGuides.matchAll(/href="([^"]+)"/g)]
-    .map((match) => match[1])
-    .filter((pathname) => pathname in TUTORIAL_PAGES);
-
-  assert.match(deepGuides, /下面 6 篇/);
-  assert.deepEqual(linkedTutorials.sort(), Object.keys(TUTORIAL_PAGES).sort());
-  assert.equal(new Set(linkedTutorials).size, Object.keys(TUTORIAL_PAGES).length);
-});
-
-test("each tutorial has unique intent, sources, revision metadata, and internal links", () => {
-  const primaryKeywords = new Set();
-
-  for (const [pathname, page] of Object.entries(TUTORIAL_PAGES)) {
-    assert.ok(page.primaryKeyword, `${pathname}: primaryKeyword is required`);
-    assert.equal(
-      primaryKeywords.has(page.primaryKeyword),
-      false,
-      `${pathname}: duplicate primary keyword ${page.primaryKeyword}`,
-    );
-    primaryKeywords.add(page.primaryKeyword);
-
-    assert.ok(page.answer?.length >= 40, `${pathname}: answer-first summary is too short`);
-    assert.ok(page.sections?.length >= 4, `${pathname}: expected at least four sections`);
-    assert.ok(page.sources?.length >= 2, `${pathname}: expected at least two sources`);
-    assert.ok(
-      page.sources.some(({ url }) => isOfficialGiffgaffUrl(url)),
-      `${pathname}: an official giffgaff source is required`,
-    );
-    assert.ok(page.related?.length >= 3, `${pathname}: expected at least three related links`);
-    assert.ok(page.author, `${pathname}: author is required`);
-    assert.ok(page.reviewMethod, `${pathname}: review method is required`);
-    assert.match(page.dateModified, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(page.revisions?.length >= 1, `${pathname}: revision log is required`);
-  }
-});
-
-test("serves standalone, citation-ready tutorial HTML with safe entity markup", async () => {
-  for (const pathname of REQUIRED_TUTORIAL_PATHS) {
-    const response = await worker.fetch(
-      new Request(`https://getgiffgaff.com${pathname}`),
-      {},
-    );
-    const html = await response.text();
-
-    assert.equal(response.status, 200, pathname);
-    assert.equal(
-      response.headers.get("x-robots-tag"),
-      "index, follow, max-snippet:-1, max-image-preview:large",
-      pathname,
-    );
-    assert.equal(response.headers.get("x-getgiffgaff-render-mode"), "edge-static-tutorial");
-    assert.match(html, new RegExp(`<link rel="canonical" href="https://getgiffgaff\\.com${pathname}">`));
-    assert.match(html, new RegExp(`<meta property="og:url" content="https://getgiffgaff\\.com${pathname}">`));
-    assert.equal(occurrences(html, /<h1\b/gi), 1, `${pathname}: expected one H1`);
-    assert.equal(occurrences(html, /<main\b/gi), 1, `${pathname}: expected one main`);
-    assert.doesNotMatch(html, /<meta\b[^>]*name=["']keywords["']/i, pathname);
-    const schemas = jsonLdEntries(html);
-    const article = schemas.find((entry) => entry["@type"] === "Article");
-    const breadcrumbs = schemas.find((entry) => entry["@type"] === "BreadcrumbList");
-    assert.ok(article, `${pathname}: Article schema is required`);
-    assert.ok(breadcrumbs, `${pathname}: BreadcrumbList schema is required`);
-    assert.equal(article.author?.["@id"], "https://getgiffgaff.com/#organization");
-    assert.equal(article.author?.name, "getgiffgaff");
-    assert.equal(article.publisher?.["@id"], "https://getgiffgaff.com/#organization");
-    assert.equal(article.datePublished, undefined);
-    assert.equal(article.dateModified, "2026-07-15");
-    assert.equal(article.reviewedBy, undefined);
-    assert.equal(article.about?.["@type"], "Brand");
-    assert.equal(article.about?.url, "https://www.giffgaff.com/");
-
-    const breadcrumbUrls = breadcrumbs.itemListElement.map(({ item }) => item);
-    const expectedBreadcrumbs = pathname === "/answers/"
-      ? ["https://getgiffgaff.com/", `https://getgiffgaff.com${pathname}`]
-      : pathname.startsWith("/more/")
-        ? ["https://getgiffgaff.com/", "https://getgiffgaff.com/more/", `https://getgiffgaff.com${pathname}`]
-        : ["https://getgiffgaff.com/", "https://getgiffgaff.com/guides/", `https://getgiffgaff.com${pathname}`];
-    assert.deepEqual(breadcrumbUrls, expectedBreadcrumbs, `${pathname}: breadcrumb hierarchy`);
-    assert.match(html, /getgiffgaff 是独立第三方服务站/, pathname);
-    assert.match(html, /编辑责任与复核方法/, pathname);
-    assert.doesNotMatch(html, /undefined|"reviewedBy"/, pathname);
-    assert.match(html, /官方来源/, pathname);
-    assert.match(html, /href="\/guides\/6-pitfalls\/"/, pathname);
-  }
-});
-
-test("serves tutorials only for safe public read methods", async () => {
-  const pathname = "/guides/2-activate/";
-  const head = await worker.fetch(
-    new Request(`https://getgiffgaff.com${pathname}`, { method: "HEAD" }),
-    {},
+  assert.deepEqual(
+    GROWTH_PAGES.filter((page) => page.indexPolicy === "noindex").map((page) => page.path),
+    NOINDEX_GROWTH_ROUTES,
   );
-  assert.equal(head.status, 200);
-  assert.equal(await head.text(), "");
+  assert.equal(new Set(GROWTH_PAGES.map((page) => page.title)).size, 8);
+  assert.equal(new Set(GROWTH_PAGES.map((page) => page.intent)).size, 8);
+
+  for (const page of GROWTH_PAGES) {
+    for (const key of [
+      "path",
+      "title",
+      "description",
+      "intent",
+      "updatedAt",
+      "reviewedAt",
+      "sources",
+      "relatedRoutes",
+      "commerceTarget",
+    ]) {
+      assert.ok(page[key] !== undefined, `${page.path} missing ${key}`);
+    }
+    assert.ok(page.sources.length >= 2, `${page.path} sources`);
+    assert.ok(page.relatedRoutes.length >= 3, `${page.path} related routes`);
+    assert.equal(page.author?.type, "Organization", `${page.path} honest author`);
+  }
+});
+
+test("new pages publish parseable conservative schema and explicit evidence boundaries", async () => {
+  for (const page of GROWTH_PAGES) {
+    const html = await readFile(routeFile(page.path), "utf8");
+    const documents = jsonLd(html);
+    const nodes = allNodes(documents);
+    assert.ok(documents.length > 0, `${page.path} JSON-LD`);
+    const serialized = JSON.stringify(nodes);
+
+    assert.doesNotMatch(serialized, /pages\.dev/i, page.path);
+    assert.doesNotMatch(
+      serialized,
+      /"@type":"(?:Offer|Review|AggregateRating|FAQPage)"/i,
+      page.path,
+    );
+    assert.doesNotMatch(serialized, /"sameAs"|"parentOrganization"/i, page.path);
+    assert.match(html, /独立第三方/, page.path);
+    assert.match(html, /核验日期|方法与边界/, page.path);
+
+    if (page.indexPolicy === "noindex") {
+      assert.match(html, /证据不足|开放索引门槛/, page.path);
+      assert.match(html, /<meta\b[^>]*name=["']robots["'][^>]*noindex/i, page.path);
+    }
+  }
+});
+
+test("local tools calculate without network state and fail closed when evidence expires", async () => {
+  const filename = path.join(ROOT, "site", "growth", "assets", "tools.js");
+  const source = await readFile(filename, "utf8");
+  const uiSource = await readFile(path.join(ROOT, "site", "growth", "assets", "growth-ui.js"), "utf8");
+  const tools = await import(`${pathToFileURL(filename).href}?tutorial=${Date.now()}`);
+
+  assert.doesNotMatch(source, /fetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon/i);
+  assert.doesNotMatch(source, /localStorage|sessionStorage|indexedDB/i);
+  assert.doesNotMatch(uiSource, /fetch\s*\(|XMLHttpRequest|WebSocket|sendBeacon/i);
+  assert.doesNotMatch(uiSource, /localStorage|sessionStorage|indexedDB|FormData/i);
+  const calendar = tools.keepNumberCalendar("2026-07-16");
+  assert.match(calendar, /BEGIN:VCALENDAR/);
+  assert.doesNotMatch(calendar, /^(?:ATTENDEE|CONTACT|ORGANIZER|TEL|URL):/gim);
+  assert.doesNotMatch(calendar, /13800000000|user@example\.com|ACCOUNT_CANARY/i);
+  assert.equal(tools.keepNumberReminderDate("2026-02-31"), null);
   assert.equal(
-    head.headers.get("x-robots-tag"),
-    "index, follow, max-snippet:-1, max-image-preview:large",
+    tools.roamingCost({
+      megabytes: 20,
+      sms: 0,
+      outgoingMinutes: 0,
+      incomingMinutes: 0,
+      ratePerMegabyte: 0.2,
+      ratePerSms: 0.3,
+      ratePerOutgoingMinute: 1,
+      ratePerIncomingMinute: 1,
+      expiresAt: "2026-07-15",
+      now: "2026-07-16",
+    }),
+    null,
   );
-
-  for (const method of ["POST", "PUT", "OPTIONS"]) {
-    const response = await worker.fetch(
-      new Request(`https://getgiffgaff.com${pathname}`, { method }),
-      {},
-    );
-    assert.equal(response.status, 405, method);
-    assert.equal(response.headers.get("allow"), "GET, HEAD", method);
-    assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive", method);
-    assert.match(response.headers.get("cache-control") ?? "", /no-store/, method);
-    assert.equal(await response.text(), "Method Not Allowed", method);
-  }
-});
-
-test("eSIM QR boundary page never teaches credential extraction or upload", async () => {
-  const response = await worker.fetch(
-    new Request("https://getgiffgaff.com/more/04-esim-qrcode/"),
-    {},
+  assert.equal(
+    tools.roamingCost({
+      megabytes: 10,
+      sms: 1,
+      outgoingMinutes: 1,
+      incomingMinutes: 2,
+      ratePerMegabyte: 0.2,
+      ratePerSms: 0.3,
+      ratePerOutgoingMinute: 1,
+      ratePerIncomingMinute: 1,
+      expiresAt: "2026-08-15",
+      now: "2026-07-16",
+    }),
+    5.3,
   );
-  const html = await response.text();
-
-  assert.equal(response.status, 200);
-  assert.match(html, /不提供抓取 LPA 凭证/);
-  assert.match(html, /遇到这些要求，应立即停止/);
-  assert.match(html, /要求上传二维码截图/);
-  assert.doesNotMatch(html, /(?:第\s*[一二三四五六七八九十0-9]+\s*步|step\s*\d+).*(?:提取|导出|上传).*(?:LPA|Cookie|二维码)/i);
-});
-
-test("redirects tutorial paths without a trailing slash in one worker hop", async () => {
-  for (const pathname of REQUIRED_TUTORIAL_PATHS) {
-    const withoutSlash = pathname.slice(0, -1);
-    const response = await worker.fetch(
-      new Request(`https://getgiffgaff.com${withoutSlash}`),
-      {},
-    );
-
-    assert.equal(response.status, 301, withoutSlash);
-    assert.equal(response.headers.get("location"), `https://getgiffgaff.com${pathname}`);
-  }
-});
-
-test("reconciles every tutorial into the public sitemap exactly once", () => {
-  const staleEntries = REQUIRED_TUTORIAL_PATHS.map(
-    (pathname) => `<url><loc>https://getgiffgaff.com${pathname}</loc><lastmod>2026-06-11T00:00:00.000Z</lastmod></url>`,
-  ).join("");
-  const xml = reconcileSitemap(`<?xml version="1.0"?><urlset>${staleEntries}</urlset>`);
-
-  assert.equal(occurrences(xml, /<url>/g), PUBLIC_INDEXABLE_PATHS.length);
-  for (const pathname of REQUIRED_TUTORIAL_PATHS) {
-    assert.equal(
-      occurrences(xml, new RegExp(`https:\\/\\/getgiffgaff\\.com${pathname}`, "g")),
-      1,
-      pathname,
-    );
-    const entry = xml.match(
-      new RegExp(`<url><loc>https:\\/\\/getgiffgaff\\.com${pathname}<\\/loc>([\\s\\S]*?)<\\/url>`),
-    )?.[0];
-    assert.match(entry ?? "", /<lastmod>2026-07-15T00:00:00\.000Z<\/lastmod>/, pathname);
-  }
+  assert.equal(
+    tools.totalCost({ card: 20, balance: 10, shipping: 8, topup: " ", expectedUsage: 6 }),
+    null,
+  );
+  assert.deepEqual(
+    tools.totalCost({ card: 20, balance: 10, shipping: 8, topup: 10, expectedUsage: 6 }),
+    { gross: 44, usableBalance: 10, cashOutlay: 44 },
+  );
 });

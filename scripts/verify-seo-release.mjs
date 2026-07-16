@@ -2,8 +2,9 @@
 
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { PUBLIC_INDEXABLE_PATHS } from "../public/route-manifest.js";
 
-const DEFAULT_EXPECTED_URL_COUNT = 34;
+const DEFAULT_EXPECTED_URL_COUNT = PUBLIC_INDEXABLE_PATHS.length;
 const DEFAULT_CONCURRENCY = 6;
 const DEFAULT_TIMEOUT_MS = 15_000;
 const PERMANENT_REDIRECT_STATUSES = new Set([301, 308]);
@@ -568,12 +569,22 @@ export async function validatePolicyProbes(
       continue;
     }
 
-    const isLlms = pathname === "/llms.txt" || pathname === "/llms-full.txt";
+    const isLlms = pathname === "/llms.txt";
+    const isRetiredLlmsFull = pathname === "/llms-full.txt";
     const isPolicyPage = pathname === "/privacy/" || pathname === "/terms/";
-    const isPrivate = !isLlms && (!isPolicyPage || response.status !== 200);
+    const isPrivate = isRetiredLlmsFull || (!isLlms && (!isPolicyPage || response.status !== 200));
 
     if (isLlms && response.status !== 200) {
       issues.push(issue("llms-status", url, `Expected ${pathname} status 200, received ${response.status}`));
+    }
+    if (isRetiredLlmsFull && response.status !== 410) {
+      issues.push(
+        issue(
+          "llms-full-status",
+          url,
+          `Expected retired ${pathname} status 410, received ${response.status}`,
+        ),
+      );
     }
     if (isPolicyPage && ![200, 404].includes(response.status)) {
       issues.push(
@@ -746,11 +757,11 @@ export async function validateSeoRelease({
 }
 
 const USAGE = `Usage:
-  node scripts/verify-seo-release.mjs --base-url https://getgiffgaff.com [--expected-url-count 34]
+  node scripts/verify-seo-release.mjs --base-url https://getgiffgaff.com [--expected-url-count ${DEFAULT_EXPECTED_URL_COUNT}]
 
 Environment fallbacks:
   SEO_BASE_URL
-  SEO_EXPECTED_URL_COUNT (default: 34)`;
+  SEO_EXPECTED_URL_COUNT (default: ${DEFAULT_EXPECTED_URL_COUNT})`;
 
 export async function runCli(
   args = process.argv.slice(2),

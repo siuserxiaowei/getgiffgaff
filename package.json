@@ -4,12 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:content": "node scripts/build-growth-pages.mjs && node scripts/build-source-cards.mjs",
+    "build": "npm run build:content && node scripts/build-release-artifact.mjs",
     "test": "node --test test/*.test.mjs",
     "test:coverage": "node --experimental-test-coverage --test test/*.test.mjs",
-    "verify": "npm test && node scripts/verify-contact-hotfix.mjs",
+    "verify": "npm test && npm run build && node scripts/verify-release-artifact.mjs",
     "verify:seo": "node scripts/verify-seo-release.mjs",
-    "predeploy": "npm run verify",
-    "deploy": "wrangler pages deploy public --project-name getgiffgaff --branch main --commit-dirty=true",
-    "postdeploy": "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 34"
+    "predeploy": "npm run verify && node scripts/assert-clean-worktree.mjs",
+    "deploy": "wrangler pages deploy .release --project-name getgiffgaff --branch main",
+    "postdeploy": "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39"
   }
 }

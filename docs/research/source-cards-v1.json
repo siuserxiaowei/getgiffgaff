@@ -1,0 +1,2076 @@
+{
+  "schemaVersion": "source-card-v1",
+  "generatedAt": "2026-07-16",
+  "copyrightBoundary": "研究层只保存元数据、原创结构摘要、链接与漏斗模式；不保存第三方全文、HTML、截图、图片或近似连续步骤。",
+  "cards": [
+    {
+      "id": "seed-ssnhd-github-readme",
+      "kind": "seed",
+      "url": "https://github.com/ssnhd/giffgaff",
+      "site": "github.com",
+      "author": "页面未可靠公开或未核验",
+      "publishedAt": "2023-09-13T14:04:20+08:00",
+      "verifiedAt": "2026-07-16",
+      "sourceLastModified": "2026-07-14T11:51:44+08:00",
+      "accessStatus": "公开可读；HTTP 200",
+      "title": "GitHub - ssnhd/giffgaff · GitHub",
+      "h1": "英国实体 SIM 卡 giffgaff 激活使用教程",
+      "searchIntent": "英国 giffgaff 实体 SIM 卡激活与使用",
+      "headingOutline": [
+        "激活",
+        "资费",
+        "保号",
+        "发短信/打电话格式",
+        "查询本机号码",
+        "收不到短信",
+        "更改号码",
+        "呼叫限制排障",
+        "查询余额",
+        "充值",
+        "更改邮箱/密码",
+        "激活 eSIM",
+        "eSIM 转实体卡",
+        "常用官方链接"
+      ],
+      "internalLinkPattern": "README 顶部和充值/补卡段落反复链向 ssnhd/sim，把教程流量导向销售与人工客服。",
+      "externalLinkPattern": "密集链接 giffgaff 官方自助页，降低读者后续操作成本。",
+      "ctaPattern": "前往 GitHub ssnhd/sim 联系人工客服购卡/充值/补卡。",
+      "schemaPattern": [],
+      "updatePattern": "完整 Git 历史共 159 个 commit；最新 commit bc9a49b5c2fe67c025a35470d36a42047590db4d。",
+      "assetPattern": {
+        "readmeLines": 214,
+        "readmeSourceLines": 130,
+        "readmeSize": "7.7 KB",
+        "observedImages": 11,
+        "activationSteps": 11
+      },
+      "learnablePattern": [
+        "用‘激活→资费→保号→排障→eSIM’完成使用周期覆盖，但在本站应拆成一个导航支柱和多个单意图页",
+        "每个操作节点附官方深链，但页内事实必须标最后核对日期",
+        "把人工服务 CTA 放在用户无法自助的断点，不要用官方身份话术"
+      ],
+      "riskNotes": [
+        "教程建议搜索并填写他人英国地址，不应在本站重现；应要求使用者提供真实、有权使用的账单/配送资料",
+        "将保号概括为‘余额变动’不如官方 13.5 准确；发布时应枚举官方允许的三类动作",
+        "收码、代充、换号时段和支付风控等实务性结论需逐条重验"
+      ],
+      "licenseStatus": "未授权（默认版权保留）",
+      "accessBoundary": "URL、标题、目录、更新历史、链接图谱与转化机制摘要。",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "seed-giffgaff-us",
+      "kind": "seed",
+      "url": "https://giffgaff.us/",
+      "site": "giffgaff.us",
+      "author": "页面未可靠公开或未核验",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-16",
+      "accessStatus": "公开可读；HTTP 200",
+      "title": "Giffgaff中文使用手册 | giffgaff激活教程2026、giffgaff充值、giffgaff eSIM保号全指南",
+      "h1": "未观察到",
+      "searchIntent": "giffgaff 中文教程/激活/充值/eSIM/保号",
+      "headingOutline": [
+        "新卡激活",
+        "实体卡激活步骤",
+        "国内漫游资费",
+        "注意事项",
+        "常见功能"
+      ],
+      "internalLinkPattern": "首页以 15 个意图卡片导航；每页保留首页、搜索、Telegram 和购卡入口；并用 PayPal/Telegram/WeChat 使用场景扩展上游需求。",
+      "externalLinkPattern": "操作页深链 giffgaff 官方，转化链指向 t.me、shop.giffgaff.us，部分页还指向 mysim.cc/shop.mysim.cc。",
+      "ctaPattern": "全站导航的 Telegram @giffgaffus 和 shop.giffgaff.us 购卡入口。",
+      "schemaPattern": {
+        "homepage": [
+          "WebSite",
+          "SearchAction"
+        ],
+        "selectedPages": [
+          "HowTo",
+          "Article"
+        ],
+        "coverageGap": "只有部分页面有 HowTo/Article，大部分无页级 Schema。"
+      },
+      "updatePattern": "首页与样本文章均未显示作者、发布日或更新日，不能根据标题中的‘2026’推定实际更新时间。",
+      "assetPattern": {
+        "linkedContentPages": 15,
+        "giffgaffPages": 14,
+        "adjacentPayPalPage": 1,
+        "approxVisibleChineseCharactersAcrossPages": 15469,
+        "observedImagesAcrossPages": 64
+      },
+      "learnablePattern": [
+        "使用‘一问题一 URL’的任务型集群，把激活、保号、资费、eSIM、排障和平台兼容性分开",
+        "在教程页保留明确的自助和人工两条路径，但必须披露商业关系与独立第三方身份",
+        "对‘平台支持情况’采用日期化状态板和证据等级，不使用绝对化承诺",
+        "不要学习其缺 robots/sitemap、canonical 指向重定向、无 H1/作者/日期和 meta-keywords 堆叠"
+      ],
+      "riskNotes": [
+        "‘所有海外 APP/银行均完美支持’类绝对表述不可采用，应用带日期、设备、网络和样本量的状态板替代",
+        "接码、号码注册平台、免实名和‘理论保号 25 年’均有高变动/合规风险",
+        "英国 PayPal 账号跨区注册内容涉及身份、地址和金融平台条款，不应作为本站流量延伸",
+        "教程中的地址和代充建议需求真、合规并经法务审核"
+      ],
+      "licenseStatus": "未找到开放许可",
+      "accessBoundary": "页面清单、标题/H1/目录、元数据、转化路径、技术缺陷和事实性摘要。",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "seed-wise-sim-complete-guide",
+      "kind": "seed",
+      "url": "https://www.wise-sim.org/guides/giffgaff-complete-guide",
+      "site": "www.wise-sim.org",
+      "author": "页面未可靠公开或未核验",
+      "publishedAt": "2026-03-25",
+      "verifiedAt": "2026-07-16",
+      "accessStatus": "公开可读；HTTP 200",
+      "title": "2026 年全网最全英国 giffgaff 卡注册开通&保号教程—每年只要 0.6 英镑 | Wise SIM",
+      "h1": "2026 年全网最全英国 giffgaff 卡注册开通&保号教程—每年只要 0.6 英镑",
+      "searchIntent": "2026 giffgaff 注册开通与保号完整教程",
+      "headingOutline": [
+        "写在前面",
+        "前置准备：实体卡/支付方式/eSIM",
+        "注册开卡：14 个图文步骤",
+        "激活与保号",
+        "注意事项：保号/防扣费/信号验证码/其他建议",
+        "三个关键动作摘要",
+        "写在最后与购买 CTA"
+      ],
+      "internalLinkPattern": "顶部与页脚连接手机卡商城、教程列表和我的订单，将内容与交易系统紧密连接。",
+      "externalLinkPattern": "用 X 串文承接 Bitget/SafePal/Bybit/Xesim 配套教程，并用 X/YouTube/投资主站构成多渠道分发。",
+      "ctaPattern": "文章前部给出微信和 Telegram 购卡联系方式，结尾再次以缺货/备用需求驱动购买。",
+      "schemaPattern": [],
+      "updatePattern": "未观察到",
+      "assetPattern": {
+        "visibleReadTime": "30 分钟",
+        "headingsH1ToH3": 17,
+        "observedImages": 22,
+        "imageAltCoverage": "22 张图中仅封面与卡片图有实质 alt，其余多为空 alt。",
+        "registrationSteps": 14
+      },
+      "learnablePattern": [
+        "标题使用‘新鲜度+完整任务+可量化结果’的组合，但本站必须把成本标为核对日和前提",
+        "在激活教程中增加‘防扣费’和‘失败边界’，比只给正常路径更有用",
+        "将购卡 CTA 放在‘前置准备’和文末，但增加独立第三方、利益关系和服务边界披露",
+        "实操图应为自制截图，标注 App/网页版本与截图日期，并提供实质 alt"
+      ],
+      "riskNotes": [
+        "建议随意填英国地址/邮编及使用虚拟卡，不能复制为本站指南",
+        "‘未见大规模封中国/香港长期漫游用户’是无方法、样本量和官方来源的安全性推断",
+        "‘一年 £0.6’只是当前 30p 出站短信价格下的静态计算，不是未来成本保证",
+        "直接将所有‘余额变动’视为保号动作不如当前官方 13.5 准确"
+      ],
+      "licenseStatus": "保留所有权利",
+      "accessBoundary": "元数据、目录、链接图谱、CTA 节点、事实性摘要和技术信号。",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "seed-google-sites-shiyongfangfa",
+      "kind": "seed",
+      "url": "https://sites.google.com/view/shiyongfangfa/%E8%8B%B1%E5%9B%BD-giffgaff-%E5%AE%9E%E4%BD%93%E5%8D%A1%E4%BF%9D%E5%8F%B7%E5%85%A8%E6%94%BB%E7%95%A5%E6%BF%80%E6%B4%BB%E5%85%85%E5%80%BC%E5%8F%8A%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B",
+      "site": "sites.google.com",
+      "author": "页面未可靠公开或未核验",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-16",
+      "accessStatus": "公开可读；HTTP 200",
+      "title": "实用方法推荐 - 英国 Giffgaff 实体卡保号全攻略：激活、充值及使用教程",
+      "h1": "英国 Giffgaff 实体卡保号全攻略：激活、充值及使用教程",
+      "searchIntent": "英国 Giffgaff 实体卡保号/激活/充值/使用教程",
+      "headingOutline": [
+        "常用境外保号电话卡对比",
+        "为什么选择 Giffgaff",
+        "如何购买：官网申请/第三方购买",
+        "Giffgaff 激活教程",
+        "费用及保号窍门",
+        "常用功能及技巧",
+        "注意事项及常见问题",
+        "总结"
+      ],
+      "internalLinkPattern": "全站菜单把 AI 工具、跨境支付、虚拟卡、广告与 Giffgaff 页互联，捕捉‘国内用户访问/付费海外服务’的广义需求。",
+      "externalLinkPattern": "页面只观察到 bit.ly/yeka 两次，未观察到直连 giffgaff 官方来源。",
+      "ctaPattern": "‘野卡 | 一分钟注册，轻松订阅海外线上服务’短链，在优势段与文末各出现一次。",
+      "schemaPattern": [],
+      "updatePattern": "页脚只显示‘Page updated’入口，HTML 中未提供可见日期。",
+      "assetPattern": {
+        "headingsH1ToH3": 15,
+        "articleImages": 0,
+        "siteInternalLinksObserved": 91,
+        "affiliateLinksObserved": 2
+      },
+      "learnablePattern": [
+        "用‘境外号码方案比较’承接上游选卡意图，再把 Giffgaff 导入为其中一个选项",
+        "将购买、激活、保号和故障分层，但不要把与主题弱相关的 AI/支付页全部塞进全局导航",
+        "如有联盟或自有服务 CTA，必须紧邻披露关系、评估方法和替代方案",
+        "对比表应使用可验证的维度和日期，而非笼统‘最佳/完美支持’"
+      ],
+      "riskNotes": [
+        "‘充值一次接码可用超过 20 年’是基于当前价格和长期成功的理论外推，不能当作承诺",
+        "‘无需实名’、全球注册平台通用性和第三方激活卡的安全性均缺少证据和边界",
+        "激活步骤较简化且无版本截图，可能已与当前官网界面不同",
+        "联盟按钮指向虚拟支付卡服务，需独立进行金融与隐私合规评审"
+      ],
+      "licenseStatus": "未找到开放许可",
+      "accessBoundary": "URL、标题、目录、链接域、CTA 位置和转化机制摘要。",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "seed-aibook-gg-esim",
+      "kind": "seed",
+      "url": "https://aibook.ren/archives/ai-resource-open-giffgaff-esim",
+      "site": "aibook.ren",
+      "author": "页面未可靠公开或未核验",
+      "publishedAt": "2026-06-03",
+      "verifiedAt": "2026-07-16",
+      "sourceLastModified": "2026-06-05T23:12:47+08:00",
+      "accessStatus": "公开可读；HTTP 200",
+      "title": "GG卡开卡教程，开通很简单 - AI全书",
+      "h1": "GG卡开卡教程，开通很简单",
+      "searchIntent": "国产安卓/不支持 eSIM 设备如何通过小白卡使用 Giffgaff eSIM",
+      "headingOutline": [
+        "GG卡是什么",
+        "三步概览",
+        "购买小白卡",
+        "下载 EasyEUICC 并检测",
+        "激活 eSIM 并写入小白卡",
+        "注册官方 Giffgaff 账号",
+        "写入小白卡",
+        "最后的适用边界"
+      ],
+      "internalLinkPattern": "分类、标签、相关阅读和上下篇将单篇教程带入 AI 资源/工具/案例内容网络。",
+      "externalLinkPattern": "把读者导向 OpenEUICC 发布页、第三方 Giffgaff 改版 App 教程和二维码工具。",
+      "ctaPattern": "无明显自有商品 CTA；主要是外部工具路径、站内相关文章和 Telegram/Facebook/Twitter 分享。",
+      "schemaPattern": [
+        "WebSite",
+        "Article",
+        "Organization"
+      ],
+      "updatePattern": "未观察到",
+      "assetPattern": {
+        "headingsH1ToH3": 11,
+        "observedImages": 4,
+        "visibleReadTime": "12~16 分钟",
+        "firstHandSignal": "作者明确描述自己使用旧版华为安卓手机测试，但未公开完整版本、样本或复测方法。"
+      },
+      "learnablePattern": [
+        "从用户真正任务‘在 AI/海外平台中需要可长期管理的手机号’开场，而不只讲 SIM 卡参数",
+        "发布日、更新日、阅读时长、作者亲测设备与适用边界都值得保留",
+        "使用分类、标签、上下篇、相关阅读、canonical、Article Schema 和 sitemap 建立内容分发基础",
+        "不应复制改版 APK/eSIM 凭证提取路径；本站应只提供官方 eSIM 路径、安全风险说明和设备兼容性工具"
+      ],
+      "riskNotes": [
+        "页面称‘接收一条短信’可满足 180 天保号，与当前 giffgaff 条款 13.5 不符；接收短信不在当前列举的保号动作中",
+        "引导下载改造过的官方 APK、捕获 eSIM 激活码并写入可编程卡，存在供应链安全、账号、eSIM 配置文件泄漏及运营商/设备条款风险",
+        "建议使用随意美国地址和虚拟卡，不可复制为本站建议",
+        "引导用公共二维码服务处理 LPA 字符串可能暴露敏感 eSIM 激活凭证"
+      ],
+      "licenseStatus": "CC BY 4.0",
+      "accessBoundary": "可在满足署名、链接许可证、标明修改且不暗示背书的前提下改编。",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "seed-feishu-aiyanxishe",
+      "kind": "seed",
+      "url": "https://aiyanxishe.feishu.cn/wiki/Y7utw8thki1akSkkwr3cQNDvned",
+      "site": "aiyanxishe.feishu.cn",
+      "author": "页面未可靠公开或未核验",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-16",
+      "sourceLastModified": "2024-07-28",
+      "accessStatus": "受限或仅部分可验证；源登记为“部分/不稳定”；HTTP 200；直接请求经过 5 次飞书账号登录/trap 重定向后回到原 URL；最终 HTML 包含文档外壳、修改日、H1 和部分正文，但通用 Web 打开工具返回 Internal Error，且静态抽取只到网页激活的第一步，不能声称已获取完整文档。",
+      "title": "Docs",
+      "h1": "充值激活",
+      "searchIntent": "giffgaff 充值激活和国内使用",
+      "headingOutline": [
+        "漫游资费",
+        "激活流程",
+        "注意事项",
+        "常见功能",
+        "准备工作",
+        "方法一：网页激活"
+      ],
+      "internalLinkPattern": "飞书 Wiki 容器、分享按钮与知识库权限形成私域文档分发，但对公开搜索不友好。",
+      "externalLinkPattern": "静态可见区有 giffgaff.com/activate 直链。",
+      "ctaPattern": "只观察到飞书‘分享’功能，未观察到购卡/代充 CTA。",
+      "schemaPattern": [],
+      "updatePattern": "未观察到",
+      "assetPattern": {
+        "visibleH1": 1,
+        "imagesInResponse": 5,
+        "staticExtractionCoverage": "部分，不足以确认完整目录、字数或 CTA。"
+      },
+      "learnablePattern": [
+        "用四项短目录先告诉读者可解决的任务，这种开场可用于本站的快速答案卡",
+        "飞书可作为内部编辑/审核底稿，不应作为公开 SEO 落地页",
+        "公开站必须使用独立 title/description/canonical/Article Schema/可抓取 HTML，且不经登录重定向"
+      ],
+      "riskNotes": [
+        "文档最后修改于 2024-07-28，资费、界面、支付和保号条款需以 2026 官方页重验",
+        "可见区对支付卡类型和风控有强结论，但未给官方支付规则引用",
+        "因不能完整抽取，不应对其未可见部分做事实或版权推断"
+      ],
+      "licenseStatus": "未找到开放许可",
+      "accessBoundary": "URL、文档标题、作者昵称、修改日、可见大纲、访问限制和技术信号。",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-a-01-giffgaff-official-getting-started",
+      "kind": "competitor",
+      "url": "https://help.giffgaff.com/en/articles/240912-getting-started-on-giffgaff",
+      "site": "help.giffgaff.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-06-09",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "Getting started on giffgaff | giffgaff Help",
+      "h1": "Getting started on giffgaff",
+      "searchIntent": [
+        "giffgaff getting started",
+        "giffgaff 激活",
+        "giffgaff APN",
+        "giffgaff 充值"
+      ],
+      "headingOutline": [
+        "Activate your SIM",
+        "Insert the SIM card",
+        "Set up data and MMS",
+        "Transfer your number",
+        "Useful numbers",
+        "Buy a plan",
+        "Add credit",
+        "Get help",
+        "Find your number",
+        "Download the app"
+      ],
+      "internalLinkPattern": "帮助中心 collection → 综合入门页 → 单任务文档；Article/Person/Organization/BreadcrumbList；站内社区和 App 形成分发闭环。",
+      "externalLinkPattern": "官方 help.giffgaff.com；页面署名 Andy，并显示 2026-06-09；直接链接激活、覆盖、套餐和社区等第一方页面。JSON-LD 含 Article、Person、Organization、BreadcrumbList。",
+      "ctaPattern": "Activate my SIM、下载 App、查看套餐、进入社区或 HelpBot；内容直接导向产品激活与自助解决。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-06-09",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "每个关键步骤都链接唯一官方任务页，并在一篇总入口中按真实操作顺序串起来。",
+      "riskNotes": "主要面向英国本地语境，不直接回答中国漫游、国内收码和支付限制；规则与界面变化后需同步复核。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/7-arrival-checklist/"
+    },
+    {
+      "id": "competitor-a-02-giffgaff-china-instructions",
+      "kind": "competitor",
+      "url": "https://www.giffgaff-china.com/instructions",
+      "site": "www.giffgaff-china.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200；SPA/JS 渲染",
+      "title": "giffgaff 中国 | 官方资讯与服务",
+      "h1": "玩家指南（搜索引擎渲染结果；初始 HTML 为 SPA 空壳）",
+      "searchIntent": [
+        "giffgaff 中国",
+        "giffgaff 保号规则",
+        "giffgaff 注册接码",
+        "giffgaff eSIM 指南"
+      ],
+      "headingOutline": [
+        "产品简介",
+        "新手入门",
+        "漫游资费",
+        "保号规则",
+        "eSIM 指南",
+        "充值续费",
+        "话费账单",
+        "换号补卡",
+        "科学上网工具",
+        "注册接码",
+        "关于封号",
+        "常见问题"
+      ],
+      "internalLinkPattern": "单页 SPA 用 slug/卡片切换内容；初始 HTML 未见结构化数据，内容依赖 JavaScript；Telegram 承接咨询。",
+      "externalLinkPattern": "页面可访问且主题覆盖完整，但初始 HTML 未见作者、更新时间或 JSON-LD；部分卡片链接 giffgaff 官方登录、激活和官网，也包含 Telegram 与第三方工具链接。",
+      "ctaPattern": "每张主题卡『点击阅读』；Telegram 客服、激活入口以及第三方工具是主要转化点。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": null,
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200；SPA/JS 渲染"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "用任务卡片把复杂长教程变成明确的自助分流入口，降低新手选择成本。",
+      "riskNotes": "标题中的『官方』容易造成身份误解；作者、来源和更新日期不透明；页面内若干接码、合规和稳定性说法需要官方文件或实测复核。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-a-03-giffgaff-shop-guide-hub",
+      "kind": "competitor",
+      "url": "https://www.giffgaff.shop/guides/",
+      "site": "www.giffgaff.shop",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-03-28",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "快速开始 - 目录 | giffgaff 非官方中文网",
+      "h1": "快速开始 - 目录",
+      "searchIntent": [
+        "giffgaff 教程",
+        "giffgaff 激活",
+        "giffgaff 保号",
+        "giffgaff 代充值",
+        "giffgaff 无信号"
+      ],
+      "headingOutline": [
+        "giffgaff 手机卡介绍",
+        "获取和购买",
+        "手机卡激活",
+        "账号管理",
+        "App 使用",
+        "保号和使用",
+        "代充值",
+        "信号问题",
+        "旅行流量包"
+      ],
+      "internalLinkPattern": "强 hub-and-spoke：/guides/ → 编号子教程；另有 /pages/、新闻、RSS 和 Telegram；页面未见 JSON-LD。",
+      "externalLinkPattern": "页面明确标注『非官方中文网』并显示最近更新 2026-03-28；每个主题有独立 URL，但目录页未观察到 JSON-LD。",
+      "ctaPattern": "教程内链导向代充值/交易页面；Telegram 与 RSS 分别承接咨询和回访。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-03-28",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "用稳定的编号路径和总目录表达操作顺序，同时让每个故障问题拥有独立落地页。",
+      "riskNotes": "教程与交易服务相邻，价格和支付建议需披露利益关系并持续更新；缺少结构化数据和更明确的作者/审核信息。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/keep-number-reminder/"
+    },
+    {
+      "id": "competitor-a-04-giffgaff-gg-complete-guide",
+      "kind": "competitor",
+      "url": "https://www.giffgaff.gg/blog/giffgaff-tutor",
+      "site": "www.giffgaff.gg",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-04（搜索结果显示约 3 个月前）",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "giffgaff指南 | Giffgaff 充值",
+      "h1": "giffgaff指南",
+      "searchIntent": [
+        "giffgaff 指南",
+        "giffgaff 资费",
+        "giffgaff 获取",
+        "giffgaff 保号",
+        "giffgaff 常见问题"
+      ],
+      "headingOutline": [
+        "特点",
+        "用途",
+        "资费",
+        "获取途径",
+        "激活",
+        "注意事项",
+        "保号",
+        "意外扣费",
+        "常用操作",
+        "常见问题"
+      ],
+      "internalLinkPattern": "长文锚点 + 博客列表 + 三个交易入口；Article/Organization/BreadcrumbList；以站内教程持续承接使用问题。",
+      "externalLinkPattern": "链接 giffgaff 官方首页、漫游费率、号码停用、账户和账单页面；JSON-LD 含 Article、Organization、ImageObject、BreadcrumbList。",
+      "ctaPattern": "导航和文末导向『充值』『购买 SIM 卡』『购买充值券』；邀请链接和 Telegram/飞书教程承担额外转化。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-04（搜索结果显示约 3 个月前）",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "在每个关键规则旁放官方深链，让商业教程的事实链更容易核验。",
+      "riskNotes": "商业利益显著，部分经验性保号、信号和成本结论不等于官方保证；需要标明实测时间、地区和失败边界。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/keep-number-reminder/"
+    },
+    {
+      "id": "competitor-a-05-larksim-activate-guide",
+      "kind": "competitor",
+      "url": "https://larksim.com/guide/giffgaff-activate",
+      "site": "larksim.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-06-15",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "giffgaff 激活与注册教程：充值、插卡与保号全流程（2026） · LarkSim",
+      "h1": "英国实体 SIM 卡 giffgaff 激活、充值与保号完整教程（2026）",
+      "searchIntent": [
+        "giffgaff 激活教程 2026",
+        "giffgaff 充值",
+        "giffgaff voucher",
+        "giffgaff 保号",
+        "giffgaff eSIM"
+      ],
+      "headingOutline": [
+        "激活前准备",
+        "9 步实拍",
+        "plan 和 credit 怎么选",
+        "充值与 voucher",
+        "eSIM",
+        "插卡后 4 个检查",
+        "长期保号",
+        "常见问题排查",
+        "官方来源",
+        "FAQ",
+        "相关文章"
+      ],
+      "internalLinkPattern": "Guide hub → 激活/套餐/eSIM/故障页 → 商品页；Article + FAQPage + Person + Organization + BreadcrumbList，是本组结构化最完整的样本。",
+      "externalLinkPattern": "页面显示最近更新 2026-06-15，列出官方来源与核验日期，并链接官方激活页；作者/实拍素材有 X 原帖佐证。JSON-LD 含 Organization、WebSite、Article、Person、FAQPage、BreadcrumbList。",
+      "ctaPattern": "『查看 giffgaff 实体卡』『立即订购』『购物车/结账』；相关教程把信息流量导回商品页。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-06-15",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "把实拍、核验日期、官方来源、FAQ schema 和相关教程同时放在页面上，兼顾 E-E-A-T、SEO、GEO 与转化。",
+      "riskNotes": "商店教程仍需清楚披露销售关系；库存、支付、费用和中国漫游表现必须以当前证据为准，不能把个例写成承诺。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "competitor-a-06-algieba-esim-guide",
+      "kind": "competitor",
+      "url": "https://blog.algieba12.cn/giffgaff-esim/",
+      "site": "blog.algieba12.cn",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2025-07-08",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "Giffgaff eSIM 卡申请与激活教程 - 工具推荐 | 阿尔的代码屋",
+      "h1": "Giffgaff eSIM 卡申请与激活教程 - 工具推荐 | 阿尔的代码屋",
+      "searchIntent": [
+        "Giffgaff eSIM 申请",
+        "Giffgaff eSIM 激活",
+        "giffgaff 关闭语音信箱",
+        "giffgaff 漫游扣费"
+      ],
+      "headingOutline": [
+        "申请 SIM 卡",
+        "注册账户流程",
+        "激活与 eSIM 转换",
+        "激活后的关键设置",
+        "取消语音信箱",
+        "客服回复示例"
+      ],
+      "internalLinkPattern": "博客分类/标签/归档/合集 + GitHub/CSDN/掘金跨平台分发；未见结构化数据。",
+      "externalLinkPattern": "个人作者语境和截图提供一定一手性；页面显示 2025-07-08，站点有 About/Privacy，并关联 GitHub、CSDN、掘金；未观察到 JSON-LD。",
+      "ctaPattern": "使用 giffgaff 推荐申请链接；站内标签、合集与社交账号用于留存，没有强结账路径。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2025-07-08",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "围绕一个真实损失点做窄主题教程，比重复完整入门文更容易占据长尾。",
+      "riskNotes": "推荐链接涉及利益关系应披露；eSIM 与语音信箱流程会变，旧截图和费用提示需用官方帮助页复核。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-a-07-newbie-village-guide",
+      "kind": "competitor",
+      "url": "https://blog.nbvil.com/sim/giffgaff/",
+      "site": "blog.nbvil.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-07-14",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "免费领取 Giffgaff 英国真实号码 | 0月租长期保号首选 | 适用各平台注册验证 | 支持eSIM | Newbie Village",
+      "h1": "免费领取 Giffgaff 英国真实号码…；页面另有『Giffgaff 英国实体SIM eSIM 手机卡全攻略』第二个 H1",
+      "searchIntent": [
+        "Giffgaff 英国真实号码",
+        "Giffgaff 国内接码",
+        "0 月租长期保号",
+        "Giffgaff eSIM"
+      ],
+      "headingOutline": [
+        "视频教程",
+        "什么是 giffgaff",
+        "为什么性价比高",
+        "优缺点",
+        "三种申请方式",
+        "激活教程",
+        "eSIM 说明",
+        "国内使用资费"
+      ],
+      "internalLinkPattern": "博客分类/标签/归档 + YouTube 视频嵌入；BlogPosting/Person；站内共有大量服务器与工具内容，跨主题分发能力强。",
+      "externalLinkPattern": "页面显示发表于 2025-12-15、更新于 2026-07-14，并有作者和 BlogPosting/Person schema；视频提供跨媒介说明，但若干稳定性和平台兼容说法未见逐条官方证据。",
+      "ctaPattern": "邀请链接、eSIM/实体卡获取方式、视频教程和留言互动；内容将搜索流量导向视频与申请路径。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-07-14",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "一篇教程同时提供图文与视频，满足不同学习偏好并获得两套搜索入口。",
+      "riskNotes": "『最稳定』『不会封号』『各平台注册』等绝对或泛化表述风险高，必须改成带样本、日期和失败边界的实测结论；双 H1 也应修正。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "competitor-a-08-ggwiki-topical-cluster",
+      "kind": "competitor",
+      "url": "https://ggwiki.comtesla.com/",
+      "site": "ggwiki.comtesla.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-07-05（首页所列文章）",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "英国 giffgaff 手机卡使用指南|未激活卡与已激活卡现货发货",
+      "h1": "英国 giffgaff 手机卡使用指南|未激活卡与已激活卡现货发货（页面出现重复 H1）",
+      "searchIntent": [
+        "giffgaff 是不是虚拟号码",
+        "giffgaff 中国长期漫游",
+        "giffgaff WiFi Calling",
+        "giffgaff 支持哪些手机",
+        "giffgaff 接码排查"
+      ],
+      "headingOutline": [
+        "MVNO 与虚拟号码区别",
+        "中国长期漫游",
+        "R 漫游标识",
+        "WiFi Calling/VoLTE",
+        "设备兼容",
+        "关闭语音信箱",
+        "180 天保号",
+        "注册接码排查",
+        "漫游资费",
+        "WhatsApp 指南"
+      ],
+      "internalLinkPattern": "首页/分类 hub → 每个精确问题 URL → 商品站；无 JSON-LD；文章批量集中发布形成覆盖面。",
+      "externalLinkPattern": "文章卡片显示作者 airyea 与 2026-07-05；主题具体，但首页未观察到 JSON-LD，作者资历、审核与来源政策不明显。",
+      "ctaPattern": "全局『在线下单 giffgaff 卡』把信息流量导向独立 shop 子域；相关文章推荐形成连续浏览。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-07-05（首页所列文章）",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "把用户在购买后真正会搜索的故障拆成一问题一页，而不是全部塞入『完整教程』。",
+      "riskNotes": "短期集中发布容易显得模板化；重复 H1、缺 schema 与信任页面削弱可信度；商品与教程关系应披露，资费和平台可达性需实测。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-a-09-cnblogs-dsyr-guide",
+      "kind": "competitor",
+      "url": "https://www.cnblogs.com/DSYR/p/18991953",
+      "site": "www.cnblogs.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2025（搜索结果显示约 1 年前）",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "英国手机号Giffgaff获取与激活教程 - 落花人独立微雨燕双飞 - 博客园",
+      "h1": "英国手机号Giffgaff获取与激活教程",
+      "searchIntent": [
+        "英国手机号 Giffgaff 获取",
+        "Giffgaff 激活教程",
+        "Giffgaff Wi-Fi Calling"
+      ],
+      "headingOutline": [
+        "重点",
+        "申请",
+        "激活",
+        "开启 Wi-Fi Calling"
+      ],
+      "internalLinkPattern": "博客园作者页、标签和平台推荐分发；BlogPosting/Person/Organization/Blog。",
+      "externalLinkPattern": "页面有个人作者、发布日期和申请经历；JSON-LD 含 BlogPosting、Person、Organization、Blog。平台评论和作者主页增加身份连续性，但官方引用有限。",
+      "ctaPattern": "无明显商品结账；通过作者博客、评论、附件/资源和博客园关注沉淀流量。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2025（搜索结果显示约 1 年前）",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "加入真实邮寄时间、失败次数和设备设置等过程证据，比纯转述官方步骤更有信息增益。",
+      "riskNotes": "个人经历的邮寄、支付和网络结果不可泛化；页面中的当前可用性与费用须按 2026 官方页面重新核验。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/7-arrival-checklist/"
+    },
+    {
+      "id": "competitor-a-10-mingnify-digital-nomad-guide",
+      "kind": "competitor",
+      "url": "https://mingnify.com/zh/blog/p/giffgaff-uk-sim-guide/",
+      "site": "mingnify.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-04-16",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "Giffgaff终极指南：如何低成本长期拥有一张畅通无阻的英国手机卡？ | 明立非|Mingnify的博客",
+      "h1": "Giffgaff终极指南：如何低成本长期拥有一张畅通无阻的英国手机卡？",
+      "searchIntent": [
+        "Giffgaff 终极指南",
+        "低成本英国手机卡",
+        "数字游民英国手机号",
+        "海外 App 注册手机号"
+      ],
+      "headingOutline": [
+        "引言",
+        "四大核心优势",
+        "官网申请与电商购买",
+        "激活与防坑设置",
+        "保号与注册",
+        "更多玩法",
+        "结论"
+      ],
+      "internalLinkPattern": "多语言博客、数字游民分类、工具子站；BlogPosting/Person；归档规模较大，可从其他技术主题导流。",
+      "externalLinkPattern": "显示发表于 2025-10-14、更新于 2026-04-16，作者强调亲身申请和踩坑；JSON-LD 含 BlogPosting/Person，但外部官方来源密度不高。",
+      "ctaPattern": "以作者品牌、工具站、分类/标签/归档承接；没有强购物车，主要目标是订阅与站内继续阅读。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-04-16",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "把教程写给一个明确职业/场景，而不是写给抽象的『所有人』，自然带出差异化关键词。",
+      "riskNotes": "『充值一次保号三十年』和平台注册畅通等强表述会受规则、余额和平台风控变化影响，必须改成计算假设与不保证说明。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/keep-number-reminder/"
+    },
+    {
+      "id": "competitor-a-11-giffgaff-cc-ai-assistant",
+      "kind": "competitor",
+      "url": "https://www.giffgaff.cc/",
+      "site": "www.giffgaff.cc",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200；JS 渲染",
+      "title": "giffgaff 小助手 - 用户问答与 AI 支持",
+      "h1": "giffgaff 小助手（搜索引擎渲染；初始 HTML 未暴露语义标题）",
+      "searchIntent": [
+        "giffgaff 小助手",
+        "giffgaff 收不到验证码",
+        "giffgaff 无信号",
+        "giffgaff 保号",
+        "giffgaff eSIM 恢复"
+      ],
+      "headingOutline": [
+        "AI 咨询搜索",
+        "为什么选择 giffgaff",
+        "激活",
+        "套餐",
+        "漫游",
+        "SIM 卡",
+        "常见问题解答"
+      ],
+      "internalLinkPattern": "SPA/JS 问题库 + 商品和官方领卡双 CTA；未观察到 schema；FAQ 文案有被 AI/搜索摘要抽取的潜力。",
+      "externalLinkPattern": "HTTP 可访问且搜索结果可读到大量问题，但初始 HTML 为客户端渲染，未见作者、更新日期、来源政策或 JSON-LD。",
+      "ctaPattern": "『中文网店购买（国内发货）』『官网免费领卡』；问题搜索承担自助筛选并把高意图用户导向购买。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": null,
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200；JS 渲染"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "将站内搜索日志和客服问题沉淀为可浏览的问题库，再反向决定教程选题。",
+      "riskNotes": "客户端渲染、无可见来源与更新时间削弱可索引性和可信度；『AI 支持』回答必须标证据和更新时间，不能替代官方客服。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-a-12-gafish-activation",
+      "kind": "competitor",
+      "url": "https://gg.gafish.me/activation",
+      "site": "gg.gafish.me",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "giffgaff 激活教程｜鱼哥 giffgaff",
+      "h1": "激活教程",
+      "searchIntent": [
+        "giffgaff 激活教程",
+        "空卡激活",
+        "giffgaff 6 位激活码",
+        "giffgaff PAYG 激活"
+      ],
+      "headingOutline": [
+        "输入激活码",
+        "邮箱验证",
+        "注册密码",
+        "选择 PAYG",
+        "充值付款",
+        "获取号码",
+        "插卡接收欢迎短信"
+      ],
+      "internalLinkPattern": "单页线性流程，仅有返回首页和官方站链接；未见 schema，外部分发能力较弱。",
+      "externalLinkPattern": "直接链接 giffgaff 官方站并提供逐步截图；页面未见作者资历、更新日期、来源列表或 JSON-LD。",
+      "ctaPattern": "返回首页继续购买/使用服务；教程本身降低售后咨询成本。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": null,
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "对『我现在就要完成激活』的用户，逐屏截图和清晰完成状态比长背景介绍更重要。",
+      "riskNotes": "页面较薄且缺更新时间；支付、最低充值与界面内容可能变化，不能长期依赖静态截图。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/research/otp-status/"
+    },
+    {
+      "id": "competitor-a-13-invest-nav-mainland-guide",
+      "kind": "competitor",
+      "url": "https://invest-nav.com/tutorials/overseas-sim/text/giffgaff-uk-sim/",
+      "site": "invest-nav.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200；部分内容需登录",
+      "title": "Giffgaff 英国手机卡教程：大陆用户无门槛开通 - 海外电话卡 | 投资导航",
+      "h1": "Giffgaff 英国手机卡教程：大陆用户无门槛开通",
+      "searchIntent": [
+        "Giffgaff 大陆用户开通",
+        "海外保号神卡",
+        "英国手机卡接码",
+        "Giffgaff 购买激活"
+      ],
+      "headingOutline": [
+        "介绍与优缺点",
+        "购买/激活流程",
+        "注意事项",
+        "继续学习",
+        "登录解锁更多",
+        "评论讨论"
+      ],
+      "internalLinkPattern": "海外 SIM 教程目录、视频/文字教程、计算工具、会员页；Article/Person/Organization/WebPage/BreadcrumbList/SiteNavigationElement。",
+      "externalLinkPattern": "页面有作者实体和 Article、Person、Organization、WebPage、BreadcrumbList schema；包含第一人称使用描述和截图，但若干运营商、KYC、库存及平台风控判断缺少逐条官方引用。",
+      "ctaPattern": "登录解锁、评论、投资工具和教程库；把公开长文作为会员与站内工具获客入口。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": null,
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200；部分内容需登录"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "在免费内容中交付完整第一阶段价值，再用相关教程、工具和评论社区做二次留存。",
+      "riskNotes": "『无门槛』『稳定靠谱』等营销表述需限定条件；电商库存、邮寄与政策会变，不能从单次体验推断所有用户。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/research/otp-status/"
+    },
+    {
+      "id": "competitor-a-14-duoplus-keep-number",
+      "kind": "competitor",
+      "url": "https://www.duoplus.cn/blog/giffgaff-keep-number-guide-2026/",
+      "site": "www.duoplus.cn",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-06-22",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "2026 Giffgaff 保号操作指南：从个人维护到多号码管理",
+      "h1": "2026 Giffgaff 保号操作指南：从个人维护到多号码管理",
+      "searchIntent": [
+        "2026 Giffgaff 保号",
+        "Giffgaff 多号码管理",
+        "海外号码批量管理",
+        "Giffgaff 号码停用"
+      ],
+      "headingOutline": [
+        "文章要点",
+        "为什么要保号",
+        "如何有效保号",
+        "停用后补救",
+        "多号码问题",
+        "云号码新思路",
+        "FAQ",
+        "结语"
+      ],
+      "internalLinkPattern": "博客 → 产品能力/定价 → 试用；相关文章继续覆盖跨境账号运营；无可见 schema，但 AI 分享按钮是显著分发设计。",
+      "externalLinkPattern": "显示作者 DuoPlus、日期 2026-06-22；FAQ 回答明确，但直接抓取未观察到 JSON-LD。页面把自身产品能力写入比较，需视为厂商内容。",
+      "ctaPattern": "登录/免费试用/立即体验/定价；一键把文章发送到 ChatGPT、Google AI、Grok、Perplexity、Claude 获取摘要。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026-06-22",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "给 AI 搜索工具提供预填摘要入口，并把信息查询自然过渡到一个明确的业务痛点。",
+      "riskNotes": "替代方案比较由卖方撰写，不能据此断言云号码优于实体 SIM；批量账号、验证码与平台风控涉及合规和安全边界。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/keep-number-reminder/"
+    },
+    {
+      "id": "competitor-a-15-shuziyoumin-guide",
+      "kind": "competitor",
+      "url": "https://shuziyoumin.vip/posts/giffgaff.html",
+      "site": "shuziyoumin.vip",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2025（标题年份）",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "『giffgaff』2025 年英国的 0 月租手机卡申请与激活全攻略：免费申请，包邮国内 | 数字游民",
+      "h1": "『giffgaff』2025 年英国的 0 月租手机卡申请与激活全攻略：免费申请，包邮国内（页面出现重复 H1）",
+      "searchIntent": [
+        "giffgaff 0 月租",
+        "giffgaff 免费申请",
+        "giffgaff 包邮国内",
+        "giffgaff 激活全攻略"
+      ],
+      "headingOutline": [
+        "初步认识",
+        "核心优势",
+        "如何领取",
+        "如何激活",
+        "如何使用",
+        "管理账户",
+        "保号方式",
+        "资费说明",
+        "避免额外扣费",
+        "eSIM"
+      ],
+      "internalLinkPattern": "海外 SIM 比较集群 + tags/categories/archives + 微博等分享；无 schema；工具箱和导航扩展站内留存。",
+      "externalLinkPattern": "页面链接官方漫游费率、语音信箱、Wi-Fi Calling、eSIM 和账户页，来源深链较丰富；未观察到 JSON-LD。文章标注原创，但作者资历与审核流程不明显。",
+      "ctaPattern": "多个 giffgaff affiliate 领卡/激活链接；社交分享和相邻海外 SIM 教程继续导流。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2025（标题年份）",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "围绕『海外长期号码』建设跨运营商比较集群，让单一品牌教程获得更宽的上游需求。",
+      "riskNotes": "affiliate 关系应醒目披露；标题中的免费、包邮和奖励可能随地区/时间失效；重复 H1 和无 schema 可优化。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "competitor-a-16-e5im-community",
+      "kind": "competitor",
+      "url": "https://e5im.com/",
+      "site": "e5im.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "持续更新；2026-07-15 仍有近期帖",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "e5im 你的esim专家",
+      "h1": "页面当前首个 H1 为一篇小白卡教程标题，首页语义结构随最新内容变化",
+      "searchIntent": [
+        "giffgaff 实体卡转 eSIM",
+        "giffgaff eSIM 小白卡",
+        "Giffgaff eSIM 激活码",
+        "OpenEUICC giffgaff"
+      ],
+      "headingOutline": [
+        "giffgaff 实体卡转 eSIM",
+        "小白卡开通",
+        "eSIM 直装版",
+        "海外 eSIM 心得",
+        "国外电话卡平台",
+        "论坛注册与分类"
+      ],
+      "internalLinkPattern": "论坛首页 → 单帖 → 分类/标签/作者；无 schema；UGC 和新帖形成持续索引入口。",
+      "externalLinkPattern": "用户经验可发现真实故障，但首页无统一作者/审核/官方来源，也未观察到 JSON-LD；论坛帖子质量不一。",
+      "ctaPattern": "注册、登录、发帖、评论和论坛分类；通过持续 UGC 获得回访与长尾页面。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "持续更新；2026-07-15 仍有近期帖",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "把官方文档之外的设备兼容和失败案例沉淀为可检索的问题库，但必须有安全审核。",
+      "riskNotes": "部分内容涉及导出 Cookie、修改版 APK 或第三方 eSIM 工具，存在账户、隐私和供应链安全风险；不应直接复刻为本站操作指南。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "competitor-a-17-notion-complete-guide",
+      "kind": "competitor",
+      "url": "https://giffgaffsim.notion.site/",
+      "site": "giffgaffsim.notion.site",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026（页面标题）",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200；Notion JS 渲染，搜索索引可读",
+      "title": "giffgaff保姆级使用教程2026（搜索索引标题；原始 HTML title 为 Notion）",
+      "h1": "giffgaff保姆级使用教程2026（搜索渲染结果）",
+      "searchIntent": [
+        "giffgaff 保姆级教程 2026",
+        "giffgaff 官网激活",
+        "giffgaff 180 天保号",
+        "giffgaff 先激活再插卡"
+      ],
+      "headingOutline": [
+        "省流步骤摘要",
+        "电脑端官网激活",
+        "注册新账号",
+        "输入 6 位激活码",
+        "选择 PAYG",
+        "充值",
+        "插卡",
+        "180 天保号"
+      ],
+      "internalLinkPattern": "依赖 Notion 公共页渲染和分享传播；无独立站内容集群、品牌实体或 JSON-LD。",
+      "externalLinkPattern": "搜索引擎可以读取公开页面正文，但原始 HTML 只暴露 Notion 通用 metadata；未见作者、审核、更新时间、独立 schema 或清晰来源列表。",
+      "ctaPattern": "快速摘要降低阅读门槛；后续具体购买/联系 CTA 需在浏览器渲染态进一步核验。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2026（页面标题）",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200；Notion JS 渲染，搜索索引可读"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "开头先给 30 秒可执行摘要，下面再提供完整解释与截图，兼顾急用用户和深读用户。",
+      "riskNotes": "第三方平台可索引性、canonical 和稳定性不可控；作者与来源不透明；价格、PAYG 和保号表述须回到官方规则。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/keep-number-reminder/"
+    },
+    {
+      "id": "competitor-a-18-wechat-eu-use-case",
+      "kind": "competitor",
+      "url": "https://wp.2008.in/2022/09/16/5226/",
+      "site": "wp.2008.in",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2022-09-16",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "WeChat EU 注册和避免风控实战 使用Giffgaff 英国手机卡 – 冒险岛",
+      "h1": "WeChat EU 注册和避免风控实战 使用Giffgaff 英国手机卡（页面有多个 H1）",
+      "searchIntent": [
+        "Giffgaff 注册 WeChat EU",
+        "英国手机号注册微信",
+        "Giffgaff 验证码",
+        "WeChat EU 风控"
+      ],
+      "headingOutline": [
+        "前言",
+        "环境",
+        "注册参考教程",
+        "辅助验证",
+        "初始化配置",
+        "防风控参考",
+        "参考资料"
+      ],
+      "internalLinkPattern": "WordPress 分类/标签/归档/近期文章/评论；无 JSON-LD；场景页可从网络技术与电子产品受众获得分发。",
+      "externalLinkPattern": "提供具体设备/系统环境和操作截图，具备一手案例价值；发布日期 2022-09-16；未见 JSON-LD，参考资料有限。",
+      "ctaPattern": "通过电话卡、eSIM、安全技术等相关文章、分类、标签和评论吸引继续阅读。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2022-09-16",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "为每个高价值平台建立单独的『适用条件 + 测试环境 + 失败排查』页面，而不是发布泛化兼容列表。",
+      "riskNotes": "页面较旧，平台政策和风控机制随时变化；不得把规避平台安全机制作为卖点，应强调遵守平台条款、账号安全与不保证成功。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/research/otp-status/"
+    },
+    {
+      "id": "competitor-a-19-10100-crossborder-guide",
+      "kind": "competitor",
+      "url": "https://www.10100.com/article/28121979",
+      "site": "www.10100.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2025（搜索结果显示约 9 个月前）",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "Giffgaff英国手机卡保号教程图文申请攻略：0月租、免费申请、激活及充值指南！支持 eSIM- 大数跨境",
+      "h1": "Giffgaff英国手机卡保号教程图文申请攻略：0月租、免费申请、激活及充值指南！支持 eSIM",
+      "searchIntent": [
+        "Giffgaff 英国手机卡保号教程",
+        "Giffgaff 图文申请攻略",
+        "Giffgaff 免费申请",
+        "Giffgaff 支持 eSIM"
+      ],
+      "headingOutline": [
+        "申请/获取",
+        "下载 App",
+        "账号登录",
+        "输入激活码",
+        "选择 PAYG",
+        "支付",
+        "保号攻略"
+      ],
+      "internalLinkPattern": "跨境知识分类与百科/招聘/活动/企业会员矩阵；Article/Person；平台级导航可为单篇文章持续导流。",
+      "externalLinkPattern": "页面 HTTP 200，含 Article/Person schema，并由跨境知识平台分发；正文截图丰富，但官方来源、实测边界和作者专业背景需进一步补强。",
+      "ctaPattern": "文中推荐支付工具/购买路径；站内『出海平台、流量密码、跨境支付、实操手册、企业会员』承接更广的商业线索。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": "2025（搜索结果显示约 9 个月前）",
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "把 giffgaff 放进『跨境业务基础设施』而非纯通信分类，可触达更大的上游出海需求。",
+      "riskNotes": "支付工具推荐、费用和平台使用场景存在商业利益与时效性；『免费』『0 月租』应说明适用条件，不能承诺验证码可达。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "competitor-a-20-paragraph-fengdie-guide",
+      "kind": "competitor",
+      "url": "https://paragraph.com/%40fengdie/giffgaff",
+      "site": "paragraph.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "页面未可靠公开或未核验",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "HTTP 200",
+      "title": "【保号卡】英国 Giffgaff 国内激活流程与保号技巧",
+      "h1": "【保号卡】英国 Giffgaff 国内激活流程与保号技巧",
+      "searchIntent": [
+        "英国 Giffgaff 国内激活",
+        "Giffgaff 保号技巧",
+        "Giffgaff 购买方式"
+      ],
+      "headingOutline": [
+        "Giffgaff 卡的购买方式",
+        "激活详细流程",
+        "准备工作",
+        "保号技巧",
+        "总结"
+      ],
+      "internalLinkPattern": "创作者主页 + 平台 Explore/Trending；Article/Person/WebPage/BreadcrumbList/Organization；借平台域获得分发。",
+      "externalLinkPattern": "页面链接官方激活页；JSON-LD 含 Organization、Article、Person、WebPage、BreadcrumbList。作者身份有平台主页，但缺少明确更新时间和系统来源清单。",
+      "ctaPattern": "链接第三方购卡/支付服务与官方激活页；Paragraph 作者页、Popular/Trending 提供平台发现。",
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_published_or_updated": null,
+        "evidence_checked": "2026-07-15",
+        "availability": "HTTP 200"
+      },
+      "assetPattern": "未观察到",
+      "learnablePattern": "用标准五段式完成单一任务，并把官方操作入口直接放在步骤旁，减少跳失。",
+      "riskNotes": "第三方购卡和支付链接需披露关系并做安全审查；教程较薄，规则/费用/可用性仍要官方复核。",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/keep-number-reminder/"
+    },
+    {
+      "id": "competitor-b-21",
+      "kind": "competitor",
+      "url": "https://www.simonlyfinder.co.uk/guides/giffgaff-roaming",
+      "site": "www.simonlyfinder.co.uk",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Last reviewed May 2026",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "giffgaff Roaming Explained: EU Charges & Limits | SIM Only Finder",
+      "h1": "giffgaff Roaming Explained: EU Charges & Limits",
+      "searchIntent": "Commercial investigation plus pre-travel problem prevention.",
+      "headingOutline": [
+        "How the guide was produced",
+        "Included roaming and covered destinations",
+        "Data allowance and over-limit outcomes",
+        "Outside-Europe roaming",
+        "Fair-use duration",
+        "Worked trip-cost example",
+        "Competitor comparison",
+        "Management steps and FAQ"
+      ],
+      "internalLinkPattern": "Links to PAC transfer, competing network roaming guides, network hubs and deal pages.",
+      "externalLinkPattern": "Inline links to official/network and independent measurement sources, followed by a methodology/editorial-policy section.",
+      "ctaPattern": [
+        "Compare giffgaff SIM-only deals",
+        "Deal cards with retailer choice",
+        "Related roaming guides",
+        "Social sharing"
+      ],
+      "schemaPattern": [
+        "Organization",
+        "Person",
+        "ContactPoint",
+        "Article",
+        "WebPage",
+        "ImageObject"
+      ],
+      "updatePattern": {
+        "page_date": "Last reviewed May 2026",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Search-first evergreen guide, comparison/deal funnel and social sharing.",
+      "learnablePattern": "Answer the expensive mistake first, show a worked cost scenario, define who the product is and is not for, then place a comparison CTA after the decision evidence.",
+      "riskNotes": "Commercial comparison page; fees and allowances are volatile secondary-source facts. Recalculate examples and cite current official tariff pages rather than copying figures.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-22",
+      "kind": "competitor",
+      "url": "https://www.expertreviews.co.uk/technology/broadband-mobile-networks/giffgaff-review",
+      "site": "www.expertreviews.co.uk",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026 review; exact publication date was not exposed in the parsed page segment",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "Giffgaff review: Simply the best",
+      "h1": "Giffgaff review: Simply the best",
+      "searchIntent": "Commercial investigation before choosing a network.",
+      "headingOutline": [
+        "Pros and cons",
+        "Mobile network deals",
+        "What you get",
+        "Customer service",
+        "Coverage, reliability and speed",
+        "Roaming",
+        "Other features and spending caps",
+        "Verdict"
+      ],
+      "internalLinkPattern": "Awards, best networks, broadband reviews and roaming deal guides.",
+      "externalLinkPattern": "Own survey evidence combined with links to related rankings and third-party network measurements.",
+      "ctaPattern": [
+        "Check prices at giffgaff",
+        "Compare mobile network deals",
+        "Read best-mobile-networks ranking"
+      ],
+      "schemaPattern": "Not verified: direct automated fetch returned 405, although the public page was readable through search-page inspection.",
+      "updatePattern": {
+        "page_date": "2026 review; exact publication date was not exposed in the parsed page segment",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Publisher search footprint, annual awards/survey content and affiliate deal links.",
+      "learnablePattern": "Lead with a compact verdict and original survey evidence, then reconcile customer-reported experience with independent network benchmarks instead of pretending one metric tells the whole story.",
+      "riskNotes": "Survey results depend on sample composition and year; product prices and roaming details change. Avoid reusing the superlative verdict without equivalent original evidence.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-23",
+      "kind": "competitor",
+      "url": "https://www.which.co.uk/reviews/mobile-phone-providers/article/mobile-phone-provider-reviews/giffgaff-mobile-review-aDkPd2m9vJnT",
+      "site": "www.which.co.uk",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026 review; survey conducted January 2026",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "Giffgaff review 2026 - Which?",
+      "h1": "Giffgaff review",
+      "searchIntent": "Independent validation before purchase.",
+      "headingOutline": [
+        "Is Giffgaff any good",
+        "Provider score and survey table",
+        "Host network and coverage map",
+        "SIM-only deals",
+        "Deals and incentives",
+        "Price increases",
+        "Roaming",
+        "Stores"
+      ],
+      "internalLinkPattern": "Best/worst network hub, savings guides, coverage map, eSIM guide and a full provider-review directory.",
+      "externalLinkPattern": "Survey methodology, internal evidence pages and links to the official roaming-rate finder.",
+      "ctaPattern": [
+        "Join or log in to unlock detailed scores",
+        "Compare deals",
+        "Enter postcode for signal quality",
+        "Browse other provider reviews"
+      ],
+      "schemaPattern": [
+        "BreadcrumbList",
+        "Article",
+        "WebPage",
+        "ImageObject",
+        "Person",
+        "Organization"
+      ],
+      "updatePattern": {
+        "page_date": "2026 review; survey conducted January 2026",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Search, consumer membership/paywall, interactive coverage tool and social sharing.",
+      "learnablePattern": "Publish sample size and study date next to the score, expose a useful free answer, and reserve deeper tables/tools for conversion without hiding the basic conclusion.",
+      "riskNotes": "Most detailed ratings are paywalled and the survey is UK-market focused; its score cannot be generalized to Chinese roaming or verification-code use cases.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-24",
+      "kind": "competitor",
+      "url": "https://giffgaff.davwheat.dev/kb/roaming-in-eu",
+      "site": "giffgaff.davwheat.dev",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "No visible update date; content contains pre-2021 framing",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "EU roaming guide | giffgaff community help",
+      "h1": "Roaming in the EU",
+      "searchIntent": "How-to and troubleshooting.",
+      "headingOutline": [
+        "Background",
+        "Things to note",
+        "Before you go",
+        "APN settings",
+        "While you are there"
+      ],
+      "internalLinkPattern": "Small knowledge-base navigation and same-guide PDF.",
+      "externalLinkPattern": "Sparse links to official account tools; no visible named author, update date or editorial policy.",
+      "ctaPattern": [
+        "Download guide as PDF",
+        "Check roaming eligibility in giffgaff account"
+      ],
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_date": "No visible update date; content contains pre-2021 framing",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Searchable lightweight knowledge base plus offline PDF.",
+      "learnablePattern": "A compact pre-departure checklist and copyable settings table solve the task faster than a long narrative; an offline version is useful when connectivity fails.",
+      "riskNotes": "High freshness risk: the page still says giffgaff had not announced whether free EU roaming would continue after Brexit, which is visibly outdated. Treat configuration details as leads only and verify every item officially.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-25",
+      "kind": "competitor",
+      "url": "https://www.giffgaffeuropa.com/en/faq/activate-giffgaff-sim",
+      "site": "www.giffgaffeuropa.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "No visible article date; site footer shows 2026",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "How to activate your giffgaff SIM card",
+      "h1": "How to activate a giffgaff SIM card",
+      "searchIntent": "Activation how-to with referral conversion.",
+      "headingOutline": [
+        "Requirements",
+        "Open activation page",
+        "Enter code",
+        "Register email and password",
+        "Select plan",
+        "Payment",
+        "Confirmation and dashboard"
+      ],
+      "internalLinkPattern": "Prices, About, Help and language variants in English, Spanish, German, French, Italian and Portuguese.",
+      "externalLinkPattern": "Operational outbound links to giffgaff; no visible author, evidence policy or update date.",
+      "ctaPattern": [
+        "Order your free SIM",
+        "Activate on official site",
+        "Choose a qualifying plan for referral credit",
+        "Email for help"
+      ],
+      "schemaPattern": [],
+      "updatePattern": {
+        "page_date": "No visible article date; site footer shows 2026",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Multilingual SEO pages, screenshots and referral funnel.",
+      "learnablePattern": "One screen/decision per numbered step, with a button exactly where the user needs to leave for the official transaction; language variants capture non-English demand.",
+      "riskNotes": "Official-looking branding may blur independent status; referral incentives and activation availability change. Our site must state independent seller/support identity prominently and never imply official giffgaff status.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/7-arrival-checklist/"
+    },
+    {
+      "id": "competitor-b-26",
+      "kind": "competitor",
+      "url": "https://www.4g.co.uk/giffgaff-4g-coverage-network-summary/",
+      "site": "www.4g.co.uk",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-05-07",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "Giffgaff Review - is Giffgaff a good choice?",
+      "h1": "Giffgaff Review",
+      "searchIntent": "Commercial investigation.",
+      "headingOutline": [
+        "Summary pros and cons",
+        "Plans and value",
+        "Benefits and policies",
+        "Network, coverage, speed and frequencies",
+        "Customer service",
+        "Conclusion and alternatives"
+      ],
+      "internalLinkPattern": "Network reviews, coverage explainers, deal categories and related policy guides.",
+      "externalLinkPattern": "Named third-party datasets and provider facts embedded in a review/deal page.",
+      "ctaPattern": [
+        "View SIM-only deals",
+        "Compare mobile deals",
+        "Read alternative-network reviews"
+      ],
+      "schemaPattern": [
+        "Organization",
+        "PostalAddress",
+        "Review",
+        "Product",
+        "Person",
+        "Rating"
+      ],
+      "updatePattern": {
+        "page_date": "2026-05-07",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Search-led review hub, social accounts and affiliate deal modules.",
+      "learnablePattern": "Use a stable review scorecard across price, roaming, coverage, speed and support, then connect each criterion to a deeper guide and an alternative.",
+      "riskNotes": "Host-network measurements are used as a proxy for an MVNO and may not establish identical real-world performance. Dynamic plan prices should not be copied into evergreen prose.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/8-uk-sim-choice/"
+    },
+    {
+      "id": "competitor-b-27",
+      "kind": "competitor",
+      "url": "https://www.simsherpa.com/networks/giffgaff/review-and-guide",
+      "site": "www.simsherpa.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Visible extract says last updated 2025-01-06; title currently says 2026",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "giffgaff review 2026: now with eSIM and WiFi calling!",
+      "h1": "giffgaff review 2026: now with eSIM and WiFi calling!",
+      "searchIntent": "Commercial investigation and provider comparison.",
+      "headingOutline": [
+        "Overall verdict",
+        "Three best and three worst points",
+        "Coverage and measured speed experience",
+        "WiFi calling and eSIM",
+        "Roaming and benefits",
+        "Pricing and deals",
+        "Customer service",
+        "FAQ"
+      ],
+      "internalLinkPattern": "Large review/deal/comparison graph: giffgaff versus O2, SMARTY, Three, VOXI, Sky, spusu, Talkmobile and 1pMobile.",
+      "externalLinkPattern": "First-hand test narrative plus official feature links and external measurement references.",
+      "ctaPattern": [
+        "Visit giffgaff",
+        "Compare deals with filters",
+        "Email a deal to yourself",
+        "Navigate to eight head-to-head giffgaff comparison pages"
+      ],
+      "schemaPattern": [
+        "Review",
+        "Product",
+        "Person",
+        "ItemList",
+        "ListItem",
+        "Rating",
+        "Organization"
+      ],
+      "updatePattern": {
+        "page_date": "Visible extract says last updated 2025-01-06; title currently says 2026",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "SERP comparison cluster, interactive deal filters and affiliate outbound links.",
+      "learnablePattern": "Build one evidence-rich review hub, then create only genuinely distinct head-to-head pages that link back to it; show failed tests and limitations as well as successes.",
+      "riskNotes": "The title says 2026 while the visible last-updated note in the search extract says 6 January 2025. Some device-support and network claims can age quickly; hands-on findings are not universal.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-28",
+      "kind": "competitor",
+      "url": "https://kenstechtips.com/index.php/giffgaff-review",
+      "site": "kenstechtips.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2023-06-26",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "giffgaff SIM Only Plans: Flexible Goodybag Deals With O2 Coverage",
+      "h1": "giffgaff SIM Only Plans: Flexible Deals With O2 Coverage",
+      "searchIntent": "Plan comparison and switching research.",
+      "headingOutline": [
+        "18-month contracts",
+        "Monthly rolling plans",
+        "Pay As You Go plans and rates",
+        "Handset deals",
+        "Flexible plans and credit checks",
+        "Coverage and roaming",
+        "App and community",
+        "Keeping your phone number"
+      ],
+      "internalLinkPattern": "Plan subtopics, PAYG expiry, unlimited data, free SIM and broader network-review directory.",
+      "externalLinkPattern": "Inline provider/deal links and related explanatory articles; reader comments add questions but are not verified evidence.",
+      "ctaPattern": [
+        "See deal buttons inside plan tables",
+        "Read related PAYG and unlimited-data guides",
+        "Comment discussion"
+      ],
+      "schemaPattern": [
+        "WebPage",
+        "ReadAction",
+        "ImageObject",
+        "BreadcrumbList",
+        "WebSite",
+        "SearchAction",
+        "Organization"
+      ],
+      "updatePattern": {
+        "page_date": "2023-06-26",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Evergreen search guide, email/social site ecosystem, comments and affiliate offers.",
+      "learnablePattern": "A comparison table can explain contract types faster than prose; use comments as a recurring source of FAQ updates, while keeping the factual answer editorially verified.",
+      "riskNotes": "The visible publication date is 2023 and multiple tariff tables are volatile. A page can look maintained while old facts remain; all figures need a current verification timestamp.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-29",
+      "kind": "competitor",
+      "url": "https://www.moneysupermarket.com/mobile-phones/networks/reviews/giffgaff/",
+      "site": "www.moneysupermarket.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-02-26",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "giffgaff review: is giffgaff any good in 2026?",
+      "h1": "giffgaff review: is giffgaff any good in 2026?",
+      "searchIntent": "Commercial investigation followed by deal comparison.",
+      "headingOutline": [
+        "Summary",
+        "SIM-only and phone plans",
+        "Coverage",
+        "Roaming",
+        "Customer service and offline experience",
+        "Deals and pricing",
+        "Pros and cons",
+        "Alternatives and comparisons"
+      ],
+      "internalLinkPattern": "Full mobile-provider review directory, roaming, SIM-only versus monthly, refurbished-phone and handset hubs.",
+      "externalLinkPattern": "Internal provider explainers plus official and regulator links where relevant.",
+      "ctaPattern": [
+        "Compare giffgaff SIM-only deals",
+        "Compare phones and other networks",
+        "Read related decision guides"
+      ],
+      "schemaPattern": "Not verified: direct automated fetch returned 403; public search-page rendering was inspectable.",
+      "updatePattern": {
+        "page_date": "2026-02-26",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "High-authority comparison marketplace, provider landing pages and cross-category deal funnel.",
+      "learnablePattern": "Cover the whole decision in a predictable order and always end with alternatives; a user who rejects the product should still remain inside the site.",
+      "riskNotes": "Commercial comparison context and some statements use older Ofcom data. Coverage percentages and roaming wording should be tied to dated primary evidence.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-30",
+      "kind": "competitor",
+      "url": "https://www.uswitch.com/mobiles/compare/sim_only_deals/giffgaff/",
+      "site": "www.uswitch.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Deals last updated 2026-07-15",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "Giffgaff SIM Only Deals: Compare Contracts 2026 - Uswitch",
+      "h1": "giffgaff SIM only deals",
+      "searchIntent": "Transactional comparison with supporting education.",
+      "headingOutline": [
+        "Live deal list",
+        "How to choose a plan",
+        "Unlimited, 5G, PAYG and cheap options",
+        "Network verdict",
+        "Switching and number transfer",
+        "Activation",
+        "Roaming",
+        "Customer service"
+      ],
+      "internalLinkPattern": "Number transfer, network pages, awards, mobile comparison and support topics.",
+      "externalLinkPattern": "Live comparison inventory plus links to official roaming and internal switching guides.",
+      "ctaPattern": [
+        "Buy now on each deal",
+        "Load more deals",
+        "Use switching guides"
+      ],
+      "schemaPattern": [
+        "WebPage",
+        "BreadcrumbList",
+        "ListItem",
+        "FAQPage",
+        "Question",
+        "Answer"
+      ],
+      "updatePattern": {
+        "page_date": "Deals last updated 2026-07-15",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Dynamic comparison engine, awards PR, search FAQ coverage and affiliate referrals.",
+      "learnablePattern": "Put a freshness timestamp directly beside dynamic inventory, then attach concise education below it; label commercial placement rules before asking for the click.",
+      "riskNotes": "Plan inventory changes continuously and the commercial ranking model is not applicable to an independent tutorial site. Do not mark editorial FAQs as FAQ schema unless all answers are visible and policy-compliant.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-31",
+      "kind": "competitor",
+      "url": "https://www.choose.co.uk/mobile/giffgaff/reviews/",
+      "site": "www.choose.co.uk",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2021-02-02",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "giffgaff review: are their SIM only goodybags any good?",
+      "h1": "giffgaff mobile review: are they any good?",
+      "searchIntent": "Commercial investigation.",
+      "headingOutline": [
+        "Best deals",
+        "Coverage and 5G",
+        "Mobile speed",
+        "Tariffs",
+        "Customer service",
+        "Verdict"
+      ],
+      "internalLinkPattern": "Coverage, WiFi calling, hotspot and unlimited-data guides plus provider/category hubs.",
+      "externalLinkPattern": "Inline source links and related evidence guides.",
+      "ctaPattern": [
+        "Get a free SIM",
+        "Compare handset deals",
+        "Read latest guides",
+        "Social sharing"
+      ],
+      "schemaPattern": [
+        "Article",
+        "WebPage",
+        "Organization",
+        "ImageObject",
+        "Person",
+        "BreadcrumbList",
+        "ListItem"
+      ],
+      "updatePattern": {
+        "page_date": "2021-02-02",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Evergreen comparison library and social sharing.",
+      "learnablePattern": "A consistent category scorecard helps scanning, but every score should link to a dated evidence block rather than float as an unexplained star rating.",
+      "riskNotes": "Last updated in 2021; the page contains old plan structures, measurements and future projections that are now historical. Useful for architecture, not facts.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/8-uk-sim-choice/"
+    },
+    {
+      "id": "competitor-b-32",
+      "kind": "competitor",
+      "url": "https://www.comparethemarket.com/mobile-phones/giff-gaff/",
+      "site": "www.comparethemarket.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Current title targets 2026; no visible article date in inspected output",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "Compare Our BEST Giffgaff Deals 2026 | Compare the Market",
+      "h1": "Giffgaff deals",
+      "searchIntent": "Transactional comparison.",
+      "headingOutline": [
+        "What is giffgaff",
+        "Related mobile guides",
+        "How to compare SIM-only deals",
+        "SIM-only versus phone contract",
+        "Keeping an existing number"
+      ],
+      "internalLinkPattern": "Mobile-network, data-usage, 5G, SIM-only and contract-choice guides.",
+      "externalLinkPattern": "Mostly internal comparison guidance and direct provider handoff; limited visible primary sourcing on this landing page.",
+      "ctaPattern": [
+        "Start comparing",
+        "Compare mobile deals now",
+        "Navigate to SIM-only, unlimited-data and network guides"
+      ],
+      "schemaPattern": "Not verified: automated request returned a blocking page, while public search-page rendering was readable.",
+      "updatePattern": {
+        "page_date": "Current title targets 2026; no visible article date in inspected output",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Brand search landing page into a comparison engine and loyalty-rewards ecosystem.",
+      "learnablePattern": "Keep the transactional landing page short, answer the three conversion objections, and route deeper education to dedicated guides instead of inflating one page.",
+      "riskNotes": "Low editorial depth and strong commercial funnel; not a model for evidence-heavy GEO content. Terms and offers can change without the prose changing.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/keep-number-reminder/"
+    },
+    {
+      "id": "competitor-b-33",
+      "kind": "competitor",
+      "url": "https://www.techradar.com/sim-only/giffgaff-sims-and-goodybags",
+      "site": "www.techradar.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2021-02-19",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "Giffgaff SIMs: what are goodybags and are they good deals? | TechRadar",
+      "h1": "Giffgaff SIMs: what are goodybags and are they good deals?",
+      "searchIntent": "Commercial investigation and concept explanation.",
+      "headingOutline": [
+        "Is it a good network",
+        "Coverage",
+        "Benefits",
+        "SIM sizes",
+        "One-month contracts",
+        "5G",
+        "Alternative providers",
+        "Current deals"
+      ],
+      "internalLinkPattern": "SIM-only, MVNO, eSIM and network-provider content across a large technology-publisher graph.",
+      "externalLinkPattern": "Editorial explanation with provider/affiliate links; little dated first-hand evidence on this older page.",
+      "ctaPattern": [
+        "View affiliate deals",
+        "Newsletter signup",
+        "Follow as preferred Google source",
+        "Share through Facebook, X, WhatsApp, Reddit, Pinterest, Flipboard and Threads"
+      ],
+      "schemaPattern": [
+        "Article",
+        "SpeakableSpecification",
+        "ImageObject",
+        "Organization",
+        "Person",
+        "WebPage",
+        "BreadcrumbList",
+        "SiteNavigationElement",
+        "ItemList"
+      ],
+      "updatePattern": {
+        "page_date": "2021-02-19",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Google preferred-source prompt, newsletter, extensive social sharing, related-news modules and affiliate syndication.",
+      "learnablePattern": "Distribution is part of the content product: offer preferred-source following, email and multiple share formats, while linking the explainer into a broader topical graph.",
+      "riskNotes": "Published in 2021 and visibly stale: its statement that 5G is limited to specific Golden Goodybags may no longer reflect current plans. Use only its structure/distribution pattern.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/7-arrival-checklist/"
+    },
+    {
+      "id": "competitor-b-34",
+      "kind": "competitor",
+      "url": "https://selectra.co.uk/mobile/networks/giff-gaff",
+      "site": "selectra.co.uk",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Last updated 2026-06-26; headline prices checked 2026-05-19",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "giffgaff review 2026: goodybag prices, O2 coverage, is it any good?",
+      "h1": "giffgaff review 2026",
+      "searchIntent": "Commercial investigation with current-plan lookup.",
+      "headingOutline": [
+        "Answer-first verdict",
+        "At-a-glance facts",
+        "Company and regulation",
+        "Current goodybags with best-for labels",
+        "Pros and cons",
+        "Customer-review snapshot",
+        "Expert verdict",
+        "FAQ"
+      ],
+      "internalLinkPattern": "A compact giffgaff entity cluster covering overview, top-up, account login and contact, connected to broader network comparisons.",
+      "externalLinkPattern": "Dense inline references, explicit checked-on dates and FAQ restatements.",
+      "ctaPattern": [
+        "See giffgaff goodybags",
+        "Read top-up, login and contact pages",
+        "Compare other networks"
+      ],
+      "schemaPattern": [
+        "Organization",
+        "Article",
+        "FAQPage",
+        "Product",
+        "Brand",
+        "AggregateRating",
+        "Review",
+        "ItemList"
+      ],
+      "updatePattern": {
+        "page_date": "Last updated 2026-06-26; headline prices checked 2026-05-19",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Search hub with answer-first snippets, provider subpages and comparison CTAs.",
+      "learnablePattern": "Attach a checked-on date to every volatile module and label each option by user fit, not just specs; create a small entity cluster for recurring tasks such as top-up and contact.",
+      "riskNotes": "Some claims, such as identical performance to the host network, require stronger evidence. Product/review/aggregate-rating schema is high-risk without direct, policy-compliant review data and should not be copied.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/8-uk-sim-choice/"
+    },
+    {
+      "id": "competitor-b-35",
+      "kind": "competitor",
+      "url": "https://toomanyadapters.com/buying-sim-card-united-kingdom/",
+      "site": "toomanyadapters.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Published 2021-10-16; modified 2026-04-23",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "Buying a SIM Card or eSIM for United Kingdom in 2026",
+      "h1": "Buying a SIM Card or eSIM for Travel in the United Kingdom",
+      "searchIntent": "Pre-trip commercial investigation and setup planning.",
+      "headingOutline": [
+        "Travel eSIM options",
+        "How to buy a prepaid SIM",
+        "Prepaid SIM costs by provider",
+        "Topping up",
+        "Coverage and data speeds",
+        "EU roaming",
+        "Reader comments"
+      ],
+      "internalLinkPattern": "Country-by-country SIM templates, travel eSIM explainers, hotspot reviews and remote-work technology.",
+      "externalLinkPattern": "Provider comparisons and experience-led recommendations; outbound commercial links should be checked individually.",
+      "ctaPattern": [
+        "Buy recommended travel eSIM/SIM",
+        "Travel insurance affiliate prompt",
+        "Newsletter signup",
+        "Read country-specific SIM guides",
+        "Comment"
+      ],
+      "schemaPattern": [
+        "Article",
+        "CommentAction",
+        "WebPage",
+        "ReadAction",
+        "ImageObject",
+        "BreadcrumbList",
+        "WebSite",
+        "SearchAction",
+        "Organization"
+      ],
+      "updatePattern": {
+        "page_date": "Published 2021-10-16; modified 2026-04-23",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Country-template SEO, newsletter, social channels and long-running comment community.",
+      "learnablePattern": "Frame network advice around a traveller's complete job—buying, price, top-up, coverage and return travel—then reuse a consistent country template only when each page has genuinely local evidence.",
+      "riskNotes": "Giffgaff is only one option on a broader travel page. Affiliate recommendations and provider prices are volatile; do not imitate country-scale programmatic SEO without unique verified data.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-36",
+      "kind": "competitor",
+      "url": "https://www.savethestudent.org/student-deals/mobile-phones/250-minutes-unlimited-texts-unlimited-data-12.html",
+      "site": "www.savethestudent.org",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Updated 2024-11-20",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "20GB data, unlimited texts & calls – £10pm - Save the Student",
+      "h1": "20GB data, unlimited texts & calls – £10pm",
+      "searchIntent": "Transactional bargain seeking.",
+      "headingOutline": [
+        "Offer summary",
+        "Three-step redemption",
+        "Device-lock warning",
+        "Deal expiry/status",
+        "Similar offers",
+        "Newsletter"
+      ],
+      "internalLinkPattern": "Student bills, international-student resources, SIM comparison, discounts and broader money-saving content.",
+      "externalLinkPattern": "Short deal copy with direct offer link; limited primary evidence on-page.",
+      "ctaPattern": [
+        "Click to get this deal",
+        "Report deal not working",
+        "Subscribe to weekly deals",
+        "View similar student offers"
+      ],
+      "schemaPattern": "Not verified: automated fetch returned 403, while public search-page rendering was inspectable.",
+      "updatePattern": {
+        "page_date": "Updated 2024-11-20",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Audience-specific SEO, email deal list, social media and repeat deal modules.",
+      "learnablePattern": "For high-intent offers, show the exact eligibility/redemption steps and a failure-report mechanism; connect the offer to the audience's wider setup journey.",
+      "riskNotes": "Updated in 2024 and the displayed allowance may be stale despite 'ongoing' status. Never publish an offer without a checked-on timestamp, evidence and automatic/manual expiry review.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/8-uk-sim-choice/"
+    },
+    {
+      "id": "competitor-b-37",
+      "kind": "competitor",
+      "url": "https://www.reddit.com/r/NoContract/comments/1tc9fy9/uk_paris_trip_giffgaff_esim_worked_surprisingly/",
+      "site": "www.reddit.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Search index showed approximately two months old at retrieval",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "UK & Paris Trip: Giffgaff eSIM Worked Surprisingly Well",
+      "h1": "UK & Paris Trip: Giffgaff eSIM Worked Surprisingly Well",
+      "searchIntent": "Experience validation and troubleshooting through peers.",
+      "headingOutline": [
+        "Original trip report",
+        "Device/setup context",
+        "Coverage and roaming anecdote",
+        "Questions and comments"
+      ],
+      "internalLinkPattern": "Subreddit feed, user profiles, related no-contract and travel threads.",
+      "externalLinkPattern": "Anecdotal UGC; no editorial fact-check or primary-source citations.",
+      "ctaPattern": [
+        "Comment",
+        "Upvote/downvote",
+        "Join r/NoContract",
+        "Open related threads"
+      ],
+      "schemaPattern": "Platform-native discussion metadata; JSON-LD was not independently verified.",
+      "updatePattern": {
+        "page_date": "Search index showed approximately two months old at retrieval",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Community feed, search indexing, repost/share and comment recirculation.",
+      "learnablePattern": "Readers value a compact field report with route, device, setup timing, what worked and what failed. Convert this into a controlled test-log format with methodology rather than borrowing anonymous claims.",
+      "riskNotes": "Anonymous anecdote, small sample and possible undisclosed promotion. Do not treat coverage or compatibility as universal; cite only as user experience and pair with official/current evidence.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/china-roaming-cost/"
+    },
+    {
+      "id": "competitor-b-38",
+      "kind": "competitor",
+      "url": "https://www.youtube.com/watch?v=acY6suWosq4",
+      "site": "www.youtube.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Uploaded 2024-04-10",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "How to install an eSIM on giffgaff for new members",
+      "h1": "How to install an eSIM on giffgaff for new members",
+      "searchIntent": "Visual setup how-to.",
+      "headingOutline": [
+        "App setup and eSIM selection",
+        "Plan selection and purchase",
+        "Installing the eSIM",
+        "Post-installation and support"
+      ],
+      "internalLinkPattern": "Channel library and YouTube recommendations; description links the wider official social ecosystem.",
+      "externalLinkPattern": "First-party demonstration rather than third-party citations.",
+      "ctaPattern": [
+        "Subscribe to giffgaff channel",
+        "Visit giffgaff site/community",
+        "Follow TikTok, Facebook, Instagram and X"
+      ],
+      "schemaPattern": "YouTube platform video metadata; page JSON-LD was not separately inspected.",
+      "updatePattern": {
+        "page_date": "Uploaded 2024-04-10",
+        "retrieved": "2026-07-15",
+        "public_metadata_at_retrieval": "98 seconds; 61,697 views; 256 likes"
+      },
+      "assetPattern": "YouTube search/recommendations plus cross-platform official social links.",
+      "learnablePattern": "Pair each high-friction tutorial with a sub-two-minute screen recording and the same four chapter labels used in the article; embed the video near the relevant steps, not only at the top.",
+      "riskNotes": "Uploaded in 2024 and app UI can change. It is first-party marketing, not independent validation; our derivative tutorial must use our own recording and screenshots with current app version/date.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "competitor-b-39",
+      "kind": "competitor",
+      "url": "https://www.zhihu.com/tardis/jm/ans/2039507496453285600",
+      "site": "www.zhihu.com",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "Search index showed approximately one month old; body frames routes as May 2026",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "如何获取一个可以长期使用海外实体电话卡？ - 知乎",
+      "h1": "如何获取一个可以长期使用海外实体电话卡？",
+      "searchIntent": "Chinese-market acquisition, choice and setup guidance.",
+      "headingOutline": [
+        "2026 current-route summary",
+        "Three routes ranked by recommendation",
+        "Outdated routes to avoid",
+        "Use-case boundaries in China",
+        "eSIM path",
+        "Physical SIM and forwarding path",
+        "Activation checklist"
+      ],
+      "internalLinkPattern": "Zhihu question graph, recommended answers, creator profile and topic feeds.",
+      "externalLinkPattern": "Mostly creator assertions and experience; official links are present for activation but a formal source list/methodology is not visible in the search extract.",
+      "ctaPattern": [
+        "Follow/read related Zhihu answers",
+        "Use recommended acquisition route",
+        "Platform engagement"
+      ],
+      "schemaPattern": [
+        "QAPage",
+        "Question",
+        "Answer",
+        "Person"
+      ],
+      "updatePattern": {
+        "page_date": "Search index showed approximately one month old; body frames routes as May 2026",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Search indexing, Q&A recommendations, topic feed and creator-follow graph.",
+      "learnablePattern": "Start with a dated decision tree, explicitly retire obsolete routes, and separate 'best path' from 'fallback path'; this directly addresses the Chinese SERP's stale-tutorial problem.",
+      "riskNotes": "UGC claims about shipping availability, activation region, marketplace supply and verification use can change or be commercially motivated. Verify against official ordering/help pages and disclose any seller relationship.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/tools/esim-compatibility/"
+    },
+    {
+      "id": "competitor-b-40",
+      "kind": "competitor",
+      "url": "https://www.giffgaff-sim-only-deals.co.uk/giffgaff-activate/",
+      "site": "www.giffgaff-sim-only-deals.co.uk",
+      "author": "页面作者信息未在本登记层复核",
+      "publishedAt": "2026-03-03",
+      "verifiedAt": "2026-07-15",
+      "accessStatus": "已纳入公开页面研究",
+      "title": "How to Activate Your giffgaff SIM | Step-by-Step Guide",
+      "h1": "How to Activate Your giffgaff SIM Card",
+      "searchIntent": "Step-by-step activation with transactional referral intent.",
+      "headingOutline": [
+        "Prerequisites",
+        "Signal check",
+        "Activation code",
+        "Account creation",
+        "Plan or credit choice",
+        "Confirmation",
+        "Number transfer",
+        "Troubleshooting",
+        "FAQ"
+      ],
+      "internalLinkPattern": "Tightly focused guide cluster around activation, switching, PIN/PUK, voicemail, top-up and APN, with global deal CTAs.",
+      "externalLinkPattern": "Mostly unsourced procedural assertions with operational links to official giffgaff pages.",
+      "ctaPattern": [
+        "Order a free SIM",
+        "Activate SIM",
+        "See SIM-only deals",
+        "Download app",
+        "Browse related PIN, PUK, voicemail, top-up and APN guides"
+      ],
+      "schemaPattern": [
+        "Article",
+        "Organization"
+      ],
+      "updatePattern": {
+        "page_date": "2026-03-03",
+        "retrieved": "2026-07-15"
+      },
+      "assetPattern": "Exact-match tutorial SEO, affiliate links and social profiles.",
+      "learnablePattern": "A task-focused hub with prerequisites, numbered actions, troubleshooting and FAQ captures both happy-path and failure-path searches; identity disclosure belongs in the header as well as the footer.",
+      "riskNotes": "High verification and branding risk. The page contains claims such as an eSIM QR-code prerequisite and abroad-use boundaries that may conflict with current official app-only activation. The official-looking domain/branding can confuse users; do not emulate that positioning.",
+      "licenseStatus": "未核验再发布许可；仅用于元数据、结构、选题与漏斗研究",
+      "accessBoundary": "禁止保存或再发布第三方全文、HTML、截图、图片和近似连续步骤",
+      "originalTopic": "/guides/7-arrival-checklist/"
+    }
+  ]
+}

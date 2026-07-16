@@ -1,348 +1,135 @@
 import assert from "node:assert/strict";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import test from "node:test";
 
-import worker, {
-  CANONICAL_ORIGIN,
-  HOTFIX_ORIGIN,
-  PUBLIC_INDEXABLE_PATHS,
-} from "../public/worker-logic.js";
+import { buildReleaseArtifact } from "../scripts/build-release-artifact.mjs";
+import { ROUTE_MANIFEST, routeFor } from "../public/route-manifest.js";
 
-const INDEXABLE_DIRECTIVES =
-  "index, follow, max-snippet:-1, max-image-preview:large";
-const PRIVATE_DIRECTIVES = "noindex, nofollow, noarchive";
-const EXPECTED_PUBLIC_URL_COUNT = 34;
-
-function parseAttributes(tag) {
-  const attributes = new Map();
-  const pattern = /([^\s=/>]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g;
-
-  for (const match of tag.matchAll(pattern)) {
-    attributes.set(match[1].toLowerCase(), match[2] ?? match[3] ?? "");
-  }
-
-  return attributes;
+function routeFile(root, route) {
+  return route === "/"
+    ? path.join(root, "index.html")
+    : path.join(root, route.slice(1), "index.html");
 }
 
-function tags(html, tagName) {
-  return [...html.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, "gi"))].map(
-    (match) => match[0],
+function attribute(tag, name) {
+  const match = String(tag).match(
+    new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i"),
+  );
+  return match ? match[1] ?? match[2] ?? match[3] ?? "" : "";
+}
+
+function hrefs(html) {
+  return [...html.matchAll(/<a\b[^>]*\bhref=(?:"([^"]*)"|'([^']*)')[^>]*>/gi)]
+    .map((match) => match[1] ?? match[2])
+    .filter(Boolean);
+}
+
+function ids(html) {
+  return new Set(
+    [...html.matchAll(/\bid=(?:"([^"]+)"|'([^']+)')/gi)].map(
+      (match) => match[1] ?? match[2],
+    ),
   );
 }
 
-function canonicalHref(html) {
-  const canonical = tags(html, "link").find((tag) =>
-    parseAttributes(tag)
-      .get("rel")
-      ?.toLowerCase()
-      .split(/\s+/)
-      .includes("canonical"),
-  );
-
-  return canonical ? parseAttributes(canonical).get("href") : undefined;
-}
-
-function metaContent(html, attributeName, attributeValue) {
-  const meta = tags(html, "meta").find(
-    (tag) =>
-      parseAttributes(tag).get(attributeName)?.toLowerCase() ===
-      attributeValue.toLowerCase(),
-  );
-
-  return meta ? parseAttributes(meta).get("content") : undefined;
-}
-
-function legacyHtml(pathname) {
-  return `<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <title>Preview fixture</title>
-    <meta name="description" content="Preview fixture for ${pathname}">
-    <meta name="keywords" content="giffgaff官方客服,getgiffgaff官网">
-    <link rel="canonical" href="${HOTFIX_ORIGIN}${pathname}">
-    <meta property="og:url" content="${HOTFIX_ORIGIN}${pathname}">
-    <script type="application/ld+json">${JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: "Fixture product",
-      offers: {
-        "@type": "Offer",
-        price: "99",
-        priceCurrency: "CNY",
-        availability: "https://schema.org/InStock",
-      },
-      aggregateRating: { "@type": "AggregateRating", ratingValue: "5" },
-      review: [{ "@type": "Review", reviewBody: "fixture" }],
-    })}</script>
-  </head>
-  <body>
-    <main><h1>Fixture page</h1></main>
-  </body>
-</html>`;
-}
-
-function upstreamSitemapFixture() {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>${CANONICAL_ORIGIN}/contact/?utm_source=preview#fragment</loc></url>
-  <url><loc>${CANONICAL_ORIGIN}/contact/</loc></url>
-  <url><loc>${HOTFIX_ORIGIN}/</loc></url>
-  <url><loc>${CANONICAL_ORIGIN}/not-public/</loc></url>
-</urlset>`;
-}
-
-function responseWithInheritedNoindex(body, {
-  status = 200,
-  contentType = "text/html; charset=utf-8",
-} = {}) {
-  return new Response(body, {
-    status,
-    headers: {
-      "content-type": contentType,
-      "x-robots-tag": "noindex",
-      "x-upstream-fixture": "inherited-noindex",
-    },
-  });
-}
-
-function localAssetEnv() {
-  return {
-    ASSETS: {
-      fetch: async (request) => {
-        const { pathname } = new URL(request.url);
-
-        if (pathname === "/guides/6-pitfalls-page.txt") {
-          return responseWithInheritedNoindex(
-            legacyHtml("/guides/6-pitfalls/"),
-          );
-        }
-
-        if (pathname === "/research/index-page.txt") {
-          return responseWithInheritedNoindex(legacyHtml("/research/"));
-        }
-
-        if (pathname === "/robots.txt") {
-          return responseWithInheritedNoindex(
-            "User-agent: *\nAllow: /\nSitemap: https://getgiffgaff.com/sitemap.xml\n",
-            { contentType: "text/plain; charset=utf-8" },
-          );
-        }
-
-        if (pathname === "/contact/getgiffgaff-contact-og.png") {
-          return responseWithInheritedNoindex("png-fixture", {
-            contentType: "image/png",
-          });
-        }
-
-        return responseWithInheritedNoindex("asset not found", {
-          status: 404,
-          contentType: "text/plain; charset=utf-8",
-        });
-      },
-    },
-  };
-}
-
-async function withMockFetch(fetchImpl, callback) {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = fetchImpl;
-
-  try {
-    return await callback();
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
-}
-
-function offlineUpstreamFetch(request) {
-  const { pathname } = new URL(request.url);
-
-  if (pathname === "/sitemap.xml") {
-    return Promise.resolve(
-      responseWithInheritedNoindex(upstreamSitemapFixture(), {
-        contentType: "application/xml; charset=utf-8",
-      }),
-    );
-  }
-
-  if (pathname === "/missing/") {
-    return Promise.resolve(
-      responseWithInheritedNoindex(legacyHtml(pathname), { status: 404 }),
-    );
-  }
-
-  if (pathname === "/assets/site.css") {
-    return Promise.resolve(
-      responseWithInheritedNoindex("body { color: #111; }", {
-        contentType: "text/css; charset=utf-8",
-      }),
-    );
-  }
-
-  return Promise.resolve(responseWithInheritedNoindex(legacyHtml(pathname)));
-}
-
-function extractSitemapLocations(xml) {
-  return [...xml.matchAll(/<loc\b[^>]*>([\s\S]*?)<\/loc>/gi)].map(
-    (match) => match[1].trim().replace(/&amp;/g, "&"),
-  );
-}
-
-test("the production indexable allowlist contains exactly 34 unique canonical paths", () => {
-  assert.equal(PUBLIC_INDEXABLE_PATHS.length, EXPECTED_PUBLIC_URL_COUNT);
-  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, EXPECTED_PUBLIC_URL_COUNT);
-
-  for (const pathname of PUBLIC_INDEXABLE_PATHS) {
-    assert.match(pathname, /^\//, pathname);
-    assert.ok(
-      pathname === "/" || pathname.endsWith("/"),
-      `expected a trailing slash for ${pathname}`,
-    );
-  }
-});
-
-test("all 34 public routes override inherited noindex and emit self-referencing metadata", async () => {
-  await withMockFetch(offlineUpstreamFetch, async () => {
-    const env = localAssetEnv();
-
-    for (const pathname of PUBLIC_INDEXABLE_PATHS) {
-      const expectedUrl = `${CANONICAL_ORIGIN}${pathname}`;
-      const response = await worker.fetch(new Request(expectedUrl), env);
-      const html = await response.text();
-
-      assert.equal(response.status, 200, pathname);
-      assert.equal(
-        response.headers.get("x-robots-tag"),
-        INDEXABLE_DIRECTIVES,
-        pathname,
-      );
-      assert.equal(canonicalHref(html), expectedUrl, pathname);
-      assert.equal(metaContent(html, "property", "og:url"), expectedUrl, pathname);
-      assert.equal(metaContent(html, "name", "keywords"), undefined, pathname);
-      assert.doesNotMatch(
-        html,
-        /"(?:offers|price|priceCurrency|availability|aggregateRating|review)"\s*:/,
-        pathname,
-      );
+function assetReferences(html) {
+  const result = [];
+  for (const tag of html.match(/<(?:img|script|link)\b[^>]*>/gi) || []) {
+    for (const name of ["src", "href"]) {
+      const value = attribute(tag, name);
+      if (value.startsWith("/") && !value.startsWith("//")) result.push(value);
     }
-  });
-});
+  }
+  return result.filter((value) => /\.(?:css|js|png|jpe?g|svg|webp|ico)$/i.test(value));
+}
 
-test("sitemap.xml is rebuilt as exactly the 34 unique canonical public URLs", async () => {
-  await withMockFetch(offlineUpstreamFetch, async () => {
-    const response = await worker.fetch(
-      new Request(`${CANONICAL_ORIGIN}/sitemap.xml`),
-      localAssetEnv(),
-    );
-    const xml = await response.text();
-    const locations = extractSitemapLocations(xml);
-    const expected = PUBLIC_INDEXABLE_PATHS.map(
-      (pathname) => `${CANONICAL_ORIGIN}${pathname}`,
-    );
+function jsonLdDocuments(html) {
+  return [...html.matchAll(
+    /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
+  )].map((match) => JSON.parse(match[1]));
+}
 
-    assert.equal(response.status, 200);
-    assert.equal(response.headers.has("x-robots-tag"), false);
-    assert.equal(locations.length, EXPECTED_PUBLIC_URL_COUNT);
-    assert.equal(new Set(locations).size, EXPECTED_PUBLIC_URL_COUNT);
-    assert.deepEqual(locations, expected);
-  });
-});
+async function build(t) {
+  const root = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-link-audit-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await buildReleaseArtifact({ outputRoot: root });
+  return root;
+}
 
-test("HTTP, www and missing-trailing-slash variants redirect to the final URL in one hop", async () => {
-  const cases = [
-    {
-      request: "http://getgiffgaff.com/contact?source=http-apex",
-      expected: "https://getgiffgaff.com/contact/?source=http-apex",
-      status: 301,
-      method: "GET",
-    },
-    {
-      request: "https://www.getgiffgaff.com/contact?source=https-www",
-      expected: "https://getgiffgaff.com/contact/?source=https-www",
-      status: 301,
-      method: "GET",
-    },
-    {
-      request: "http://www.getgiffgaff.com/contact?source=combined&campaign=seo",
-      expected:
-        "https://getgiffgaff.com/contact/?source=combined&campaign=seo",
-      status: 301,
-      method: "GET",
-    },
-    {
-      request: "https://getgiffgaff.com/contact?source=slash-only",
-      expected: "https://getgiffgaff.com/contact/?source=slash-only",
-      status: 301,
-      method: "GET",
-    },
-    {
-      request: "http://www.getgiffgaff.com/contact?source=post",
-      expected: "https://getgiffgaff.com/contact/?source=post",
-      status: 308,
-      method: "POST",
-    },
-  ];
+test("all final pages have valid internal route, fragment and static asset targets", async (t) => {
+  const root = await build(t);
+  for (const route of Object.keys(ROUTE_MANIFEST)) {
+    const html = await readFile(routeFile(root, route), "utf8");
+    const pageIds = ids(html);
 
-  await withMockFetch(
-    async () => {
-      throw new Error("redirect variants must not reach the upstream fixture");
-    },
-    async () => {
-      for (const { request, expected, status, method } of cases) {
-        const response = await worker.fetch(new Request(request, { method }), {});
-
-        assert.equal(response.status, status, request);
-        assert.equal(response.headers.get("location"), expected, request);
+    for (const href of hrefs(html)) {
+      if (href === "#") continue;
+      if (href.startsWith("#")) {
+        assert.ok(pageIds.has(decodeURIComponent(href.slice(1))), `${route} missing ${href}`);
+        continue;
       }
-    },
-  );
+      if (!href.startsWith("/") || href.startsWith("//")) continue;
+      const target = new URL(href, "https://getgiffgaff.com");
+      if (/\.[a-z0-9]+$/i.test(target.pathname)) continue;
+      assert.ok(routeFor(target.pathname), `${route} has broken route ${href}`);
+    }
+
+    for (const asset of assetReferences(html)) {
+      const pathname = new URL(asset, "https://getgiffgaff.com").pathname;
+      const filename = path.join(root, pathname.slice(1));
+      assert.ok((await readFile(filename)).length > 0, `${route} missing asset ${pathname}`);
+    }
+  }
 });
 
-test("404 and API responses remain noindex and bypass every cache", async () => {
-  await withMockFetch(offlineUpstreamFetch, async () => {
-    const cases = [
-      ["/missing/", 404],
-      ["/api/orders/fixture", 200],
-    ];
+test("all JSON-LD parses without preview origins or false official ownership", async (t) => {
+  const root = await build(t);
+  for (const route of Object.keys(ROUTE_MANIFEST)) {
+    const html = await readFile(routeFile(root, route), "utf8");
+    const documents = jsonLdDocuments(html);
+    const serialized = JSON.stringify(documents);
+    assert.doesNotMatch(serialized, /pages\.dev/i, route);
+    assert.doesNotMatch(serialized, /"parentOrganization"\s*:/i, route);
+    assert.doesNotMatch(serialized, /"sameAs"\s*:\s*"?https?:\/\/(?:www\.)?giffgaff\.com/i, route);
 
-    for (const [pathname, expectedStatus] of cases) {
-      const response = await worker.fetch(
-        new Request(`${CANONICAL_ORIGIN}${pathname}`),
-        localAssetEnv(),
-      );
-
-      assert.equal(response.status, expectedStatus, pathname);
-      assert.equal(
-        response.headers.get("x-robots-tag"),
-        PRIVATE_DIRECTIVES,
-        pathname,
-      );
-      assert.match(response.headers.get("cache-control") ?? "", /\bno-store\b/i);
+    const nodes = documents.flatMap((document) =>
+      Array.isArray(document)
+        ? document
+        : Array.isArray(document?.["@graph"])
+          ? document["@graph"]
+          : [document],
+    );
+    for (const node of nodes) {
+      if (String(node?.name || "").trim().toLowerCase() === "giffgaff") {
+        const types = Array.isArray(node["@type"]) ? node["@type"] : [node["@type"]];
+        assert.deepEqual(types, ["Brand"], `${route} giffgaff entity`);
+      }
     }
-  });
+  }
 });
 
-test("robots.txt and local or proxied static assets never inherit preview noindex", async () => {
-  await withMockFetch(offlineUpstreamFetch, async () => {
-    const cases = [
-      ["/robots.txt", "text/plain"],
-      ["/contact/getgiffgaff-contact-og.png", "image/png"],
-      ["/assets/site.css", "text/css"],
-    ];
-
-    for (const [pathname, expectedContentType] of cases) {
-      const response = await worker.fetch(
-        new Request(`${CANONICAL_ORIGIN}${pathname}`),
-        localAssetEnv(),
-      );
-
-      assert.equal(response.status, 200, pathname);
-      assert.match(
-        response.headers.get("content-type") ?? "",
-        new RegExp(`^${expectedContentType.replace("/", "\\/")}`, "i"),
-        pathname,
-      );
-      assert.equal(response.headers.has("x-robots-tag"), false, pathname);
-    }
-  });
+test("additive links create the intended tutorial-to-product-to-contact loop", async (t) => {
+  const root = await build(t);
+  for (const sourceRoute of ["/answers/", "/guides/1-order/"]) {
+    const html = await readFile(routeFile(root, sourceRoute), "utf8");
+    assert.match(html, /href=["']\/shop\/giffgaff-g0\/["']/i, sourceRoute);
+    assert.match(html, /href=["']\/shop\/giffgaff-g2\/["']/i, sourceRoute);
+  }
+  for (const productRoute of ["/shop/giffgaff-g0/", "/shop/giffgaff-g2/"]) {
+    const html = await readFile(routeFile(root, productRoute), "utf8");
+    assert.match(html, /href=["']\/contact\/["']/i, productRoute);
+  }
+  for (const growthRoute of [
+    "/guides/7-arrival-checklist/",
+    "/guides/8-uk-sim-choice/",
+    "/tools/keep-number-reminder/",
+    "/tools/china-roaming-cost/",
+    "/tools/g0-g2-total-cost/",
+  ]) {
+    const html = await readFile(routeFile(root, growthRoute), "utf8");
+    assert.match(html, /href=["']\/(?:shop|answers)\//i, growthRoute);
+    assert.match(html, /href=["']\/contact\/["']/i, growthRoute);
+  }
 });
