@@ -68,6 +68,7 @@ export const PUBLIC_STATIC_ASSET_PATHS = Object.freeze([
   "/growth-assets/tools.js",
   "/growth-assets/commerce-ui.js",
   "/growth-assets/analytics.js",
+  "/indexnow-key.txt",
   "/robots.txt",
   "/llms.txt",
 ]);

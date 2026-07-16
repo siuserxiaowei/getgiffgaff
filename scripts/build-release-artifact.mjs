@@ -177,7 +177,13 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     path.join(outputRoot, "growth-assets"),
   );
 
-  for (const filename of ["robots.txt", "_worker.js", "worker-logic.js", "route-manifest.js"]) {
+  for (const filename of [
+    "robots.txt",
+    "indexnow-key.txt",
+    "_worker.js",
+    "worker-logic.js",
+    "route-manifest.js",
+  ]) {
     await copyFile(path.join(PUBLIC_ROOT, filename), path.join(outputRoot, filename));
   }
   await writeFile(path.join(outputRoot, "sitemap.xml"), sitemapXml());

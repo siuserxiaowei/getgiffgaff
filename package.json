@@ -11,6 +11,7 @@
     "verify": "npm test && npm run build && node scripts/verify-release-artifact.mjs",
     "verify:preview": "node scripts/verify-preview-release.mjs",
     "verify:seo": "node scripts/verify-seo-release.mjs",
+    "submit:indexnow": "node scripts/submit-indexnow.mjs",
     "predeploy": "npm run verify && node scripts/assert-clean-worktree.mjs",
     "deploy": "wrangler pages deploy .release --project-name getgiffgaff --branch main",
     "postdeploy": "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39"

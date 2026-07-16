@@ -573,3 +573,20 @@ test("legacy and growth static resources retain their public URLs and never inhe
     assert.equal(head.headers.get("content-length"), String(expected.length), `${pathname} HEAD length`);
   }
 });
+
+test("every root-relative asset referenced by release HTML is Worker-allowlisted", async () => {
+  const root = await releaseRoot();
+  const allowlist = new Set(PUBLIC_STATIC_ASSET_PATHS);
+
+  for (const pathname of Object.keys(ROUTE_MANIFEST)) {
+    const html = await readFile(publicFile(root, pathname), "utf8");
+    for (const match of html.matchAll(/\b(?:href|src)=["'](\/[^"']*)["']/gi)) {
+      const referenced = new URL(match[1], ORIGIN).pathname;
+      if (routeFor(referenced)) continue;
+      assert.ok(
+        allowlist.has(referenced),
+        `${pathname} references ${referenced}, but it is missing from PUBLIC_STATIC_ASSET_PATHS`,
+      );
+    }
+  }
+});
