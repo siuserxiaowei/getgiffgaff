@@ -34,12 +34,14 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 在仓库根目录执行：
 
 ```bash
-npm install --ignore-scripts
+npm install --ignore-scripts --no-package-lock
 npm test
 npm run test:coverage
 npm run verify
 git diff --check
 ```
+
+当前仓库没有 tracked `package-lock.json`。在依赖锁定方案完成单独审查前，安装命令必须显式使用 `--no-package-lock`，否则会生成未跟踪 lockfile，并被 clean-worktree 门禁拒绝。
 
 视觉与交互门禁需先安装 Chromium，并在另一个终端用当前 `.release` 启动只读本地服务器：
 
@@ -50,7 +52,7 @@ npm run verify:browser -- http://127.0.0.1:4173 /tmp/getgiffgaff-visual-release
 ```
 
 - [ ] `npm test` 全绿；重点覆盖 [`test/seo-response-policy.test.mjs`](../test/seo-response-policy.test.mjs)、[`test/contact-seo.test.mjs`](../test/contact-seo.test.mjs)、[`test/worker-seo-integration.test.mjs`](../test/worker-seo-integration.test.mjs) 和 [`test/verify-seo-release.test.mjs`](../test/verify-seo-release.test.mjs)。
-- [ ] `npm run verify` 通过，其中 [`scripts/verify-contact-hotfix.mjs`](../scripts/verify-contact-hotfix.mjs) 验证 Contact 热修复资产与交互。
+- [ ] `npm run verify` 通过；该命令依次运行测试、构建 `.release`，再由 [`scripts/verify-release-artifact.mjs`](../scripts/verify-release-artifact.mjs) 验证发布产物。
 - [ ] 覆盖率下降有明确解释；新增响应策略、重定向或验证逻辑必须有回归测试。
 - [ ] `verify:browser` 生成 `report.json`，14 组旧页面截图均达到 SSIM ≥ 0.995、变化像素比例 ≤ 0.1%，10 张新增页截图和 34 项交互完成，且无浏览器错误。
 - [ ] diff 中没有密钥、令牌、真实订单数据、个人联系方式草稿或无关改动。
@@ -62,7 +64,7 @@ npm run verify:browser -- http://127.0.0.1:4173 /tmp/getgiffgaff-visual-release
 本地启动 Pages：
 
 ```bash
-npx wrangler pages dev public
+npx wrangler pages dev .release
 ```
 
 另开终端做基础检查（端口以 Wrangler 实际输出为准）：
@@ -77,7 +79,8 @@ curl -sS http://127.0.0.1:8788/sitemap.xml | rg -o '<loc>' | wc -l
 需要 Cloudflare Pages 权限时，可建立非生产分支 Preview：
 
 ```bash
-npx wrangler pages deploy public --project-name getgiffgaff --branch seo-release-check --commit-dirty=true
+npx wrangler pages deploy .release --project-name getgiffgaff --branch seo-release-check --commit-dirty=true
+npm run verify:preview -- --base-url https://<deployment-id>.getgiffgaff.pages.dev
 ```
 
 - [ ] Preview 页面、二维码、弹窗键盘操作和核心链接均可用。
