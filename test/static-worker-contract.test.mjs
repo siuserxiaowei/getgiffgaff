@@ -247,6 +247,20 @@ function createAssetsEnvironment(root, { setCookie = false } = {}) {
   };
 }
 
+function createMemoryCache() {
+  const entries = new Map();
+  return {
+    entries,
+    async match(request) {
+      const stored = entries.get(request.url);
+      return stored ? stored.clone() : undefined;
+    },
+    async put(request, response) {
+      entries.set(request.url, response.clone());
+    },
+  };
+}
+
 async function readJson(relativePath) {
   return JSON.parse(await readFile(path.join(ROOT, relativePath), "utf8"));
 }
@@ -479,6 +493,53 @@ test("Cookie is stripped before ASSETS, response state is removed and caching fa
   assert.match(response.headers.get("cache-control") || "", /\bno-store\b/i);
   assertDirectives(response, INDEX_DIRECTIVES, "cookie response indexing");
   assert.doesNotMatch(body, /COOKIE_REQUEST_CANARY|13800000000|ASSET_COOKIE_CANARY/);
+});
+
+test("canonical production HTML uses a versioned edge cache while private requests bypass it", async () => {
+  const root = await releaseRoot();
+  const env = createAssetsEnvironment(root);
+  env.__STATIC_CACHE = createMemoryCache();
+  const pending = [];
+  const context = { waitUntil(promise) { pending.push(promise); } };
+  const url = `${ORIGIN}/guides/7-arrival-checklist/`;
+
+  const miss = await worker.fetch(new Request(url), env, context);
+  const missBody = await miss.text();
+  assert.equal(miss.status, 200);
+  assert.equal(miss.headers.get("x-getgiffgaff-edge-cache"), "MISS");
+  assert.equal(env.calls.length, 1);
+  await Promise.all(pending);
+  assert.equal(env.__STATIC_CACHE.entries.size, 1);
+
+  const hit = await worker.fetch(new Request(url), env, context);
+  assert.equal(hit.status, 200);
+  assert.equal(hit.headers.get("x-getgiffgaff-edge-cache"), "HIT");
+  assert.equal(await hit.text(), missBody);
+  assert.equal(env.calls.length, 1, "cache HIT must not fetch Pages ASSETS again");
+
+  const head = await worker.fetch(new Request(url, { method: "HEAD" }), env, context);
+  assert.equal(head.status, 200);
+  assert.equal(head.headers.get("x-getgiffgaff-edge-cache"), "HIT");
+  assert.equal(await head.text(), "");
+  assert.equal(env.calls.length, 1, "cached HEAD must reuse the GET representation");
+
+  const cookieResponse = await worker.fetch(
+    new Request(url, { headers: { cookie: "session=PRIVATE_CACHE_BYPASS" } }),
+    env,
+    context,
+  );
+  assert.equal(cookieResponse.headers.get("x-getgiffgaff-edge-cache"), null);
+  assert.match(cookieResponse.headers.get("cache-control") || "", /\bprivate\b/i);
+  assert.equal(env.calls.length, 2, "Cookie requests must bypass the shared edge cache");
+
+  const preview = await worker.fetch(
+    new Request("https://cache-preview.getgiffgaff.pages.dev/guides/7-arrival-checklist/"),
+    env,
+    context,
+  );
+  assert.equal(preview.headers.get("x-getgiffgaff-edge-cache"), null);
+  assert.match(preview.headers.get("cache-control") || "", /\bno-store\b/i);
+  assert.equal(env.calls.length, 3, "preview requests must bypass the production edge cache");
 });
 
 test("unknown hosts are rejected while project previews remain usable, private and noindex", async () => {

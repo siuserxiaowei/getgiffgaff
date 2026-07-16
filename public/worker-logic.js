@@ -15,6 +15,7 @@ const PROJECT_PREVIEW_HOST = "getgiffgaff.pages.dev";
 const ANALYTICS_EVENT_PATH = "/analytics-event-v1";
 const ANALYTICS_EVENT_VERSION = "analytics_event_v1";
 const ANALYTICS_MAX_BYTES = 1024;
+const EDGE_HTML_CACHE_VERSION = "additive-growth-20260716-v1";
 const PUBLIC_READ_METHODS = new Set(["GET", "HEAD"]);
 const PUBLIC_STATIC_ASSETS = new Set(PUBLIC_STATIC_ASSET_PATHS);
 const BODYLESS_STATUSES = new Set([101, 204, 205, 304]);
@@ -303,17 +304,73 @@ function sanitizedAssetRequest(request, pathname) {
   });
 }
 
-async function fetchStaticAsset(request, env, pathname) {
+function edgeCacheFor(env) {
+  return env?.__STATIC_CACHE || globalThis.caches?.default || null;
+}
+
+function edgeCacheKey(pathname) {
+  const url = new URL(`${CANONICAL_ORIGIN}${pathname}`);
+  url.searchParams.set("__getgiffgaff_release", EDGE_HTML_CACHE_VERSION);
+  return new Request(url.toString(), { method: "GET" });
+}
+
+function shouldUseEdgeHtmlCache(request, pathname) {
+  const url = new URL(request.url);
+  const record = routeFor(pathname);
+  return Boolean(
+    record &&
+      record.cachePolicy === "public" &&
+      url.hostname.toLowerCase() === CANONICAL_HOST &&
+      PUBLIC_READ_METHODS.has(request.method) &&
+      !request.headers.has("authorization") &&
+      !request.headers.has("cookie") &&
+      !hasSensitiveQuery(url),
+  );
+}
+
+function withEdgeCacheState(request, response, state) {
+  const headers = new Headers(response.headers);
+  headers.set("x-getgiffgaff-edge-cache", state);
+  const body = request.method === "HEAD" ? null : response.body;
+  return new Response(body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+async function fetchStaticAsset(request, env, pathname, context) {
   if (!env?.ASSETS || typeof env.ASSETS.fetch !== "function") {
     return privateError(request, 503, "Static assets are unavailable");
   }
+  const cache = shouldUseEdgeHtmlCache(request, pathname) ? edgeCacheFor(env) : null;
+  const cacheKey = cache ? edgeCacheKey(pathname) : null;
+  if (cache && cacheKey) {
+    const cached = await cache.match(cacheKey);
+    if (cached) return withEdgeCacheState(request, cached, "HIT");
+  }
+
   const upstream = await env.ASSETS.fetch(sanitizedAssetRequest(request, pathname));
   const policy = policyFor(
     pathname,
     upstream.status,
     upstream.headers.get("content-type") || "",
   );
-  return finalizeResponse(request, upstream, policy);
+  const response = finalizeResponse(request, upstream, policy);
+  if (
+    cache &&
+    cacheKey &&
+    request.method === "GET" &&
+    response.status >= 200 &&
+    response.status < 300 &&
+    !response.headers.has("set-cookie")
+  ) {
+    const put = cache.put(cacheKey, response.clone());
+    if (context && typeof context.waitUntil === "function") context.waitUntil(put);
+    else await put;
+    return withEdgeCacheState(request, response, "MISS");
+  }
+  return response;
 }
 
 export async function analyticsEventV1(request, env) {
@@ -375,7 +432,7 @@ export async function analyticsEventV1(request, env) {
   );
 }
 
-async function handleRequest(request, env) {
+async function handleRequest(request, env, context) {
   const url = new URL(request.url);
   const hostname = url.hostname.toLowerCase();
   const suppliedHost = normalizeHostHeader(request.headers.get("host"));
@@ -416,10 +473,10 @@ async function handleRequest(request, env) {
 
   const normalizedPath = normalizePathname(url.pathname);
   if (routeFor(normalizedPath)) {
-    return fetchStaticAsset(request, env, normalizedPath);
+    return fetchStaticAsset(request, env, normalizedPath, context);
   }
   if (PUBLIC_STATIC_ASSETS.has(url.pathname)) {
-    return fetchStaticAsset(request, env, url.pathname);
+    return fetchStaticAsset(request, env, url.pathname, context);
   }
   return privateError(request, 404, "Not found");
 }
