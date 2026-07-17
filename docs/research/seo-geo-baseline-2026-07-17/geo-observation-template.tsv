@@ -1,0 +1,2 @@
+observation_id	question_id	platform	observed_at	timezone	locale	country_or_region	device_or_client	run_number	answer_available	cited_getgiffgaff	cited_url	other_cited_urls	evidence_artifact	result_state	reviewer_notes
+EXAMPLE-DO-NOT-COUNT	GEO-01	Google AI|ChatGPT Search|Perplexity|Bing Copilot	YYYY-MM-DDThh:mm:ss+08:00	Asia/Shanghai	zh-CN	observed environment	observed client	1	true|false	true|false	verified exact URL or blank	pipe-separated verified URLs	private screenshot/export reference	observed|unavailable|error	No inference beyond this dated run

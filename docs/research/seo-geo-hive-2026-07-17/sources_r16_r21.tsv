@@ -1,0 +1,33 @@
+source_id	url	source_type	tier	status	access_date	owner_worker	title	notes
+SRC-R16-FREEZE	repo://site/legacy/legacy-freeze-manifest.json	repository	required	verified	2026-07-17	R16	Legacy freeze manifest	Direct local repository observation; 34 frozen legacy route records
+SRC-R16-RELATED	repo://site/growth/related-links.json	repository	required	verified	2026-07-17	R16	Approved additive related-link registry	Direct local repository observation; nine registered legacy slot routes
+SRC-R16-GATE	repo://test/static-worker-contract.test.mjs	repository	required	verified	2026-07-17	R16	Legacy freeze and additive-slot contract	Direct local test-source observation; only registered additive sections are excluded from frozen legacy signatures
+SRC-R17-GOOGLE-SITEMAP	https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap	official	required	verified	2026-07-17	R17	Google sitemap build and submission documentation	Public official page returned HTTP 200
+SRC-R17-GSC-REPORT	https://support.google.com/webmasters/answer/7451001?hl=en	official	required	verified	2026-07-17	R17	Google Search Console Sitemaps report	Public official help returned HTTP 200; authenticated property readback was not accessed
+SRC-R17-INDEXNOW	https://www.indexnow.org/documentation	official	required	verified	2026-07-17	R17	IndexNow protocol documentation	Public protocol documentation returned HTTP 200
+SRC-R17-BING-INDEXNOW	https://www.bing.com/indexnow/getstarted	official	required	verified	2026-07-17	R17	Bing IndexNow implementation guide	Public Microsoft Bing page returned HTTP 200
+SRC-R17-REPO-RECEIPT	repo://docs/seo-release-runbook.md	repository	required	verified	2026-07-17	R17	Recorded 2026-07-16 IndexNow receipt	Repository records a 39-URL HTTP 202 receipt and explicitly limits its meaning
+SRC-R17-GSC-BACKEND	https://search.google.com/search-console/sitemaps	account-only	required	blocked	2026-07-17	R17	Current GSC property sitemap readback	Redirected to authentication; worker did not log in
+SRC-R17-BING-BACKEND	https://www.bing.com/webmasters/home	account-only	required	blocked	2026-07-17	R17	Current Bing Webmaster Tools readback	Redirected to authentication; worker did not log in
+SRC-R18-BAIDU-SUBMIT	https://ziyuan.baidu.com/linksubmit/index	official	required	verified	2026-07-17	R18	Baidu normal inclusion submission	Public official page returned HTTP 200 and exposed the bounded submission description
+SRC-R18-BAIDU-SITE	https://ziyuan.baidu.com/site/index	official	required	verified	2026-07-17	R18	Baidu site management	Public official page returned HTTP 200 and exposed the ownership-verification prompt
+SRC-R18-BAIDU-ROBOTS	https://ziyuan.baidu.com/robots/index	official	important	verified	2026-07-17	R18	Baidu robots tool	Public official page returned HTTP 200
+SRC-R18-BAIDU-BACKEND	https://ziyuan.baidu.com/site/index	account-only	required	blocked	2026-07-17	R18	Current getgiffgaff Baidu property state	No authorized property session or dated backend export was supplied; worker did not log in
+SRC-R19-VITALS	https://web.dev/articles/vitals	official	required	verified	2026-07-17	R19	Web Vitals thresholds	Public Google web.dev documentation returned HTTP 200
+SRC-R19-TOOLS	https://web.dev/articles/vitals-tools	official	required	verified	2026-07-17	R19	Core Web Vitals measurement tools	Public Google web.dev documentation returned HTTP 200
+SRC-R19-PSI	https://pagespeed.web.dev/analysis/https-getgiffgaff-com/p2csr9pwo4?form_factor=mobile	seo	required	verified	2026-07-17	R19	PageSpeed Insights mobile report	Public report captured 2026-07-17 11:12 Asia/Shanghai; field section said No Data and lab section completed
+SRC-R19-GSC-CWV	https://search.google.com/search-console/core-web-vitals	account-only	important	blocked	2026-07-17	R19	Current Search Console CWV URL-group data	No authorized property session or export; worker did not log in
+SRC-R20-G0	https://getgiffgaff.com/shop/giffgaff-g0/	official	required	verified	2026-07-17	R20	Production G0 product page	Direct HTTP observation; no purchase or payment attempted
+SRC-R20-G2	https://getgiffgaff.com/shop/giffgaff-g2/	official	required	verified	2026-07-17	R20	Production G2 product page	Direct HTTP observation; no purchase or payment attempted
+SRC-R20-CONTACT	https://getgiffgaff.com/contact/	official	required	verified	2026-07-17	R20	Production contact page	Direct HTTP observation; no message sent and no QR scanned
+SRC-R20-ORDER	https://getgiffgaff.com/guides/1-order/	official	required	verified	2026-07-17	R20	Production order guide	Direct HTTP observation
+SRC-R20-WIDGET	repo://site/growth/commerce-widget.js	repository	important	verified	2026-07-17	R20	Additive commerce widget markup	Direct local repository observation
+SRC-R20-COMMERCE-UI	repo://site/growth/assets/commerce-ui.js	repository	important	verified	2026-07-17	R20	Commerce dialog interaction logic	Direct local repository observation
+SRC-R20-PRIVACY	https://getgiffgaff.com/privacy/	official	required	verified	2026-07-17	R20	Production privacy route	Direct HTTP observation returned 404
+SRC-R20-TERMS	https://getgiffgaff.com/terms/	official	required	verified	2026-07-17	R20	Production terms route	Direct HTTP observation returned 404
+SRC-R20-REFUND	https://getgiffgaff.com/refund/	official	required	verified	2026-07-17	R20	Production refund route	Direct HTTP observation returned 404
+SRC-R20-SHIPPING	https://getgiffgaff.com/shipping/	official	required	verified	2026-07-17	R20	Production shipping route	Direct HTTP observation returned 404
+SRC-R21-REGISTRY	repo://site/growth/content-registry.js	repository	required	verified	2026-07-17	R21	Growth content source and expiry registry	Direct local repository observation
+SRC-R21-MANIFEST	repo://site/growth/content-manifest.json	repository	required	verified	2026-07-17	R21	Rendered growth content manifest	Direct local repository observation; eight pages share reviewedAt and updatedAt 2026-07-17
+SRC-R21-TOOLS	repo://site/growth/assets/tools.js	repository	required	verified	2026-07-17	R21	Tool expiry enforcement	Direct local repository observation
+SRC-R21-TEST	repo://test/roaming-cost.test.mjs	repository	important	verified	2026-07-17	R21	Roaming expiry regression test	Direct local repository observation; after-expiry behavior is asserted

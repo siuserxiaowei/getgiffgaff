@@ -1,0 +1,40 @@
+route	thematic_depth	thematic_inlinks	thematic_outlinks	observation
+/	0	6	13	root
+/answers/	1	9	10	indexable
+/shop/	1	27	6	indexable
+/shop/giffgaff-g0/	1	7	4	indexable
+/shop/giffgaff-g2/	1	7	4	indexable
+/guides/	1	4	13	indexable
+/guides/0-intro/	1	3	7	indexable
+/guides/1-order/	1	11	9	indexable
+/guides/2-activate/	1	15	9	indexable
+/guides/3-account/	2	3	4	indexable
+/guides/3-app/	2	3	4	indexable
+/guides/3-usage/	1	9	9	indexable
+/guides/4-recharge-service/	2	1	4	indexable; only one non-sitewide thematic inlink
+/guides/4-signal/	1	13	8	indexable
+/guides/5-travel-data/	2	4	6	indexable
+/more/	1	3	5	indexable
+/more/00-wechat/	2	3	4	indexable
+/more/02-telegram/	2	2	4	indexable
+/more/03-esim/	2	8	8	indexable
+/more/04-esim-qrcode/	2	6	7	indexable; frozen action anchor is a separate safety issue
+/qa/	1	1	11	indexable
+/qa/00-username/	2	2	4	indexable
+/qa/01-change-number/	2	3	4	indexable
+/qa/02-topup/	2	5	4	indexable
+/qa/03-reissue/	2	3	4	indexable
+/qa/04-choose-number/	2	3	4	indexable
+/qa/05-multiple-number/	2	3	4	indexable
+/qa/06-activation-expiration/	2	3	4	indexable
+/qa/07-voicemail-switch/	2	4	4	indexable
+/qa/08-gv/	2	3	4	indexable
+/qa/09-spread/	2	2	3	indexable
+/contact/	1	34	0	indexable
+/guides/6-pitfalls/	2	8	12	indexable
+/research/	3	1	7	indexable; reachable but not within thematic depth two
+/guides/7-arrival-checklist/	2	3	6	indexable growth; at least two thematic inlinks
+/guides/8-uk-sim-choice/	2	2	5	indexable growth; at least two thematic inlinks
+/tools/keep-number-reminder/	2	3	5	indexable growth; at least two thematic inlinks
+/tools/china-roaming-cost/	2	4	5	indexable growth; at least two thematic inlinks
+/tools/g0-g2-total-cost/	2	2	5	indexable growth; at least two thematic inlinks

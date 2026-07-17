@@ -1,0 +1,40 @@
+url	status	final_url_matches_requested	self_canonical	robots	direct_answer_label	visible_source_section_signal	date_or_update_signal	observed_at	boundary
+https://getgiffgaff.com/	200	true	true	index-follow	false	false	true	2026-07-17	HTTP and HTML feature observation only
+https://getgiffgaff.com/answers/	200	true	true	index-follow	true	true	true	2026-07-17	HTTP and HTML feature observation only
+https://getgiffgaff.com/shop/	200	true	true	index-follow	false	false	true	2026-07-17	Commerce evidence remains blocked
+https://getgiffgaff.com/shop/giffgaff-g0/	200	true	true	index-follow	false	false	false	2026-07-17	Commerce evidence remains blocked
+https://getgiffgaff.com/shop/giffgaff-g2/	200	true	true	index-follow	false	false	false	2026-07-17	G2 is seller-defined; batch evidence remains blocked
+https://getgiffgaff.com/guides/	200	true	true	index-follow	false	true	true	2026-07-17	HTTP and HTML feature observation only
+https://getgiffgaff.com/guides/0-intro/	200	true	true	index-follow	true	false	true	2026-07-17	Short-body triage candidate
+https://getgiffgaff.com/guides/1-order/	200	true	true	index-follow	true	false	true	2026-07-17	Commerce evidence remains blocked
+https://getgiffgaff.com/guides/2-activate/	200	true	true	index-follow	true	true	true	2026-07-17	Provisional activation owner
+https://getgiffgaff.com/guides/3-account/	200	true	true	index-follow	true	false	true	2026-07-17	Normalized body duplicates qa/00-username
+https://getgiffgaff.com/guides/3-app/	200	true	true	index-follow	true	false	true	2026-07-17	Short-body triage candidate
+https://getgiffgaff.com/guides/3-usage/	200	true	true	index-follow	true	true	true	2026-07-17	Provisional keep-number owner
+https://getgiffgaff.com/guides/4-recharge-service/	200	true	true	index-follow	true	false	true	2026-07-17	Credential and transaction boundaries remain blocked
+https://getgiffgaff.com/guides/4-signal/	200	true	true	index-follow	true	true	true	2026-07-17	Provisional signal/SMS/OTP diagnostic owner
+https://getgiffgaff.com/guides/5-travel-data/	200	true	true	index-follow	true	false	true	2026-07-17	Must own add-on/use intent, not PAYG arithmetic
+https://getgiffgaff.com/more/	200	true	true	index-follow	false	false	true	2026-07-17	HTTP and HTML feature observation only
+https://getgiffgaff.com/more/00-wechat/	200	true	true	index-follow	true	false	true	2026-07-17	Platform-specific evidence absent
+https://getgiffgaff.com/more/02-telegram/	200	true	true	index-follow	true	false	true	2026-07-17	Platform-specific evidence absent
+https://getgiffgaff.com/more/03-esim/	200	true	true	index-follow	true	true	true	2026-07-17	Provisional official eSIM path owner
+https://getgiffgaff.com/more/04-esim-qrcode/	200	true	true	index-follow	true	true	true	2026-07-17	Production legacy anchor conflict remains separately blocked
+https://getgiffgaff.com/qa/	200	true	true	index-follow	false	false	true	2026-07-17	HTTP and HTML feature observation only
+https://getgiffgaff.com/qa/00-username/	200	true	true	index-follow	true	false	true	2026-07-17	Normalized body duplicates guides/3-account
+https://getgiffgaff.com/qa/01-change-number/	200	true	true	index-follow	true	false	true	2026-07-17	Short-body triage candidate
+https://getgiffgaff.com/qa/02-topup/	200	true	true	index-follow	true	false	true	2026-07-17	Short-body triage candidate
+https://getgiffgaff.com/qa/03-reissue/	200	true	true	index-follow	true	false	true	2026-07-17	Short-body triage candidate
+https://getgiffgaff.com/qa/04-choose-number/	200	true	true	index-follow	true	false	true	2026-07-17	Short-body triage candidate
+https://getgiffgaff.com/qa/05-multiple-number/	200	true	true	index-follow	true	false	true	2026-07-17	Intent-answer gap and short-body candidate
+https://getgiffgaff.com/qa/06-activation-expiration/	200	true	true	index-follow	true	false	true	2026-07-17	Overlap with activation owner
+https://getgiffgaff.com/qa/07-voicemail-switch/	200	true	true	index-follow	true	false	true	2026-07-17	Short-body triage candidate
+https://getgiffgaff.com/qa/08-gv/	200	true	true	index-follow	true	false	true	2026-07-17	Platform-specific evidence absent
+https://getgiffgaff.com/qa/09-spread/	200	true	true	index-follow	true	false	true	2026-07-17	High-volatility reward content
+https://getgiffgaff.com/contact/	200	true	true	index-follow	false	false	false	2026-07-17	Identity, policy and transaction evidence remain blocked
+https://getgiffgaff.com/guides/6-pitfalls/	200	true	true	index-follow	true	true	true	2026-07-17	Lifecycle pillar; owner map remains provisional
+https://getgiffgaff.com/research/	200	true	true	index-follow	true	true	true	2026-07-17	Research hub; noindex child thresholds remain open
+https://getgiffgaff.com/guides/7-arrival-checklist/	200	true	true	index-follow	true	true	true	2026-07-17	Provisional arrival and receipt-check owner
+https://getgiffgaff.com/guides/8-uk-sim-choice/	200	true	true	index-follow	true	true	true	2026-07-17	Provisional UK SIM decision owner
+https://getgiffgaff.com/tools/keep-number-reminder/	200	true	true	index-follow	true	true	true	2026-07-17	Tool owns local calculation, not inactivity rule explanation
+https://getgiffgaff.com/tools/china-roaming-cost/	200	true	true	index-follow	true	true	true	2026-07-17	Production formula drift remains separately blocked
+https://getgiffgaff.com/tools/g0-g2-total-cost/	200	true	true	index-follow	true	true	true	2026-07-17	Do not promote before commerce evidence closure

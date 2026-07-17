@@ -1,0 +1,61 @@
+agent_id	phase	task	status	artifact_or_result
+R01	research	Production technical SEO and AI crawler accessibility	accepted	EC-R01-01..07; production HTTP cross-check
+R02	research	Current giffgaff and regulator primary-source fact audit	accepted	12/12 unique official URLs live; roaming billing defect identified
+R03	research	Chinese user search-language and intent clusters	partially-curated-open-cards	cards=13; accepted=11; pending=2; title/search/corpus observations accepted narrowly; X search and unrecovered legacy Exa result set remain blocked
+R04	research	Backlink profile and available data-source sufficiency	partially-curated-open-cards	cards=8; accepted=4; pending=4; Tier 0 and no-score observations accepted; Moz Bing DataForSEO and legacy referrers remain blocked
+R05	research	Competitor linkable-asset patterns and gaps	partially-curated-open-cards	cards=8; accepted=7; pending=1; bounded current asset forms accepted; unidentified GOV calculator remains open and the old BetterSIM provenance was not recovered
+R06	research	Chinese student and UK-arrival resource opportunities	accepted	cards=11; accepted=11; pending=0; page topics dates lists and policy text accepted narrowly with no submission permission or backlink inference
+R07	research	UK travel, expat, and telecom editorial opportunities	accepted	cards=10; accepted=10; pending=0; editorial page and policy observations accepted narrowly with no contribution acceptance or backlink inference
+R08	research	YouTube and Bilibili question and citation landscape	accepted	cards=12; accepted=12; pending=0; public metadata and attributed author-claim signals accepted with no accuracy demand or success inference
+R09	research	X/Twitter public discussion and expert-source landscape	accepted	cards=12; accepted=12; pending=0; public posts and attributed statements accepted with no policy prevalence success or compatibility inference
+R10	research	Brand/entity footprint and disambiguation risks	partially-curated-open-cards	cards=11; accepted=10; pending=1; programme-specific terms are scoped correctly while getgiffgaff authorization remains unproved and not disproved
+R11	research	Official AI crawler documentation and policy mapping	accepted	cards=10; accepted=10; pending=0; platform purposes remain agent-specific
+R12	research	llms.txt status, limits, and implementation evidence	accepted	cards=9; accepted=9; pending=0; format is a proposal and no ranking/citation benefit is inferred
+R13	research	Google-supported structured-data requirements	accepted	cards=9; accepted=9; pending=0; semantic schema is not rich-result eligibility
+R14	research	Passage-level AI citability of indexable growth pages	accepted	cards=6; accepted=6; pending=0; structure is not proof of AI citation
+R15	research	Five indexable and three noindex growth-page evidence audit	accepted	cards=9; accepted=9; pending=0; production drift remains explicit
+R16	research	Append-only opportunities across frozen legacy routes	accepted	cards=3; accepted=3; pending=0; rejected=0; replacement source is current build order
+R17	research	GSC, Bing, and IndexNow official submission/measurement guidance	partially-curated-open-cards	cards=7; accepted=5; pending=2; rejected=0
+R18	research	Baidu official discovery and verification guidance	partially-curated-open-cards	cards=4; accepted=3; pending=1; rejected=0
+R19	research	Core Web Vitals and performance evidence	partially-curated-open-cards	cards=5; accepted=4; pending=1; rejected=0
+R20	research	Search experience, accessibility, and task-completion audit	accepted	cards=10; accepted=10; pending=0; rejected=0
+R21	research	Content freshness and source-expiry policy	accepted	cards=5; accepted=5; pending=0; rejected=0; manifest card refreshed for 12-page candidate
+R22	research	Link-scheme, spam, and outreach compliance risks	accepted	cards=3; accepted=3; pending=0; rejected=0
+R23	research	Original-data and digital-PR asset opportunities	accepted	cards=3; accepted=3; pending=0; rejected=0
+R24	research	Prospect contact/editorial-policy qualification	partially-curated-open-cards	cards=3; accepted=2; pending=1; rejected=0
+R25	research	Community, guest-contribution, and platform-rule fit	accepted	cards=5; accepted=5; pending=0; rejected=0; Zhihu scope is institution accounts only and X direct access remains Cloudflare-challenged despite substantive Jina retrieval
+R26	research	Internal-link graph, orphaning, and crawl-depth audit	accepted	cards=4; accepted=4; pending=0; rejected=0
+R27	research	Keyword ownership and cannibalization audit	accepted	cards=5; accepted=5; pending=0; rejected=0
+R28	research	Trust, trademark, identity, and disclosure evidence	partially-curated-open-cards	cards=5; accepted=4; pending=1; rejected=0
+R29	research	Commerce E-E-A-T and payment-funnel evidence gaps	partially-curated-open-cards	cards=5; accepted=3; pending=2; rejected=0
+R30	research	Counter-evidence review and research synthesis	curator-summary	independently accepted bounded synthesis after narrowing; preserves 16 pending cards and separates execution observations; not 30/30 program acceptance
+E01	execute	Curate accepted research evidence and gaps	completed-evidence-gaps-open	final_synthesis.md and source_gap_backlog.md preserve missing-card and acceptance limits
+E02	execute	Improve llms.txt and llms-full content where supported	completed-local-not-deployed	Curated 39-URL task index; llms-full remains private 410; production still serves old bare-URL list
+E03	execute	Align robots AI-crawler policy with verified official names	completed-local-not-deployed	Per-UA search/retrieval versus training groups; Google-Extended opt-out retained
+E04	execute	Refine growth-page structured data conservatively	completed-local-not-deployed	Real 1400x1000 Article image; no fabricated Person Offer price review rating sameAs or datePublished
+E05	execute	Improve answer-first citability on growth pages	completed-local-not-deployed	Five indexable pages have dated bounded direct answers and dedicated tests
+E06	execute	Improve claim-to-source proximity and citation labels	completed-local-not-deployed	Official links and review dates moved beside key claims; runtime links classified
+E07	execute	Add visible entity definitions and scope boundaries	completed-local-not-deployed	Independent-site and G0/G2 non-official classification disclosure on eight growth pages
+E08	execute	Add accountable editorial/revision policy without fake people	completed-local-not-deployed	Organization accountability and review/expiry rules added without invented authors
+E09	execute	Review outbound-link safety and semantics	completed-local-not-deployed	Official evidence and WeChat contact links classified with noopener/noreferrer tests
+E10	execute	Implement only approved append-only internal links	completed-local-not-deployed	Nine legacy slots; five index pages each have two thematic inlinks and depth <=2
+E11	execute	Create external-content source-of-truth brief	completed-local-release-gated	docs/outreach/content-source-of-truth.md; publication requires fresh source and blocker review
+E12	execute	Create target-specific outreach email drafts	draft-not-sent	docs/outreach/pitch-templates.md; no contact or acceptance evidence
+E13	execute	Qualify and enrich backlink prospect ledger	completed-local-no-outreach	23 distinct candidate URLs across 22 hostnames; one general contribution policy; result fields empty
+E14	execute	Create arrival-checklist earned-link content kit	draft-not-sent	docs/outreach/kits/arrival-checklist-kit.md
+E15	execute	Create keep-number-tool earned-link content kit	draft-not-sent	docs/outreach/kits/keep-number-reminder-kit.md
+E16	execute	Create roaming-calculator earned-link content kit	completed-but-release-blocked	docs/outreach/kits/china-roaming-calculator-kit.md; production still runs old formula
+E17	execute	Create G0/G2 calculator earned-link content kit	completed-but-commerce-blocked	docs/outreach/kits/g0-g2-cost-kit.md; SKU batch payment and account-control evidence missing
+E18	execute	Create UK-SIM-choice earned-link content kit	draft-not-sent	docs/outreach/kits/uk-sim-choice-kit.md
+E19	execute	Draft a Zhihu answer with disclosure and citations	draft-blocked-not-published	docs/outreach/drafts/zhihu-answer.md; institution-account rule is readable but account type, applicable full rules, release and identity gates remain unresolved
+E20	execute	Draft a WeChat article with disclosure and citations	draft-not-published	docs/outreach/drafts/wechat-article.md
+E21	execute	Draft a Bilibili/YouTube explainer outline	draft-not-published	docs/outreach/drafts/video-explainer.md
+E22	execute	Draft an X thread and short social variants	draft-not-published	docs/outreach/drafts/x-thread.md
+E23	execute	Draft a GitHub resource/contribution proposal	draft-permission-gated-not-opened	docs/outreach/drafts/github-contribution-proposal.md; no Issue PR or message created
+E24	execute	Draft university/student resource pitch	draft-do-not-send	docs/outreach/drafts/university-resource-pitch.md; five tailored pairs and no inferred contacts
+E25	execute	Create a publisher fact sheet and media kit	completed-internal-not-sent	docs/outreach/publisher-fact-sheet-and-media-kit.md; no invented press assets or spokesperson
+E26	execute	Add or update automated GEO/robots/schema tests	completed-local	Roaming overflow and unsafe-unit fail-closed fixes; SEO GEO Schema and graph tests reviewed
+E27	execute	Add external-content and outreach-ledger validation	completed-local	npm run validate:outreach validates 23 candidates 7 drafts and 15 Markdown files
+E28	execute	Privacy, legal-claim, and spam red-team review	completed-blockers-open	execution-red-team-e28.md records five P0 and three P1/external findings
+E29	execute	Run full repository and production-safe verification	completed-production-failed	verification-e29.md; latest production postdeploy has 21 findings (15 redirect hops 4 policy 404s 2 robots source conflicts)
+E30	execute	Final independent red-team and handoff review	completed-with-open-blockers	HANDOFF-2026-07-17-SEO-GEO-60-LANES.md; no deploy merge submission contact or publication

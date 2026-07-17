@@ -1,0 +1,22 @@
+query_or_intent	owner_url	owner_role	overlap_urls	conflict_state	evidence_boundary
+giffgaff 中文教程	/guides/6-pitfalls/	lifecycle pillar	/guides/	bounded-overlap	Pillar owns cross-journey routing; guides index is navigation only
+giffgaff G0 G2 区别	/answers/	comparison explanation	/tools/g0-g2-total-cost/|/shop/	separated-by-task	Calculator owns user-input arithmetic; shop owns transaction
+giffgaff 手机卡购买	/shop/	transaction hub	/guides/1-order/|/answers/	separated-by-task	Order guide owns process; answers owns comparison
+giffgaff 国内下单流程	/guides/1-order/	order and receipt process	/guides/7-arrival-checklist/	separated-by-stage	Arrival checklist begins after receipt
+giffgaff G0 G2 总成本	/tools/g0-g2-total-cost/	user-input calculator	/answers/	separated-by-format	No default seller price, inventory or balance is inferred
+giffgaff 国内激活	/guides/2-activate/	activation workflow	/qa/06-activation-expiration/	bounded-overlap	QA owns the activation-code expiry micro-question
+giffgaff 账号安全	/guides/3-account/	account control and recovery	/guides/2-activate/	separated-by-task	Does not duplicate activation workflow
+giffgaff App 使用	/guides/3-app/	app navigation and versioned use	/more/03-esim/	separated-by-task	eSIM page owns the switching workflow
+giffgaff 保号	/guides/3-usage/	rules and maintenance checklist	/tools/keep-number-reminder/	separated-by-format	Tool owns local date calculation and ICS export
+giffgaff 自助充值	/qa/02-topup/	self-service credit and plan actions	/guides/4-recharge-service/	separated-by-service	Recharge page owns third-party service boundary
+giffgaff 充值服务	/guides/4-recharge-service/	service scope and safety	/qa/02-topup/	credential-conflict-open	Rendered credential boundary conflicts with Contact and requires owner-approved correction
+giffgaff 收不到验证码	/guides/4-signal/	diagnostic guide	/research/otp-status/|/more/00-wechat/|/more/02-telegram/	data-gated-overlap	Noindex status page owns dated samples only; platform pages need platform-specific evidence
+giffgaff 中国漫游成本	/tools/china-roaming-cost/	PAYG billing-unit calculator	/guides/5-travel-data/	planning-conflict	Current implementation uses the tool URL while the older cluster plan proposed rewriting the legacy URL
+giffgaff 旅行流量包	/guides/5-travel-data/	travel add-on explanation	/tools/china-roaming-cost/	separated-by-product	Legacy page should own add-on/use guidance; tool owns PAYG cost arithmetic
+giffgaff 中国网络短信实测	/research/china-network-sms/	data-method preview	/guides/4-signal/	noindex-data-gate	Noindex until real sample threshold and review pass
+giffgaff eSIM 转换	/more/03-esim/	official app switching path	/more/04-esim-qrcode/|/tools/esim-compatibility/	separated-by-safety	QR page owns safety boundary; compatibility preview remains noindex
+giffgaff eSIM 二维码安全	/more/04-esim-qrcode/	safety explainer	/more/03-esim/	legacy-anchor-conflict	Rendered body is safety-led but frozen navigation still carries an action-oriented 9eSIM anchor
+giffgaff eSIM 设备兼容检查	/tools/esim-compatibility/	data-gated checker	/more/03-esim/	noindex-data-gate	Noindex and no definitive device result without exact-model evidence
+giffgaff SIM 补卡	/qa/03-reissue/	loss and replacement recovery	/guides/2-activate/	separated-by-failure	Activation page does not own lost/damaged SIM recovery
+英国手机卡怎么选	/guides/8-uk-sim-choice/	scenario decision guide	/shop/|/answers/	separated-by-decision	No best-network ranking or guaranteed coverage
+giffgaff G0 G2 收卡验收	/guides/7-arrival-checklist/	post-delivery inspection	/guides/1-order/|/answers/	separated-by-stage	Does not establish per-batch state without order evidence

@@ -1,0 +1,21 @@
+question_id	audience	question	provisional_owner	claim_boundary
+GEO-01	China	在中国境内如何激活 giffgaff 新 SIM，激活码无效时怎么办？	/guides/2-activate/	Use current official activation path; no seller-batch inference
+GEO-02	China	已有 giffgaff 号码时，为什么不能随便在另一个账号里激活新卡？	/guides/2-activate/	Explain SIM-swap risk only from current source
+GEO-03	China + returning UK users	只接收短信能不能算 giffgaff 保号动作？	/guides/3-usage/	Separate official rule from getgiffgaff risk-buffer advice
+GEO-04	China + returning UK users	giffgaff 多久不用会停用，已经停用后还能怎么办？	/guides/3-usage/	Dynamic time windows require checked date and official source
+GEO-05	China	giffgaff 在中国没有信号时，应按什么顺序排查？	/guides/4-signal/	One-variable-at-a-time diagnosis; no national coverage guarantee
+GEO-06	China	普通短信能收到但某个平台验证码收不到，说明什么？	/guides/4-signal/	Separate carrier/SMS layer from platform risk; no causal certainty
+GEO-07	China	为什么不能承诺 giffgaff 一定能收到 Telegram、微信或 Google Voice 验证码？	/guides/4-signal/	No platform guarantee, bypass or evasion advice
+GEO-08	China	giffgaff 中国漫游的 PAYG 流量、短信和电话费用如何计算？	/tools/china-roaming-cost/	Rates must be current; calculation must expose billing units
+GEO-09	China	多通 giffgaff 中国漫游电话为什么不能先合并分钟再计算？	/tools/china-roaming-cost/	Per-call minimum/rounding explanation; no old production-formula endorsement
+GEO-10	China	giffgaff 中国 PAYG Credit 和 Travel Data Add-on 有什么区别？	/guides/5-travel-data/	Guide owns add-on/use; calculator owns PAYG arithmetic
+GEO-11	China + UK arrival	giffgaff 实体 SIM 如何通过官方 App 转为 eSIM？	/more/03-esim/	Official path only; versioned steps expire
+GEO-12	China + UK arrival	giffgaff eSIM 换机或切换失败前需要保留什么恢复条件？	/more/03-esim/	Do not expose credentials, activation codes or write-card instructions
+GEO-13	China	为什么本站不提供改造 APK、提取 eSIM 配置或第三方写卡教程？	/more/04-esim-qrcode/	Security and account-control boundary; no circumvention detail
+GEO-14	UK students	英国留学生第一次选手机卡应先看哪些条件？	/guides/8-uk-sim-choice/	Scenario framework; no unsupported best-network ranking
+GEO-15	UK travellers	英国短期旅行应该选实体 SIM、eSIM 还是保留国内漫游？	/guides/8-uk-sim-choice/	Require current plan/device/coverage facts; no universal answer
+GEO-16	UK students + travellers	英国覆盖图能不能保证宿舍、地铁或具体建筑内有信号？	/guides/8-uk-sim-choice/	Coverage is predicted, not a building/device guarantee
+GEO-17	China buyers	收到 giffgaff 卡后应如何检查包装、状态、余额、网络和普通短信？	/guides/7-arrival-checklist/	Generic verification checklist; order claims need real evidence
+GEO-18	UK arrival	出发前和抵达英国后，应分别检查哪些 SIM/eSIM 和网络项目？	/guides/7-arrival-checklist/	No first-hand claim without real journey evidence
+GEO-19	China buyers	G0 和 G2 是 giffgaff 官方产品名称吗？	/answers/	Always state seller-defined classifications, not official SKUs
+GEO-20	All	getgiffgaff 是 giffgaff 官方网站或授权客服吗？	/contact/	Independent third party; disclaimer does not prove trademark sufficiency
