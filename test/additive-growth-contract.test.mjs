@@ -62,6 +62,10 @@ const NOINDEX_GROWTH_ROUTES = Object.freeze([
   "/tools/esim-compatibility/",
   "/research/china-network-sms/",
   "/research/otp-status/",
+  "/privacy/",
+  "/terms/",
+  "/refund/",
+  "/shipping/",
 ]);
 
 const RELATED_LINK_ROUTES = Object.freeze([
@@ -73,6 +77,7 @@ const RELATED_LINK_ROUTES = Object.freeze([
   "/guides/4-signal/",
   "/guides/5-travel-data/",
   "/more/03-esim/",
+  "/guides/6-pitfalls/",
 ]);
 
 function sha256(value) {
@@ -156,7 +161,7 @@ function internalHrefs(html) {
     .filter((href) => href.startsWith("/") && !href.startsWith("//"));
 }
 
-test("route manifest keeps 34 frozen pages and adds five index plus three noindex pages", async () => {
+test("route manifest keeps 34 frozen pages and adds five index plus seven noindex pages", async () => {
   const modulePath = path.join(ROOT, "public", "route-manifest.js");
   await access(modulePath);
   const manifest = await import(`${pathToFileURL(modulePath).href}?t=${Date.now()}`);
@@ -165,7 +170,7 @@ test("route manifest keeps 34 frozen pages and adds five index plus three noinde
   assert.deepEqual(manifest.INDEXABLE_GROWTH_ROUTES, INDEXABLE_GROWTH_ROUTES);
   assert.deepEqual(manifest.NOINDEX_GROWTH_ROUTES, NOINDEX_GROWTH_ROUTES);
   assert.equal(manifest.PUBLIC_INDEXABLE_PATHS.length, 39);
-  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 42);
+  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 46);
 
   for (const route of LEGACY_ROUTES) {
     const record = manifest.routeFor(route);
@@ -182,6 +187,8 @@ test("route manifest keeps 34 frozen pages and adds five index plus three noinde
     assert.equal(manifest.routeFor(route)?.sitemap, false, route);
   }
   assert.equal(manifest.routeFor("/")?.schemaType, "WebPage");
+  assert.equal(manifest.routeFor("/shop/giffgaff-g0/")?.schemaType, "WebPage");
+  assert.equal(manifest.routeFor("/shop/giffgaff-g2/")?.schemaType, "WebPage");
   assert.equal(
     manifest.routeFor("/research/china-network-sms/")?.schemaType,
     "CollectionPage",
@@ -243,6 +250,8 @@ test("related link registry is append-only and targets valid routes", async () =
 test("growth pages are original static pages with correct index policy and commerce exits", async () => {
   const allRoutes = [...INDEXABLE_GROWTH_ROUTES, ...NOINDEX_GROWTH_ROUTES];
   for (const route of allRoutes) {
+    const page = GROWTH_PAGES.find((entry) => entry.path === route);
+    assert.ok(page, `${route} registry entry`);
     const html = await readFile(routeFile(GROWTH_ROOT, route), "utf8");
     const expectedUrl = `https://getgiffgaff.com${route}`;
     assert.equal(canonical(html), expectedUrl, route);
@@ -250,7 +259,11 @@ test("growth pages are original static pages with correct index policy and comme
     assert.ok(title(html), `${route} title`);
     assert.ok(firstHeading(html), `${route} h1`);
     assert.match(html, /核验日期|方法与边界/, route);
-    assert.match(html, /https:\/\/(?:help\.)?giffgaff\.com\//i, `${route} official source`);
+    if (page.sources.length > 0) {
+      assert.match(html, /https:\/\/(?:help\.)?giffgaff\.com\//i, `${route} official source`);
+    } else {
+      assert.match(html, /缺少经营负责人确认|不能替代完整政策/, `${route} business evidence gap`);
+    }
     assert.match(html, /href=["']\/(?:shop|answers|contact|guides)\//i, `${route} funnel exit`);
     assert.ok(new Set(internalHrefs(html)).size >= 3, `${route} internal links`);
     assert.doesNotMatch(
@@ -392,9 +405,39 @@ test("source cards contain six seeds and forty independent competitors without c
 test("backlink outreach tracker is ready without fabricated placements", async () => {
   const csv = await readFile(path.join(ROOT, "docs", "outreach", "backlink-prospects.csv"), "utf8");
   const [header, ...rows] = csv.trimEnd().split(/\r?\n/);
-  assert.equal(
-    header,
-    "target_page,prospect_url,contact_channel,relevance,pitch_angle,first_contact,next_follow_up,status,live_url,notes",
+  const fields = header.split(",");
+  for (const required of [
+    "policy_url", "checked_at", "contact_scope", "acceptance_evidence", "relationship",
+    "asset_readiness", "blocker", "qualification", "reason", "next_safe_action",
+    "first_contact", "next_follow_up", "live_url", "live_evidence_url",
+  ]) assert.ok(fields.includes(required), `missing ${required}`);
+
+  const records = rows.map((row) => Object.fromEntries(fields.map((field, index) => [field, row.split(",")[index]])));
+  assert.equal(new Set(records.map(({ prospect_url }) => prospect_url)).size, records.length);
+  const hostCounts = records.reduce((counts, { prospect_url }) => {
+    const host = new URL(prospect_url).hostname;
+    counts.set(host, (counts.get(host) || 0) + 1);
+    return counts;
+  }, new Map());
+  assert.equal(hostCounts.size, 22);
+  assert.deepEqual(
+    [...hostCounts.entries()].filter(([, count]) => count > 1),
+    [["github.com", 2]],
+    "only two separately governed GitHub repositories may share a platform hostname",
   );
-  assert.ok(rows.every((row) => !/,live,https?:\/\//i.test(row)), "must not invent live backlinks");
+  for (const record of records) {
+    assert.equal(record.first_contact, "", `${record.prospect_url} fabricated contact`);
+    assert.equal(record.next_follow_up, "", `${record.prospect_url} fabricated follow-up`);
+    assert.equal(record.live_url, "", `${record.prospect_url} fabricated live URL`);
+    assert.equal(record.live_evidence_url, "", `${record.prospect_url} fabricated evidence`);
+    assert.notEqual(record.acceptance_evidence, "public_contact", record.prospect_url);
+    if (record.qualification === "reject") {
+      assert.equal(record.status, "reject", `${record.prospect_url} reject status`);
+      assert.match(record.next_safe_action, /^Do not contact/, record.prospect_url);
+    }
+    if (record.status === "live") {
+      assert.match(record.live_url, /^https:\/\//);
+      assert.match(record.live_evidence_url, /^https:\/\//);
+    }
+  }
 });

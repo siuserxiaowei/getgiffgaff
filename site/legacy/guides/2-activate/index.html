@@ -19,82 +19,44 @@
   <meta name="twitter:description" content="中国境内激活 giffgaff SIM 的原创流程：准备激活码或 13 位序列号，避免误触 SIM swap，并按症状排查失败。">
   <meta name="twitter:image" content="https://getgiffgaff.com/gg-card-hero.png">
   <link rel="icon" href="/favicon.svg">
-  <style>
-  :root { color-scheme: light; --ink:#122019; --muted:#536159; --green:#2f5e41; --line:#dce7df; --soft:#f3f8f2; --gold:#fff6dc; }
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin:0; color:var(--ink); background:#fff; font-family:Inter,"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
-  a { color:var(--green); }
-  .site-header { display:flex; align-items:center; justify-content:space-between; gap:20px; min-height:72px; padding:14px max(20px,calc((100vw - 1120px)/2)); border-bottom:1px solid var(--line); background:#fff; }
-  .brand { display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; }
-  .brand-mark { display:grid; place-items:center; width:38px; height:38px; border-radius:10px; background:var(--green); color:#fff; font-weight:900; }
-  .brand small { display:block; color:var(--muted); }
-  .site-header nav { display:flex; flex-wrap:wrap; gap:16px; }
-  .site-header nav a { color:var(--ink); font-weight:700; text-decoration:none; }
-  .hero { border-bottom:1px solid var(--line); background:linear-gradient(135deg,#f8fbf7 0%,#edf6ee 56%,var(--gold) 100%); }
-  .hero-inner,.layout,.footer-inner { width:min(1120px,calc(100% - 32px)); margin:0 auto; }
-  .hero-inner { padding:56px 0 40px; }
-  .breadcrumbs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; color:var(--muted); font-size:14px; }
-  .eyebrow { margin:0 0 10px; color:var(--green); font-size:13px; font-weight:900; letter-spacing:.09em; text-transform:uppercase; }
-  h1 { max-width:900px; margin:0; font-size:clamp(34px,5vw,58px); line-height:1.1; letter-spacing:-.02em; }
-  .deck { max-width:820px; margin:18px 0 0; color:var(--muted); font-size:18px; line-height:1.8; }
-  .meta { display:flex; flex-wrap:wrap; gap:9px; margin-top:22px; }
-  .meta span { border:1px solid rgba(47,94,65,.18); border-radius:999px; background:rgba(255,255,255,.8); padding:8px 11px; color:var(--green); font-size:14px; font-weight:800; }
-  .layout { display:grid; grid-template-columns:240px minmax(0,1fr); gap:38px; padding:40px 0 72px; }
-  .toc { position:sticky; top:18px; align-self:start; border:1px solid var(--line); border-radius:14px; padding:18px; background:#fff; }
-  .toc strong { display:block; margin-bottom:9px; }
-  .toc a { display:block; margin:9px 0; font-size:14px; line-height:1.45; text-decoration:none; }
-  article { min-width:0; font-size:17px; line-height:1.85; }
-  .answer { margin:0 0 28px; border:1px solid rgba(47,94,65,.2); border-radius:16px; background:var(--soft); padding:22px; }
-  .answer strong { display:block; margin-bottom:8px; color:var(--green); font-size:20px; }
-  article section { scroll-margin-top:20px; }
-  h2 { margin:42px 0 14px; font-size:clamp(26px,3vw,36px); line-height:1.25; }
-  h3 { margin:26px 0 8px; font-size:22px; }
-  p { margin:12px 0; }
-  li { margin:8px 0; }
-  .callout { border-left:4px solid var(--green); background:var(--soft); padding:14px 16px; color:var(--green); font-weight:800; }
-  .table-scroll { overflow-x:auto; margin:18px 0; }
-  table { width:100%; min-width:680px; border-collapse:collapse; border:1px solid var(--line); }
-  th,td { border-bottom:1px solid var(--line); padding:12px 14px; text-align:left; vertical-align:top; }
-  thead th { background:var(--soft); color:var(--green); }
-  tbody th { width:24%; background:#fbfdfb; }
-  .trust-box,.sources,.related,.revisions,.faq { margin-top:42px; border-top:1px solid var(--line); padding-top:10px; }
-  .trust-box { border:1px solid var(--line); border-radius:14px; background:#fbfdfb; padding:20px; }
-  .source-item { margin:14px 0; padding:16px; border:1px solid var(--line); border-radius:12px; }
-  .source-item a { font-weight:900; }
-  .source-item p { margin:5px 0 0; color:var(--muted); font-size:15px; }
-  .related-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-  .related-grid a { display:block; border:1px solid var(--line); border-radius:12px; padding:14px; font-weight:800; text-decoration:none; }
-  .faq details { border-bottom:1px solid var(--line); padding:14px 0; }
-  .faq summary { cursor:pointer; font-weight:900; }
-  footer { border-top:1px solid var(--line); background:#f8faf8; }
-  .footer-inner { padding:28px 0; color:var(--muted); line-height:1.7; }
-  @media (max-width:800px) { .site-header { align-items:flex-start; flex-direction:column; } .layout { grid-template-columns:1fr; } .toc { position:static; } .related-grid { grid-template-columns:1fr; } }
-</style>
+  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/legacy-palette.css">
+
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","@id":"https://getgiffgaff.com/guides/2-activate/#article","mainEntityOfPage":"https://getgiffgaff.com/guides/2-activate/","headline":"giffgaff 国内激活：先保住账号，再处理信号","description":"中国境内激活 giffgaff SIM 的原创流程：准备激活码或 13 位序列号，避免误触 SIM swap，并按症状排查失败。","url":"https://getgiffgaff.com/guides/2-activate/","inLanguage":"zh-CN","dateModified":"2026-07-15","author":{"@type":"Organization","@id":"https://getgiffgaff.com/#organization","name":"getgiffgaff","url":"https://getgiffgaff.com/"},"publisher":{"@id":"https://getgiffgaff.com/#organization"},"isPartOf":{"@id":"https://getgiffgaff.com/#website"},"about":{"@type":"Brand","@id":"https://www.giffgaff.com/#brand","name":"giffgaff","url":"https://www.giffgaff.com/"},"citation":["https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim","https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit","https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting","https://www.giffgaff.com/boiler-plate/terms"]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://getgiffgaff.com/"},{"@type":"ListItem","position":2,"name":"教程","item":"https://getgiffgaff.com/guides/"},{"@type":"ListItem","position":3,"name":"giffgaff 国内激活：先保住账号，再处理信号","item":"https://getgiffgaff.com/guides/2-activate/"}]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"激活码看不清还能激活吗？","acceptedAnswer":{"@type":"Answer","text":"可先根据 giffgaff 官方帮助页尝试 SIM 上的 13 位序列号。不要靠反复猜测激活码。"}},{"@type":"Question","name":"激活后多久有信号？","acceptedAnswer":{"@type":"Answer","text":"官方说明通常更快，但可能需要最多 24 小时。这不是到点必然成功的承诺。"}},{"@type":"Question","name":"多张卡可以放在一个账号吗？","acceptedAnswer":{"@type":"Answer","text":"官方说明一个账号同时只能有一张有效 SIM。在有效账号激活另一张卡可能触发 SIM swap。"}}]}</script>
 </head>
-<body>
-  <header class="site-header">
-    <a class="brand" href="/" aria-label="getgiffgaff 首页"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>独立第三方购买与使用信息</small></span></a>
-    <nav aria-label="主导航"><a href="/shop/">手机卡</a><a href="/guides/">教程</a><a href="/research/">资料库</a><a href="/contact/">联系</a></nav>
-  </header>
+<body class="legacy-palette">
+  <header class="site-header"><a class="brand" aria-label="getgiffgaff 首页" href="/"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>英国手机卡购买与教程</small></span></a><nav aria-label="主导航"><a href="/shop/">手机卡</a><a href="/guides/">教程</a><a href="/more/">更多玩法</a><a href="/qa/">常见问题</a><a href="/contact/">联系我</a><a class="btn btn-primary btn-compact" href="/shop/"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-bag" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>点此购买</a></nav></header>
   <main>
-    <section class="hero">
-      <div class="hero-inner">
-        <nav class="breadcrumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/guides/">教程</a><span>/</span><span>giffgaff 国内激活</span></nav>
-        <p class="eyebrow">Evidence-led guide</p>
-        <h1>giffgaff 国内激活：先保住账号，再处理信号</h1>
-        <p class="deck">这不是对某篇第三方教程的复制，而是把 giffgaff 官方规则和国内用户常见故障拆成可验证的检查顺序。</p>
-        <div class="meta"><span>搜索意图：操作教程 / 故障排查</span><span>证据型版本：2026-07-15</span><span>规则可能变化，请操作前复核</span></div>
-      </div>
-    </section>
-    <div class="layout">
-      <aside class="toc" aria-label="本页目录"><strong>本页目录</strong><a href="#prepare">开始前的 7 项准备</a><a href="#new-sim">新卡激活的稳妥顺序</a><a href="#avoid-sim-swap">最容易忽略的风险：SIM swap</a><a href="#terms-boundary">推广、转售与账号资料的条款边界</a><a href="#diagnose">按症状排查，不要一次改五个变量</a><a href="#evidence">联系支持时提供可诊断证据</a><a href="#official-sources">官方来源</a><a href="#revision-log">修订记录</a></aside>
-      <article>
-        <div class="answer"><strong>直接答案</strong><p>国内激活的核心不是连续重试，而是确认 SIM 身份、账号归属和当前处理阶段。新卡从官方激活页开始；激活码无法使用时，官方说明可尝试 SIM 上的 13 位序列号。一张已有号码的卡不要随意在其他已激活账号里操作，否则可能触发 SIM swap。来自推广或转售渠道的卡还应先核对 giffgaff 当前条款与卖家合规边界。</p></div>
-        <div class="trust-box"><strong>编辑责任与复核方法</strong><p>编辑责任主体：getgiffgaff；复核方法：逐项对照本页列明的 giffgaff 官方页面并记录修订日期。当前未公开个人作者或复核者，本站不使用虚构署名；本文未经 giffgaff Limited 审核或背书。发现规则变化可<a href="/contact/">提交纠错</a>。</p></div>
+  <section class="docs-hero">
+    <div class="docs-hero-content">
+      <nav class="breadcrumbs" aria-label="面包屑"><a href="/">首页</a><span>/</span><a href="/guides/">教程</a><span>/</span><span>giffgaff 国内激活</span></nav>
+      <p class="doc-kicker">Evidence-led guide</p>
+      <h1>giffgaff 国内激活：先保住账号，再处理信号</h1>
+      <p>这不是对某篇第三方教程的复制，而是把 giffgaff 官方规则和国内用户常见故障拆成可验证的检查顺序。</p>
+    </div>
+  </section>
+  <div class="docs-shell">
+    <aside class="docs-sidebar" aria-label="教程目录">
+      <nav class="docs-nav">
+        <section class="docs-nav-group"><h2>快速开始</h2><ul><li><a href="/guides/">快速开始 - 目录</a></li><li><a href="/guides/0-intro/">giffgaff 手机卡介绍</a></li><li><a href="/guides/1-order/">giffgaff 手机卡获取和购买</a></li><li><a href="/guides/2-activate/">giffgaff 手机卡激活</a></li><li><a href="/guides/3-account/">giffgaff 账号管理</a></li><li><a href="/guides/3-app/">giffgaff App 使用</a></li><li><a href="/guides/3-usage/">giffgaff 手机卡保号和使用</a></li><li><a href="/guides/4-recharge-service/">giffgaff 手机卡代充值</a></li><li><a href="/guides/4-signal/">giffgaff 信号相关问题</a></li></ul></section>
+        <section class="docs-nav-group"><h2>更多玩法</h2><ul><li><a href="/more/">更多玩法 - 目录</a></li><li><a href="/more/00-wechat/">giffgaff 号码注册 WeChat 账号</a></li><li><a href="/more/02-telegram/">giffgaff 注册 Telegram 电报账号</a></li><li><a href="/more/03-esim/">giffgaff 实体卡和 eSIM 相互转换</a></li><li><a href="/more/04-esim-qrcode/">giffgaff 获取 eSIM 二维码，并写入到 9eSIM</a></li></ul></section>
+        <section class="docs-nav-group"><h2>常见问题</h2><ul><li><a href="/qa/">常见问题 - 目录</a></li><li><a href="/qa/00-username/">giffgaff 如何修改/找回用户名</a></li><li><a href="/qa/01-change-number/">giffgaff 如何更换号码</a></li><li><a href="/qa/02-topup/">giffgaff 如何充值/查询余额/查消费记录</a></li><li><a href="/qa/03-reissue/">giffgaff 实体卡损坏/丢失如何补办</a></li><li><a href="/qa/04-choose-number/">giffgaff 如何挑选手机号</a></li><li><a href="/qa/05-multiple-number/">giffgaff 同一账号下能否管理多个手机号？</a></li><li><a href="/qa/06-activation-expiration/">giffgaff 新卡激活有没有期限限制？</a></li><li><a href="/qa/07-voicemail-switch/">giffgaff 如何关闭 voicemail 语音信箱</a></li><li><a href="/qa/08-gv/">giffgaff 能否注册 Google Voice</a></li><li><a href="/qa/09-spread/">giffgaff 邀请奖励和 Payback 说明</a></li></ul></section>
+        <section class="docs-nav-group"><h2>联系我</h2><ul><li><a href="/contact/">联系我</a></li></ul></section>
+      </nav>
+    </aside>
+    <details class="docs-mobile-nav"><summary>教程目录</summary><nav class="docs-nav"><section class="docs-nav-group"><h2>快速开始</h2><ul><li><a href="/guides/">快速开始 - 目录</a></li><li><a href="/guides/0-intro/">giffgaff 手机卡介绍</a></li><li><a href="/guides/1-order/">giffgaff 手机卡获取和购买</a></li><li><a href="/guides/2-activate/">giffgaff 手机卡激活</a></li><li><a href="/guides/3-account/">giffgaff 账号管理</a></li><li><a href="/guides/3-app/">giffgaff App 使用</a></li><li><a href="/guides/3-usage/">giffgaff 手机卡保号和使用</a></li><li><a href="/guides/4-recharge-service/">giffgaff 手机卡代充值</a></li><li><a href="/guides/4-signal/">giffgaff 信号相关问题</a></li></ul></section><section class="docs-nav-group"><h2>更多玩法</h2><ul><li><a href="/more/">更多玩法 - 目录</a></li><li><a href="/more/00-wechat/">giffgaff 号码注册 WeChat 账号</a></li><li><a href="/more/02-telegram/">giffgaff 注册 Telegram 电报账号</a></li><li><a href="/more/03-esim/">giffgaff 实体卡和 eSIM 相互转换</a></li><li><a href="/more/04-esim-qrcode/">giffgaff 获取 eSIM 二维码，并写入到 9eSIM</a></li></ul></section><section class="docs-nav-group"><h2>常见问题</h2><ul><li><a href="/qa/">常见问题 - 目录</a></li><li><a href="/qa/00-username/">giffgaff 如何修改/找回用户名</a></li><li><a href="/qa/01-change-number/">giffgaff 如何更换号码</a></li><li><a href="/qa/02-topup/">giffgaff 如何充值/查询余额/查消费记录</a></li><li><a href="/qa/03-reissue/">giffgaff 实体卡损坏/丢失如何补办</a></li><li><a href="/qa/04-choose-number/">giffgaff 如何挑选手机号</a></li><li><a href="/qa/05-multiple-number/">giffgaff 同一账号下能否管理多个手机号？</a></li><li><a href="/qa/06-activation-expiration/">giffgaff 新卡激活有没有期限限制？</a></li><li><a href="/qa/07-voicemail-switch/">giffgaff 如何关闭 voicemail 语音信箱</a></li><li><a href="/qa/08-gv/">giffgaff 能否注册 Google Voice</a></li><li><a href="/qa/09-spread/">giffgaff 邀请奖励和 Payback 说明</a></li></ul></section><section class="docs-nav-group"><h2>联系我</h2><ul><li><a href="/contact/">联系我</a></li></ul></section></nav></details>
+    <main class="docs-main">
+      <article class="doc-article">
+        <header class="doc-head">
+          <p class="doc-kicker">Evidence-led guide</p>
+          <h1>giffgaff 国内激活：先保住账号，再处理信号</h1>
+          <p>这不是对某篇第三方教程的复制，而是把 giffgaff 官方规则和国内用户常见故障拆成可验证的检查顺序。</p>
+        </header>
+        <nav class="doc-toc" aria-label="本页内容"><strong>本页内容</strong><ol><li><a href="#prepare">开始前的 7 项准备</a></li><li><a href="#new-sim">新卡激活的稳妥顺序</a></li><li><a href="#avoid-sim-swap">最容易忽略的风险：SIM swap</a></li><li><a href="#terms-boundary">推广、转售与账号资料的条款边界</a></li><li><a href="#diagnose">按症状排查，不要一次改五个变量</a></li><li><a href="#evidence">联系支持时提供可诊断证据</a></li><li><a href="#official-sources">官方来源</a></li><li><a href="#revision-log">修订记录</a></li></ol></nav>
+        <div class="doc-answer"><strong>直接答案</strong><p>国内激活的核心不是连续重试，而是确认 SIM 身份、账号归属和当前处理阶段。新卡从官方激活页开始；激活码无法使用时，官方说明可尝试 SIM 上的 13 位序列号。一张已有号码的卡不要随意在其他已激活账号里操作，否则可能触发 SIM swap。来自推广或转售渠道的卡还应先核对 giffgaff 当前条款与卖家合规边界。</p></div>
+        <div class="doc-cta"><strong>编辑责任与复核方法</strong><p>编辑责任主体：getgiffgaff；复核方法：逐项对照本页列明的 giffgaff 官方页面并记录修订日期。当前未公开个人作者或复核者，本站不使用虚构署名；本文未经 giffgaff Limited 审核或背书。发现规则变化可<a href="/contact/">提交纠错</a>。</p></div>
         <section id="prepare">
     <h2>开始前的 7 项准备</h2>
     <p>先区分你拿到的是尚未激活的新卡，还是已经有账号、号码或余额的卡。两者的正确入口不同。</p><p>只使用 giffgaff 官方激活页或官方 App。第三方文章中的界面截图可能已经过时，不要根据旧按钮名强行对照。</p>
@@ -117,7 +79,7 @@
     
     
     
-    <p class="callout">不要把“页面能继续”当成“这个操作对原号码无影响”。</p>
+    <p class="notice-strip">不要把“页面能继续”当成“这个操作对原号码无影响”。</p>
   </section>
 <section id="terms-boundary">
     <h2>推广、转售与账号资料的条款边界</h2>
@@ -125,14 +87,14 @@
     
     
     
-    <p class="callout">不要使用虚假姓名、地址、支付资料，也不要把他人的已登记账号当成可直接继受的商品。</p>
+    <p class="notice-strip">不要使用虚假姓名、地址、支付资料，也不要把他人的已登记账号当成可直接继受的商品。</p>
   </section>
 <section id="diagnose">
     <h2>按症状排查，不要一次改五个变量</h2>
     
     
     
-    <div class="table-scroll"><table><thead><tr><th scope="col">症状</th><th scope="col">先查什么</th><th scope="col">暂时不要做什么</th></tr></thead><tbody><tr><th scope="row">激活码不识别</th><td>字符是否读错；改用 13 位 SIM 序列号</td><td>连续猜测和快速重提</td></tr><tr><th scope="row">网页提交卡住</th><td>清理 Cookie/Cache；换浏览器或设备</td><td>同时在多窗口操作</td></tr><tr><th scope="row">账号已显示卡，但没信号</th><td>等待激活窗口、重启、检查设备锁与漫游</td><td>立即重新激活另一张卡</td></tr><tr><th scope="row">普通短信可收，某平台验证码不到</th><td>转入平台风控排查</td><td>把问题当成 SIM 激活失败</td></tr></tbody></table></div>
+    <div class="article-section table-scroll"><table><thead><tr><th scope="col">症状</th><th scope="col">先查什么</th><th scope="col">暂时不要做什么</th></tr></thead><tbody><tr><th scope="row">激活码不识别</th><td>字符是否读错；改用 13 位 SIM 序列号</td><td>连续猜测和快速重提</td></tr><tr><th scope="row">网页提交卡住</th><td>清理 Cookie/Cache；换浏览器或设备</td><td>同时在多窗口操作</td></tr><tr><th scope="row">账号已显示卡，但没信号</th><td>等待激活窗口、重启、检查设备锁与漫游</td><td>立即重新激活另一张卡</td></tr><tr><th scope="row">普通短信可收，某平台验证码不到</th><td>转入平台风控排查</td><td>把问题当成 SIM 激活失败</td></tr></tbody></table></div>
     
   </section>
 <section id="evidence">
@@ -143,13 +105,14 @@
     
     
   </section>
-        <section class="faq" id="faq"><h2>常见问题</h2><details><summary>激活码看不清还能激活吗？</summary><p>可先根据 giffgaff 官方帮助页尝试 SIM 上的 13 位序列号。不要靠反复猜测激活码。</p></details><details><summary>激活后多久有信号？</summary><p>官方说明通常更快，但可能需要最多 24 小时。这不是到点必然成功的承诺。</p></details><details><summary>多张卡可以放在一个账号吗？</summary><p>官方说明一个账号同时只能有一张有效 SIM。在有效账号激活另一张卡可能触发 SIM swap。</p></details></section>
-        <section class="sources" id="official-sources"><h2>官方来源</h2><p>下列页面用于核对规则。界面、价格、时间窗和流程可能更新，操作当日请再打开原页。</p><div class="source-item"><a href="https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim" target="_blank" rel="noopener noreferrer">giffgaff 官方：Activating your giffgaff SIM</a><p>激活码、13 位 SIM 序列号、激活耗时、一个账号一张有效 SIM 与 SIM swap 边界。</p></div><div class="source-item"><a href="https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit" target="_blank" rel="noopener noreferrer">giffgaff 官方：Everything to know about Credit</a><p>Airtime Credit 的用途、充值渠道、余额查询与海外使用边界。</p></div><div class="source-item"><a href="https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting" target="_blank" rel="noopener noreferrer">giffgaff 官方：Network &amp; Service Troubleshooting</a><p>无信号、通话、短信、数据的基础排查，以及跨设备判断 SIM 或手机问题。</p></div><div class="source-item"><a href="https://www.giffgaff.com/boiler-plate/terms" target="_blank" rel="noopener noreferrer">giffgaff 官方：Terms &amp; Conditions</a><p>个人使用、滥用、服务、品牌与推广边界。</p></div></section>
-        <section class="related"><h2>继续阅读</h2><div class="related-grid"><a href="/guides/6-pitfalls/">giffgaff 使用教程和避坑清单</a><a href="/guides/4-signal/">giffgaff 收不到短信验证码排查</a><a href="/more/03-esim/">giffgaff eSIM 切换前检查</a><a href="/contact/">库存、下单与售后联系</a></div></section>
-        <section class="revisions" id="revision-log"><h2>修订记录</h2><ul><li>2026-07-15：证据型版本全面重写；根据 2026-07-15 可访问的官方激活、Credit、网络排查与条款页复核，并补充推广/转售边界。</li></ul></section>
+        <section class="doc-faq" id="faq"><h2>常见问题</h2><details><summary>激活码看不清还能激活吗？</summary><p>可先根据 giffgaff 官方帮助页尝试 SIM 上的 13 位序列号。不要靠反复猜测激活码。</p></details><details><summary>激活后多久有信号？</summary><p>官方说明通常更快，但可能需要最多 24 小时。这不是到点必然成功的承诺。</p></details><details><summary>多张卡可以放在一个账号吗？</summary><p>官方说明一个账号同时只能有一张有效 SIM。在有效账号激活另一张卡可能触发 SIM swap。</p></details><details><summary>激活后手机显示无信号怎么办？</summary><p>先确认手机支持 giffgaff 所用频段并已开启漫游（如在国内使用）；重启手机或手动选择网络运营商；等待 10–30 分钟让网络注册完成。若仍无信号，检查官方状态页面或联系客服。</p></details><details><summary>激活后多久能开始收短信？</summary><p>通常网络注册成功后即可收短信，但部分场景可能需要数分钟到数小时。首次收不到验证码时，先排除平台拦截、号码格式错误、信号覆盖或账号风控等原因。</p></details></section>
+        <section  id="official-sources"><h2>官方来源</h2><p>下列页面用于核对规则。界面、价格、时间窗和流程可能更新，操作当日请再打开原页。</p><div class="doc-list-item"><a href="https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim" target="_blank" rel="noopener noreferrer">giffgaff 官方：Activating your giffgaff SIM</a><p>激活码、13 位 SIM 序列号、激活耗时、一个账号一张有效 SIM 与 SIM swap 边界。</p></div><div class="doc-list-item"><a href="https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit" target="_blank" rel="noopener noreferrer">giffgaff 官方：Everything to know about Credit</a><p>Airtime Credit 的用途、充值渠道、余额查询与海外使用边界。</p></div><div class="doc-list-item"><a href="https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting" target="_blank" rel="noopener noreferrer">giffgaff 官方：Network &amp; Service Troubleshooting</a><p>无信号、通话、短信、数据的基础排查，以及跨设备判断 SIM 或手机问题。</p></div><div class="doc-list-item"><a href="https://www.giffgaff.com/boiler-plate/terms" target="_blank" rel="noopener noreferrer">giffgaff 官方：Terms &amp; Conditions</a><p>个人使用、滥用、服务、品牌与推广边界。</p></div></section>
+        <section ><h2>继续阅读</h2><div class="article-grid"><a href="/guides/6-pitfalls/">giffgaff 使用教程和避坑清单</a><a href="/guides/4-signal/">giffgaff 收不到短信验证码排查</a><a href="/more/03-esim/">giffgaff eSIM 切换前检查</a><a href="/contact/">库存、下单与售后联系</a></div></section>
+        <section  id="revision-log"><h2>修订记录</h2><ul><li>2026-07-15：证据型版本全面重写；根据 2026-07-15 可访问的官方激活、Credit、网络排查与条款页复核，并补充推广/转售边界。</li></ul></section>
       </article>
-    </div>
-  </main>
-  <footer><div class="footer-inner"><strong>getgiffgaff 是独立第三方服务站，不是 giffgaff Limited 官方网站、官方客服或授权代表。</strong><p>本页不承诺号码永久有效、实时库存、静态价格或第三方平台验证码送达。运营商规则以操作当日官方页面为准。</p></div></footer>
+    </main>
+  </div>
+</main>
+  <footer class="site-footer"><div><a class="brand brand-footer" href="/"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>英国手机卡购买、激活和使用教程</small></span></a><p>getgiffgaff 独立服务站。新客户可从手机卡商城开始，已购买客户可继续按教程、更多玩法、常见问题和联系我查找内容。</p></div><div class="footer-warning"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-alert" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg><span>不承诺长期保号，不承诺所有验证码均可送达。</span></div><p class="footer-contact">购买要点：<a href="/answers/">G0/G2 对比与常见结论</a></p></footer>
 </body>
 </html>

@@ -21,7 +21,9 @@ import {
   staticizeLegacyHtml,
   visibleTextSignature,
 } from "./capture-legacy-site.mjs";
+import { applyGrowthSafetyOverrides } from "./build-growth-pages.mjs";
 import { renderCommerceWidget } from "../site/growth/commerce-widget.js";
+import { configureAdsenseVerification } from "./adsense-verification.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const LEGACY_ROOT = path.join(ROOT, "site", "legacy");
@@ -30,6 +32,846 @@ const PUBLIC_ROOT = path.join(ROOT, "public");
 const DEFAULT_OUTPUT = path.join(ROOT, ".release");
 const GROWTH_MARKER = 'data-growth-slot="related-tutorials-v1"';
 const COMMERCE_MARKER = 'data-growth-slot="wechat-buying-guide-v1"';
+
+function safetyRule(route, issueId, source, replacement, expectedOccurrences, reason) {
+  return Object.freeze({
+    route,
+    issueId,
+    source,
+    replacement,
+    expectedOccurrences,
+    reason,
+  });
+}
+
+const NINE_ESIM_ANCHOR_COUNTS = Object.freeze({
+  "/answers/": 2,
+  "/guides/": 2,
+  "/guides/0-intro/": 2,
+  "/guides/1-order/": 2,
+  "/guides/2-activate/": 2,
+  "/guides/3-account/": 2,
+  "/guides/3-app/": 2,
+  "/guides/3-usage/": 2,
+  "/guides/4-recharge-service/": 2,
+  "/guides/5-travel-data/": 2,
+  "/more/": 3,
+  "/more/00-wechat/": 2,
+  "/more/02-telegram/": 2,
+  "/more/03-esim/": 2,
+  "/more/04-esim-qrcode/": 2,
+  "/qa/": 2,
+  "/qa/00-username/": 3,
+  "/qa/01-change-number/": 2,
+  "/qa/02-topup/": 2,
+  "/qa/03-reissue/": 2,
+  "/qa/04-choose-number/": 2,
+  "/qa/05-multiple-number/": 2,
+  "/qa/06-activation-expiration/": 2,
+  "/qa/07-voicemail-switch/": 2,
+  "/qa/08-gv/": 2,
+  "/qa/09-spread/": 2,
+  "/contact/": 2,
+});
+
+const NINE_ESIM_SAFETY_RULES = Object.entries(NINE_ESIM_ANCHOR_COUNTS).map(
+  ([route, expectedOccurrences]) => safetyRule(
+    route,
+    "SAFE-9ESIM-ANCHOR",
+    "giffgaff 获取 eSIM 二维码，并写入到 9eSIM",
+    "giffgaff eSIM 安全边界与官方路径",
+    expectedOccurrences,
+    "旧导航把第三方写卡描述成行动步骤；发布物只保留官方路径与安全边界。",
+  ),
+);
+
+const LEGACY_COMMERCE_META_COUNTS = Object.freeze({
+  "/": 6,
+  "/guides/": 2,
+  "/guides/0-intro/": 2,
+  "/guides/1-order/": 2,
+  "/guides/3-account/": 2,
+  "/guides/3-app/": 2,
+  "/guides/4-recharge-service/": 2,
+  "/guides/5-travel-data/": 2,
+  "/more/": 2,
+  "/more/00-wechat/": 2,
+  "/more/02-telegram/": 2,
+  "/qa/": 2,
+  "/qa/00-username/": 2,
+  "/qa/01-change-number/": 2,
+  "/qa/02-topup/": 2,
+  "/qa/03-reissue/": 2,
+  "/qa/04-choose-number/": 2,
+  "/qa/05-multiple-number/": 2,
+  "/qa/06-activation-expiration/": 2,
+  "/qa/07-voicemail-switch/": 2,
+  "/qa/08-gv/": 2,
+  "/qa/09-spread/": 2,
+  "/shop/": 2,
+  "/shop/giffgaff-g0/": 2,
+  "/shop/giffgaff-g2/": 2,
+});
+
+const LEGACY_COMMERCE_META_SAFETY_RULES = Object.entries(LEGACY_COMMERCE_META_COUNTS).map(
+  ([route, expectedOccurrences]) => safetyRule(
+    route,
+    "SAFE-COMMERCE-META",
+    "getgiffgaff 是面向中文用户的 giffgaff 英国手机卡购买与教程站，提供 G0 新卡、G2 有余额卡、国内发货、激活、充值、收短信、信号排查和常见问题说明。",
+    "getgiffgaff 是独立第三方中文教程与销售服务站，提供 G0/G2 分类说明、激活、充值、短信和信号排查；当前商品与履约证据未核验。",
+    expectedOccurrences,
+    "共享元数据不得把未经核验的库存、销售或国内发货写成当前事实。",
+  ),
+);
+
+const LEGACY_COMMERCE_CTA_COUNTS = Object.freeze({
+  "/guides/0-intro/": 1,
+  "/guides/3-account/": 1,
+  "/guides/3-app/": 1,
+  "/guides/4-recharge-service/": 1,
+  "/guides/5-travel-data/": 1,
+  "/more/00-wechat/": 1,
+  "/more/02-telegram/": 1,
+  "/qa/00-username/": 1,
+  "/qa/01-change-number/": 1,
+  "/qa/02-topup/": 1,
+  "/qa/03-reissue/": 1,
+  "/qa/04-choose-number/": 1,
+  "/qa/05-multiple-number/": 1,
+  "/qa/06-activation-expiration/": 1,
+  "/qa/07-voicemail-switch/": 1,
+  "/qa/08-gv/": 1,
+  "/qa/09-spread/": 1,
+});
+
+const LEGACY_COMMERCE_CTA_SAFETY_RULES = Object.entries(LEGACY_COMMERCE_CTA_COUNTS).map(
+  ([route, expectedOccurrences]) => safetyRule(
+    route,
+    "SAFE-COMMERCE-CTA",
+    "本站主卖 G0 新卡和 G2 有余额卡，购买说明集中放在获取和购买教程里。",
+    "本站保留 G0/G2 分类说明；当前没有已核验的直达 SKU、库存、价格、支付或履约证据，资料补齐前请勿付款。",
+    expectedOccurrences,
+    "共享购买 CTA 不得把未经核验的商品状态写成当前在售事实。",
+  ),
+);
+
+const COMMERCE_EVIDENCE_SAFETY_RULES = [
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "主卖 G0 新卡和 G2 有余额卡，并整理国内发货、激活、充值、保号、收短信和信号排查说明。",
+    "整理 G0/G2 分类、激活、充值、保号、短信和信号排查；当前商品与履约证据未核验。",
+    2,
+    "主卖与国内发货断言缺少当前 SKU 和履约证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "G0 新卡、G2 有余额卡、国内发货。",
+    "G0/G2 分类与购买证据状态。",
+    1,
+    "库存与国内发货断言缺少当前 SKU 和履约证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "购买前确认库存、余额范围、发货方式和使用边界。",
+    "当前没有已核验的 SKU、库存、余额或履约证据；证据补齐前请勿付款。",
+    1,
+    "口头确认不能替代当前 SKU 与交易证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "默认浙江发货，圆通包邮，急单可提前沟通顺丰到付。",
+    "发货地点、承运商、运费与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    2,
+    "发货地点、承运商、运费与时效承诺缺少真实履约证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "默认浙江发货，5 天内发出；圆通包邮，着急可备注顺丰到付。",
+    "发货地点、承运商、运费与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    1,
+    "发货地点、承运商、运费与时效承诺缺少真实履约证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "国内圆通包邮，顺丰可到付",
+    "物流方式与费用须以当前订单书面说明为准",
+    2,
+    "承运商与运费承诺缺少真实履约证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "5 张起卖",
+    "起售数量暂无已核验证据",
+    1,
+    "起售数量缺少当前 SKU 证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "浙江发货，圆通包邮",
+    "物流证据待核验",
+    2,
+    "发货地点、承运商和运费承诺缺少真实履约证据。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "getgiffgaff 手机卡商城，提供 G0 新卡和 G2 有余额卡，浙江发货，5 天内发出，购买前可确认库存、余额范围和发货安排。",
+    "getgiffgaff 手机卡信息页；当前缺少可核验 SKU、库存、价格、发货与履约证据，证据补齐前请勿付款。",
+    1,
+    "搜索摘要不得发布未经核验的库存、发货和时效断言。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "当前主卖 G0 新卡和 G2 有余额卡。先看清楚库存、余额范围、发货方式和使用限制，再选择适合自己的卡。",
+    "本页保留 G0/G2 分类说明；当前没有已核验的 SKU、库存、余额、价格或履约证据，证据补齐前请勿付款。",
+    1,
+    "主卖与库存断言缺少当前 SKU 及交易证据。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "购买保障",
+    "购买证据状态",
+    1,
+    "没有真实订单、支付、履约、退款与售后记录时不得声称购买保障。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "<span>浙江发货</span><p>默认圆通包邮，顺丰可到付</p>",
+    "<span>物流待核验</span><p>发货地点、承运商、费用和时效暂无已核验证据</p>",
+    1,
+    "物流承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "5 张起卖",
+    "起售数量待核验",
+    1,
+    "起售数量缺少当前 SKU 证据。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "省去首次充值麻烦",
+    "不保证激活、充值或支付结果",
+    1,
+    "卡片分类不能保证充值或支付结果。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "默认浙江发货，5 天内发出；圆通包邮，着急可备注顺丰到付。",
+    "当前没有已登记的发货地点、承运商、费用或时效证据；缺少书面订单说明时不要付款。",
+    1,
+    "物流承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "浙江发货，5 天内发出；着急可备注顺丰到付。",
+    "发货地点、承运商、费用与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    2,
+    "物流承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "国内圆通包邮，顺丰可到付",
+    "物流方式与费用须以当前订单书面说明为准",
+    1,
+    "承运商与运费承诺缺少真实履约证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "5 张起卖",
+    "起售数量待核验",
+    1,
+    "起售数量缺少当前 SKU 证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "常规库存，5 张起发；大批量付款前建议先确认数量。",
+    "当前没有已核验的 SKU、库存或起售数量；证据补齐前请勿付款。",
+    1,
+    "库存与起售数量缺少当前 SKU 证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "售价、库存和余额范围以快团团商品页或客服确认为准。",
+    "当前没有已核验的直达 SKU、售价、库存或余额证据；证据补齐前请勿付款。",
+    1,
+    "泛化跳转或口头确认不能替代当前 SKU 与交易证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "本站当前以快团团下单为主，默认浙江发货、圆通包邮，着急可备注顺丰到付。",
+    "当前没有已核验的直达 SKU、支付、发货或履约证据；缺少书面订单说明时不要付款。",
+    1,
+    "下单渠道和物流承诺缺少真实交易与履约证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "国内圆通包邮，顺丰可到付",
+    "物流方式与费用须以当前订单书面说明为准",
+    2,
+    "承运商与运费承诺缺少真实履约证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "5 张起卖",
+    "起售数量待核验",
+    3,
+    "起售数量缺少当前 SKU 证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "浙江发货，5 天内发出；着急可备注顺丰到付。",
+    "发货地点、承运商、费用与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    1,
+    "物流承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "常规库存，5 张起发；大批量付款前建议先确认数量。",
+    "当前没有已核验的 SKU、库存或起售数量；证据补齐前请勿付款。",
+    1,
+    "库存与起售数量缺少当前 SKU 证据。",
+  ),
+];
+
+const G2_SAFETY_RULES = [
+  safetyRule(
+    "/",
+    "SAFE-G2-SCHEMA",
+    '"@type":"Product","name":"giffgaff G2 有余额卡"',
+    '"@type":"WebPage","name":"G2 库存分类说明"',
+    1,
+    "没有可核验的在售批次时不得把 G2 分类声明为 Product。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-BATCH",
+    "通常含 10-14 英镑余额",
+    "余额范围须按批次核验",
+    7,
+    "固定余额范围缺少逐批证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-BATCH",
+    "更适合第一次购买或急用",
+    "仅可在逐批证据齐全后评估",
+    2,
+    "推荐适用性缺少逐批证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-BATCH",
+    "更适合第一次购买、急用或不想处理首次充值失败的人",
+    "只应在逐批证据齐全后评估",
+    2,
+    "推荐适用性缺少逐批证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-BATCH",
+    "G2 适合第一次购买或急用",
+    "G2 仅可在逐批证据齐全后评估",
+    1,
+    "推荐适用性缺少逐批证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-BATCH",
+    "已完成前置处理的 giffgaff 实体卡",
+    "本站称为 G2 的内部库存分类",
+    2,
+    "前置处理状态缺少逐批证据。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-BATCH",
+    "优先推荐",
+    "逐批证据待补",
+    1,
+    "证据不足时不得作优先推荐。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-OTP",
+    "更适合接收海外平台短信验证码",
+    "不保证任何平台验证码",
+    1,
+    "OTP 适用性不能由卡片分类保证。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G2-SCHEMA",
+    '"@type":"Product","name":"G2 有余额卡"',
+    '"@type":"WebPage","name":"G2 库存分类说明"',
+    1,
+    "没有可核验的在售批次时不得把 G2 分类声明为 Product。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G2-SCHEMA",
+    '"sku":"g2-credit-card",',
+    "",
+    1,
+    "G2 是本站内部分类，不能冒充已核验的官方或商家 SKU。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G2-BATCH",
+    "通常含 10-14 英镑余额",
+    "余额范围须按批次核验",
+    2,
+    "固定余额范围缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G2-BATCH",
+    "更适合第一次购买或急用",
+    "仅可在逐批证据齐全后评估",
+    1,
+    "推荐适用性缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G2-BATCH",
+    "已完成前置处理的 giffgaff 实体卡",
+    "本站称为 G2 的内部库存分类",
+    2,
+    "前置处理状态缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G2-BATCH",
+    "优先推荐",
+    "逐批证据待补",
+    1,
+    "证据不足时不得作优先推荐。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-SCHEMA",
+    '"@type":"Product","name":"G2 有余额卡"',
+    '"@type":"WebPage","name":"G2 库存分类说明"',
+    1,
+    "没有可核验的在售批次时不得把 G2 分类声明为 Product。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-SCHEMA",
+    '"sku":"g2-credit-card",',
+    "",
+    1,
+    "G2 是本站内部分类，不能冒充已核验的官方或商家 SKU。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "通常含 10-14 英镑余额",
+    "余额范围须按批次核验",
+    6,
+    "固定余额范围缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "余额通常为 10-14 英镑",
+    "当前未登记固定余额范围",
+    1,
+    "固定余额范围缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "更适合第一次购买或急用",
+    "仅可在逐批证据齐全后评估",
+    2,
+    "推荐适用性缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "已完成前置处理的 giffgaff 实体卡",
+    "本站称为 G2 的内部库存分类",
+    4,
+    "前置处理状态缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "优先推荐",
+    "逐批证据待补",
+    1,
+    "证据不足时不得作优先推荐。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-OTP",
+    "更适合接收海外平台短信验证码",
+    "不保证任何平台验证码",
+    1,
+    "OTP 适用性不能由卡片分类保证。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-OTP",
+    "急用英国手机号接收海外平台短信",
+    "不保证任何平台验证码或短信送达",
+    1,
+    "OTP 与短信送达不能由卡片分类保证。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "第一次购买 giffgaff 手机卡",
+    "仅在商家提供逐批证据后评估",
+    1,
+    "适用人群缺少逐批证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "不想处理首次充值和支付失败问题",
+    "不代替 giffgaff 官方激活或充值流程",
+    1,
+    "卡片分类不能保证绕过激活、充值或支付问题。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "付款前先确认当前库存和余额范围。",
+    "付款前要求商家提供对应批次证据。",
+    1,
+    "库存和余额必须由逐批证据支持。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "到手后按随卡说明插卡测试和登录账户。",
+    "收到后仅通过 giffgaff 官方渠道核验卡片状态。",
+    2,
+    "避免暗示未经核验的随卡凭证或登录状态。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "到手后先按随卡说明测试信号、余额和账户。",
+    "收到后仅通过 giffgaff 官方渠道核验卡片状态。",
+    1,
+    "避免暗示未经核验的随卡凭证或登录状态。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "国内圆通包邮，顺丰可到付",
+    "物流方式与时效须由当前批次履约证据支持",
+    1,
+    "物流承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "浙江发货，5 天内发出；急单请提前确认。",
+    "发货地点、承运商与时效须以已登记批次证据为准。",
+    2,
+    "发货承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "需要的客户较多，不保证随时有货；10 英镑以下或 15 英镑以上余额卡可单独议价。",
+    "当前没有已登记的可售批次、余额范围或价格；缺少逐批证据时不要付款。",
+    1,
+    "库存、余额和议价断言缺少真实批次记录。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g2/",
+    "SAFE-G2-BATCH",
+    "<h1>giffgaff G2 有余额卡</h1>",
+    "<h1>G2 库存分类说明</h1><p><strong>G2 是本站内部库存分类，不是 giffgaff 官方 SKU；当前缺少可核验的在售批次、余额、价格与履约证据，缺少逐批证据时不要付款。</strong></p>",
+    1,
+    "页面首屏必须明确分类身份与付款禁区。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-G2-BATCH",
+    "通常含 10-14 英镑余额",
+    "余额范围须按批次核验",
+    4,
+    "固定余额范围缺少逐批证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-G2-BATCH",
+    "更适合第一次购买、急用或不想处理首次充值的人",
+    "只应在逐批证据齐全后评估",
+    1,
+    "推荐适用性缺少逐批证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-G2-BATCH",
+    "已完成前置处理的 giffgaff 实体卡",
+    "本站称为 G2 的内部库存分类",
+    1,
+    "前置处理状态缺少逐批证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-G2-BATCH",
+    "优先推荐",
+    "逐批证据待补",
+    1,
+    "证据不足时不得作优先推荐。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-G2-OTP",
+    "更适合接收海外平台短信验证码",
+    "不保证任何平台验证码",
+    1,
+    "OTP 适用性不能由卡片分类保证。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "浙江发货，5 天内发出；急单请提前确认。",
+    "发货地点、承运商与时效须以已登记批次证据为准。",
+    1,
+    "发货承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "默认浙江发货，5 天内发出。圆通包邮，着急可以备注顺丰到付。",
+    "当前没有已登记的发货地点、承运商与时效证据；付款前必须核验。",
+    1,
+    "发货承诺缺少真实履约记录。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-COMMERCE-EVIDENCE",
+    "需要的客户较多，不保证随时有货；10 英镑以下或 15 英镑以上余额卡可单独议价。",
+    "当前没有已登记的可售批次、余额范围或价格；缺少逐批证据时不要付款。",
+    1,
+    "库存、余额和议价断言缺少真实批次记录。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G2-BATCH",
+    "适合第一次购买或急用",
+    "适用性须按批次证据评估",
+    1,
+    "适用性断言缺少当前批次证据。",
+  ),
+];
+
+const G0_SAFETY_RULES = [
+  safetyRule(
+    "/",
+    "SAFE-G0-SCHEMA",
+    '"@type":"Product","name":"giffgaff G0 新卡"',
+    '"@type":"WebPage","name":"G0 库存分类说明"',
+    1,
+    "没有可核验的在售 SKU 和批次时不得把 G0 分类声明为 Product。",
+  ),
+  safetyRule(
+    "/",
+    "SAFE-G0-BATCH",
+    "全新未激活",
+    "状态须按批次核验",
+    6,
+    "实体卡状态缺少当前批次证据。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G0-SCHEMA",
+    '"@type":"Product","name":"G0 新卡"',
+    '"@type":"WebPage","name":"G0 库存分类说明"',
+    1,
+    "没有可核验的在售 SKU 和批次时不得把 G0 分类声明为 Product。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G0-SCHEMA",
+    '"sku":"g0-new-card",',
+    "",
+    1,
+    "G0 是本站内部分类，不能冒充已核验的官方或商家 SKU。",
+  ),
+  safetyRule(
+    "/shop/",
+    "SAFE-G0-BATCH",
+    "全新未激活",
+    "状态须按批次核验",
+    2,
+    "实体卡状态缺少当前批次证据。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-G0-SCHEMA",
+    '"@type":"Product","name":"G0 新卡"',
+    '"@type":"WebPage","name":"G0 库存分类说明"',
+    1,
+    "没有可核验的在售 SKU 和批次时不得把 G0 分类声明为 Product。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-G0-SCHEMA",
+    '"sku":"g0-new-card",',
+    "",
+    1,
+    "G0 是本站内部分类，不能冒充已核验的官方或商家 SKU。",
+  ),
+  safetyRule(
+    "/shop/giffgaff-g0/",
+    "SAFE-G0-BATCH",
+    "全新未激活",
+    "状态须按批次核验",
+    6,
+    "实体卡状态缺少当前批次证据。",
+  ),
+  safetyRule(
+    "/guides/1-order/",
+    "SAFE-G0-BATCH",
+    "全新未激活",
+    "状态须按批次核验",
+    4,
+    "实体卡状态缺少当前批次证据。",
+  ),
+];
+
+export const LEGACY_SAFETY_OVERRIDE_MANIFEST = Object.freeze([
+  ...NINE_ESIM_SAFETY_RULES,
+  ...LEGACY_COMMERCE_META_SAFETY_RULES,
+  ...LEGACY_COMMERCE_CTA_SAFETY_RULES,
+  ...COMMERCE_EVIDENCE_SAFETY_RULES,
+  safetyRule(
+    "/guides/4-recharge-service/",
+    "SAFE-CREDENTIAL-BOUNDARY",
+    "涉及密码、验证码或账号安全时，要确认你理解操作风险。",
+    "本站不会要求或接收密码、短信验证码、Cookie 或完整支付卡信息；如有人索取，请立即停止。",
+    1,
+    "代充说明必须明确禁止接收密码、OTP、Cookie 和完整卡资料。",
+  ),
+  ...G2_SAFETY_RULES,
+  ...G0_SAFETY_RULES,
+]);
+
+export const UNSUPPORTED_COMMERCE_CLAIM_PATTERN =
+  /主卖|国内发货|浙江发货|圆通包邮|顺丰可到付|5 张起卖|5 张起发|适合第一次购买或急用|全新未激活|购买保障|省去首次充值麻烦|常规库存/u;
+
+export function assertNoUnsupportedCommerceClaims(html, route) {
+  const match = html.match(UNSUPPORTED_COMMERCE_CLAIM_PATTERN);
+  if (match) {
+    throw new Error(
+      `${route} retains unsupported commerce claim ${JSON.stringify(match[0])} after safety overrides`,
+    );
+  }
+}
+
+export function applyLegacySafetyOverrides(html, route) {
+  let output = html;
+  let applied = 0;
+  for (const rule of LEGACY_SAFETY_OVERRIDE_MANIFEST) {
+    if (rule.route !== route) continue;
+    const occurrences = output.split(rule.source).length - 1;
+    if (occurrences !== rule.expectedOccurrences) {
+      throw new Error(
+        `${route} expected safety override source text ${JSON.stringify(rule.source)} `
+        + `${rule.expectedOccurrences} time(s), found ${occurrences} (${rule.issueId})`,
+      );
+    }
+    output = output.replaceAll(rule.source, rule.replacement);
+    applied += occurrences;
+  }
+  return { html: output, applied };
+}
+
+const LLMS_TASK_SECTIONS = Object.freeze([
+  Object.freeze({
+    heading: "选卡、购买与收卡",
+    pages: Object.freeze([
+      ["/", "从本站首页进入 G0/G2 选卡、购买、教程和售后路径。"],
+      ["/answers/", "比较 G0 与 G2 的卡状态、账号边界、总成本和风险。"],
+      ["/shop/", "查看 G0/G2 分类与证据缺口；当前无已核验 SKU 或交易证据，请勿付款。"],
+      ["/shop/giffgaff-g0/", "了解 G0 分类、激活边界和当前缺失的 SKU 与交易证据。"],
+      ["/shop/giffgaff-g2/", "了解 G2 内部分类、风险边界和当前缺失的逐批证据。"],
+      ["/guides/0-intro/", "理解 giffgaff 英国手机卡、英国号码和常见使用场景。"],
+      ["/guides/1-order/", "按步骤核对购买前证据与风险；当前证据未齐，请勿付款。"],
+      ["/guides/7-arrival-checklist/", "收到 G0/G2 后逐项验收包装、卡状态、余额、网络和短信。"],
+      ["/guides/8-uk-sim-choice/", "按旅行、留学和跨境保号需求选择英国手机卡。"],
+      ["/tools/g0-g2-total-cost/", "自行输入卡价、运费、充值和使用支出来比较现金成本。"],
+      ["/contact/", "联系本站索取书面订单信息；联系入口不等于 SKU、支付或履约证据。"],
+    ]),
+  }),
+  Object.freeze({
+    heading: "激活、账号、充值与保号",
+    pages: Object.freeze([
+      ["/guides/", "浏览购买、激活、账号、保号、信号和漫游教程目录。"],
+      ["/guides/2-activate/", "在中国境内按官方边界激活实体 SIM 并排查失败。"],
+      ["/guides/3-account/", "管理用户名、密码、邮箱和账号恢复信息。"],
+      ["/guides/3-app/", "使用 giffgaff App 登录、查余额、看套餐和管理安全设置。"],
+      ["/guides/3-usage/", "核对六个月 inactive 规则、有效动作和停用边界。"],
+      ["/guides/4-recharge-service/", "判断何时需要代充值服务并准备必要的非敏感信息。"],
+      ["/tools/keep-number-reminder/", "在浏览器本地生成第五月保号缓冲提醒并导出日历。"],
+      ["/qa/00-username/", "查找或修改 giffgaff 用户名并处理常见登录问题。"],
+      ["/qa/01-change-number/", "了解更换号码的入口、限制和操作前备份事项。"],
+      ["/qa/02-topup/", "查询 Credit、voucher、套餐、余额充值和消费记录。"],
+      ["/qa/03-reissue/", "实体卡损坏或丢失后准备验证并申请补卡。"],
+      ["/qa/04-choose-number/", "了解挑选或更换号码时的限制和账号绑定风险。"],
+      ["/qa/05-multiple-number/", "理解多号码与账号管理的边界并建立卡片记录。"],
+      ["/qa/06-activation-expiration/", "评估新卡长期未激活的风险和操作时机。"],
+      ["/qa/07-voicemail-switch/", "了解关闭 voicemail 的常见方式和注意事项。"],
+    ]),
+  }),
+  Object.freeze({
+    heading: "信号、短信、平台与中国漫游",
+    pages: Object.freeze([
+      ["/guides/4-signal/", "从账号、设备和选网逐层排查无信号、普通短信与 OTP。"],
+      ["/guides/5-travel-data/", "区分旅行流量、漫游使用和中国境内低频短信场景。"],
+      ["/tools/china-roaming-cost/", "按已核验的中国漫游费率输入用量并估算费用。"],
+      ["/more/", "浏览 WeChat、Telegram 与 eSIM 等延伸使用主题。"],
+      ["/more/00-wechat/", "了解使用 giffgaff 号码注册或换绑 WeChat 的风险边界。"],
+      ["/more/02-telegram/", "了解 Telegram 注册、验证码和平台风控排查。"],
+      ["/qa/08-gv/", "判断英国号码用于 Google Voice 验证时的不确定性。"],
+      ["/qa/09-spread/", "理解邀请奖励与 Payback 的资格、周期和限制。"],
+    ]),
+  }),
+  Object.freeze({
+    heading: "eSIM、安全与研究方法",
+    pages: Object.freeze([
+      ["/more/03-esim/", "按官方 App 路径核对 eSIM 兼容、切换和失败恢复边界。"],
+      ["/more/04-esim-qrcode/", "区分官方 eSIM 凭证与第三方写卡并避免敏感凭证泄露。"],
+      ["/qa/", "浏览用户名、换号、充值、补卡、挑号和平台验证问答。"],
+      ["/guides/6-pitfalls/", "从总览检查购买、激活、保号、漫游、eSIM 和 OTP 风险。"],
+      ["/research/", "查看本站的来源拆解、竞品证据卡、版权边界和研究方法。"],
+    ]),
+  }),
+]);
 
 function escapeHtml(value) {
   return String(value)
@@ -84,44 +926,6 @@ export function injectCommerceWidget(html) {
   return `${output.slice(0, closingBody)}${renderCommerceWidget()}${output.slice(closingBody)}`;
 }
 
-const PRODUCT_SCHEMA_HOTFIX_ROUTES = new Set([
-  "/",
-  "/shop/",
-  "/shop/giffgaff-g0/",
-  "/shop/giffgaff-g2/",
-]);
-
-function neutralizeProductEntity(value, route) {
-  if (Array.isArray(value)) {
-    return value.map((item) => neutralizeProductEntity(item, route));
-  }
-  if (!value || typeof value !== "object") return value;
-
-  const output = {};
-  for (const [key, nested] of Object.entries(value)) {
-    if (key === "sku" && value["@type"] === "Product") continue;
-    output[key] = neutralizeProductEntity(nested, route);
-  }
-  if (value["@type"] === "Product") {
-    const entityUrl = typeof value.url === "string" ? new URL(value.url).pathname : "";
-    output["@type"] = entityUrl === route && route.startsWith("/shop/giffgaff-")
-      ? "WebPage"
-      : "Thing";
-  }
-  return output;
-}
-
-export function removeUnsupportedProductRichResults(html, route) {
-  if (!PRODUCT_SCHEMA_HOTFIX_ROUTES.has(route)) return html;
-  return html.replace(
-    /(<script\b[^>]*type=["']application\/ld\+json["'][^>]*>)([\s\S]*?)(<\/script>)/gi,
-    (script, opening, body, closing) => {
-      const schema = JSON.parse(body);
-      return `${opening}${JSON.stringify(neutralizeProductEntity(schema, route))}${closing}`;
-    },
-  );
-}
-
 async function copyTree(source, destination, { exclude = new Set() } = {}) {
   await mkdir(destination, { recursive: true });
   for (const entry of await readdir(source, { withFileTypes: true })) {
@@ -145,20 +949,70 @@ function sitemapXml() {
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`;
 }
 
-function shortLlmsText() {
-  return [
-    "# getgiffgaff",
+function decodeHtmlText(value) {
+  return String(value || "")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replaceAll("&amp;", "&")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function titleFromHtml(html, pathname) {
+  const title = decodeHtmlText(
+    (html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i) || [])[1],
+  );
+  if (!title) throw new Error(`${pathname} is missing a title for llms.txt`);
+  return title;
+}
+
+async function curatedLlmsText(outputRoot) {
+  const curatedRoutes = LLMS_TASK_SECTIONS.flatMap((section) =>
+    section.pages.map(([pathname]) => pathname));
+  if (
+    curatedRoutes.length !== PUBLIC_INDEXABLE_PATHS.length
+    || new Set(curatedRoutes).size !== curatedRoutes.length
+    || PUBLIC_INDEXABLE_PATHS.some((pathname) => !curatedRoutes.includes(pathname))
+  ) {
+    throw new Error("llms.txt task index must curate every indexable route exactly once");
+  }
+
+  const lines = [
+    "# getgiffgaff 中文任务索引",
     "",
-    "> 独立第三方中文教程与销售服务站，不代表 giffgaff 官方。",
+    "> getgiffgaff 是独立第三方中文教程与销售服务站，不代表 giffgaff 官方、官方客服或授权代表。",
     "",
-    ...PUBLIC_INDEXABLE_PATHS.map((pathname) => `- https://getgiffgaff.com${pathname}`),
+    "## 身份与事实边界",
     "",
-  ].join("\n");
+    "- 运营商规则、号码状态、资费和网络能力以操作当日的 giffgaff 官方页面与账户显示为准。",
+    "- 本站库存、价格、余额范围、发货和售后安排可能按批次变化，付款前需通过本站购买路径确认。",
+    "- 本站不保证号码永久有效、第三方 OTP 送达、搜索引擎收录或排名，也不保证被 AI 系统检索或引用。",
+    "- 下列清单只包含本站 39 个可索引 canonical URL；方法预览和证据不足页面不在此清单中。",
+  ];
+
+  for (const section of LLMS_TASK_SECTIONS) {
+    lines.push("", `## ${section.heading}`, "");
+    for (const [pathname, purpose] of section.pages) {
+      const html = await readFile(routeFile(outputRoot, pathname), "utf8");
+      const title = titleFromHtml(html, pathname);
+      lines.push(`- [${title}](https://getgiffgaff.com${pathname})：${purpose}`);
+    }
+  }
+  return `${lines.join("\n")}\n`;
 }
 
 export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
   const outputRoot =
     typeof options === "string" ? options : options?.outputRoot || DEFAULT_OUTPUT;
+  const adsensePublisherId =
+    typeof options === "object" && Object.hasOwn(options || {}, "adsensePublisherId")
+      ? options.adsensePublisherId
+      : undefined;
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputRoot, { recursive: true });
 
@@ -179,6 +1033,7 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
 
   let injectedPages = 0;
   let commerceWidgets = 0;
+  let safetyOverrides = 0;
   for (const route of LEGACY_ROUTES) {
     const filename = routeFile(outputRoot, route);
     const original = staticizeLegacyHtml(await readFile(filename, "utf8"));
@@ -199,7 +1054,9 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     ) {
       throw new Error(`${route} DOM changed outside the approved growth slot`);
     }
-    built = removeUnsupportedProductRichResults(built, route);
+    const safetyResult = applyLegacySafetyOverrides(built, route);
+    built = safetyResult.html;
+    safetyOverrides += safetyResult.applied;
     if (links) injectedPages += 1;
     commerceWidgets += 1;
     await writeFile(filename, built);
@@ -209,7 +1066,21 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     const source = routeFile(GROWTH_ROOT, route);
     const destination = routeFile(outputRoot, route);
     await mkdir(path.dirname(destination), { recursive: true });
-    await copyFile(source, destination);
+    await writeFile(
+      destination,
+      applyGrowthSafetyOverrides(await readFile(source, "utf8"), route),
+    );
+  }
+
+  for (const route of [
+    ...LEGACY_ROUTES,
+    ...INDEXABLE_GROWTH_ROUTES,
+    ...NOINDEX_GROWTH_ROUTES,
+  ]) {
+    assertNoUnsupportedCommerceClaims(
+      await readFile(routeFile(outputRoot, route), "utf8"),
+      route,
+    );
   }
   await copyTree(
     path.join(GROWTH_ROOT, "assets"),
@@ -226,7 +1097,16 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     await copyFile(path.join(PUBLIC_ROOT, filename), path.join(outputRoot, filename));
   }
   await writeFile(path.join(outputRoot, "sitemap.xml"), sitemapXml());
-  await writeFile(path.join(outputRoot, "llms.txt"), shortLlmsText());
+  await writeFile(path.join(outputRoot, "llms.txt"), await curatedLlmsText(outputRoot));
+  const adsense = await configureAdsenseVerification({
+    outputRoot,
+    publisherId: adsensePublisherId,
+    routes: [
+      ...LEGACY_ROUTES,
+      ...INDEXABLE_GROWTH_ROUTES,
+      ...NOINDEX_GROWTH_ROUTES,
+    ],
+  });
 
   return {
     outputRoot,
@@ -234,7 +1114,9 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     growthPages: INDEXABLE_GROWTH_ROUTES.length + NOINDEX_GROWTH_ROUTES.length,
     injectedPages,
     commerceWidgets,
+    safetyOverrides,
     indexablePages: PUBLIC_INDEXABLE_PATHS.length,
+    adsense,
   };
 }
 
@@ -244,6 +1126,9 @@ if (invokedDirectly) {
   const outputRoot = process.argv[2]
     ? path.resolve(process.argv[2])
     : DEFAULT_OUTPUT;
-  const report = await buildReleaseArtifact(outputRoot);
+  const report = await buildReleaseArtifact({
+    outputRoot,
+    adsensePublisherId: process.env.ADSENSE_PUBLISHER_ID,
+  });
   process.stdout.write(`${JSON.stringify(report)}\n`);
 }

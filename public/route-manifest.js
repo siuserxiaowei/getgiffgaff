@@ -1,6 +1,6 @@
 const BASELINE_DATE = "2026-06-11";
 const EVIDENCE_DATE = "2026-07-15";
-const GROWTH_DATE = "2026-07-16";
+const GROWTH_DATE = "2026-07-17";
 
 export const LEGACY_ROUTES = Object.freeze([
   "/",
@@ -51,6 +51,10 @@ export const NOINDEX_GROWTH_ROUTES = Object.freeze([
   "/tools/esim-compatibility/",
   "/research/china-network-sms/",
   "/research/otp-status/",
+  "/privacy/",
+  "/terms/",
+  "/refund/",
+  "/shipping/",
 ]);
 
 // Exact public files that are not HTML routes. Keeping this list beside the
@@ -58,6 +62,7 @@ export const NOINDEX_GROWTH_ROUTES = Object.freeze([
 // paths into a 200 response containing the home page.
 export const PUBLIC_STATIC_ASSET_PATHS = Object.freeze([
   "/assets/site.css",
+  "/assets/legacy-palette.css",
   "/gg-card-hero.png",
   "/favicon.svg",
   "/contact/wechat-qr.png",
@@ -71,6 +76,12 @@ export const PUBLIC_STATIC_ASSET_PATHS = Object.freeze([
   "/indexnow-key.txt",
   "/robots.txt",
   "/llms.txt",
+]);
+
+// Optional ownership-verification artifact. It is allowlisted at the edge but
+// is generated only when a real publisher ID is supplied during the build.
+export const OPTIONAL_PUBLIC_STATIC_ASSET_PATHS = Object.freeze([
+  "/ads.txt",
 ]);
 
 const EVIDENCE_LEGACY_ROUTES = new Set([
@@ -92,7 +103,7 @@ const COLLECTION_ROUTES = new Set([
   "/research/",
 ]);
 
-const PRODUCT_ROUTES = new Set([
+const COMMERCE_DETAIL_ROUTES = new Set([
   "/shop/giffgaff-g0/",
   "/shop/giffgaff-g2/",
 ]);
@@ -106,7 +117,10 @@ const TOOL_ROUTES = new Set([
 
 function schemaTypeFor(pathname) {
   if (pathname === "/") return "WebPage";
-  if (PRODUCT_ROUTES.has(pathname)) return "Product";
+  if (["/privacy/", "/terms/", "/refund/", "/shipping/"].includes(pathname)) {
+    return "WebPage";
+  }
+  if (COMMERCE_DETAIL_ROUTES.has(pathname)) return "WebPage";
   if (pathname === "/contact/") return "ContactPage";
   if (COLLECTION_ROUTES.has(pathname) || pathname.startsWith("/research/")) {
     return "CollectionPage";
@@ -116,7 +130,7 @@ function schemaTypeFor(pathname) {
 }
 
 function commerceFor(pathname) {
-  if (pathname === "/shop/" || PRODUCT_ROUTES.has(pathname)) return "direct";
+  if (pathname === "/shop/" || COMMERCE_DETAIL_ROUTES.has(pathname)) return "direct";
   if (pathname === "/contact/") return "support";
   if (pathname.startsWith("/research/")) return "none";
   return "contextual";

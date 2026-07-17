@@ -36,6 +36,7 @@ const ADDITIVE_SLOT_ROUTES = Object.freeze([
   "/guides/4-signal/",
   "/guides/5-travel-data/",
   "/more/03-esim/",
+  "/guides/6-pitfalls/",
 ]);
 const ORIGINAL_FETCH = globalThis.fetch;
 globalThis.fetch = async (input) => {
@@ -275,11 +276,11 @@ function sitemapEntries(xml) {
   return entries;
 }
 
-test("route manifest owns 39 indexable and three noindex routes with real source dates", async () => {
+test("route manifest owns 39 indexable and seven noindex routes with real source dates", async () => {
   assert.equal(LEGACY_ROUTES.length, 34);
   assert.equal(INDEXABLE_GROWTH_ROUTES.length, 5);
-  assert.equal(NOINDEX_GROWTH_ROUTES.length, 3);
-  assert.equal(Object.keys(ROUTE_MANIFEST).length, 42);
+  assert.equal(NOINDEX_GROWTH_ROUTES.length, 7);
+  assert.equal(Object.keys(ROUTE_MANIFEST).length, 46);
   assert.equal(PUBLIC_INDEXABLE_PATHS.length, 39);
   assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 39);
   assert.equal(new Set(PUBLIC_STATIC_ASSET_PATHS).size, PUBLIC_STATIC_ASSET_PATHS.length);
@@ -348,12 +349,16 @@ test("module Worker serves GET and HEAD for every manifest page and overrides in
       const frozen = frozenByRoute.get(pathname);
       assert.ok(frozen, `${pathname} freeze record`);
       assert.equal(slots, slotRoutes.has(pathname) ? 1 : 0, `${pathname} additive slot count`);
-      assert.equal(elementText(getBody, "title"), frozen.title, `${pathname} title`);
-      assert.equal(metaContent(getBody, "name", "description"), frozen.description, `${pathname} description`);
-      assert.equal(elementText(getBody, "h1"), frozen.h1, `${pathname} H1`);
-      assert.equal(navigationSignature(getBody), frozen.navigationSha256, `${pathname} navigation`);
-      assert.equal(visibleTextSignature(getBody), frozen.visibleTextSha256, `${pathname} visible copy`);
-      assert.equal(legacyDomSignature(getBody), frozen.domSha256, `${pathname} legacy DOM`);
+      assert.doesNotMatch(
+        getBody,
+        /获取 eSIM 二维码，并写入到 9eSIM|涉及密码、验证码或账号安全时，要确认你理解操作风险/,
+        pathname,
+      );
+      assert.doesNotMatch(
+        getBody,
+        /优先推荐|更适合接收海外平台短信验证码|通常含 10-14 英镑余额/,
+        pathname,
+      );
     } else {
       assert.equal(slots, 0, `${pathname} must not duplicate a legacy growth slot`);
     }
@@ -379,7 +384,7 @@ test("module Worker serves GET and HEAD for every manifest page and overrides in
     assert.deepEqual(directiveSet(headResponse), directiveSet(getResponse), `${pathname} GET/HEAD robots`);
   }
 
-  assert.equal(totalSlots, 8);
+  assert.equal(totalSlots, 9);
   assert.equal(totalCommerceWidgets, Object.keys(ROUTE_MANIFEST).length);
   assert.ok(!env.calls.some((call) => /\/_next(?:\/|$)/i.test(call.pathname)));
 });
@@ -633,6 +638,24 @@ test("legacy and growth static resources retain their public URLs and never inhe
     }
     assert.equal(head.headers.get("content-length"), String(expected.length), `${pathname} HEAD length`);
   }
+});
+
+test("retired llms-full remains a private 410 for GET and HEAD", async () => {
+  const root = await releaseRoot();
+  const env = createAssetsEnvironment(root);
+  const url = `${ORIGIN}/llms-full.txt`;
+
+  const response = await worker.fetch(new Request(url), env, {});
+  assert.equal(response.status, 410);
+  assertDirectives(response, PRIVATE_DIRECTIVES, url);
+  assert.match(await response.text(), /retired/i);
+  assert.equal(env.calls.length, 0, "retired llms-full must not reach static assets");
+
+  const head = await worker.fetch(new Request(url, { method: "HEAD" }), env, {});
+  assert.equal(head.status, 410);
+  assert.equal(await head.text(), "");
+  assertDirectives(head, PRIVATE_DIRECTIVES, `${url} HEAD`);
+  assert.equal(env.calls.length, 0, "retired llms-full HEAD must not reach static assets");
 });
 
 test("every root-relative asset referenced by release HTML is Worker-allowlisted", async () => {

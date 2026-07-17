@@ -1,0 +1,204 @@
+{
+  "schema_version": "1.0",
+  "record_id": "TODO-UNIQUE-RECORD-ID",
+  "captured_at": "",
+  "scope": "production-mobile-test",
+  "privacy_review": {
+    "reviewer_role": "",
+    "reviewed_at": "",
+    "redacted_copy_only": false,
+    "raw_artifacts_in_repository": false,
+    "checks": {
+      "no_full_name": false,
+      "no_phone": false,
+      "no_address": false,
+      "no_email": false,
+      "no_credentials_or_otp": false,
+      "no_full_order_or_transaction_id": false
+    }
+  },
+  "products": [
+    {
+      "variant": "G0",
+      "sku": {
+        "url": "https://REPLACE.invalid/direct-g0-sku",
+        "final_url": "https://REPLACE.invalid/direct-g0-sku",
+        "checked_at": "",
+        "http_status": 0,
+        "evidence": {
+          "path": "artifacts/g0-sku-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "order": {
+        "masked_reference": "",
+        "item_label": "",
+        "ordered_at": "",
+        "amount": { "currency": "", "value": null },
+        "evidence": {
+          "path": "artifacts/g0-order-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "payment": {
+        "status": "pending",
+        "masked_reference": "",
+        "payee_display_name": "",
+        "paid_at": "",
+        "amount": { "currency": "", "value": null },
+        "evidence": {
+          "path": "artifacts/g0-payment-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "fulfillment": {
+        "status": "pending",
+        "fulfilled_at": "",
+        "method": "",
+        "item_matches_order": false,
+        "evidence": {
+          "path": "artifacts/g0-fulfillment-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "refund": {
+        "status": "pending",
+        "masked_reference": "",
+        "requested_at": "",
+        "completed_at": "",
+        "amount": { "currency": "", "value": null },
+        "evidence": {
+          "path": "artifacts/g0-refund-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "support": {
+        "status": "pending",
+        "masked_reference": "",
+        "channel": "",
+        "opened_at": "",
+        "resolved_at": "",
+        "redacted_summary": "",
+        "evidence": {
+          "path": "artifacts/g0-support-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      }
+    },
+    {
+      "variant": "G2",
+      "sku": {
+        "url": "https://REPLACE.invalid/direct-g2-sku",
+        "final_url": "https://REPLACE.invalid/direct-g2-sku",
+        "checked_at": "",
+        "http_status": 0,
+        "evidence": {
+          "path": "artifacts/g2-sku-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "order": {
+        "masked_reference": "",
+        "item_label": "",
+        "ordered_at": "",
+        "amount": { "currency": "", "value": null },
+        "evidence": {
+          "path": "artifacts/g2-order-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "payment": {
+        "status": "pending",
+        "masked_reference": "",
+        "payee_display_name": "",
+        "paid_at": "",
+        "amount": { "currency": "", "value": null },
+        "evidence": {
+          "path": "artifacts/g2-payment-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "fulfillment": {
+        "status": "pending",
+        "fulfilled_at": "",
+        "method": "",
+        "item_matches_order": false,
+        "evidence": {
+          "path": "artifacts/g2-fulfillment-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "refund": {
+        "status": "pending",
+        "masked_reference": "",
+        "requested_at": "",
+        "completed_at": "",
+        "amount": { "currency": "", "value": null },
+        "evidence": {
+          "path": "artifacts/g2-refund-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      },
+      "support": {
+        "status": "pending",
+        "masked_reference": "",
+        "channel": "",
+        "opened_at": "",
+        "resolved_at": "",
+        "redacted_summary": "",
+        "evidence": {
+          "path": "artifacts/g2-support-redacted.png",
+          "sha256": "",
+          "media_type": "image/png",
+          "captured_at": "",
+          "redacted": false,
+          "redaction_review": "pending"
+        }
+      }
+    }
+  ]
+}

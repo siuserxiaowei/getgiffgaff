@@ -8,6 +8,60 @@ import { renderCommerceWidget } from "../site/growth/commerce-widget.js";
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const OUTPUT_ROOT = path.join(ROOT, "site", "growth");
 const ORIGIN = "https://getgiffgaff.com";
+const SOCIAL_IMAGE = `${ORIGIN}/gg-card-hero.png`;
+
+const INDEXABLE_ANSWER_EVIDENCE = Object.freeze({
+  "/guides/7-arrival-checklist/": Object.freeze({
+    kind: "mixed",
+    method: "本站验收与问题分流方法",
+    sourceUrls: Object.freeze([
+      "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+      "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit",
+      "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+      "https://help.giffgaff.com/en/articles/246074-policy-to-manage-illegitimate-sms-usage",
+    ]),
+  }),
+  "/guides/8-uk-sim-choice/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://www.giffgaff.com/boiler-plate/terms",
+      "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+      "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+    ]),
+  }),
+  "/tools/keep-number-reminder/": Object.freeze({
+    kind: "mixed",
+    method: "本站提醒日期计算方法",
+    sourceUrls: Object.freeze([
+      "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",
+    ]),
+  }),
+  "/tools/china-roaming-cost/": Object.freeze({
+    kind: "mixed",
+    method: "本站漫游费用计算方法",
+    sourceUrls: Object.freeze([
+      "https://www.giffgaff.com/roaming/china",
+      "https://help.giffgaff.com/en/articles/365501-giffgaff-travel-data-add-ons-and-how-they-work",
+    ]),
+  }),
+  "/tools/g0-g2-total-cost/": Object.freeze({
+    kind: "method",
+    method: "本站公开的用户输入公式",
+    sourceUrls: Object.freeze([]),
+  }),
+});
+
+const GROWTH_SAFETY_OVERRIDE_MANIFEST = Object.freeze([
+  Object.freeze({
+    route: "/tools/g0-g2-total-cost/",
+    issueId: "SAFE-GROWTH-COMMERCE-CLASSIFICATION",
+    source:
+      "G0 用于描述全新未激活卡，G2 用于描述本站当前有余额卡库存。它们不是 giffgaff 官方套餐或官方产品名称；每批卡状态、余额范围、价格和发货安排应在付款前确认。",
+    replacement:
+      "G0 和 G2 仅是本站内部分类，不能据此推断卡片状态、余额、库存或可售性。它们不是 giffgaff 官方套餐或官方产品名称；当前缺少 SKU 与交易证据，资料补齐前请勿付款。",
+    expectedOccurrences: 1,
+  }),
+]);
 
 function escapeHtml(value) {
   return String(value)
@@ -57,6 +111,12 @@ function schemaFor(page) {
     pageNode.author = { "@id": `${ORIGIN}/#organization` };
     pageNode.publisher = { "@id": `${ORIGIN}/#organization` };
     pageNode.mainEntityOfPage = url;
+    pageNode.image = {
+      "@type": "ImageObject",
+      url: SOCIAL_IMAGE,
+      width: 1400,
+      height: 1000,
+    };
   }
   if (page.schemaType === "WebApplication") {
     pageNode.applicationCategory = "UtilitiesApplication";
@@ -103,17 +163,90 @@ function footer() {
   return `<footer class="site-footer"><div><h3>getgiffgaff</h3><p>面向中文用户的 giffgaff 英国手机卡购买与教程站。现有 G0/G2 商品、微信小玉和快团团入口继续保留。</p></div><div><h3>常用入口</h3><ul><li><a href="/guides/">中文教程</a></li><li><a href="/shop/">手机卡商城</a></li><li><a href="/contact/">微信联系小玉</a></li></ul></div><p class="footer-warning">本站为独立第三方中文教程与销售服务站，不代表 giffgaff 官方。运营商规则与费用请以核验当日官方页面为准。</p></footer>`;
 }
 
+function classifySectionSourceLinks(html, sources) {
+  let output = html;
+  for (const source of sources) {
+    output = output.replaceAll(
+      `<a href="${source.url}"`,
+      `<a data-source-role="official" href="${source.url}"`,
+    );
+  }
+  return output;
+}
+
 function renderSources(page) {
+  if (page.sources.length === 0) {
+    return `<section class="growth-sources" id="official-sources"><h2>事实来源与审核状态</h2><p class="growth-review"><strong>当前状态：</strong>本站尚未取得足以发布完整政策的经营事实和负责人审核。本页只公开缺口，不以运营商条款代替本站政策。</p></section>`;
+  }
   return `<section class="growth-sources" id="official-sources"><h2>官方来源、核验日期与方法边界</h2><p class="growth-review"><strong>核验日期：</strong>${escapeHtml(page.reviewedAt)}。页面由 getgiffgaff 作为 Organization 负责；没有真实个人资料时不使用虚构署名。竞品只用于发现问题，事实结论回到官方来源。</p><div class="growth-source-list">${page.sources
     .map(
-      (source) => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.label)}<small>直接官方来源 · 核验 ${escapeHtml(page.reviewedAt)}</small></a>`,
+      (source) => `<a data-source-role="official" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.label)}<small>直接官方来源 · 核验 ${escapeHtml(page.reviewedAt)}</small></a>`,
     )
     .join("")}</div></section>`;
 }
 
+function explicitAnswerEvidence(page) {
+  if (page.indexPolicy !== "index") return null;
+  const contract = INDEXABLE_ANSWER_EVIDENCE[page.path];
+  if (!contract) throw new Error(`${page.path} is missing an explicit answer evidence contract`);
+  const sources = contract.sourceUrls.map((url) => {
+    const matches = page.sources.filter((source) => source.url === url);
+    if (matches.length !== 1) {
+      throw new Error(
+        `${page.path} answer evidence source ${url} must occur exactly once; found ${matches.length}`,
+      );
+    }
+    return matches[0];
+  });
+  return { ...contract, sources };
+}
+
 function renderInlineEvidence(page) {
-  const primary = page.sources[0];
-  return `<p class="growth-inline-source"><strong>主要依据：</strong><a href="${escapeHtml(primary.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(primary.label)}</a><span>官方来源 · 核验 ${escapeHtml(page.reviewedAt)}</span></p>`;
+  const explicit = explicitAnswerEvidence(page);
+  if (explicit) {
+    const officialLinks = explicit.sources
+      .map((source) => `<a data-source-role="official" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.label)}</a>`)
+      .join("；");
+    if (explicit.kind === "method") {
+      return `<p class="growth-inline-source" data-answer-evidence="method"><strong>答案依据：</strong>${escapeHtml(explicit.method)}；这段直接答案不引用运营商事实，也不证明库存、价格、支付或交易结果。<span>方法复核 · ${escapeHtml(page.reviewedAt)}</span></p>`;
+    }
+    if (explicit.kind === "mixed") {
+      return `<p class="growth-inline-source" data-answer-evidence="mixed"><strong>答案依据：</strong>${escapeHtml(explicit.method)}；相关运营商事实见：${officialLinks}<span>本站方法 + 官方来源 · 核验 ${escapeHtml(page.reviewedAt)}</span></p>`;
+    }
+    return `<p class="growth-inline-source" data-answer-evidence="official"><strong>直接答案依据：</strong>${officialLinks}<span>官方来源 · 核验 ${escapeHtml(page.reviewedAt)}</span></p>`;
+  }
+  const answerSources = page.answerSources ?? page.sources.slice(0, 1);
+  if (answerSources.length === 0 && page.sources.length === 0) {
+    return `<p class="growth-inline-source"><strong>证据状态：</strong>缺少经营负责人确认的真实业务资料；本页不能替代完整政策。</p>`;
+  }
+  if (answerSources.length === 0) {
+    return `<p class="growth-inline-source"><strong>依据类型：</strong>本站公开方法与用户输入公式；这段直接答案不引用运营商事实，也不证明库存、价格、支付或交易结果。<span>方法复核 · ${escapeHtml(page.reviewedAt)}</span></p>`;
+  }
+  return `<p class="growth-inline-source"><strong>直接答案依据：</strong>${answerSources
+    .map((source) => `<a data-source-role="official" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.label)}</a>`)
+    .join("；")}<span>官方来源 · 核验 ${escapeHtml(page.reviewedAt)}</span></p>`;
+}
+
+export function applyGrowthSafetyOverrides(html, route) {
+  let output = html;
+  for (const rule of GROWTH_SAFETY_OVERRIDE_MANIFEST) {
+    if (rule.route !== route) continue;
+    const sourceOccurrences = output.split(rule.source).length - 1;
+    const replacementOccurrences = output.split(rule.replacement).length - 1;
+    const isUnapplied =
+      sourceOccurrences === rule.expectedOccurrences && replacementOccurrences === 0;
+    const isAlreadyApplied =
+      sourceOccurrences === 0 && replacementOccurrences === rule.expectedOccurrences;
+    if (!isUnapplied && !isAlreadyApplied) {
+      throw new Error(
+        `${route} expected growth safety source text ${JSON.stringify(rule.source)} `
+        + `or replacement ${rule.expectedOccurrences} time(s), found source=${sourceOccurrences} `
+        + `replacement=${replacementOccurrences} (${rule.issueId})`,
+      );
+    }
+    if (isUnapplied) output = output.replaceAll(rule.source, rule.replacement);
+  }
+  return output;
 }
 
 function analyticsEventForHref(href) {
@@ -139,16 +272,16 @@ export function renderGrowthPage(page) {
     : "";
   const sections = page.sections
     .map(
-      (section) => `<section id="${escapeHtml(section.id)}"><h2>${escapeHtml(section.title)}</h2>${section.html}</section>`,
+      (section) => `<section id="${escapeHtml(section.id)}"><h2>${escapeHtml(section.title)}</h2>${classifySectionSourceLinks(section.html, page.sources)}</section>`,
     )
     .join("");
   const toc = page.sections
     .map((section) => `<li><a href="#${escapeHtml(section.id)}">${escapeHtml(section.title)}</a></li>`)
     .join("");
   const toolScript = page.tool
-    ? '<script type="module" src="/growth-assets/growth-ui.js"></script>'
+    ? '  <script type="module" src="/growth-assets/growth-ui.js"></script>\n'
     : "";
-  return `<!doctype html>
+  const html = `<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -163,11 +296,11 @@ export function renderGrowthPage(page) {
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
   <meta property="og:url" content="${url}">
-  <meta property="og:image" content="${ORIGIN}/gg-card-hero.png">
+  <meta property="og:image" content="${SOCIAL_IMAGE}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
-  <meta name="twitter:image" content="${ORIGIN}/gg-card-hero.png">
+  <meta name="twitter:image" content="${SOCIAL_IMAGE}">
   <link rel="icon" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="stylesheet" href="/growth-assets/growth.css">
@@ -183,7 +316,7 @@ export function renderGrowthPage(page) {
         <p>${escapeHtml(page.deck)}</p>
         <div class="growth-meta"><span>更新 ${escapeHtml(page.updatedAt)}</span><span>核验 ${escapeHtml(page.reviewedAt)}</span><span>${page.indexPolicy === "index" ? "原创教程/工具" : "方法预览 · noindex"}</span></div>
       </header>
-      <p class="growth-disclosure">本站是独立第三方中文教程与销售服务站，不代表 giffgaff 官方。本文为独立原创内容，不复制竞品正文、截图或图片。</p>
+      <p class="growth-disclosure"><strong>实体与范围说明：</strong>本站是独立第三方中文教程与销售服务站，不代表 giffgaff 官方。G0 / G2 是本站用于区分库存状态和交付方式的库存分类，不是 giffgaff 官方产品名。本文为独立原创内容，不复制竞品正文、截图或图片。</p>
       <div class="legacy-answer"><strong>直接答案</strong><p>${escapeHtml(page.directAnswer)}</p></div>
       ${renderInlineEvidence(page)}
       ${threshold}
@@ -195,9 +328,10 @@ export function renderGrowthPage(page) {
   </main>
   ${footer()}
   ${renderCommerceWidget()}
-  ${toolScript}
-</body>
-</html>`;
+${toolScript}</body>
+</html>
+`;
+  return applyGrowthSafetyOverrides(html, page.path);
 }
 
 function localPath(pathname) {

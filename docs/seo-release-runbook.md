@@ -1,6 +1,6 @@
 # getgiffgaff SEO / GEO 发布运维清单
 
-> 状态（2026-07-16）：追加式增长层已发布到生产，34 个旧页面保持冻结，当前 manifest 为 42 个页面、sitemap 为 39 个可索引 URL。生产功能与缓存门禁已通过；Cloudflare 第一条规范化规则仍需补入 5 个新增无尾斜杠路径，因此完整生产 SEO 门禁尚有 15 个一跳变体失败。Google/Bing 所有权验证仍有效，IndexNow 已接收本批 39 URL；百度验证与搜索平台后台回执仍待账号所有者完成。本文同时保留为后续发布 SOP。命令不包含任何密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
+> 状态（2026-07-17）：生产仍是 2026-07-16 的 42 路由增长层；当前本地候选为 34 legacy + 12 growth = 46 个公开 HTML 路由，其中 39 个可索引、7 个 `noindex`，sitemap 仍为 39 URL。本地 149/149 测试通过，并产生 240 次精确的路由级安全替换；这些凭证、商业、G2 和 9eSIM 修正尚未部署。本地已建立隐私、条款、退款和物流的 `noindex` 状态页，但生产四路径仍为 404，且缺失真实经营事实的完整政策仍 blocked。Cloudflare 规则应与 45 个非根公开路径完全一致；生产原有 5 个增长路径仍造成 15 个两跳组合，生产 robots 另有 2 个 Managed/仓库来源冲突。G0/G2 真实交易所需 12 份脱敏证据仍缺失。当前任务不执行部署；任一上述门禁未闭环时，禁止合并或推广，任何技术止损部署也必须由发布负责人单独审批。Google/Bing 所有权验证仍有效，IndexNow 曾接收 39 URL，但后台回读仍待账号所有者确认；百度仍受实名与验证码门禁限制。命令不包含密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
 
 ## 1. 发布门槛与责任人
 
@@ -11,8 +11,10 @@
 - [ ] 可查看 Cloudflare 请求日志、Verified Bot 字段及缓存状态的权限。
 - [ ] 业务负责人已确认经营主体、客服渠道、服务时间、响应 SLA、发货、退换/退款、作者与审核人信息。缺失时不得自行补写或猜测。
 - [ ] 业务负责人已提供 giffgaff 书面品牌许可，或法务已确认可接受的域名与表述边界。没有许可时，当前域只按过渡资产处理。
+- [ ] G0/G2 各有可核验的直达 SKU，并且 SKU、订单、支付成功、履约完成、退款完成、售后已解决共 12 份独立脱敏证据通过本地门禁。
+- [ ] 有权限的独立 reviewer 已在对应 SKU、订单、支付、履约、退款和售后源系统复核这 12 份证据；本地校验器只检查证据包结构、文件、哈希、时序和隐私门禁，不联网验证外部记录真实性。
 
-技术性 `noindex` 修复可以独立发布；依赖真实业务资料的 Contact、Schema 与政策内容，资料未确认时不得用占位信息冒充正式内容。
+技术性 `noindex` 止损只能在发布负责人单独批准后作为最小候选发布；本地测试通过不构成发布授权。依赖真实业务资料的 Contact、Schema 与政策内容，资料未确认时不得用占位信息冒充正式内容。
 
 ## 2. T-72 小时：冻结与留档
 
@@ -59,7 +61,35 @@ npm run verify:browser -- http://127.0.0.1:4173 /tmp/getgiffgaff-visual-release
 
 任一项失败即停止，不执行部署。
 
+当前本地候选的已知基线是 149/149 测试、46 路由（39 indexable + 7 noindex）和 240 次路由级安全替换。数量漂移必须先解释并更新验收记录，不得临时放宽测试。
+
 ## 4. 本地与 Pages Preview 检查
+
+### 4.1 Cloudflare 规则与交易证据的本地预检
+
+在进入 Preview 或由有权限的负责人操作 Cloudflare 前，先使用只读本地工具：
+
+```bash
+# 从 ROUTE_MANIFEST 生成第一条动态重定向规则片段，当前应为 45 个非根公开 HTML 路径
+npm run cloudflare:rules:generate
+
+# 如需保存纯 JSON，用 --silent 防止 npm 脚本标题混入文件
+npm run --silent cloudflare:rules:generate > /tmp/getgiffgaff-canonical-rule.json
+
+# 对 Cloudflare 导出的规则 JSON 做离线对比，不调用更新 API
+npm run cloudflare:rules:validate -- \
+  --file /absolute/path/to/cloudflare-ruleset-export.json \
+  --rule-id 23a9c07759414918816c2e768101d6f0
+
+# 验证私密目录中的脱敏 G0/G2 真实交易证据包
+npm run validate:commerce-evidence -- \
+  --file /absolute/private/path/commerce-evidence.json \
+  --max-age-days 30
+```
+
+Cloudflare 工具只生成待审阅的单条规则片段，不得用它覆盖完整 zone ruleset。离线校验通过后仍需有权限者人工更新规则，并在生产运行 `npm run postdeploy`。
+
+交易证据模板与字段说明见 [`docs/operations/cloudflare-and-commerce-evidence.md`](operations/cloudflare-and-commerce-evidence.md)。模板默认必然失败；只有 G0/G2 的直达 SKU、订单、支付成功、履约完成、退款完成、售后已解决的实际记录及 12 份脱敏文件齐全时才能通过。该命令不会打开 SKU URL，也不会登录、下单、支付、退款或联系客服。
 
 本地启动 Pages：
 
@@ -125,8 +155,19 @@ npm run deploy
 - 正式视觉报告见 [`docs/qa/browser-visual-report-2026-07-16.json`](qa/browser-visual-report-2026-07-16.json)：14/14 旧页双视口比较、10/10 新增页截图、34/34 交互，错误 0、阈值失败 0；13 组无像素变化，手机商城 6 个像素变化（0.001823%），SSIM 全部为 1。
 - 公开 canonical HTML 已启用版本化 Cache API：同一路由生产实测 `MISS → HIT → HIT`；Cookie 请求绕过公共缓存并返回 `private, no-store`。
 - IndexNow key 已部署到 `/indexnow-key.txt`；2026-07-16 向 `api.indexnow.org` 提交 39 个可索引 canonical URL，回执为 HTTP 202。该状态只表示批次已接收、key 校验待完成，不表示已经抓取或收录。
-- 当前唯一技术发布阻断是 Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 仍只有 2026-07-15 的 33 个旧路径。需在其 `http.request.uri.path in {...}` 集合中追加 `/guides/7-arrival-checklist`、`/guides/8-uk-sim-choice`、`/tools/keep-number-reminder`、`/tools/china-roaming-cost`、`/tools/g0-g2-total-cost`，保持规则第一优先级、动态目标与 301 设置不变。未补齐前，生产 `postdeploy` 会对这 5 个路由的 `www`、HTTP apex、HTTP www 无尾斜杠组合报告 15 个两跳失败，不能宣称完整 SEO 门禁全绿。
+- 截至该次生产记录，已知技术发布阻断是 Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 仍只有 2026-07-15 的 33 个旧路径。需在其 `http.request.uri.path in {...}` 集合中追加 `/guides/7-arrival-checklist`、`/guides/8-uk-sim-choice`、`/tools/keep-number-reminder`、`/tools/china-roaming-cost`、`/tools/g0-g2-total-cost`，保持规则第一优先级、动态目标与 301 设置不变。未补齐前，生产 `postdeploy` 会对这 5 个路由的 `www`、HTTP apex、HTTP www 无尾斜杠组合报告 15 个两跳失败，不能宣称完整 SEO 门禁全绿。
 - GSC apex TXT 和 Bing CNAME 所有权验证仍在公网解析；同一个 sitemap URL 曾在两平台提交。当前 39 URL 是否已被平台后台重新读取仍需登录后台确认。百度尚无可核验证明，仍需账号所有者完成实名、手机号和验证码流程。
+
+2026-07-17 本地候选记录（未部署）：
+
+- manifest 为 46 个公开 HTML 路由：34 legacy + 12 growth；39 indexable + 7 noindex。新增的 4 个 noindex 路由是 `/privacy/`、`/terms/`、`/refund/`和 `/shipping/`。
+- 四页只是「信息待经营负责人确认」的状态页，不是完整政策。生产仍为 404；在真实主体、隐私流程、交易条款、退款与物流事实被确认前，必须暂停付款和推广。
+- 构建会先验证 34 个冻结源页签名，再应用 240 次精确、路由级的凭证、商业、G2 和 9eSIM 安全替换。本地通过不代表生产已修复。
+- `npm run test:coverage` 最终复测为 149/149；line 88.29%、branch 77.16%、functions 88.58%。`npm run verify` 已通过本地发布物门禁。
+- 最新隔离端口浏览器运行完成 34 个交互、控制台错误 0，但有 12 个旧页/视口因安全文案变更超出生产视觉阈值。禁止放宽阈值或恢复无证据话术；须人工批准这些预期差异并建立新的发布基线。
+- Cloudflare 本地生成/离线验证的目标是 45 个非根公开 HTML 路径。最后仍必须由有权限者更新生产规则，并使 `npm run postdeploy` 零错误。
+- 最新只读 `postdeploy` 为 21 项：15 个两跳、4 个政策状态页 404、2 个 Cloudflare robots 来源策略冲突（`cohere-ai`、`anthropic-ai`）。
+- G0/G2 真实交易门禁要求每个产品的 SKU、订单、支付、履约、退款和售后六阶段，共 12 份独立脱敏证据文件。当前缺失，空模板必须失败。
 
 - [x] 生产别名传播完成后，34 URL 门禁已成功退出；若自动 `postdeploy` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑，仍失败则按第 9 节回滚或向前修复。
 
@@ -160,7 +201,7 @@ https://getgiffgaff.com/contact/
 
 不得出现 `www` 200、临时重定向、两跳链、跨域跳转或循环。
 
-如果 Cloudflare 在 Pages Worker 之前先把 HTTP 跳到 HTTPS，单靠 Worker 无法消除 `HTTP → HTTPS www → HTTPS apex` 链。此时需在 Cloudflare Redirect Rules / Bulk Redirects 中配置优先级更高的规范化规则（需 Zone Rules 权限）：`www.getgiffgaff.com` 指向 `https://getgiffgaff.com`，保留 query、子路径和 path suffix；对 39 个可索引 HTML 路由中除 `/` 外的 38 个无尾斜杠路径，规则目标必须直接是最终带 `/` URL。以生产 `verify:seo` 的组合变体结果为准，不能只验证 HTTPS www。
+如果 Cloudflare 在 Pages Worker 之前先把 HTTP 跳到 HTTPS，单靠 Worker 无法消除 `HTTP → HTTPS www → HTTPS apex` 链。此时需在 Cloudflare Redirect Rules / Bulk Redirects 中配置优先级更高的规范化规则（需 Zone Rules 权限）：`www.getgiffgaff.com` 指向 `https://getgiffgaff.com`，保留 query、子路径和 path suffix；对 46 个公开 HTML 路由中除 `/` 外的 45 个无尾斜杠路径，规则目标必须直接是最终带 `/` URL。以生产 `verify:seo` 的组合变体结果为准，不能只验证 HTTPS www。
 
 ## 6. 发布后 39 URL 强制验收
 
@@ -179,6 +220,7 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 - [x] JSON-LD 可解析，不引用 `pages.dev`，不把本站声明为 giffgaff 官方实体、母公司或官方 seller。
 - [x] `/llms.txt`、`/llms-full.txt` 保持 supporting `noindex, follow, noarchive`；404、API 和敏感路由保持 `noindex, nofollow, noarchive`；`robots.txt` 不带继承的 X-Robots-Tag。这些固定探针由 `verify:seo` 自动检查。
 - [x] Product JSON-LD 不包含未经发布证据支持的 `offers`、价格、库存、评价或聚合评分。
+- [ ] 7 个 `noindex` 支持/状态路由均返回 200 且保持 `noindex, follow, noarchive`。当前生产 `/privacy/`、`/terms/`、`/refund/`和 `/shipping/` 仍为 404。
 
 再用真实 Googlebot Smartphone 抓取结果确认核心页面。仅用伪造 UA 的 `curl` 不足以证明真实 Googlebot 可访问；最终以 GSC URL Inspection 的“测试实际网址”和 Cloudflare Verified Bot 日志为准。
 

@@ -1,4 +1,4 @@
-const REVIEWED_AT = "2026-07-16";
+const REVIEWED_AT = "2026-07-17";
 const EXPIRES_AT = "2026-08-15";
 
 const official = Object.freeze({
@@ -33,6 +33,10 @@ const official = Object.freeze({
   roamingChina: {
     label: "giffgaff 中国漫游费率",
     url: "https://www.giffgaff.com/roaming/china",
+  },
+  travelAddOn: {
+    label: "giffgaff 非欧盟 Travel Data Add-on 说明",
+    url: "https://help.giffgaff.com/en/articles/365501-giffgaff-travel-data-add-ons-and-how-they-work",
   },
   inactive: {
     label: "giffgaff 号码停用说明",
@@ -69,6 +73,52 @@ function page(frontmatter) {
   });
 }
 
+function policyStatusPage({
+  path,
+  title,
+  h1,
+  policyName,
+  missingFacts,
+  confirmedFactsHtml = "",
+}) {
+  return page({
+    path,
+    indexPolicy: "noindex",
+    schemaType: "WebPage",
+    intent: `${policyName}状态与资料缺口`,
+    title,
+    description: `${policyName}尚待经营负责人按真实业务流程确认；本页公开资料缺口并暂停把不完整说明当作正式政策使用。`,
+    h1,
+    deck: "信息待经营负责人确认；在完整政策通过审核前，本页保持 noindex。",
+    directAnswer: `这不是完整${policyName}。目前缺少经营负责人确认的真实业务事实，因此不能用通用模板补全。涉及付款、下单或提交个人资料时，请先暂停并通过联系页取得与具体订单对应的书面说明；未取得前请勿付款。`,
+    threshold: `经营负责人提交并审核真实流程，至少补齐：${missingFacts}；完成后还需复核页面、交易流程和证据留档，才能评估是否开放索引。`,
+    sections: [
+      {
+        id: "status",
+        title: "当前状态",
+        html: `<p><strong>信息待经营负责人确认。</strong>本站没有在此虚构经营主体、渠道、期限、费用或例外。本页仍不是完整${policyName}，也不表示任何默认承诺。</p>${confirmedFactsHtml}<p>如果具体订单需要依赖本页尚未确认的信息，请暂停付款并联系本站索取书面说明；无法取得时请勿付款。</p>`,
+      },
+      {
+        id: "missing",
+        title: "发布完整页面前必须补齐什么",
+        html: `<p>${missingFacts}。所有字段都要来自真实流程、实际渠道或负责人书面确认，并保留审核日期和版本记录。</p>`,
+      },
+      {
+        id: "boundary",
+        title: "本页不能证明什么",
+        html: `<p>本页不能证明某项服务一定可用，也不能证明价格、发货、退款、数据处理或售后结果。giffgaff 运营商规则不能替代本站作为独立第三方销售服务站应提供的自身说明。</p>`,
+      },
+    ],
+    sources: [],
+    relatedRoutes: [
+      { href: "/contact/", label: "联系本站确认具体订单" },
+      { href: "/guides/1-order/", label: "查看购买风险边界" },
+      { href: "/guides/7-arrival-checklist/", label: "查看收卡验收清单" },
+    ],
+    commerceTarget: { href: "/contact/", label: "先确认再决定是否付款" },
+  });
+}
+
 export const GROWTH_PAGES = Object.freeze([
   page({
     path: "/guides/7-arrival-checklist/",
@@ -81,7 +131,7 @@ export const GROWTH_PAGES = Object.freeze([
     h1: "giffgaff G0/G2 收卡验收清单",
     deck: "先确认卡片和订单交付是否一致，再进入激活、充值或平台验证。",
     directAnswer:
-      "收到卡后先别急着充值或绑定平台。依次核对外观、卡状态、账号控制权、余额、普通短信和网络；任一信息对不上，先保留脱敏证据并联系小玉处理。",
+      "收到卡后先核对订单与实际交付是否一致：卡种、数量、卡状态、账号控制方式和余额都要能验证，再分别测试网络与普通短信。任一项不一致就停止后续充值、改资料或绑定平台，保留脱敏证据；订单交付问题走本站售后，账号、号码状态或计费问题转 giffgaff 官方支持。",
     sections: [
       {
         id: "complete",
@@ -96,7 +146,7 @@ export const GROWTH_PAGES = Object.freeze([
       {
         id: "seven-steps",
         title: "七步检查包装、卡、账号、余额、网络与短信",
-        html: `<ol class="growth-steps"><li><strong>核对包装：</strong>卡板、SIM、数量和订单 SKU 一致。</li><li><strong>留下脱敏证据：</strong>拍摄外观和异常位置，不公开完整识别码。</li><li><strong>判断卡状态：</strong>G0 重点核对激活码；不要在已有号码账号里误触 SIM swap。</li><li><strong>确认交付控制：</strong>G2 是本站库存分类，不是运营商官方产品名；只按本批订单承诺核对。</li><li><strong>核对余额：</strong>只以官方 Dashboard 或 App 显示为依据。</li><li><strong>测试网络：</strong>记录城市、设备、系统、自动或手动选网及结果。</li><li><strong>测试普通短信：</strong>先确认普通短信，再测试具体平台；普通短信成功不代表 OTP 必达。</li></ol>`,
+        html: `<ol class="growth-steps"><li><strong>核对包装：</strong>卡板、SIM、数量和订单 SKU 一致。</li><li><strong>留下脱敏证据：</strong>拍摄外观和异常位置，不公开完整识别码。</li><li><strong>判断卡状态：</strong>G0 重点核对激活码；不要在已有号码账号里误触 SIM swap。参见<a href="${official.activation.url}" target="_blank" rel="noopener noreferrer">${official.activation.label}</a>（核验 ${REVIEWED_AT}）。</li><li><strong>确认交付控制：</strong>G2 是本站库存分类，不是运营商官方产品名；只按本批订单承诺核对。</li><li><strong>核对余额：</strong>只以官方 Dashboard 或 App 显示为依据，余额与 Credit 的含义见<a href="${official.credit.url}" target="_blank" rel="noopener noreferrer">${official.credit.label}</a>（核验 ${REVIEWED_AT}）。</li><li><strong>测试网络：</strong>记录城市、设备、系统、自动或手动选网及结果；排障顺序见<a href="${official.network.url}" target="_blank" rel="noopener noreferrer">${official.network.label}</a>（核验 ${REVIEWED_AT}）。</li><li><strong>测试普通短信：</strong>先确认普通短信，再测试具体平台；普通短信成功不代表 OTP 必达。<a href="${official.smsPolicy.url}" target="_blank" rel="noopener noreferrer">${official.smsPolicy.label}</a>只界定短信服务使用边界，不作第三方平台送达承诺（核验 ${REVIEWED_AT}）。</li></ol>`,
       },
       {
         id: "g0-g2",
@@ -109,7 +159,7 @@ export const GROWTH_PAGES = Object.freeze([
         html: `<p>订单内容、数量、卡状态或余额与承诺不一致，走本站订单售后；账号权限、号码状态和运营商计费由 giffgaff 控制，应转官方帮助。不要在多个设备和窗口里连续重复激活。</p><p class="growth-warning">联系支持时只提供订单号后四位、设备和错误摘要。不要发送密码、短信验证码、完整支付资料或完整 ICCID。</p>`,
       },
     ],
-    sources: [official.activation, official.credit, official.network, official.lostSim],
+    sources: [official.activation, official.credit, official.network, official.smsPolicy, official.lostSim],
     relatedRoutes: [
       { label: "G0 与 G2 怎么选", href: "/answers/" },
       { label: "国内激活教程", href: "/guides/2-activate/" },
@@ -130,7 +180,8 @@ export const GROWTH_PAGES = Object.freeze([
     h1: "英国手机卡怎么选：按场景判断 giffgaff 是否适合",
     deck: "不做没有方法的“最佳卡”榜单，先按地点、时长和维护需求排除不合适方案。",
     directAnswer:
-      "短期旅行先看停留天数和流量，留学生再看英国本地覆盖、续费与合约，跨境保号则重点看维护动作和漫游成本。giffgaff 只是候选之一，不适合就不要硬选。",
+      "giffgaff 使用 O2 网络，但邮编覆盖图只是预测，不保证某栋建筑、交通线路或设备一定有信号。需要 eSIM 时还要确认具体机型兼容、设备无锁并可使用最新版 App；切换成功后旧 SIM 会停止工作。它更适合能自行管理账号、付款和保活动作的人；若需要确定的中国信号、平台 OTP 保证或代管账号，就不适合选择。",
+    answerSources: [official.terms, official.ofcomCoverage, official.esim],
     sections: [
       {
         id: "six-questions",
@@ -145,20 +196,20 @@ export const GROWTH_PAGES = Object.freeze([
       {
         id: "fit",
         title: "什么情况适合或不适合 giffgaff",
-        html: `<p>giffgaff 使用 O2 网络，但覆盖仍要按具体邮编和设备核对。适合希望使用预付费方式、能够自己管理账号和维护动作的人；如果你需要确定性的中国境内信号、特定平台验证码保证或人工代管账号，它并不是合适选择。</p><p>Ofcom 的覆盖工具用于比较预测，不是室内、地铁或每台设备的服务承诺。</p>`,
+        html: `<p>giffgaff 使用 O2 网络，但覆盖仍要按具体邮编和设备核对；<a href="${official.terms.url}" target="_blank" rel="noopener noreferrer">${official.terms.label}</a>将覆盖描述为预测而非保证（核验 ${REVIEWED_AT}）。适合希望使用预付费方式、能够自己管理账号和维护动作的人；如果你需要确定性的中国境内信号、特定平台验证码保证或人工代管账号，它并不是合适选择。</p><p><a href="${official.ofcomCoverage.url}" target="_blank" rel="noopener noreferrer">${official.ofcomCoverage.label}</a>用于比较预测，不是室内、地铁或每台设备的服务承诺（核验 ${REVIEWED_AT}）。</p>`,
       },
       {
         id: "sim-or-esim",
         title: "实体 SIM 与 eSIM 怎么选",
-        html: `<p>实体卡适合需要可见卡片、设备不支持 eSIM 或希望在多台兼容设备间人工换卡的人。eSIM 需要设备原生支持、无网络锁并能使用最新 giffgaff App；切换后旧 SIM 会停止工作。</p>`,
+        html: `<p>实体卡适合需要可见卡片、设备不支持 eSIM 或希望在多台兼容设备间人工换卡的人。eSIM 需要设备原生支持、无网络锁并能使用最新 giffgaff App；切换后旧 SIM 会停止工作。操作前查看<a href="${official.esim.url}" target="_blank" rel="noopener noreferrer">${official.esim.label}</a>（核验 ${REVIEWED_AT}）。</p>`,
       },
       {
         id: "cost",
         title: "不要只看月费：完整成本清单",
-        html: `<ul class="growth-list"><li>卡片、国内或英国寄送与可能的服务费用。</li><li>首次 Credit 或套餐、后续续费和支付手续费。</li><li>中国漫游的短信、通话和后台数据成本。</li><li>激活、排障和保号提醒所需时间。</li><li>设备兼容、账号恢复和换卡失败的风险缓冲。</li></ul><p>官方境外寄送国家、套餐和 eSIM 条件可能变化；超过核验周期时只使用下方官方入口，不依赖静态结论。</p>`,
+        html: `<ul class="growth-list"><li>卡片、国内或英国寄送与可能的服务费用；官方直寄范围以<a href="${official.simOrder.url}" target="_blank" rel="noopener noreferrer">${official.simOrder.label}</a>为准（核验 ${REVIEWED_AT}）。</li><li>首次 Credit 或套餐、后续续费和支付手续费。</li><li>中国漫游的短信、通话和后台数据成本；个人短信的使用边界见<a href="${official.smsPolicy.url}" target="_blank" rel="noopener noreferrer">${official.smsPolicy.label}</a>（核验 ${REVIEWED_AT}）。</li><li>激活、排障和保号提醒所需时间。</li><li>设备兼容、账号恢复和换卡失败的风险缓冲。</li></ul><p>官方境外寄送国家、套餐和 eSIM 条件可能变化；超过核验周期时只使用下方官方入口，不依赖静态结论。</p>`,
       },
     ],
-    sources: [official.ofcomCoverage, official.plans, official.simOrder, official.esim, official.roamingChina, official.smsPolicy],
+    sources: [official.ofcomCoverage, official.terms, official.plans, official.simOrder, official.esim, official.roamingChina, official.smsPolicy],
     relatedRoutes: [
       { label: "比较 G0 与 G2", href: "/answers/" },
       { label: "查看当前手机卡", href: "/shop/" },
@@ -178,13 +229,13 @@ export const GROWTH_PAGES = Object.freeze([
     h1: "giffgaff 保号提醒：生成本地日历",
     deck: "日期只在当前浏览器内计算，不发送到本站服务器。",
     directAnswer:
-      "输入最近一次可验证的有效动作日期，工具会在本机生成第5个月操作提醒。日期不会上传，提醒也不代表运营商对号码状态或永久保号作出保证。",
+      "官方停用边界是连续 6 个月没有列明的有效动作；可记为“最近一次有效动作 + 6 个月”，本站在第 5 个月提前生成缓冲提醒。日期只在本机计算，不保证号码状态。号码一旦被停用就不能重新激活；如需保留号码，应在停用后的 30 天内按官方说明申请 PAC。",
     tool: "keep-number",
     sections: [
       {
         id: "rule",
         title: "当前官方规则与本站缓冲提醒",
-        html: `<p>官方当前列出的保活动作包括主动通话、主动 SMS/MMS、移动数据连接、购买 Airtime Credit 或 plan。单纯接收短信不在列表中。<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${REVIEWED_AT}）。</p><p>第 5 个月是本站给异常排查预留时间的建议，不是官方把周期改成了 5 个月。</p>`,
+        html: `<p>官方当前规则可写成：连续 6 个月没有列明的有效动作会进入停用边界；本站用“最近一次有效动作 + 6 个月”记录最晚复核点。列明动作包括主动通话、主动 SMS/MMS、移动数据连接、购买 Airtime Credit 或 plan，单纯接收短信不在列表中。<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${REVIEWED_AT}）。</p><p>第 5 个月是本站给异常排查预留时间的缓冲提醒，不是官方把周期改成了 5 个月。</p>`,
       },
       {
         id: "tool",
@@ -199,7 +250,7 @@ export const GROWTH_PAGES = Object.freeze([
       {
         id: "expired",
         title: "超过周期或号码已停用怎么办",
-        html: `<p>不要把计算日期当成号码仍然有效的证明。立即登录官方账号检查号码、余额和服务状态；已经停用时按官方页面的当前处理窗口联系官方支持。</p>`,
+        html: `<p>不要把计算日期当成号码仍然有效的证明。立即登录官方账号检查号码、余额和服务状态。官方说明号码一旦停用就不能重新激活；如仍需保留号码，应在停用后的 30 天内按当前页面申请 PAC 并转出。<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${REVIEWED_AT}）。</p>`,
       },
     ],
     sources: [official.inactive, official.credit],
@@ -215,30 +266,30 @@ export const GROWTH_PAGES = Object.freeze([
     path: "/tools/china-roaming-cost/",
     indexPolicy: "index",
     schemaType: "WebApplication",
-    intent: "giffgaff 中国漫游费用试算",
-    title: "giffgaff 中国漫游费用计算器｜短信、通话与流量",
+    intent: "giffgaff 中国 PAYG Credit 漫游费用试算",
+    title: "giffgaff 中国 PAYG 漫游费用计算器｜短信、通话与流量",
     description:
-      "按 giffgaff 当前中国漫游费率试算短信、通话和流量成本；显示来源与核验日，费率过期自动停止给出总价。",
-    h1: "giffgaff 中国漫游费用计算器",
-    deck: `费率核验日期 ${REVIEWED_AT}，到 ${EXPIRES_AT} 前用于估算；实际扣费以运营商账单为准。`,
+      "按 giffgaff 当前中国 PAYG Credit 漫游费率试算短信、单次通话和流量成本；不包含 Travel Data Add-on，费率过期停止给出总价。",
+    h1: "giffgaff 中国 PAYG 漫游费用计算器",
+    deck: `PAYG Credit 费率核验日期 ${REVIEWED_AT}，到 ${EXPIRES_AT} 前用于估算；不包含 Travel Data Add-on，实际扣费以运营商账单为准。`,
     directAnswer:
-      "输入短信、通话和流量用量，即可按当前中国漫游费率试算。费率过期或来源失效时，工具会停止给出总价并要求先打开官方页面复核。",
+      "本页只试算中国 PAYG Credit：数据费用 = MB × £0.20，发出短信费用 = 条数 × £0.30；拨出电话最低单位为 30 秒，即 30 秒是最低计费单位，之后按秒；接听电话逐通按分钟向上取整，所以多通电话必须分别计算。本工具不包含通过 App 购买、30 天有效的 Travel Data Add-on。",
     tool: "roaming-cost",
     sections: [
       {
         id: "status",
-        title: "当前中国漫游费率核验状态",
-        html: `<div class="growth-rate-status"><strong>已核验：${REVIEWED_AT}</strong><span>失效日：${EXPIRES_AT}</span><p>当前公开页显示：数据 20p/MB、拨打电话 £1/分钟、接听 £1/分钟、发短信 30p、收短信免费。通话计费单位见<a href="${official.roamingChina.url}" target="_blank" rel="noopener noreferrer">${official.roamingChina.label}</a>（核验 ${REVIEWED_AT}）。</p></div>`,
+        title: "当前中国 PAYG Credit 费率核验状态",
+        html: `<div class="growth-rate-status"><strong>已核验：${REVIEWED_AT}</strong><span>失效日：${EXPIRES_AT}</span><p>当前公开页显示：数据 20p/MB；拨打 £1/分钟，首 30 秒起计、之后按秒；接听 £1/分钟，每次通话按整分钟向上取整；发短信 30p，收短信免费。见<a href="${official.roamingChina.url}" target="_blank" rel="noopener noreferrer">${official.roamingChina.label}</a>（核验 ${REVIEWED_AT}）。</p></div>`,
       },
       {
         id: "tool",
         title: "输入预计用量",
-        html: `<div class="growth-tool" data-tool="roaming-cost" data-rate-per-megabyte="0.2" data-rate-per-sms="0.3" data-rate-per-outgoing-minute="1" data-rate-per-incoming-minute="1" data-expires="${EXPIRES_AT}" role="group" aria-label="中国漫游费用试算工具"><label>预计流量（MB）<input type="number" name="megabytes" min="0" step="0.01" value="0" required></label><label>预计发出短信（条）<input type="number" name="sms" min="0" step="1" value="0" required></label><label>预计拨打电话（分钟）<input type="number" name="outgoing-minutes" min="0" step="0.01" value="0" required></label><label>预计接听电话（分钟）<input type="number" name="incoming-minutes" min="0" step="0.01" value="0" required></label><button class="btn btn-primary" type="button" data-calculate>计算估算费用</button><output aria-live="polite"></output></div>`,
+        html: `<div class="growth-tool" data-tool="roaming-cost" data-rate-per-megabyte="0.2" data-rate-per-sms="0.3" data-rate-per-outgoing-minute="1" data-rate-per-incoming-minute="1" data-expires="${EXPIRES_AT}" role="group" aria-label="中国 PAYG Credit 漫游费用试算工具"><label>预计 PAYG 流量（MB）<input type="number" name="megabytes" min="0" step="0.01" value="0" required></label><label>预计发出短信（条）<input type="number" name="sms" min="0" step="1" value="0" required></label><label>单次预计拨打时长（分钟）<input type="number" name="outgoing-minutes" min="0" step="0.01" value="0" required></label><label>单次预计接听时长（分钟）<input type="number" name="incoming-minutes" min="0" step="0.01" value="0" required></label><button class="btn btn-primary" type="button" data-calculate>计算 PAYG Credit 估算费用</button><output aria-live="polite"></output></div>`,
       },
       {
         id: "method",
         title: "通话和流量计费单位说明",
-        html: `<p>简化计算器把你输入的通话分钟数按整段预计时间估算，不能替代官方对最低计费时长、按秒或按分钟取整的账单逻辑。后台同步可能在你没有主动打开网页时产生数据。</p><p class="growth-warning">如果费率超过失效日，数值结果会关闭。先打开官方中国漫游页复核，再重新发布配置。</p>`,
+        html: `<p>公开公式是：数据 = MB × £0.20；发出短信 = 条数 × £0.30；拨出电话逐通计算，首 30 秒按最低计费单位、之后按秒；接听电话逐通按分钟向上取整。若预计多次通话，应逐通计算后相加，不能先合并分钟，否则每通各自的最低单位或取整会被低估。后台同步可能在你没有主动打开网页时产生 PAYG 数据。</p><p>本页只估算 PAYG Credit，明确不包含 Travel Data Add-on。中国另有通过 App 购买的非欧盟 Travel Data Add-on，购买后 30 天有效；规格和当前价格先查看<a href="${official.travelAddOn.url}" target="_blank" rel="noopener noreferrer">${official.travelAddOn.label}</a>（核验 ${REVIEWED_AT}）。</p><p class="growth-warning">如果费率超过失效日，数值结果会关闭。先打开官方中国漫游页复核，再重新发布配置。</p>`,
       },
       {
         id: "boundaries",
@@ -246,7 +297,7 @@ export const GROWTH_PAGES = Object.freeze([
         html: `<p>产生漫游费用不自动证明特定平台 OTP 会到达；收到 OTP 也不等于完成官方列明的保活动作。分别记录号码状态、普通短信基线和平台结果。</p>`,
       },
     ],
-    sources: [official.roamingChina, official.inactive, official.network],
+    sources: [official.roamingChina, official.travelAddOn, official.inactive, official.network],
     relatedRoutes: [
       { label: "中国漫游与流量教程", href: "/guides/5-travel-data/" },
       { label: "网络和短信排查", href: "/guides/4-signal/" },
@@ -259,20 +310,21 @@ export const GROWTH_PAGES = Object.freeze([
     path: "/tools/g0-g2-total-cost/",
     indexPolicy: "index",
     schemaType: "WebApplication",
-    intent: "G0/G2 用户输入总成本",
-    title: "G0/G2 总成本计算器｜卡价、充值、时间与维护费用",
+    intent: "G0/G2 用户输入现金支出",
+    title: "G0/G2 现金支出计算器｜卡价、运费、充值与使用支出",
     description:
-      "自行输入 G0/G2 卡价、运费、首次充值和预计使用成本，分别计算现金支出；无当前商品证据时不填默认价格。",
-    h1: "giffgaff G0/G2 总成本计算器",
+      "自行输入一条 G0 或 G2 路径的卡价、运费、首次充值和预计额外使用支出，计算人民币现金支出；英镑余额单列且不折算。",
+    h1: "giffgaff G0/G2 现金支出计算器",
     deck: "G0/G2 是本站库存分类，计算结果完全取决于你的输入，不代替卡状态确认。",
     directAnswer:
-      "这个工具只比较你输入的卡价、运费、首次充值和预计使用成本，不替你判断哪张卡一定更好。商品默认值没有当前证据时保持空白，结果也不代表账号或验证码保证。",
+      "公开现金公式是：现金支出 = 卡价 + 运费 + 首次充值 + 预计额外使用支出。每次只试算一条购买路径；可用余额以英镑单独展示，不按未知汇率折算或抵扣人民币现金支出。要比较 G0 与 G2，必须分别运行两次并保持相同时间范围，结果不判断账号控制、激活、OTP 或哪张卡一定更好。",
+    answerSources: [],
     tool: "total-cost",
     sections: [
       {
         id: "scope",
         title: "计算器能比较什么、不能判断什么",
-        html: `<p>计算器只处理金额：卡价、国内运费、首次充值、可用余额和预计使用支出。它不能判断账号控制权、激活成功率、平台 OTP 或未来号码状态。</p>`,
+        html: `<p>计算器只处理一条路径的金额。公开公式为：现金支出 = 卡价 + 国内运费 + 首次充值 + 预计额外使用支出；可用余额只记录、不参与人民币现金合计。它不能判断账号控制权、激活成功率、平台 OTP 或未来号码状态。</p>`,
       },
       {
         id: "classification",
@@ -287,7 +339,7 @@ export const GROWTH_PAGES = Object.freeze([
       {
         id: "interpret",
         title: "怎样解读结果",
-        html: `<p>结果只表述为“按本次输入，现金支出为……”。可用英镑余额单独展示，不擅自按未知汇率抵扣人民币成本。比较 G0 与 G2 时分别计算，再检查差额来自卡价、运费、首次充值还是后续支出。</p>`,
+        html: `<p>结果只表述为“按本次输入，现金支出为……”。每次只试算一条购买路径；可用英镑余额单独展示，不按未知汇率折算或抵扣人民币成本。比较 G0 与 G2 时分别运行两次，使用相同时间范围，再检查差额来自卡价、运费、首次充值还是后续支出。</p>`,
       },
       {
         id: "before-order",
@@ -352,14 +404,14 @@ export const GROWTH_PAGES = Object.freeze([
     path: "/research/china-network-sms/",
     indexPolicy: "noindex",
     schemaType: "CollectionPage",
-    intent: "giffgaff 中国网络与普通短信实测",
-    title: "giffgaff 中国网络与短信实测｜方法与数据门槛",
+    intent: "giffgaff 中国网络与普通短信采集方法",
+    title: "giffgaff 中国网络与短信｜采集方法与样本门槛",
     description:
-      "按城市、设备、系统、SIM 形态和选网方式展示近期网络与普通短信结果；样本不足时只公开方法，不承诺永久覆盖。",
-    h1: "giffgaff 中国网络与短信实测矩阵",
-    deck: "成功和失败都要记录；旧样本不参与“近期”聚合。",
+      "公开按城市、设备、系统、SIM 形态和选网方式采集网络与普通短信记录的方法；当前没有合格样本结果，达到门槛前保持 noindex。",
+    h1: "giffgaff 中国网络与短信采集计划",
+    deck: "当前只发布方法和门槛，没有近期样本结果；成功和失败都必须记录。",
     directAnswer:
-      "本页只展示特定城市、设备、系统和选网环境下的近期实测，不承诺中国境内永久有信号或短信必达。样本不足时只公开方法，并明确标记“证据不足”。",
+      "本页当前没有可发布的近期实测样本，只公开未来记录特定城市、设备、系统和选网环境的方法。达到门槛后也只能描述有日期和环境边界的样本，不能承诺中国境内永久有信号或短信必达。",
     threshold: "最近 90 天至少 30 条已复核记录，覆盖 3 个城市、3 个设备/系统组合，以及自动选网与手动选网两类网络环境。",
     sections: [
       {
@@ -396,14 +448,14 @@ export const GROWTH_PAGES = Object.freeze([
     path: "/research/otp-status/",
     indexPolicy: "noindex",
     schemaType: "CollectionPage",
-    intent: "giffgaff 平台 OTP 近期样本",
-    title: "giffgaff 验证码状态板｜近期实测与失败边界",
+    intent: "giffgaff 平台 OTP 样本采集方法",
+    title: "giffgaff 验证码状态板｜采集方法与开放门槛",
     description:
-      "展示带普通短信基线的平台 OTP 近期样本、环境、等待时间和失败类型；不提供接码、绕过验证或永久兼容承诺。",
-    h1: "giffgaff OTP 验证码近期状态板",
-    deck: "平台风控和网络状态必须分开判断，不能把个别成功写成永久兼容。",
+      "公开带普通短信基线的平台 OTP 采集方法、环境字段和失败类型；当前没有合格样本结果，不提供接码、绕过验证或永久兼容承诺。",
+    h1: "giffgaff OTP 验证码采集计划",
+    deck: "当前只发布采集方法，没有近期样本结果；平台风控和网络状态必须分开判断。",
     directAnswer:
-      "验证码是否送达同时受平台风控、账号状态、设备和网络影响。本页只展示带普通短信基线的近期样本，不提供接码、绕过验证或“某平台永久可用”的保证。",
+      "验证码是否送达同时受平台风控、账号状态、设备和网络影响。本页当前没有可发布的近期样本，只公开带普通短信基线的采集方法；不提供接码、绕过验证或“某平台永久可用”的保证。",
     threshold: "至少 50 个已复核事件、5 个平台、每平台 5 条、3 类环境，并且每条均有普通短信基线。",
     sections: [
       {
@@ -435,6 +487,35 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "查看当前手机卡", href: "/shop/" },
     ],
     commerceTarget: { label: "微信联系小玉整理排查信息", href: "/contact/" },
+  }),
+  policyStatusPage({
+    path: "/privacy/",
+    title: "隐私说明状态｜信息待经营负责人确认",
+    h1: "隐私说明：信息待经营负责人确认",
+    policyName: "隐私政策",
+    missingFacts: "经营主体、实际收集的数据、处理目的与法律依据、支付和客服第三方、存储位置与期限、用户权利、安全事件与未成年人处理",
+    confirmedFactsHtml: `<section aria-labelledby="privacy-confirmed-facts"><h3 id="privacy-confirmed-facts">已确认的有限事实</h3><ul><li>公开隐私联系邮箱：<a href="mailto:siuserxy@gmail.com" target="_blank" rel="noopener noreferrer" data-link-role="contact-channel">siuserxy@gmail.com</a>。</li><li>本站尚未启用 Google AdSense，当前没有 AdSense 账号、publisher ID、广告脚本或广告 Cookie。</li><li>本页仍不是完整隐私政策；其余数据与经营事实未闭环前不开放索引。</li></ul></section>`,
+  }),
+  policyStatusPage({
+    path: "/terms/",
+    title: "交易条款状态｜信息待经营负责人确认",
+    h1: "交易条款：信息待经营负责人确认",
+    policyName: "交易条款",
+    missingFacts: "真实经营主体、商品与 G0/G2 定义、价格和支付渠道、订单成立时间、库存与取消规则、账号控制边界、责任限制、争议处理和有效联系方式",
+  }),
+  policyStatusPage({
+    path: "/refund/",
+    title: "退款说明状态｜信息待经营负责人确认",
+    h1: "退款说明：信息待经营负责人确认",
+    policyName: "退款政策",
+    missingFacts: "可取消与不可取消场景、退货资格、申请窗口、卡片和账号状态要求、证据清单、退款路径与时限、费用承担、拒绝理由、升级与申诉流程",
+  }),
+  policyStatusPage({
+    path: "/shipping/",
+    title: "物流说明状态｜信息待经营负责人确认",
+    h1: "物流说明：信息待经营负责人确认",
+    policyName: "物流政策",
+    missingFacts: "实际发货地、覆盖地区、承运商、运费、处理与预计时效、追踪方式、延误与丢损处理、地址修改和签收责任",
   }),
 ]);
 

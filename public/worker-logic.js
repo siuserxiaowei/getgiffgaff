@@ -1,5 +1,6 @@
 import {
   PUBLIC_INDEXABLE_PATHS,
+  OPTIONAL_PUBLIC_STATIC_ASSET_PATHS,
   PUBLIC_STATIC_ASSET_PATHS,
   ROUTE_MANIFEST,
   routeFor,
@@ -18,6 +19,7 @@ const ANALYTICS_MAX_BYTES = 1024;
 const EDGE_HTML_CACHE_VERSION = "additive-growth-20260716-v1";
 const PUBLIC_READ_METHODS = new Set(["GET", "HEAD"]);
 const PUBLIC_STATIC_ASSETS = new Set(PUBLIC_STATIC_ASSET_PATHS);
+const OPTIONAL_PUBLIC_STATIC_ASSETS = new Set(OPTIONAL_PUBLIC_STATIC_ASSET_PATHS);
 const BODYLESS_STATUSES = new Set([101, 204, 205, 304]);
 
 const SUPPORTING_NOINDEX_PATHS = new Set([
@@ -25,6 +27,8 @@ const SUPPORTING_NOINDEX_PATHS = new Set([
   "/llms-full.txt",
   "/privacy/",
   "/terms/",
+  "/refund/",
+  "/shipping/",
 ]);
 const PRIVATE_ROUTE_PREFIXES = [
   "/admin",
@@ -475,7 +479,10 @@ async function handleRequest(request, env, context) {
   if (routeFor(normalizedPath)) {
     return fetchStaticAsset(request, env, normalizedPath, context);
   }
-  if (PUBLIC_STATIC_ASSETS.has(url.pathname)) {
+  if (
+    PUBLIC_STATIC_ASSETS.has(url.pathname)
+    || OPTIONAL_PUBLIC_STATIC_ASSETS.has(url.pathname)
+  ) {
     return fetchStaticAsset(request, env, url.pathname, context);
   }
   return privateError(request, 404, "Not found");

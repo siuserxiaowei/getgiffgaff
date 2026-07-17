@@ -1,6 +1,6 @@
 {
   "schemaVersion": "legacy-freeze-v2",
-  "capturedAt": "2026-07-16T07:16:15.566Z",
+  "capturedAt": "2026-07-17T12:53:18.996Z",
   "baseline": {
     "commit": "7cac06f",
     "origin": "https://getgiffgaff.com"
@@ -16,19 +16,19 @@
       "domSha256": "9005c3eafa80acb5dd15f0f9e6beebaeff09d106b8d8a411fed423942132f219",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
-        "/guides/0-intro/",
-        "/guides/1-order/",
-        "/guides/2-activate/",
-        "/guides/3-usage/",
-        "/guides/4-signal/",
         "/more/",
         "/qa/",
-        "/shop/",
-        "/shop/giffgaff-g0/",
-        "/shop/giffgaff-g2/"
+        "/contact/",
+        "/shop/giffgaff-g2/",
+        "/guides/1-order/",
+        "/guides/2-activate/",
+        "/guides/4-signal/",
+        "/guides/0-intro/",
+        "/guides/3-usage/",
+        "/answers/",
+        "/shop/giffgaff-g0/"
       ]
     },
     {
@@ -36,18 +36,40 @@
       "title": "G0 与 G2 怎么选：状态、总成本与风险对比 · getgiffgaff",
       "description": "G0 新卡与 G2 有余额卡的独立第三方对比：先看卡状态、账号归属、激活和首次付款，再计算总成本，不写死库存与价格。",
       "h1": "G0 与 G2 怎么选：不要只比商品价格",
-      "navigationSha256": "1c1fe6b52dd1e76508dc9f924dc78da9c5ae2b9503e2ca3a82afdde293630de9",
-      "visibleTextSha256": "a2c8e48a7e73b067f57e7104adcd4c321f52cbac3dd513ee93fd12d580d3bfbe",
-      "domSha256": "96edc06b88da0c4a766c3f144d0cbf82b0b3c56c4724b3ef40dd3ddb5e46992d",
+      "navigationSha256": "580280ee8202d452b78bef18610161d9296089bb7cb5e1c31a971cc958c1fff9",
+      "visibleTextSha256": "cd6be69b537dab0b45a119d7b9e91e64ec87cd7051f57b5a26b07d58505f828a",
+      "domSha256": "dd99d6fc48c6f33b9204ae01887d5268e5a198d2f6c9e0a9d3faaa42e1dc3146",
       "legacyInternalHrefs": [
         "/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
+        "/guides/0-intro/",
+        "/guides/1-order/",
         "/guides/2-activate/",
+        "/guides/3-account/",
+        "/guides/3-app/",
         "/guides/3-usage/",
+        "/guides/4-recharge-service/",
+        "/guides/4-signal/",
+        "/more/00-wechat/",
+        "/more/02-telegram/",
+        "/more/03-esim/",
+        "/more/04-esim-qrcode/",
+        "/qa/00-username/",
+        "/qa/01-change-number/",
+        "/qa/02-topup/",
+        "/qa/03-reissue/",
+        "/qa/04-choose-number/",
+        "/qa/05-multiple-number/",
+        "/qa/06-activation-expiration/",
+        "/qa/07-voicemail-switch/",
+        "/qa/08-gv/",
+        "/qa/09-spread/",
         "/guides/6-pitfalls/",
-        "/research/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -60,17 +82,17 @@
       "domSha256": "369328a11fbd4d416fe08877f9037b45cf3d7f2c983002979ad6157474caf56f",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
-        "/guides/1-order/",
-        "/guides/2-activate/",
-        "/guides/4-signal/",
         "/more/",
         "/qa/",
-        "/shop/",
+        "/contact/",
+        "/guides/1-order/",
         "/shop/giffgaff-g0/",
-        "/shop/giffgaff-g2/"
+        "/shop/giffgaff-g2/",
+        "/guides/2-activate/",
+        "/guides/4-signal/",
+        "/answers/"
       ]
     },
     {
@@ -83,14 +105,14 @@
       "domSha256": "61a96a4d0194474361c3a64bcfdd988cbdd8be7c348ddd553899bbaa5534044e",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
-        "/guides/1-order/",
-        "/guides/2-activate/",
         "/more/",
         "/qa/",
-        "/shop/"
+        "/contact/",
+        "/guides/1-order/",
+        "/guides/2-activate/",
+        "/answers/"
       ]
     },
     {
@@ -103,14 +125,14 @@
       "domSha256": "444c16e77cf03a5eb76240f44c6589951cb9a2009832b47effcd654cd72997e1",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
-        "/guides/1-order/",
-        "/guides/2-activate/",
         "/more/",
         "/qa/",
-        "/shop/"
+        "/contact/",
+        "/guides/1-order/",
+        "/guides/2-activate/",
+        "/answers/"
       ]
     },
     {
@@ -123,9 +145,11 @@
       "domSha256": "b9cfeaf0de4414fca278ee193394baeee95de50f8ea07f040dfe49bba64e3c3d",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -136,12 +160,10 @@
         "/guides/4-signal/",
         "/guides/5-travel-data/",
         "/guides/6-pitfalls/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -152,7 +174,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -165,9 +187,11 @@
       "domSha256": "5d5040451a7948ca2319c5d73a43524ea532969e874d21a3705a11e29fd820cf",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -177,12 +201,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -193,7 +215,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -206,9 +228,11 @@
       "domSha256": "da57f87fee41ddc7f5093fa899352334a662f4b74cbcee15f257bbeee94c4afc",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -218,12 +242,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -234,7 +256,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -242,18 +264,40 @@
       "title": "giffgaff 国内激活教程：激活码、账号与失败排查 · getgiffgaff",
       "description": "中国境内激活 giffgaff SIM 的原创流程：准备激活码或 13 位序列号，避免误触 SIM swap，并按症状排查失败。",
       "h1": "giffgaff 国内激活：先保住账号，再处理信号",
-      "navigationSha256": "1c1fe6b52dd1e76508dc9f924dc78da9c5ae2b9503e2ca3a82afdde293630de9",
-      "visibleTextSha256": "039ce05c9cd79796bfa6e948ca4182772ba2a849200380e8a0e36f49e90d19a9",
-      "domSha256": "d52ba630fd8a0c51e472ab0e52fc602e6b301110bea6a9783fd4f7c3de7f0076",
+      "navigationSha256": "580280ee8202d452b78bef18610161d9296089bb7cb5e1c31a971cc958c1fff9",
+      "visibleTextSha256": "8df7a2205d7bf2ca44a082ae92151244496c5e685c608a62037c88959b8596a2",
+      "domSha256": "351fc78f2e1d25a492f47feaada8ca21fea7ae85870e0654ce73de660b628403",
       "legacyInternalHrefs": [
         "/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
+        "/guides/0-intro/",
+        "/guides/1-order/",
+        "/guides/2-activate/",
+        "/guides/3-account/",
+        "/guides/3-app/",
+        "/guides/3-usage/",
+        "/guides/4-recharge-service/",
         "/guides/4-signal/",
-        "/guides/6-pitfalls/",
+        "/more/00-wechat/",
+        "/more/02-telegram/",
         "/more/03-esim/",
-        "/research/",
-        "/shop/"
+        "/more/04-esim-qrcode/",
+        "/qa/00-username/",
+        "/qa/01-change-number/",
+        "/qa/02-topup/",
+        "/qa/03-reissue/",
+        "/qa/04-choose-number/",
+        "/qa/05-multiple-number/",
+        "/qa/06-activation-expiration/",
+        "/qa/07-voicemail-switch/",
+        "/qa/08-gv/",
+        "/qa/09-spread/",
+        "/guides/6-pitfalls/",
+        "/answers/"
       ]
     },
     {
@@ -266,9 +310,11 @@
       "domSha256": "48452b3d0bb9e89b3d345bc10827ae70435a8d88394165ee81a324d26f082d87",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -278,12 +324,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -294,7 +338,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -307,9 +351,11 @@
       "domSha256": "e5c7066a516a5c9ca2683c931e4e62969eb9894e52652d83d510189a2d356900",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -319,12 +365,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -335,7 +379,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -343,18 +387,40 @@
       "title": "giffgaff 保号规则：6 个月 inactive 前要做什么 · getgiffgaff",
       "description": "按 giffgaff 官方 2026 年帮助页解释 6 个月 inactive 规则、有效使用、提醒记录和停用后的处理边界。",
       "h1": "giffgaff 保号：不要把“收到短信”当成有效使用",
-      "navigationSha256": "1c1fe6b52dd1e76508dc9f924dc78da9c5ae2b9503e2ca3a82afdde293630de9",
-      "visibleTextSha256": "9dbc828915da4d6f13716173e02aeea736f619dca545139eb82ae323c3fcd64f",
-      "domSha256": "f5f82acfad98eb207d30d28abe66e082cef9552f0d51c68e37ab9ebe1110142a",
+      "navigationSha256": "580280ee8202d452b78bef18610161d9296089bb7cb5e1c31a971cc958c1fff9",
+      "visibleTextSha256": "49a06e7b2a04e6bf1a7b530310a4f3098d32a6eb5523df43a6bfba285940c69a",
+      "domSha256": "adc5d6ead83587376489c51299f09c293984ae0540b7b6e977c4237bd2f90e14",
       "legacyInternalHrefs": [
         "/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
+        "/guides/0-intro/",
+        "/guides/1-order/",
         "/guides/2-activate/",
+        "/guides/3-account/",
+        "/guides/3-app/",
+        "/guides/3-usage/",
+        "/guides/4-recharge-service/",
         "/guides/4-signal/",
+        "/more/00-wechat/",
+        "/more/02-telegram/",
+        "/more/03-esim/",
+        "/more/04-esim-qrcode/",
+        "/qa/00-username/",
+        "/qa/01-change-number/",
+        "/qa/02-topup/",
+        "/qa/03-reissue/",
+        "/qa/04-choose-number/",
+        "/qa/05-multiple-number/",
+        "/qa/06-activation-expiration/",
+        "/qa/07-voicemail-switch/",
+        "/qa/08-gv/",
+        "/qa/09-spread/",
         "/guides/6-pitfalls/",
-        "/research/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -367,9 +433,11 @@
       "domSha256": "2a5611a3532662505069bc0e0d5108007f2ee4a27109ac207a68c908beef9d26",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -379,12 +447,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -395,7 +461,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -408,13 +474,13 @@
       "domSha256": "0d9cc3975ef762eda5893b7adee27dccec61c3d6193ad6b8f14be53d61d2db21",
       "legacyInternalHrefs": [
         "/",
-        "/contact/",
+        "/shop/",
         "/guides/",
-        "/guides/2-activate/",
-        "/guides/3-usage/",
-        "/guides/6-pitfalls/",
         "/research/",
-        "/shop/"
+        "/contact/",
+        "/guides/6-pitfalls/",
+        "/guides/2-activate/",
+        "/guides/3-usage/"
       ]
     },
     {
@@ -427,9 +493,11 @@
       "domSha256": "76377bfc829aac9a8ebe2665e2ab9b5314576cef63c6962aef1906dc56906db4",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -439,12 +507,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -455,7 +521,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -468,9 +534,11 @@
       "domSha256": "35ce031d7309a847d239dbc804fd781898e46b3e773c9dd21bcfa3a69c415f42",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -480,12 +548,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -496,7 +562,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -509,9 +575,11 @@
       "domSha256": "4fc296ea1668cb1a224dd3c6c26b0317620e04d5331c91c5f0b8068d60350d35",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -521,12 +589,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -537,7 +603,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -550,9 +616,11 @@
       "domSha256": "b6a88d82c31a7b93d1931f1f659f3209c3bc7d5ef92c95afbf9a41f85431f04d",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -562,12 +630,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -578,7 +644,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -586,20 +652,40 @@
       "title": "giffgaff eSIM 转换指南：兼容、切换与失败边界 · getgiffgaff",
       "description": "把 giffgaff 实体 SIM 转为 eSIM 前，先核对设备、App、账号和旧 SIM 失效风险；含切换后排查与回退决策。",
       "h1": "giffgaff eSIM 转换：先证明你能恢复账号",
-      "navigationSha256": "1c1fe6b52dd1e76508dc9f924dc78da9c5ae2b9503e2ca3a82afdde293630de9",
-      "visibleTextSha256": "f005de5bfeb1522f2470e7d7c1ee8215382444bee77aabee88381b45e50d2e51",
-      "domSha256": "15d4e2ce681c1f6e055147d6975354d2cab1cdca2e11373f58bf84361975e255",
+      "navigationSha256": "580280ee8202d452b78bef18610161d9296089bb7cb5e1c31a971cc958c1fff9",
+      "visibleTextSha256": "81eb80c47076f5d23c8fa3a4ff0fea3f26bc95e5cf98c792aa1e70c4e94b171a",
+      "domSha256": "3e2b5c045c96afdc7e011aae072485eb48dc8c32b99eb055f4b0977f0677210d",
       "legacyInternalHrefs": [
         "/",
-        "/contact/",
+        "/shop/",
         "/guides/",
-        "/guides/2-activate/",
-        "/guides/4-signal/",
-        "/guides/6-pitfalls/",
         "/more/",
+        "/qa/",
+        "/contact/",
+        "/guides/0-intro/",
+        "/guides/1-order/",
+        "/guides/2-activate/",
+        "/guides/3-account/",
+        "/guides/3-app/",
+        "/guides/3-usage/",
+        "/guides/4-recharge-service/",
+        "/guides/4-signal/",
+        "/more/00-wechat/",
+        "/more/02-telegram/",
+        "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/research/",
-        "/shop/"
+        "/qa/00-username/",
+        "/qa/01-change-number/",
+        "/qa/02-topup/",
+        "/qa/03-reissue/",
+        "/qa/04-choose-number/",
+        "/qa/05-multiple-number/",
+        "/qa/06-activation-expiration/",
+        "/qa/07-voicemail-switch/",
+        "/qa/08-gv/",
+        "/qa/09-spread/",
+        "/guides/6-pitfalls/",
+        "/answers/"
       ]
     },
     {
@@ -607,20 +693,40 @@
       "title": "giffgaff eSIM 二维码与第三方写卡：安全边界 · getgiffgaff",
       "description": "解释 giffgaff 官方 eSIM、二维码、激活凭证与第三方写卡的区别；不提供改版 App、凭证提取、上传或绕过兼容检测的步骤。",
       "h1": "giffgaff eSIM 二维码：先判断是不是官方支持路径",
-      "navigationSha256": "1c1fe6b52dd1e76508dc9f924dc78da9c5ae2b9503e2ca3a82afdde293630de9",
-      "visibleTextSha256": "b6ccb41daad6b1aa5ab52ba83176dc5b0a649765c8c3f28f6d7e1e484c109a23",
-      "domSha256": "c4de085af642c6f9c73383023fbbf5658abbad46bc2723d195d52158a6e5fa57",
+      "navigationSha256": "580280ee8202d452b78bef18610161d9296089bb7cb5e1c31a971cc958c1fff9",
+      "visibleTextSha256": "b8cb8a6c754feee3ebf7b47616afef8ab395ff70b14c153b16215f06cc54d7d6",
+      "domSha256": "e764e76fb41336f60bc3c1f1017deefa8abf33b71cd0180e1b13245ddab9bf82",
       "legacyInternalHrefs": [
         "/",
-        "/contact/",
+        "/shop/",
         "/guides/",
-        "/guides/2-activate/",
-        "/guides/4-signal/",
-        "/guides/6-pitfalls/",
         "/more/",
+        "/qa/",
+        "/contact/",
+        "/guides/0-intro/",
+        "/guides/1-order/",
+        "/guides/2-activate/",
+        "/guides/3-account/",
+        "/guides/3-app/",
+        "/guides/3-usage/",
+        "/guides/4-recharge-service/",
+        "/guides/4-signal/",
+        "/more/00-wechat/",
+        "/more/02-telegram/",
         "/more/03-esim/",
-        "/research/",
-        "/shop/"
+        "/more/04-esim-qrcode/",
+        "/qa/00-username/",
+        "/qa/01-change-number/",
+        "/qa/02-topup/",
+        "/qa/03-reissue/",
+        "/qa/04-choose-number/",
+        "/qa/05-multiple-number/",
+        "/qa/06-activation-expiration/",
+        "/qa/07-voicemail-switch/",
+        "/qa/08-gv/",
+        "/qa/09-spread/",
+        "/guides/6-pitfalls/",
+        "/answers/"
       ]
     },
     {
@@ -633,9 +739,11 @@
       "domSha256": "dcae8f7bdca137339f584d612a4392e5d7444119bbcd24a304d0dc0b0aeddbd4",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -645,12 +753,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -661,7 +767,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -674,9 +780,11 @@
       "domSha256": "772647d4876b9e2a1861947e9792bca9862c8b5f57efb8a942365b014b626a2a",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -686,12 +794,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -702,7 +808,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -715,9 +821,11 @@
       "domSha256": "335f86fe21a16abb9986ac8817b454cc7373cbdfed72a7c4982c72f732adfad3",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -727,12 +835,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -743,7 +849,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -756,9 +862,11 @@
       "domSha256": "e03160f90d16550304d84fef5268234c071b7763cd127fab419fa2ef97fef40f",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -768,12 +876,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -784,7 +890,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -797,9 +903,11 @@
       "domSha256": "3a7789ecc8f26bbfff0c442cd81fb81b84990308e52900b88fc6e331e6118e44",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -809,12 +917,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -825,7 +931,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -838,9 +944,11 @@
       "domSha256": "338adfdf947ce955455f446f9c966e39377e485d20299d1b924dd38465e75466",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -850,12 +958,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -866,7 +972,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -879,9 +985,11 @@
       "domSha256": "a48d08c9ca58788b6788a0787dc061b2fd11f41f18f737b77bd3a3cfacabfd26",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -891,12 +999,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -907,7 +1013,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -920,9 +1026,11 @@
       "domSha256": "a437b17811d723616a0ee140a90da5fb42228db2fe0a0f079aed692e274c8b54",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -932,12 +1040,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -948,7 +1054,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -961,9 +1067,11 @@
       "domSha256": "8f2cf2d45a5ba10a65f90128a83603d6d26c740b5dc32f34c86f046e94b17441",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -973,12 +1081,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -989,7 +1095,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -1002,9 +1108,11 @@
       "domSha256": "5a25fcf1d225274ab4fc5b9fc05ef193f735f59a2fb757e89107570de7cf7184",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -1014,12 +1122,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -1030,7 +1136,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -1043,9 +1149,11 @@
       "domSha256": "5d6d8a80cd92be060eb69dc2ba93ca57e9742d237cf4e0f12d00e018a4baa1f6",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -1055,12 +1163,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -1071,7 +1177,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -1084,9 +1190,11 @@
       "domSha256": "a979affcf013a46d8ff9b429c22a0d3fcc10deb1c8eabe6d4f41a8262f4fa687",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/0-intro/",
         "/guides/1-order/",
         "/guides/2-activate/",
@@ -1096,12 +1204,10 @@
         "/guides/4-recharge-service/",
         "/guides/4-signal/",
         "/guides/5-travel-data/",
-        "/more/",
         "/more/00-wechat/",
         "/more/02-telegram/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
         "/qa/00-username/",
         "/qa/01-change-number/",
         "/qa/02-topup/",
@@ -1112,7 +1218,7 @@
         "/qa/07-voicemail-switch/",
         "/qa/08-gv/",
         "/qa/09-spread/",
-        "/shop/"
+        "/answers/"
       ]
     },
     {
@@ -1125,17 +1231,17 @@
       "domSha256": "9130f4c31f0c938cc0946c23b0ee5313e262cd70768425cbd2d4adf286f0cd6f",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/2-activate/",
         "/guides/3-usage/",
-        "/guides/4-signal/",
-        "/more/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
-        "/shop/"
+        "/guides/4-signal/",
+        "/answers/"
       ]
     },
     {
@@ -1148,18 +1254,18 @@
       "domSha256": "f8033eb3a6856b5451403031ceb36fac60f406eb5280847f84cf930e8e34713c",
       "legacyInternalHrefs": [
         "/",
-        "/answers/",
-        "/contact/",
+        "/shop/",
         "/guides/",
+        "/more/",
+        "/qa/",
+        "/contact/",
         "/guides/2-activate/",
         "/guides/3-usage/",
-        "/guides/4-signal/",
-        "/guides/6-pitfalls/",
-        "/more/",
         "/more/03-esim/",
         "/more/04-esim-qrcode/",
-        "/qa/",
-        "/shop/"
+        "/guides/4-signal/",
+        "/answers/",
+        "/guides/6-pitfalls/"
       ]
     }
   ],
@@ -1191,8 +1297,13 @@
     },
     "/assets/site.css": {
       "path": "assets/site.css",
-      "sha256": "fd021d65c520e410efd3519dc6d0060f4ef5d29f7ad1f7b7530660f760b8768c",
-      "bytes": 44203
+      "sha256": "2acdba1a8cf532ee045ff01ab820159761ab0c262080acf8d0858f6da10ca0bc",
+      "bytes": 54950
+    },
+    "/assets/legacy-palette.css": {
+      "path": "assets/legacy-palette.css",
+      "sha256": "1d74d7a36713db24274523f8fdcacca35ff2ee018072ced5e0fe64d80971d2b1",
+      "bytes": 7967
     }
   }
 }

@@ -28,6 +28,14 @@ test("commerce widget is one additive, accessible British SIM buying guide", asy
   );
   assert.doesNotMatch(html, /<dialog\b[^>]*aria-modal=/i);
   assert.match(html, /<h2 id="wechat-buying-guide-title">\s*英国卡购买指南\s*<\/h2>/);
+  const description = html.match(/<p id="wechat-buying-guide-description">([\s\S]*?)<\/p>/i);
+  assert.ok(description, "visible commerce boundary disclosure");
+  assert.match(description[1], /独立第三方/);
+  assert.match(description[1], /不代表 giffgaff 官方/);
+  assert.match(description[1], /G0 \/ G2 是本站库存分类/);
+  assert.match(description[1], /不保证实时库存/);
+  assert.match(description[1], /支付成功/);
+  assert.match(description[1], /OTP 验证码送达/);
   assert.match(html, /微信客服[“"]客服小玉[”"]/);
   assert.match(html, /data-commerce-close/);
   assert.match(html, /aria-label="关闭英国卡购买指南"/);

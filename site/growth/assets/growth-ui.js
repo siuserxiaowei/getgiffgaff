@@ -2,7 +2,7 @@ import {
   evidenceIsCurrent,
   keepNumberCalendar,
   keepNumberReminderDate,
-  roamingCost,
+  roamingCostBreakdown,
   totalCost,
 } from "./tools.js";
 
@@ -67,7 +67,7 @@ function bindRoamingCost(root) {
   const calculate = root.querySelector("[data-calculate]");
   if (!output || !calculate) return;
   calculate.addEventListener("click", () => {
-    const total = roamingCost({
+    const result = roamingCostBreakdown({
       megabytes: fieldValue(root, "megabytes"),
       sms: fieldValue(root, "sms"),
       outgoingMinutes: fieldValue(root, "outgoing-minutes"),
@@ -79,11 +79,11 @@ function bindRoamingCost(root) {
       expiresAt: root.dataset.expires,
       now: todayIso(),
     });
-    if (total === null) {
+    if (result === null) {
       output.textContent = "费率已过核验期或输入无效，已停止给出数值结果。";
       return;
     }
-    output.textContent = `估算合计 ${money(total, "GBP")}。实际扣费以运营商账单为准。`;
+    output.textContent = `PAYG Credit 估算合计 ${money(result.total, "GBP")}：流量 ${money(result.data.amount, "GBP")}；发出短信 ${money(result.sms.amount, "GBP")}；单次拨打 ${money(result.outgoingCall.amount, "GBP")}（按 ${result.outgoingCall.billedSeconds} 秒）；单次接听 ${money(result.incomingCall.amount, "GBP")}（按 ${result.incomingCall.billedMinutes} 个整分钟）。不含 Travel Data Add-on；实际扣费以运营商账单为准。`;
   });
 }
 

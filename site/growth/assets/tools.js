@@ -59,6 +59,7 @@ export function keepNumberCalendar(lastActionDate) {
     `DTSTART;VALUE=DATE:${compact}`,
     "SUMMARY:检查 giffgaff 保号状态",
     "DESCRIPTION:打开官方 inactive 规则，核对账号、余额和可验证的有效动作。第 5 个月提醒是本站风险缓冲建议。",
+    "URL:https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",
     "END:VEVENT",
     "END:VCALENDAR",
     "",
@@ -71,7 +72,52 @@ export function evidenceIsCurrent({ expiresAt, now } = {}) {
   return Boolean(expiry && current && current <= expiry);
 }
 
-export function roamingCost(options = {}) {
+function moneyAmount(value) {
+  if (!Number.isFinite(value)) return null;
+  const amount = Math.round((value + Number.EPSILON) * 100) / 100;
+  return Number.isFinite(amount) ? amount : null;
+}
+
+function billedUnits(value, multiplier = 1) {
+  const unroundedUnits = value * multiplier;
+  if (!Number.isFinite(unroundedUnits)) return null;
+  const units = Math.ceil(Number(unroundedUnits.toFixed(9)));
+  return Number.isSafeInteger(units) && units >= 0 ? units : null;
+}
+
+export function outgoingCallCharge(minutes, ratePerMinute) {
+  const actualMinutes = finiteNonNegative(minutes);
+  const rate = finiteNonNegative(ratePerMinute);
+  if (actualMinutes === null || rate === null) return null;
+  const calculatedSeconds = billedUnits(actualMinutes, 60);
+  if (calculatedSeconds === null) return null;
+  const billedSeconds = actualMinutes === 0 ? 0 : Math.max(30, calculatedSeconds);
+  const amount = moneyAmount((billedSeconds / 60) * rate);
+  if (amount === null) return null;
+  return {
+    actualMinutes,
+    billedSeconds,
+    amount,
+  };
+}
+
+export function incomingCallCharge(minutes, ratePerMinute) {
+  const actualMinutes = finiteNonNegative(minutes);
+  const rate = finiteNonNegative(ratePerMinute);
+  if (actualMinutes === null || rate === null) return null;
+  const calculatedMinutes = billedUnits(actualMinutes);
+  if (calculatedMinutes === null) return null;
+  const billedMinutes = actualMinutes === 0 ? 0 : Math.max(1, calculatedMinutes);
+  const amount = moneyAmount(billedMinutes * rate);
+  if (amount === null) return null;
+  return {
+    actualMinutes,
+    billedMinutes,
+    amount,
+  };
+}
+
+export function roamingCostBreakdown(options = {}) {
   const {
     megabytes,
     sms = 0,
@@ -84,25 +130,53 @@ export function roamingCost(options = {}) {
     expiresAt,
     now,
   } = options || {};
-  const values = [
-    megabytes,
-    sms,
-    outgoingMinutes,
-    incomingMinutes,
-    ratePerMegabyte,
-    ratePerSms,
-    ratePerOutgoingMinute,
-    ratePerIncomingMinute,
-  ].map(finiteNonNegative);
-  if (values.includes(null) || !evidenceIsCurrent({ expiresAt, now })) {
-    return null;
-  }
-  const [usage, smsCount, outgoing, incoming, dataRate, smsRate, outgoingRate, incomingRate] = values;
-  const total = usage * dataRate
-    + smsCount * smsRate
-    + outgoing * outgoingRate
-    + incoming * incomingRate;
-  return Math.round((total + Number.EPSILON) * 100) / 100;
+  const usage = finiteNonNegative(megabytes);
+  const smsCount = finiteNonNegative(sms);
+  const dataRate = finiteNonNegative(ratePerMegabyte);
+  const smsRate = finiteNonNegative(ratePerSms);
+  const outgoingCall = outgoingCallCharge(outgoingMinutes, ratePerOutgoingMinute);
+  const incomingCall = incomingCallCharge(incomingMinutes, ratePerIncomingMinute);
+  if (
+    usage === null
+    || smsCount === null
+    || !Number.isSafeInteger(smsCount)
+    || dataRate === null
+    || smsRate === null
+    || !outgoingCall
+    || !incomingCall
+    || !evidenceIsCurrent({ expiresAt, now })
+  ) return null;
+
+  const dataAmount = moneyAmount(usage * dataRate);
+  const smsAmount = moneyAmount(smsCount * smsRate);
+  if (dataAmount === null || smsAmount === null) return null;
+  const data = {
+    megabytes: usage,
+    ratePerMegabyte: dataRate,
+    amount: dataAmount,
+  };
+  const sentSms = {
+    sent: smsCount,
+    ratePerSms: smsRate,
+    amount: smsAmount,
+  };
+  const total = moneyAmount(
+    data.amount + sentSms.amount + outgoingCall.amount + incomingCall.amount,
+  );
+  if (total === null) return null;
+  return {
+    kind: "china-payg-credit",
+    excludesTravelDataAddOn: true,
+    data,
+    sms: sentSms,
+    outgoingCall,
+    incomingCall,
+    total,
+  };
+}
+
+export function roamingCost(options = {}) {
+  return roamingCostBreakdown(options)?.total ?? null;
 }
 
 export function totalCost(options = {}) {

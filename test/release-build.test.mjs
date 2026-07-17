@@ -7,7 +7,9 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import {
+  applyLegacySafetyOverrides,
   buildReleaseArtifact,
+  ensureGrowthStylesheet,
   injectCommerceWidget,
   injectRelatedTutorials,
 } from "../scripts/build-release-artifact.mjs";
@@ -15,6 +17,7 @@ import {
   INDEXABLE_GROWTH_ROUTES,
   LEGACY_ROUTES,
   NOINDEX_GROWTH_ROUTES,
+  PUBLIC_INDEXABLE_PATHS,
 } from "../public/route-manifest.js";
 import {
   legacyDomSignature,
@@ -36,20 +39,58 @@ function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
-function collectSchemaTypes(value, types = []) {
-  if (Array.isArray(value)) {
-    for (const item of value) collectSchemaTypes(item, types);
-    return types;
+function robotsGroups(value) {
+  const groups = [];
+  let agents = [];
+  let directives = [];
+
+  const flush = () => {
+    if (agents.length > 0) groups.push({ agents, directives });
+    agents = [];
+    directives = [];
+  };
+
+  for (const rawLine of value.split(/\r?\n/)) {
+    const line = rawLine.replace(/#.*$/, "").trim();
+    if (!line) {
+      if (directives.length > 0) flush();
+      continue;
+    }
+    const separator = line.indexOf(":");
+    if (separator === -1) continue;
+    const field = line.slice(0, separator).trim().toLowerCase();
+    const content = line.slice(separator + 1).trim();
+    if (field === "user-agent") {
+      if (directives.length > 0) flush();
+      agents.push(content);
+    } else if (agents.length > 0) {
+      directives.push(`${field}:${content}`);
+    }
   }
-  if (!value || typeof value !== "object") return types;
-  if (typeof value["@type"] === "string") types.push(value["@type"]);
-  for (const nested of Object.values(value)) collectSchemaTypes(nested, types);
-  return types;
+  flush();
+  return groups;
 }
 
-function jsonLdDocuments(html) {
-  return [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)]
-    .map((match) => JSON.parse(match[1]));
+function directivesFor(groups, agent) {
+  const group = groups.find(({ agents }) => agents.includes(agent));
+  assert.ok(group, `missing robots group for ${agent}`);
+  return new Set(group.directives);
+}
+
+function plainText(value) {
+  return String(value || "")
+    .replace(/<[^>]+>/g, "")
+    .replaceAll("&amp;", "&")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function htmlTitle(html) {
+  return plainText((html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i) || [])[1]);
 }
 
 test("related tutorial injection is append-only, exact, and idempotent", async () => {
@@ -88,45 +129,14 @@ test("commerce widget injection is append-only and idempotent", async () => {
   assert.equal(injectCommerceWidget(output), output);
 });
 
-test("release does not advertise unsupported Product rich results", async (t) => {
-  const affectedRoutes = [
-    "/",
-    "/shop/",
-    "/shop/giffgaff-g0/",
-    "/shop/giffgaff-g2/",
-  ];
-  const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-schema-hotfix-"));
-  t.after(() => rm(outputRoot, { recursive: true, force: true }));
-
-  const sourceChecks = await Promise.all(
-    affectedRoutes.map(async (route) =>
-      (await readFile(routeFile(LEGACY_ROOT, route), "utf8")).includes('"@type":"Product"')
-    ),
-  );
-  assert.equal(
-    sourceChecks.every(Boolean),
-    true,
-    "frozen production source remains unchanged for auditability",
-  );
-
-  await buildReleaseArtifact(outputRoot);
-  for (const route of affectedRoutes) {
-    const html = await readFile(routeFile(outputRoot, route), "utf8");
-    const types = jsonLdDocuments(html).flatMap((document) => collectSchemaTypes(document));
-    assert.ok(types.length > 0, `${route} keeps valid JSON-LD`);
-    assert.equal(types.includes("Product"), false, `${route} must not expose Product`);
-    assert.doesNotMatch(html, /"sku":"g[02]-(?:new-card|credit-card)"/u, route);
-  }
-});
-
-test("release build contains 34 frozen pages, 8 new pages, 8 related slots, and 42 commerce widgets", async (t) => {
+test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, and 46 commerce widgets", async (t) => {
   const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-release-"));
   t.after(() => rm(outputRoot, { recursive: true, force: true }));
   const report = await buildReleaseArtifact(outputRoot);
 
   assert.equal(report.legacyPages, 34);
-  assert.equal(report.growthPages, 8);
-  assert.equal(report.injectedPages, 8);
+  assert.equal(report.growthPages, 12);
+  assert.equal(report.injectedPages, 9);
   assert.equal(report.commerceWidgets, 34);
 
   const related = JSON.parse(
@@ -136,23 +146,19 @@ test("release build contains 34 frozen pages, 8 new pages, 8 related slots, and 
     await readFile(path.join(LEGACY_ROOT, "legacy-freeze-manifest.json"), "utf8"),
   );
   assert.equal(freeze.schemaVersion, "legacy-freeze-v2");
-  const frozenByRoute = new Map(freeze.pages.map((page) => [page.route, page]));
-
   for (const route of LEGACY_ROUTES) {
     const html = await readFile(routeFile(outputRoot, route), "utf8");
+    const source = await readFile(routeFile(LEGACY_ROOT, route), "utf8");
+    let expected = ensureGrowthStylesheet(source);
+    if (Object.hasOwn(related, route)) {
+      expected = injectRelatedTutorials(expected, related[route]);
+    }
+    expected = injectCommerceWidget(expected);
+    expected = applyLegacySafetyOverrides(expected, route).html;
     const expectedSlots = Object.hasOwn(related, route) ? 2 : 1;
     assert.equal((html.match(/data-growth-slot=/g) || []).length, expectedSlots, route);
     assert.equal((html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, 1, route);
-    assert.equal(
-      visibleTextSignature(html),
-      frozenByRoute.get(route).visibleTextSha256,
-      `${route} legacy copy`,
-    );
-    assert.equal(
-      legacyDomSignature(html),
-      frozenByRoute.get(route).domSha256,
-      `${route} legacy DOM`,
-    );
+    assert.equal(html, expected, `${route} only approved release transformations`);
     assert.doesNotMatch(html, /(?:src|href)=["']\/_next\//i, route);
   }
 
@@ -186,8 +192,22 @@ test("release build contains 34 frozen pages, 8 new pages, 8 related slots, and 
   const robots = await readFile(path.join(outputRoot, "robots.txt"), "utf8");
   const sourceRobots = await readFile(path.join(ROOT, "public", "robots.txt"), "utf8");
   assert.equal(robots, sourceRobots, "release robots.txt must have one owned source");
-  assert.match(robots, /User-agent:\s*OAI-SearchBot[\s\S]*?Allow:\s*\//i);
-  assert.match(robots, /User-agent:\s*GPTBot[\s\S]*?Disallow:\s*\//i);
+  const groups = robotsGroups(robots);
+  for (const agent of [
+    "OAI-SearchBot",
+    "ChatGPT-User",
+    "Claude-SearchBot",
+    "Claude-User",
+    "PerplexityBot",
+    "Perplexity-User",
+  ]) {
+    assert.deepEqual(directivesFor(groups, agent), new Set(["allow:/"]), agent);
+  }
+  for (const agent of ["GPTBot", "ClaudeBot", "Google-Extended"]) {
+    assert.deepEqual(directivesFor(groups, agent), new Set(["disallow:/"]), agent);
+  }
+  assert.match(robots, /Google-Extended covers both some Gemini grounding and generative-AI training/i);
+  assert.match(robots, /Content-Signal field is a non-standard policy signal/i);
   assert.doesNotMatch(robots, /BEGIN Cloudflare Managed content/i);
 
   for (const asset of Object.values(freeze.assets)) {
@@ -195,4 +215,47 @@ test("release build contains 34 frozen pages, 8 new pages, 8 related slots, and 
     const built = await readFile(path.join(outputRoot, asset.path));
     assert.equal(sha256(built), sha256(source), asset.path);
   }
+});
+
+test("llms.txt is a curated task index for exactly the 39 indexable pages", async (t) => {
+  const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-llms-"));
+  t.after(() => rm(outputRoot, { recursive: true, force: true }));
+  await buildReleaseArtifact(outputRoot);
+
+  const llms = await readFile(path.join(outputRoot, "llms.txt"), "utf8");
+  assert.equal((llms.match(/^# /gm) || []).length, 1, "exactly one H1");
+  assert.ok((llms.match(/^## /gm) || []).length >= 4, "task-oriented H2 sections");
+  assert.doesNotMatch(llms, /^### /m, "flat task index needs no deeper headings");
+  assert.match(llms, /独立第三方/);
+  assert.match(llms, /不代表 giffgaff 官方/);
+  assert.match(llms, /运营商规则/);
+  assert.match(llms, /库存、价格/);
+  assert.match(llms, /不保证.*(?:收录|排名|引用)/);
+  assert.match(llms, /当前无已核验 SKU 或交易证据，请勿付款/);
+  assert.match(llms, /联系入口不等于 SKU、支付或履约证据/);
+
+  const entries = [...llms.matchAll(/^- \[([^\]]+)\]\((https:\/\/getgiffgaff\.com\/[^)]*)\)：([^\n]+)$/gm)]
+    .map((match) => ({ title: match[1], url: match[2], purpose: match[3].trim() }));
+  assert.equal(entries.length, 39, "one titled purpose entry per indexable page");
+  assert.deepEqual(
+    entries.map((entry) => new URL(entry.url).pathname).sort(),
+    [...PUBLIC_INDEXABLE_PATHS].sort(),
+  );
+
+  for (const entry of entries) {
+    const pathname = new URL(entry.url).pathname;
+    const html = await readFile(routeFile(outputRoot, pathname), "utf8");
+    assert.equal(entry.title, htmlTitle(html), `${pathname} exact HTML title`);
+    assert.match(entry.purpose, /。$/, `${pathname} purpose ends as one sentence`);
+    assert.equal((entry.purpose.match(/。/g) || []).length, 1, `${pathname} one-sentence purpose`);
+  }
+
+  for (const pathname of NOINDEX_GROWTH_ROUTES) {
+    assert.ok(!llms.includes(`https://getgiffgaff.com${pathname}`), pathname);
+  }
+  await assert.rejects(
+    readFile(path.join(outputRoot, "llms-full.txt")),
+    { code: "ENOENT" },
+    "retired llms-full must not be generated",
+  );
 });

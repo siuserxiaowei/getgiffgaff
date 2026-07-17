@@ -23,7 +23,7 @@ export function renderCommerceWidget() {
         <div>
           <p class="commerce-guide-eyebrow">微信咨询 · 选卡 · 下单</p>
           <h2 id="${TITLE_ID}">英国卡购买指南</h2>
-          <p id="${DESCRIPTION_ID}">先对比 G0 / G2，再通过购买教程、微信客服“客服小玉”或快团团完成下单与支付。</p>
+          <p id="${DESCRIPTION_ID}"><strong>本站是独立第三方，不代表 giffgaff 官方。</strong> G0 / G2 是本站库存分类；本站不保证实时库存、支付成功或任何平台的 OTP 验证码送达。当前没有已核验的 G0/G2 直达 SKU、真实交易及完整隐私、条款、退款、物流政策证据；资料未补齐前请勿付款。</p>
         </div>
         <a class="commerce-guide-close" href="#${CLOSE_TARGET_ID}" data-commerce-close aria-label="关闭英国卡购买指南">
           <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -39,7 +39,7 @@ export function renderCommerceWidget() {
           </a>
           <a class="commerce-choice-card" href="/shop/giffgaff-g2/" data-analytics-event="shop_click">
             <strong>G2 有余额卡</strong>
-            <span>适合希望收卡后先检查余额和账户状态的用户；余额范围以付款前确认为准。</span>
+            <span>本站内部库存分类，不是 giffgaff 官方 SKU；批次、余额和账户控制证据未齐时请勿付款。</span>
           </a>
         </div>
         <a class="commerce-text-link" href="/guides/1-order/" data-analytics-event="commerce_click">查看完整购买教程</a>
@@ -53,7 +53,7 @@ export function renderCommerceWidget() {
           <div>
             <h3 id="commerce-wechat-title">微信客服“客服小玉”</h3>
             <p>购买前可确认库存、发货和 G0 / G2 选择；请勿发送密码、短信验证码或完整支付卡信息。</p>
-            <a class="commerce-action commerce-action--wechat" href="https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3" target="_blank" rel="noopener noreferrer" data-analytics-event="contact_click">打开微信联系小玉</a>
+            <a class="commerce-action commerce-action--wechat" href="https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3" target="_blank" rel="noopener noreferrer" data-link-role="contact-channel" data-analytics-event="contact_click">打开微信联系小玉</a>
           </div>
         </section>
 
@@ -63,13 +63,13 @@ export function renderCommerceWidget() {
           </div>
           <div>
             <h3 id="commerce-ktt-title">快团团下单与支付</h3>
-            <p>前往联系页查看快团团入口。实际库存、价格、订单和支付状态以快团团展示与支付结果为准。</p>
+            <p>前往联系页查看快团团入口。当前未提供可核验的 G0/G2 直达 SKU 和真实交易证据；不得仅凭二维码或口头说明判断可购买。</p>
             <a class="commerce-action" href="/contact/#ktt-giga-card" data-analytics-event="commerce_click">查看快团团小程序码</a>
           </div>
         </section>
       </div>
 
-      <p class="commerce-privacy-note">本弹窗不收集手机号、账户、订单号或支付信息。具体购买和支付在对应的微信或快团团路径中完成。</p>
+      <p class="commerce-privacy-note">本弹窗不收集手机号、账户、订单号或支付信息。本站不会要求或接收密码、短信验证码、Cookie 或完整支付卡信息。<a href="/privacy/">隐私说明状态</a> · <a href="/terms/">交易条款状态</a> · <a href="/refund/">退款说明状态</a> · <a href="/shipping/">物流说明状态</a></p>
     </div>
   </dialog>
   <script type="module" src="/growth-assets/commerce-ui.js"></script>

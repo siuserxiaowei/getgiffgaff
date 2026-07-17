@@ -6,12 +6,13 @@
       "title": "giffgaff 收卡验收清单｜G0/G2 到手检查与售后",
       "description": "国内收到 giffgaff G0/G2 后，按包装、卡状态、账号控制、余额、网络和普通短信逐项验收；附失败分流、商品页与微信小玉售后入口。",
       "intent": "giffgaff G0/G2 收卡验收",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
         "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit",
         "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+        "https://help.giffgaff.com/en/articles/246074-policy-to-manage-illegitimate-sms-usage",
         "https://help.giffgaff.com/en/articles/240710-what-to-do-if-you-ve-lost-your-sim-or-phone"
       ],
       "relatedRoutes": [
@@ -29,10 +30,11 @@
       "title": "英国手机卡怎么选｜留学、旅行、保号与 giffgaff",
       "description": "按停留时间、英国邮编覆盖、流量、合约、实体卡或 eSIM、漫游和保号需求选择英国手机卡，并判断 giffgaff 与 G0/G2 是否适合。",
       "intent": "英国手机卡怎么选",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+        "https://www.giffgaff.com/boiler-plate/terms",
         "https://www.giffgaff.com/sim-only-deals",
         "https://help.giffgaff.com/en/articles/240676-ordering-a-sim-in-the-uk-or-abroad",
         "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
@@ -53,8 +55,8 @@
       "title": "giffgaff 保号提醒工具｜本地生成第 5 个月提醒",
       "description": "输入最近一次有效动作日期，在浏览器本地生成第 5 个月提醒并导出 .ics；不上传号码、账号或日期，不承诺永久保号。",
       "intent": "giffgaff 保号提醒日期计算",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",
         "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit"
@@ -70,13 +72,14 @@
     },
     {
       "path": "/tools/china-roaming-cost/",
-      "title": "giffgaff 中国漫游费用计算器｜短信、通话与流量",
-      "description": "按 giffgaff 当前中国漫游费率试算短信、通话和流量成本；显示来源与核验日，费率过期自动停止给出总价。",
-      "intent": "giffgaff 中国漫游费用试算",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "title": "giffgaff 中国 PAYG 漫游费用计算器｜短信、通话与流量",
+      "description": "按 giffgaff 当前中国 PAYG Credit 漫游费率试算短信、单次通话和流量成本；不包含 Travel Data Add-on，费率过期停止给出总价。",
+      "intent": "giffgaff 中国 PAYG Credit 漫游费用试算",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://www.giffgaff.com/roaming/china",
+        "https://help.giffgaff.com/en/articles/365501-giffgaff-travel-data-add-ons-and-how-they-work",
         "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",
         "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting"
       ],
@@ -91,11 +94,11 @@
     },
     {
       "path": "/tools/g0-g2-total-cost/",
-      "title": "G0/G2 总成本计算器｜卡价、充值、时间与维护费用",
-      "description": "自行输入 G0/G2 卡价、运费、首次充值和预计使用成本，分别计算现金支出；无当前商品证据时不填默认价格。",
-      "intent": "G0/G2 用户输入总成本",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "title": "G0/G2 现金支出计算器｜卡价、运费、充值与使用支出",
+      "description": "自行输入一条 G0 或 G2 路径的卡价、运费、首次充值和预计额外使用支出，计算人民币现金支出；英镑余额单列且不折算。",
+      "intent": "G0/G2 用户输入现金支出",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
         "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit",
@@ -116,8 +119,8 @@
       "title": "giffgaff eSIM 兼容性检查方法｜数据采集中",
       "description": "按精确型号、地区版本、系统与 giffgaff App 版本核对 eSIM 前提条件；证据不足时只显示需核对，不提供第三方写卡方案。",
       "intent": "giffgaff eSIM 精确设备兼容方法",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
         "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting"
@@ -133,11 +136,11 @@
     },
     {
       "path": "/research/china-network-sms/",
-      "title": "giffgaff 中国网络与短信实测｜方法与数据门槛",
-      "description": "按城市、设备、系统、SIM 形态和选网方式展示近期网络与普通短信结果；样本不足时只公开方法，不承诺永久覆盖。",
-      "intent": "giffgaff 中国网络与普通短信实测",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "title": "giffgaff 中国网络与短信｜采集方法与样本门槛",
+      "description": "公开按城市、设备、系统、SIM 形态和选网方式采集网络与普通短信记录的方法；当前没有合格样本结果，达到门槛前保持 noindex。",
+      "intent": "giffgaff 中国网络与普通短信采集方法",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://www.giffgaff.com/roaming/china",
         "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
@@ -155,11 +158,11 @@
     },
     {
       "path": "/research/otp-status/",
-      "title": "giffgaff 验证码状态板｜近期实测与失败边界",
-      "description": "展示带普通短信基线的平台 OTP 近期样本、环境、等待时间和失败类型；不提供接码、绕过验证或永久兼容承诺。",
-      "intent": "giffgaff 平台 OTP 近期样本",
-      "updatedAt": "2026-07-16",
-      "reviewedAt": "2026-07-16",
+      "title": "giffgaff 验证码状态板｜采集方法与开放门槛",
+      "description": "公开带普通短信基线的平台 OTP 采集方法、环境字段和失败类型；当前没有合格样本结果，不提供接码、绕过验证或永久兼容承诺。",
+      "intent": "giffgaff 平台 OTP 样本采集方法",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
       "sources": [
         "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
         "https://help.giffgaff.com/en/articles/258873-how-to-perform-a-manual-roam",
@@ -170,6 +173,70 @@
         "/research/china-network-sms/",
         "/answers/",
         "/shop/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "noindex"
+    },
+    {
+      "path": "/privacy/",
+      "title": "隐私说明状态｜信息待经营负责人确认",
+      "description": "隐私政策尚待经营负责人按真实业务流程确认；本页公开资料缺口并暂停把不完整说明当作正式政策使用。",
+      "intent": "隐私政策状态与资料缺口",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
+      "sources": [],
+      "relatedRoutes": [
+        "/contact/",
+        "/guides/1-order/",
+        "/guides/7-arrival-checklist/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "noindex"
+    },
+    {
+      "path": "/terms/",
+      "title": "交易条款状态｜信息待经营负责人确认",
+      "description": "交易条款尚待经营负责人按真实业务流程确认；本页公开资料缺口并暂停把不完整说明当作正式政策使用。",
+      "intent": "交易条款状态与资料缺口",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
+      "sources": [],
+      "relatedRoutes": [
+        "/contact/",
+        "/guides/1-order/",
+        "/guides/7-arrival-checklist/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "noindex"
+    },
+    {
+      "path": "/refund/",
+      "title": "退款说明状态｜信息待经营负责人确认",
+      "description": "退款政策尚待经营负责人按真实业务流程确认；本页公开资料缺口并暂停把不完整说明当作正式政策使用。",
+      "intent": "退款政策状态与资料缺口",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
+      "sources": [],
+      "relatedRoutes": [
+        "/contact/",
+        "/guides/1-order/",
+        "/guides/7-arrival-checklist/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "noindex"
+    },
+    {
+      "path": "/shipping/",
+      "title": "物流说明状态｜信息待经营负责人确认",
+      "description": "物流政策尚待经营负责人按真实业务流程确认；本页公开资料缺口并暂停把不完整说明当作正式政策使用。",
+      "intent": "物流政策状态与资料缺口",
+      "updatedAt": "2026-07-17",
+      "reviewedAt": "2026-07-17",
+      "sources": [],
+      "relatedRoutes": [
+        "/contact/",
+        "/guides/1-order/",
+        "/guides/7-arrival-checklist/"
       ],
       "commerceTarget": "/contact/",
       "indexPolicy": "noindex"

@@ -9,6 +9,31 @@ const DEFAULT_CONCURRENCY = 6;
 const DEFAULT_TIMEOUT_MS = 15_000;
 const PERMANENT_REDIRECT_STATUSES = new Set([301, 308]);
 const ROBOTS_NAMES = new Set(["robots", "googlebot", "bingbot"]);
+export const EXPECTED_ROBOTS_POLICY = Object.freeze({
+  allow: Object.freeze([
+    "Googlebot",
+    "Bingbot",
+    "Baiduspider",
+    "OAI-SearchBot",
+    "ChatGPT-User",
+    "Claude-SearchBot",
+    "Claude-User",
+    "PerplexityBot",
+    "Perplexity-User",
+  ]),
+  disallow: Object.freeze([
+    "Amazonbot",
+    "Applebot-Extended",
+    "Bytespider",
+    "CCBot",
+    "ClaudeBot",
+    "cohere-ai",
+    "GPTBot",
+    "meta-externalagent",
+    "anthropic-ai",
+    "Google-Extended",
+  ]),
+});
 
 export class SeoReleaseError extends Error {
   constructor(issues, report = {}) {
@@ -527,6 +552,270 @@ function missingDirectives(value, expected) {
   return expected.filter((directive) => !directives.has(directive));
 }
 
+function robotsSourceLabel(isCloudflareManaged) {
+  return isCloudflareManaged ? "cloudflare-managed" : "repository";
+}
+
+export function parseRobotsTxt(value) {
+  const groups = [];
+  const errors = [];
+  let currentGroup = null;
+  let isCloudflareManaged = false;
+  let mayAppendAgent = false;
+
+  const lines = String(value ?? "").replace(/^\uFEFF/, "").split(/\r?\n/);
+  for (let index = 0; index < lines.length; index += 1) {
+    const lineNumber = index + 1;
+    const rawLine = lines[index];
+    if (/^\s*#\s*BEGIN\s+Cloudflare\s+Managed\s+content\b/i.test(rawLine)) {
+      isCloudflareManaged = true;
+      currentGroup = null;
+      mayAppendAgent = false;
+      continue;
+    }
+    if (/^\s*#\s*END\s+Cloudflare\s+Managed\s+Content\b/i.test(rawLine)) {
+      isCloudflareManaged = false;
+      currentGroup = null;
+      mayAppendAgent = false;
+      continue;
+    }
+
+    const withoutComment = rawLine.replace(/#.*$/, "").trim();
+    if (!withoutComment) continue;
+    const separator = withoutComment.indexOf(":");
+    if (separator < 1) {
+      errors.push({ line: lineNumber, message: `Malformed robots.txt line: ${withoutComment}` });
+      continue;
+    }
+
+    const directive = withoutComment.slice(0, separator).trim().toLowerCase();
+    const directiveValue = withoutComment.slice(separator + 1).trim();
+    const source = robotsSourceLabel(isCloudflareManaged);
+
+    if (directive === "user-agent") {
+      if (!directiveValue) {
+        errors.push({ line: lineNumber, message: "User-agent must not be empty" });
+        currentGroup = null;
+        mayAppendAgent = false;
+        continue;
+      }
+      const normalizedAgent = directiveValue.toLowerCase();
+      if (
+        currentGroup
+        && currentGroup.source === source
+        && mayAppendAgent
+      ) {
+        currentGroup.agents.push(normalizedAgent);
+      } else {
+        currentGroup = {
+          agents: [normalizedAgent],
+          rules: [],
+          source,
+          line: lineNumber,
+        };
+        groups.push(currentGroup);
+      }
+      mayAppendAgent = true;
+      continue;
+    }
+
+    mayAppendAgent = false;
+
+    if (directive === "allow" || directive === "disallow") {
+      if (!currentGroup) {
+        errors.push({
+          line: lineNumber,
+          message: `${directive} appears before a User-agent group`,
+        });
+        continue;
+      }
+      if (!directiveValue) continue;
+      if (!directiveValue.startsWith("/") && !directiveValue.startsWith("*")) {
+        errors.push({
+          line: lineNumber,
+          message: `${directive} path must begin with / or *: ${directiveValue}`,
+        });
+        continue;
+      }
+      currentGroup.rules.push({
+        directive,
+        pattern: directiveValue,
+        line: lineNumber,
+      });
+      continue;
+    }
+
+    // Sitemap, Content-Signal, Crawl-delay, Host and other extensions do not
+    // change Allow/Disallow matching for the release gate.
+  }
+
+  return { groups, errors };
+}
+
+function applicableRobotsGroups(groups, agent, source) {
+  const normalizedAgent = String(agent).toLowerCase();
+  const candidates = source ? groups.filter((group) => group.source === source) : groups;
+  const exact = candidates.filter((group) => group.agents.includes(normalizedAgent));
+  if (exact.length > 0) return exact;
+  return candidates.filter((group) => group.agents.includes("*"));
+}
+
+function robotsPatternMatch(pattern, pathname) {
+  const anchored = pattern.endsWith("$");
+  const source = anchored ? pattern.slice(0, -1) : pattern;
+  const expression = source
+    .split("*")
+    .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join(".*");
+  return new RegExp(`^${expression}${anchored ? "$" : ""}`).test(pathname);
+}
+
+function robotsDecision(groups, agent, pathname, source) {
+  const applicable = applicableRobotsGroups(groups, agent, source);
+  if (applicable.length === 0) {
+    return { allowed: true, applicable: false, rule: null };
+  }
+
+  const matches = applicable
+    .flatMap((group) => group.rules.map((rule) => ({ ...rule, source: group.source })))
+    .filter((rule) => robotsPatternMatch(rule.pattern, pathname))
+    .map((rule) => ({
+      ...rule,
+      specificity: rule.pattern.replace(/\*/g, "").replace(/\$$/, "").length,
+    }))
+    .sort((left, right) =>
+      right.specificity - left.specificity
+      || (left.directive === "allow" ? -1 : 1)
+      || left.line - right.line);
+
+  if (matches.length === 0) return { allowed: true, applicable: true, rule: null };
+  return {
+    allowed: matches[0].directive === "allow",
+    applicable: true,
+    rule: matches[0],
+  };
+}
+
+function robotsPathSummary(paths, allPaths) {
+  return paths.length === allPaths.length
+    ? `all ${allPaths.length} proposed indexable paths`
+    : paths.join(", ");
+}
+
+export function validateRobotsPolicy(
+  robotsText,
+  {
+    baseUrl,
+    expectedPolicy = EXPECTED_ROBOTS_POLICY,
+    indexablePaths = PUBLIC_INDEXABLE_PATHS,
+  } = {},
+) {
+  const baseOrigin = normalizeBaseUrl(baseUrl);
+  const robotsUrl = `${baseOrigin}/robots.txt`;
+  const parsed = parseRobotsTxt(robotsText);
+  const issues = parsed.errors.map((error) =>
+    issue("robots-parse", robotsUrl, `Line ${error.line}: ${error.message}`));
+  const validPaths = [];
+  const allowedAgents = Array.isArray(expectedPolicy?.allow) ? expectedPolicy.allow : [];
+  const disallowedAgents = Array.isArray(expectedPolicy?.disallow) ? expectedPolicy.disallow : [];
+  const policyOverlap = allowedAgents.filter((agent) =>
+    disallowedAgents.some((entry) => entry.toLowerCase() === String(agent).toLowerCase()));
+  if (policyOverlap.length > 0) {
+    issues.push(
+      issue(
+        "robots-policy-matrix-conflict",
+        robotsUrl,
+        `Crawler policy lists agents as both allowed and disallowed: ${policyOverlap.join(", ")}`,
+      ),
+    );
+  }
+
+  for (const pathname of indexablePaths) {
+    if (typeof pathname !== "string" || !pathname.startsWith("/")) {
+      issues.push(
+        issue("robots-indexable-path", robotsUrl, `Invalid proposed indexable path: ${String(pathname)}`),
+      );
+      continue;
+    }
+    validPaths.push(new URL(pathname, `${baseOrigin}/`).pathname);
+  }
+
+  if (validPaths.length === 0) {
+    issues.push(
+      issue("robots-indexable-path", robotsUrl, "No proposed indexable paths were supplied"),
+    );
+  }
+
+  const sources = new Set(parsed.groups.map((group) => group.source));
+  const expectedAgents = [
+    ...allowedAgents.map((agent) => ({ agent, expected: "allow" })),
+    ...disallowedAgents.map((agent) => ({ agent, expected: "disallow" })),
+  ];
+  for (const { agent, expected } of expectedAgents) {
+    const applicable = applicableRobotsGroups(parsed.groups, agent);
+    if (applicable.length === 0) {
+      issues.push(
+        issue(
+          "robots-agent-policy-missing",
+          robotsUrl,
+          `${agent} has no matching User-agent or wildcard group; crawl access cannot be verified`,
+        ),
+      );
+      continue;
+    }
+
+    const decisions = validPaths.map((pathname) => ({
+      pathname,
+      allowed: robotsDecision(parsed.groups, agent, pathname).allowed,
+    }));
+    if (expected === "allow") {
+      const blockedPaths = decisions.filter((entry) => !entry.allowed).map((entry) => entry.pathname);
+      if (blockedPaths.length > 0) {
+        const detail = robotsPathSummary(blockedPaths, validPaths);
+        issues.push(
+          issue(
+            "robots-indexable-blocked",
+            robotsUrl,
+            `${agent} is blocked from ${detail}`,
+          ),
+        );
+      }
+    } else {
+      const allowedPaths = decisions.filter((entry) => entry.allowed).map((entry) => entry.pathname);
+      if (allowedPaths.length > 0) {
+        const detail = robotsPathSummary(allowedPaths, validPaths);
+        issues.push(
+          issue(
+            "robots-excluded-agent-allowed",
+            robotsUrl,
+            `${agent} is allowed on ${detail}, contrary to the repository exclusion policy`,
+          ),
+        );
+      }
+    }
+
+    if (sources.has("cloudflare-managed") && sources.has("repository")) {
+      const conflictingPaths = validPaths.filter((pathname) => {
+        const managed = robotsDecision(parsed.groups, agent, pathname, "cloudflare-managed");
+        const repository = robotsDecision(parsed.groups, agent, pathname, "repository");
+        return managed.applicable && repository.applicable && managed.allowed !== repository.allowed;
+      });
+      if (conflictingPaths.length > 0) {
+        const detail = robotsPathSummary(conflictingPaths, validPaths);
+        issues.push(
+          issue(
+            "robots-cloudflare-policy-conflict",
+            robotsUrl,
+            `${agent} has conflicting Cloudflare managed and repository crawl policy for ${detail}`,
+          ),
+        );
+      }
+    }
+  }
+
+  return issues;
+}
+
 export async function validatePolicyProbes(
   baseUrl,
   {
@@ -541,6 +830,8 @@ export async function validatePolicyProbes(
     "/llms-full.txt",
     "/privacy/",
     "/terms/",
+    "/refund/",
+    "/shipping/",
     "/__seo-release-probe-missing__/",
     "/api/__seo-release-probe",
     "/robots.txt",
@@ -566,12 +857,24 @@ export async function validatePolicyProbes(
       if (xRobotsTag) {
         issues.push(issue("robots-header", url, `robots.txt must not emit X-Robots-Tag; found ${xRobotsTag}`));
       }
+      if (response.status === 200) {
+        try {
+          const robotsText = await response.text();
+          issues.push(...validateRobotsPolicy(robotsText, {
+            baseUrl: baseOrigin,
+            expectedPolicy: EXPECTED_ROBOTS_POLICY,
+            indexablePaths: PUBLIC_INDEXABLE_PATHS,
+          }));
+        } catch (error) {
+          issues.push(issue("robots-body", url, `Could not read robots.txt response: ${error.message}`));
+        }
+      }
       continue;
     }
 
     const isLlms = pathname === "/llms.txt";
     const isRetiredLlmsFull = pathname === "/llms-full.txt";
-    const isPolicyPage = pathname === "/privacy/" || pathname === "/terms/";
+    const isPolicyPage = ["/privacy/", "/terms/", "/refund/", "/shipping/"].includes(pathname);
     const isPrivate = isRetiredLlmsFull || (!isLlms && (!isPolicyPage || response.status !== 200));
 
     if (isLlms && response.status !== 200) {
@@ -586,12 +889,12 @@ export async function validatePolicyProbes(
         ),
       );
     }
-    if (isPolicyPage && ![200, 404].includes(response.status)) {
+    if (isPolicyPage && response.status !== 200) {
       issues.push(
         issue(
           "policy-page-status",
           url,
-          `Expected ${pathname} to be a published 200 or an explicit 404, received ${response.status}`,
+          `Expected ${pathname} to be a published noindex status page with status 200, received ${response.status}`,
         ),
       );
     }

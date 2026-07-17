@@ -14,11 +14,11 @@ test("release verifier audits all pages, index policies and the frozen commerce 
 
   const report = await verifyReleaseArtifact({ releaseRoot: root });
   assert.deepEqual(report, {
-    manifestPages: 42,
+    manifestPages: 46,
     indexablePages: 39,
-    noindexPages: 3,
+    noindexPages: 7,
     legacyPages: 34,
-    growthPages: 8,
+    growthPages: 12,
     sitemapUrls: 39,
     commerceChecks: 6,
   });

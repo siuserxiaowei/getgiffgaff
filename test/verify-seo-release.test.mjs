@@ -1,12 +1,15 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
   SeoReleaseError,
   extractSitemapUrls,
+  parseRobotsTxt,
   parseCliOptions,
   validateCanonicalVariants,
   validatePolicyProbes,
+  validateRobotsPolicy,
   validateSeoRelease,
 } from "../scripts/verify-seo-release.mjs";
 
@@ -42,6 +45,25 @@ function fixtureFetch(routes) {
     return typeof route === "function" ? route(url) : route.clone();
   };
 }
+
+const EXPECTED_ROBOTS_POLICY = {
+  allow: [
+    "Googlebot",
+    "Bingbot",
+    "OAI-SearchBot",
+    "ChatGPT-User",
+    "Claude-SearchBot",
+    "Claude-User",
+    "PerplexityBot",
+  ],
+  disallow: ["GPTBot", "ClaudeBot", "Google-Extended"],
+};
+
+const INDEXABLE_ROBOT_PATHS = [
+  "/",
+  "/guides/7-arrival-checklist/",
+  "/tools/china-roaming-cost/",
+];
 
 test("extractSitemapUrls preserves duplicate loc entries for validation", () => {
   const xml = `<?xml version="1.0"?><urlset>
@@ -267,13 +289,17 @@ test("validates supporting, private and non-HTML policy probes", async () => {
       status: 410,
       headers: privateHeaders,
     })],
-    [`${BASE_URL}/privacy/`, jsonResponse("missing", {
-      status: 404,
-      headers: privateHeaders,
+    [`${BASE_URL}/privacy/`, jsonResponse("status", {
+      headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
-    [`${BASE_URL}/terms/`, jsonResponse("missing", {
-      status: 404,
-      headers: privateHeaders,
+    [`${BASE_URL}/terms/`, jsonResponse("status", {
+      headers: { "x-robots-tag": "noindex, follow, noarchive" },
+    })],
+    [`${BASE_URL}/refund/`, jsonResponse("status", {
+      headers: { "x-robots-tag": "noindex, follow, noarchive" },
+    })],
+    [`${BASE_URL}/shipping/`, jsonResponse("status", {
+      headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
     [`${BASE_URL}/__seo-release-probe-missing__/`, jsonResponse("missing", {
       status: 404,
@@ -283,7 +309,32 @@ test("validates supporting, private and non-HTML policy probes", async () => {
       status: 404,
       headers: privateHeaders,
     })],
-    [`${BASE_URL}/robots.txt`, jsonResponse("User-agent: *\nAllow: /")],
+    [`${BASE_URL}/robots.txt`, jsonResponse(`User-agent: *
+Allow: /
+
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Baiduspider
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Amazonbot
+User-agent: Applebot-Extended
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: ClaudeBot
+User-agent: cohere-ai
+User-agent: GPTBot
+User-agent: meta-externalagent
+User-agent: anthropic-ai
+User-agent: Google-Extended
+Disallow: /
+`)],
   ]);
 
   const issues = await validatePolicyProbes(BASE_URL, {
@@ -291,6 +342,178 @@ test("validates supporting, private and non-HTML policy probes", async () => {
   });
 
   assert.deepEqual(issues, []);
+});
+
+test("parses Cloudflare-prepended robots groups and ignores non-crawl directives", () => {
+  const parsed = parseRobotsTxt(`# BEGIN Cloudflare Managed content
+User-agent: *
+Content-Signal: search=yes,ai-train=no,use=reference
+Allow: /
+
+User-agent: GPTBot
+Disallow: /training/
+# END Cloudflare Managed Content
+
+User-agent: Googlebot
+User-agent: Bingbot
+Allow: /
+Sitemap: https://getgiffgaff.test/sitemap.xml
+`);
+
+  assert.deepEqual(parsed.errors, []);
+  assert.equal(parsed.groups.length, 3);
+  assert.deepEqual(parsed.groups[0].agents, ["*"]);
+  assert.equal(parsed.groups[0].source, "cloudflare-managed");
+  assert.deepEqual(parsed.groups[0].rules, [{ directive: "allow", pattern: "/", line: 4 }]);
+  assert.equal(parsed.groups[2].source, "repository");
+  assert.deepEqual(parsed.groups[2].agents, ["googlebot", "bingbot"]);
+});
+
+test("robots semantics enforce the repository allow and disallow matrix", () => {
+  const issues = validateRobotsPolicy(`User-agent: *
+Allow: /
+
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+Disallow: /
+`, {
+    baseUrl: BASE_URL,
+    expectedPolicy: EXPECTED_ROBOTS_POLICY,
+    indexablePaths: INDEXABLE_ROBOT_PATHS,
+  });
+
+  assert.deepEqual(issues, []);
+});
+
+test("repository robots.txt remains synchronized with the postdeploy crawler matrix", async () => {
+  const robots = await readFile(new URL("../public/robots.txt", import.meta.url), "utf8");
+  const issues = validateRobotsPolicy(robots, {
+    baseUrl: "https://getgiffgaff.com",
+    indexablePaths: INDEXABLE_ROBOT_PATHS,
+  });
+
+  assert.deepEqual(issues, []);
+});
+
+test("robots semantics reject blocked search crawlers and allowed training crawlers", () => {
+  const issues = validateRobotsPolicy(`User-agent: *
+Allow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: Claude-SearchBot
+Disallow: /guides/
+Allow: /guides/public$
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+User-agent: Google-Extended
+Disallow: /
+`, {
+    baseUrl: BASE_URL,
+    expectedPolicy: EXPECTED_ROBOTS_POLICY,
+    indexablePaths: INDEXABLE_ROBOT_PATHS,
+  });
+
+  const blocked = issues.filter(({ code }) => code === "robots-indexable-blocked");
+  assert.equal(blocked.length, 2);
+  assert.match(blocked.find(({ message }) => /OAI-SearchBot/.test(message)).message, /all 3 proposed indexable paths/i);
+  assert.match(
+    blocked.find(({ message }) => /Claude-SearchBot/.test(message)).message,
+    /\/guides\/7-arrival-checklist\//,
+  );
+  assert.doesNotMatch(blocked.map(({ message }) => message).join("\n"), /Googlebot.*blocked/i);
+  const allowed = issues.find(({ code }) => code === "robots-excluded-agent-allowed");
+  assert.ok(allowed);
+  assert.match(allowed.message, /GPTBot/);
+});
+
+test("robots validation reports Cloudflare managed policy conflicts even when merged rules allow", () => {
+  const issues = validateRobotsPolicy(`# BEGIN Cloudflare Managed content
+User-agent: GPTBot
+Disallow: /
+# END Cloudflare Managed Content
+
+User-agent: GPTBot
+Disallow: /
+`, {
+    baseUrl: BASE_URL,
+    expectedPolicy: {
+      allow: [],
+      disallow: ["GPTBot"],
+    },
+    indexablePaths: INDEXABLE_ROBOT_PATHS,
+  });
+
+  assert.equal(issues.some(({ code }) => code === "robots-excluded-agent-allowed"), false);
+  assert.equal(issues.some(({ code }) => code === "robots-indexable-blocked"), false);
+  assert.equal(issues.some(({ code }) => code === "robots-cloudflare-policy-conflict"), false);
+
+  const conflictIssues = validateRobotsPolicy(`# BEGIN Cloudflare Managed content
+User-agent: GPTBot
+Disallow: /
+# END Cloudflare Managed Content
+
+User-agent: GPTBot
+Allow: /
+`, {
+    baseUrl: BASE_URL,
+    expectedPolicy: {
+      allow: [],
+      disallow: ["GPTBot"],
+    },
+    indexablePaths: INDEXABLE_ROBOT_PATHS,
+  });
+
+  assert.ok(conflictIssues.some(({ code }) => code === "robots-excluded-agent-allowed"));
+  const conflict = conflictIssues.find(({ code }) => code === "robots-cloudflare-policy-conflict");
+  assert.ok(conflict);
+  assert.match(conflict.message, /GPTBot/);
+  assert.match(conflict.message, /Cloudflare managed.*repository/i);
+});
+
+test("robots parsing and policy validation fail closed on rules without a User-agent", () => {
+  const issues = validateRobotsPolicy("Disallow: /\n", {
+    baseUrl: BASE_URL,
+    expectedPolicy: EXPECTED_ROBOTS_POLICY,
+    indexablePaths: INDEXABLE_ROBOT_PATHS,
+  });
+
+  assert.ok(issues.some(({ code }) => code === "robots-parse"));
+  assert.ok(issues.some(({ code }) => code === "robots-agent-policy-missing"));
+});
+
+test("policy probes read final robots text and fail closed when the body cannot be read", async () => {
+  const privateHeaders = {
+    "cache-control": "private, no-store",
+    "x-robots-tag": "noindex, nofollow, noarchive",
+  };
+  const routes = new Map([
+    [`${BASE_URL}/llms.txt`, jsonResponse("llms", {
+      headers: { "x-robots-tag": "noindex, follow, noarchive" },
+    })],
+    [`${BASE_URL}/llms-full.txt`, jsonResponse("retired", { status: 410, headers: privateHeaders })],
+    ...["privacy", "terms", "refund", "shipping"].map((name) => [
+      `${BASE_URL}/${name}/`,
+      jsonResponse("status", { headers: { "x-robots-tag": "noindex, follow, noarchive" } }),
+    ]),
+    [`${BASE_URL}/__seo-release-probe-missing__/`, jsonResponse("missing", { status: 404, headers: privateHeaders })],
+    [`${BASE_URL}/api/__seo-release-probe`, jsonResponse("missing", { status: 404, headers: privateHeaders })],
+    [`${BASE_URL}/robots.txt`, () => ({
+      status: 200,
+      headers: new Headers(),
+      async text() {
+        throw new Error("stream reset");
+      },
+    })],
+  ]);
+
+  const issues = await validatePolicyProbes(BASE_URL, { fetchImpl: fixtureFetch(routes) });
+  assert.ok(issues.some(({ code }) => code === "robots-body"));
 });
 
 test("parses --base-url and environment fallbacks with a configurable count", () => {

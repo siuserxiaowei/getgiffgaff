@@ -1,0 +1,338 @@
+:root {
+  /* 线上首页紫 + 绿调色板，覆盖 v2 默认海军蓝/金色 */
+  --lp-ink: #241a33;
+  --lp-ink-soft: #4b3f5e;
+  --lp-muted: #685b78;
+  --lp-bg: #f8f5ff;
+  --lp-paper: #ffffff;
+  --lp-purple: #6d3bd8;
+  --lp-purple-hover: #5a2ebe;
+  --lp-purple-light: #9c6cff;
+  --lp-purple-soft: #efe7ff;
+  --lp-purple-pale: #f8f5ff;
+  --lp-green: #1d7d5a;
+  --lp-green-dark: #15392f;
+  --lp-green-soft: #f2f9ee;
+  --lp-green-pale: #f5faef;
+  --lp-line: #ded2ef;
+  --lp-line-strong: rgba(109, 59, 216, 0.18);
+  --lp-risk: #b85a72;
+  --lp-risk-soft: #fff4f7;
+  --lp-gold: #e8c45f;
+}
+
+/* 覆盖 v2 token，让组件自动换色 */
+body.legacy-palette {
+  --gg-paper: var(--lp-paper);
+  --gg-paper-warm: var(--lp-bg);
+  --gg-ink: var(--lp-ink);
+  --gg-ink-soft: var(--lp-ink-soft);
+  --gg-muted: var(--lp-muted);
+  --gg-line: var(--lp-line);
+  --gg-line-strong: var(--lp-line-strong);
+  --gg-navy: var(--lp-purple);
+  --gg-navy-soft: var(--lp-purple-hover);
+  --gg-gold: var(--lp-purple);
+  --gg-gold-soft: var(--lp-purple-soft);
+  --gg-gold-pale: var(--lp-purple-pale);
+  --gg-forest: var(--lp-green);
+  --gg-forest-soft: var(--lp-green-soft);
+  --gg-risk: var(--lp-risk);
+  --gg-risk-soft: var(--lp-risk-soft);
+  --gg-white: #ffffff;
+  --gg-shadow: 0 4px 24px rgba(109, 59, 216, 0.08);
+  --gg-shadow-hover: 0 12px 40px rgba(109, 59, 216, 0.14);
+
+  color: var(--lp-ink);
+  background: var(--lp-bg);
+}
+
+/* Header：淡紫底 + 紫色品牌标 */
+body.legacy-palette .site-header {
+  background: rgba(248, 245, 255, 0.96);
+  border-bottom-color: var(--lp-line);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+body.legacy-palette .brand-mark {
+  color: #ffffff;
+  background: var(--lp-purple);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+body.legacy-palette .brand strong {
+  color: var(--lp-ink);
+}
+
+body.legacy-palette .site-header nav a:not(.btn):hover,
+body.legacy-palette .site-header nav a:not(.btn):focus-visible {
+  color: var(--lp-purple);
+}
+
+body.legacy-palette .btn-primary {
+  background: var(--lp-purple);
+  box-shadow: 0 2px 8px rgba(109, 59, 216, 0.18);
+}
+
+body.legacy-palette .btn-primary:hover {
+  background: var(--lp-purple-hover);
+}
+
+/* Hero：紫底 + 绿色光晕，呼应品牌绿 */
+body.legacy-palette .docs-hero {
+  background:
+    radial-gradient(circle at 16% 18%, rgba(156, 108, 255, 0.2) 0, transparent 34%),
+    radial-gradient(circle at 88% 20%, rgba(29, 125, 90, 0.16) 0, transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, var(--lp-bg) 45%, var(--lp-purple-soft) 100%);
+  border-bottom-color: var(--lp-line);
+}
+
+body.legacy-palette .docs-hero h1,
+body.legacy-palette .doc-head h1,
+body.legacy-palette .doc-body h2,
+body.legacy-palette .doc-cta h2,
+body.legacy-palette .doc-faq h2,
+body.legacy-palette .doc-toc strong,
+body.legacy-palette .doc-answer strong,
+body.legacy-palette .doc-list-item span,
+body.legacy-palette .site-footer h3 {
+  color: var(--lp-purple);
+}
+
+body.legacy-palette .doc-kicker,
+body.legacy-palette .eyebrow {
+  color: var(--lp-purple);
+}
+
+/* 侧边栏：白底 + 紫标题 + 绿色当前项 */
+body.legacy-palette .docs-sidebar {
+  color: var(--lp-ink);
+  background: var(--lp-paper);
+  border-color: var(--lp-line);
+}
+
+body.legacy-palette .docs-nav h2 {
+  color: var(--lp-purple);
+}
+
+body.legacy-palette .docs-nav ul {
+  border-left-color: var(--lp-line);
+}
+
+body.legacy-palette .docs-nav a {
+  color: var(--lp-ink-soft);
+}
+
+body.legacy-palette .docs-nav a:hover,
+body.legacy-palette .docs-nav a[aria-current='page'] {
+  color: #ffffff;
+  background: var(--lp-green);
+}
+
+/* 移动端目录 */
+body.legacy-palette .docs-mobile-nav > summary {
+  color: #ffffff;
+  background: var(--lp-purple);
+  border-color: var(--lp-purple);
+}
+
+body.legacy-palette .docs-mobile-nav .docs-nav {
+  background: var(--lp-paper);
+  border-color: var(--lp-line);
+}
+
+/* 内容卡片 */
+body.legacy-palette .doc-toc,
+body.legacy-palette .doc-answer,
+body.legacy-palette .doc-cta,
+body.legacy-palette .doc-list-item,
+body.legacy-palette .doc-pager a,
+body.legacy-palette .contact-action-card {
+  background: var(--lp-paper);
+  border-color: var(--lp-line);
+  box-shadow: 0 1px 2px rgba(36, 26, 51, 0.04);
+}
+
+body.legacy-palette .doc-answer {
+  background: var(--lp-purple-soft);
+  border-color: rgba(109, 59, 216, 0.22);
+}
+
+body.legacy-palette .doc-cta {
+  background: linear-gradient(135deg, var(--lp-paper), var(--lp-purple-soft));
+  border-color: rgba(109, 59, 216, 0.18);
+}
+
+body.legacy-palette .doc-toc a:hover {
+  color: var(--lp-purple);
+}
+
+body.legacy-palette .doc-pager a:hover,
+body.legacy-palette .doc-list-item:hover {
+  border-color: var(--lp-purple);
+}
+
+/* 表格 */
+body.legacy-palette .table-scroll table {
+  border-color: var(--lp-line);
+}
+
+body.legacy-palette .table-scroll thead th {
+  color: var(--lp-green);
+  background: var(--lp-green-soft);
+  border-bottom-color: var(--lp-line);
+}
+
+body.legacy-palette .table-scroll tbody th {
+  background: var(--lp-green-pale);
+  border-bottom-color: var(--lp-line);
+}
+
+body.legacy-palette .table-scroll td {
+  border-bottom-color: var(--lp-line);
+}
+
+/* 提示条：紫色信息条 */
+body.legacy-palette .notice-strip {
+  color: var(--lp-purple);
+  background: var(--lp-purple-pale);
+  border-color: rgba(109, 59, 216, 0.15);
+}
+
+/* 页脚 */
+body.legacy-palette .site-footer {
+  color: var(--lp-muted);
+  border-top-color: var(--lp-line);
+}
+
+body.legacy-palette .site-footer a:hover {
+  color: var(--lp-purple);
+}
+
+body.legacy-palette .footer-warning {
+  color: var(--lp-risk);
+  background: var(--lp-risk-soft);
+  border-color: rgba(184, 90, 114, 0.12);
+}
+
+/* 面包屑 */
+body.legacy-palette .breadcrumbs {
+  color: var(--lp-muted);
+}
+
+body.legacy-palette .breadcrumbs a:hover {
+  color: var(--lp-purple);
+}
+
+/* FAQ 折叠 */
+body.legacy-palette .doc-faq details {
+  border-bottom-color: var(--lp-line);
+}
+
+body.legacy-palette .doc-faq summary {
+  color: var(--lp-ink);
+}
+
+body.legacy-palette .doc-faq summary:hover {
+  color: var(--lp-purple);
+}
+
+/* 正文排版松量调整 */
+body.legacy-palette .doc-article {
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+body.legacy-palette .doc-body section {
+  margin-top: 44px;
+}
+
+body.legacy-palette .doc-body h2,
+body.legacy-palette .doc-cta h2,
+body.legacy-palette .doc-faq h2 {
+  margin: 42px 0 16px;
+}
+
+body.legacy-palette .doc-body h3 {
+  margin: 28px 0 10px;
+}
+
+body.legacy-palette .doc-body p,
+body.legacy-palette .doc-cta p,
+body.legacy-palette .doc-faq p {
+  margin: 14px 0;
+  line-height: 1.85;
+}
+
+body.legacy-palette .doc-body li,
+body.legacy-palette .doc-faq li {
+  margin: 10px 0;
+  line-height: 1.8;
+}
+
+body.legacy-palette .doc-toc,
+body.legacy-palette .doc-answer,
+body.legacy-palette .doc-cta {
+  margin-top: 28px;
+  padding: 22px;
+}
+
+body.legacy-palette .doc-faq {
+  margin-top: 44px;
+  gap: 14px;
+}
+
+body.legacy-palette .doc-pager {
+  margin-top: 44px;
+}
+
+/* 链接：绿色，hover 加深 */
+body.legacy-palette .doc-body a,
+body.legacy-palette .doc-faq a {
+  color: var(--lp-green);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+body.legacy-palette .doc-body a:hover,
+body.legacy-palette .doc-faq a:hover {
+  color: var(--lp-green-dark);
+}
+
+/* 商品/联系卡片（如页面内嵌） */
+body.legacy-palette .contact-action-card--primary {
+  background: linear-gradient(135deg, var(--lp-paper), var(--lp-purple-soft));
+  border-color: rgba(109, 59, 216, 0.18);
+}
+
+body.legacy-palette .contact-action-icon {
+  color: var(--lp-purple);
+  background: var(--lp-purple-soft);
+}
+
+/* 相关链接网格 */
+body.legacy-palette .article-grid a {
+  border-color: var(--lp-line);
+}
+
+body.legacy-palette .article-grid a:hover {
+  border-color: var(--lp-purple);
+}
+
+/* 小屏适配 */
+@media (max-width: 800px) {
+  body.legacy-palette .docs-shell {
+    gap: 28px;
+  }
+
+  body.legacy-palette .doc-article {
+    font-size: 15px;
+  }
+
+  body.legacy-palette .doc-body h2,
+  body.legacy-palette .doc-cta h2,
+  body.legacy-palette .doc-faq h2 {
+    margin: 34px 0 14px;
+  }
+}

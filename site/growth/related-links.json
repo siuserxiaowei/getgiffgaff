@@ -10,7 +10,7 @@
     { "label": "对比 G0 与 G2", "href": "/answers/" },
     { "label": "查看 G0 新卡", "href": "/shop/giffgaff-g0/" },
     { "label": "查看 G2 有余额卡", "href": "/shop/giffgaff-g2/" },
-    { "label": "微信咨询库存与发货", "href": "/contact/" },
+    { "label": "下单前试算 G0/G2 总成本", "href": "/tools/g0-g2-total-cost/" },
     { "label": "收到 G0/G2 后逐项验收", "href": "/guides/7-arrival-checklist/" }
   ],
   "/answers/": [
@@ -24,7 +24,7 @@
     { "label": "继续设置账号", "href": "/guides/3-account/" },
     { "label": "查看 App 使用说明", "href": "/guides/3-app/" },
     { "label": "排查无信号与短信", "href": "/guides/4-signal/" },
-    { "label": "联系微信售后", "href": "/contact/" }
+    { "label": "激活前先完成收卡验收", "href": "/guides/7-arrival-checklist/" }
   ],
   "/guides/3-usage/": [
     { "label": "生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" },
@@ -36,7 +36,7 @@
     { "label": "查看短信与网络实测方法", "href": "/research/china-network-sms/" },
     { "label": "查看 OTP 状态板方法", "href": "/research/otp-status/" },
     { "label": "检查旅行漫游设置", "href": "/guides/5-travel-data/" },
-    { "label": "整理信息后联系微信售后", "href": "/contact/" }
+    { "label": "先估算中国 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" }
   ],
   "/guides/5-travel-data/": [
     { "label": "估算中国漫游费用", "href": "/tools/china-roaming-cost/" },
@@ -49,5 +49,12 @@
     { "label": "回到实体卡激活教程", "href": "/guides/2-activate/" },
     { "label": "切换后排查信号", "href": "/guides/4-signal/" },
     { "label": "购买实体卡备用", "href": "/shop/" }
+  ],
+  "/guides/6-pitfalls/": [
+    { "label": "查看研究方法与证据卡", "href": "/research/" },
+    { "label": "按旅行、留学和保号场景选卡", "href": "/guides/8-uk-sim-choice/" },
+    { "label": "本地生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" },
+    { "label": "排查无信号、普通短信和 OTP", "href": "/guides/4-signal/" },
+    { "label": "查看中国 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" }
   ]
 }

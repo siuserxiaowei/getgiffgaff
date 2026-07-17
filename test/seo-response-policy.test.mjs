@@ -99,7 +99,7 @@ test("finalizeResponse keeps 404 and private or sensitive routes out of the inde
 });
 
 test("finalizeResponse keeps public privacy and terms pages crawlable but out of the index", async () => {
-  for (const pathname of ["/privacy/", "/terms/"]) {
+  for (const pathname of ["/privacy/", "/terms/", "/refund/", "/shipping/"]) {
     const request = new Request(`https://getgiffgaff.com${pathname}`);
     const upstream = inheritedNoindexResponse();
     const response = await finalizeResponse(

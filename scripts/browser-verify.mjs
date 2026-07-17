@@ -575,10 +575,14 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
     );
     await page.locator('[name="megabytes"]').fill("10");
     await page.locator('[name="sms"]').fill("1");
-    await page.locator('[name="outgoing-minutes"]').fill("1");
-    await page.locator('[name="incoming-minutes"]').fill("2");
+    await page.locator('[name="outgoing-minutes"]').fill("0.1");
+    await page.locator('[name="incoming-minutes"]').fill("1.1");
     await page.locator('[data-tool="roaming-cost"] [data-calculate]').click();
-    assert.match(await page.locator('[data-tool="roaming-cost"] output').innerText(), /£5\.30/);
+    const roamingOutput = await page.locator('[data-tool="roaming-cost"] output').innerText();
+    assert.match(roamingOutput, /£4\.80/);
+    assert.match(roamingOutput, /30 秒/);
+    assert.match(roamingOutput, /2 个整分钟/);
+    assert.match(roamingOutput, /不含 Travel Data Add-on/);
     await page.locator('[data-tool="roaming-cost"]').evaluate((root) => {
       root.dataset.expires = "2000-01-01";
     });
