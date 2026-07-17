@@ -36,6 +36,22 @@ function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
 
+function collectSchemaTypes(value, types = []) {
+  if (Array.isArray(value)) {
+    for (const item of value) collectSchemaTypes(item, types);
+    return types;
+  }
+  if (!value || typeof value !== "object") return types;
+  if (typeof value["@type"] === "string") types.push(value["@type"]);
+  for (const nested of Object.values(value)) collectSchemaTypes(nested, types);
+  return types;
+}
+
+function jsonLdDocuments(html) {
+  return [...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)]
+    .map((match) => JSON.parse(match[1]));
+}
+
 test("related tutorial injection is append-only, exact, and idempotent", async () => {
   const source = await readFile(
     routeFile(LEGACY_ROOT, "/guides/0-intro/"),
@@ -70,6 +86,37 @@ test("commerce widget injection is append-only and idempotent", async () => {
   assert.equal(visibleTextSignature(output), visibleTextSignature(source));
   assert.equal(legacyDomSignature(output), legacyDomSignature(source));
   assert.equal(injectCommerceWidget(output), output);
+});
+
+test("release does not advertise unsupported Product rich results", async (t) => {
+  const affectedRoutes = [
+    "/",
+    "/shop/",
+    "/shop/giffgaff-g0/",
+    "/shop/giffgaff-g2/",
+  ];
+  const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-schema-hotfix-"));
+  t.after(() => rm(outputRoot, { recursive: true, force: true }));
+
+  const sourceChecks = await Promise.all(
+    affectedRoutes.map(async (route) =>
+      (await readFile(routeFile(LEGACY_ROOT, route), "utf8")).includes('"@type":"Product"')
+    ),
+  );
+  assert.equal(
+    sourceChecks.every(Boolean),
+    true,
+    "frozen production source remains unchanged for auditability",
+  );
+
+  await buildReleaseArtifact(outputRoot);
+  for (const route of affectedRoutes) {
+    const html = await readFile(routeFile(outputRoot, route), "utf8");
+    const types = jsonLdDocuments(html).flatMap((document) => collectSchemaTypes(document));
+    assert.ok(types.length > 0, `${route} keeps valid JSON-LD`);
+    assert.equal(types.includes("Product"), false, `${route} must not expose Product`);
+    assert.doesNotMatch(html, /"sku":"g[02]-(?:new-card|credit-card)"/u, route);
+  }
 });
 
 test("release build contains 34 frozen pages, 8 new pages, 8 related slots, and 42 commerce widgets", async (t) => {
