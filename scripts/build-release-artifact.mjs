@@ -84,6 +84,44 @@ export function injectCommerceWidget(html) {
   return `${output.slice(0, closingBody)}${renderCommerceWidget()}${output.slice(closingBody)}`;
 }
 
+const PRODUCT_SCHEMA_HOTFIX_ROUTES = new Set([
+  "/",
+  "/shop/",
+  "/shop/giffgaff-g0/",
+  "/shop/giffgaff-g2/",
+]);
+
+function neutralizeProductEntity(value, route) {
+  if (Array.isArray(value)) {
+    return value.map((item) => neutralizeProductEntity(item, route));
+  }
+  if (!value || typeof value !== "object") return value;
+
+  const output = {};
+  for (const [key, nested] of Object.entries(value)) {
+    if (key === "sku" && value["@type"] === "Product") continue;
+    output[key] = neutralizeProductEntity(nested, route);
+  }
+  if (value["@type"] === "Product") {
+    const entityUrl = typeof value.url === "string" ? new URL(value.url).pathname : "";
+    output["@type"] = entityUrl === route && route.startsWith("/shop/giffgaff-")
+      ? "WebPage"
+      : "Thing";
+  }
+  return output;
+}
+
+export function removeUnsupportedProductRichResults(html, route) {
+  if (!PRODUCT_SCHEMA_HOTFIX_ROUTES.has(route)) return html;
+  return html.replace(
+    /(<script\b[^>]*type=["']application\/ld\+json["'][^>]*>)([\s\S]*?)(<\/script>)/gi,
+    (script, opening, body, closing) => {
+      const schema = JSON.parse(body);
+      return `${opening}${JSON.stringify(neutralizeProductEntity(schema, route))}${closing}`;
+    },
+  );
+}
+
 async function copyTree(source, destination, { exclude = new Set() } = {}) {
   await mkdir(destination, { recursive: true });
   for (const entry of await readdir(source, { withFileTypes: true })) {
@@ -161,6 +199,7 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     ) {
       throw new Error(`${route} DOM changed outside the approved growth slot`);
     }
+    built = removeUnsupportedProductRichResults(built, route);
     if (links) injectedPages += 1;
     commerceWidgets += 1;
     await writeFile(filename, built);
