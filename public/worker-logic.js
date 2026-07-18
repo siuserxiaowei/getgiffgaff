@@ -16,10 +16,13 @@ const PROJECT_PREVIEW_HOST = "getgiffgaff.pages.dev";
 const ANALYTICS_EVENT_PATH = "/analytics-event-v1";
 const ANALYTICS_EVENT_VERSION = "analytics_event_v1";
 const ANALYTICS_MAX_BYTES = 1024;
+const PAYMENT_HANDOFF_PATH = "/pay/";
+const PAYMENT_HANDOFF_TARGET = `${CANONICAL_ORIGIN}/contact/#ktt-giga-card`;
 const EDGE_HTML_CACHE_VERSION = "additive-growth-20260716-v1";
 const PUBLIC_READ_METHODS = new Set(["GET", "HEAD"]);
 const PUBLIC_STATIC_ASSETS = new Set(PUBLIC_STATIC_ASSET_PATHS);
 const OPTIONAL_PUBLIC_STATIC_ASSETS = new Set(OPTIONAL_PUBLIC_STATIC_ASSET_PATHS);
+const PRIVATE_HANDOFF_PATHS = new Set([PAYMENT_HANDOFF_PATH]);
 const BODYLESS_STATUSES = new Set([101, 204, 205, 304]);
 
 const SUPPORTING_NOINDEX_PATHS = new Set([
@@ -124,7 +127,11 @@ function normalizePathname(pathname) {
   if (!normalized) normalized = "/";
   if (!routeFor(normalized) && normalized !== "/" && !normalized.endsWith("/")) {
     const withSlash = `${normalized}/`;
-    if (routeFor(withSlash) || SUPPORTING_NOINDEX_PATHS.has(withSlash)) {
+    if (
+      routeFor(withSlash)
+      || SUPPORTING_NOINDEX_PATHS.has(withSlash)
+      || PRIVATE_HANDOFF_PATHS.has(withSlash)
+    ) {
       normalized = withSlash;
     }
   }
@@ -282,6 +289,18 @@ export function canonicalRedirectFor(request) {
   }
   if (!changed) return null;
   return Response.redirect(canonical.toString(), 301);
+}
+
+export function paymentHandoffResponse(request) {
+  const upstream = new Response(null, {
+    status: 303,
+    headers: {
+      location: PAYMENT_HANDOFF_TARGET,
+      "x-getgiffgaff-payment-mode": "provider-hosted-handoff",
+      "x-getgiffgaff-payment-provider": "kuaituantuan",
+    },
+  });
+  return finalizeResponse(request, upstream, "private-noindex");
 }
 
 function sitemapXml() {
@@ -457,6 +476,12 @@ async function handleRequest(request, env, context) {
 
   if (url.pathname === ANALYTICS_EVENT_PATH) {
     return analyticsEventV1(request, env);
+  }
+  if (url.pathname === PAYMENT_HANDOFF_PATH) {
+    if (!PUBLIC_READ_METHODS.has(request.method)) {
+      return privateError(request, 405, "Method not allowed");
+    }
+    return paymentHandoffResponse(request);
   }
   if (!PUBLIC_READ_METHODS.has(request.method)) {
     return privateError(request, 405, "Method not allowed");

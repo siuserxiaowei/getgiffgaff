@@ -54,6 +54,7 @@ test("commerce widget connects G0, G2, WeChat, tutorial and KTT payment paths", 
     "/shop/giffgaff-g2/",
     "/guides/1-order/",
     "/contact/#ktt-giga-card",
+    "https://getgiffgaff.com/pay/",
     "https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3",
   ]) {
     assert.ok(html.includes(`href="${href}"`), `missing ${href}`);
@@ -61,6 +62,7 @@ test("commerce widget connects G0, G2, WeChat, tutorial and KTT payment paths", 
   assert.match(html, />G0 新卡</);
   assert.match(html, />G2 有余额卡</);
   assert.match(html, /快团团下单与支付/);
+  assert.match(html, /进入快团团托管支付入口/);
   assert.match(
     html,
     /<img\b[^>]*src="\/contact\/wechat-qr\.png"[^>]*alt="微信客服小玉二维码"[^>]*width="820"[^>]*height="1229"/,
