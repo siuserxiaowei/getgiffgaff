@@ -13,7 +13,7 @@
 ## 生产验证
 
 ```bash
-curl -I https://getgiffgaff.com/pay/
+curl -sS -D - -o /dev/null https://getgiffgaff.com/pay/
 curl -I https://getgiffgaff.com/contact/ktt-giga-card.png
 npm run postdeploy
 ```
