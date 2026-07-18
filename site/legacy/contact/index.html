@@ -51,6 +51,7 @@
     background: rgba(17, 24, 39, 0.54);
   }
   #ktt-giga-card:target { display: flex; }
+  #ktt-giga-card.ktt-modal-closed { display: none; }
   .ktt-modal-backdrop { position: absolute; inset: 0; }
   .ktt-modal-panel {
     position: relative;
@@ -131,12 +132,16 @@
 
   const isOpen = () => window.location.hash === "#" + modalId;
   const syncModal = () => {
-    modal.setAttribute("aria-hidden", String(!isOpen()));
-    if (isOpen()) window.requestAnimationFrame(() => panel.focus());
+    const open = isOpen();
+    modal.classList.toggle("ktt-modal-closed", !open);
+    modal.setAttribute("aria-hidden", String(!open));
+    if (open) window.requestAnimationFrame(() => panel.focus());
   };
   const closeModal = () => {
     history.replaceState(null, "", window.location.pathname + window.location.search);
-    modal.setAttribute("aria-hidden", "true");
+    // History API URL changes do not reliably refresh :target. syncModal adds
+    // an explicit closed state so the dialog disappears without a page jump.
+    syncModal();
     if (returnFocus && document.contains(returnFocus)) returnFocus.focus();
   };
 

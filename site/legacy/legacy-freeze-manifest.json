@@ -1,6 +1,6 @@
 {
   "schemaVersion": "legacy-freeze-v2",
-  "capturedAt": "2026-07-17T12:53:18.996Z",
+  "capturedAt": "2026-07-18T05:49:53.591Z",
   "baseline": {
     "commit": "7cac06f",
     "origin": "https://getgiffgaff.com"
@@ -1187,7 +1187,7 @@
       "h1": "联系 getgiffgaff：库存、下单与售后支持",
       "navigationSha256": "580280ee8202d452b78bef18610161d9296089bb7cb5e1c31a971cc958c1fff9",
       "visibleTextSha256": "2b88826c83cc6af0c1eb8c432891ca632c0558de0df66d95c051dcc4d820db9f",
-      "domSha256": "a979affcf013a46d8ff9b429c22a0d3fcc10deb1c8eabe6d4f41a8262f4fa687",
+      "domSha256": "a4492986381e7040b63766e33535b0e6e4f9c02026903e04294746e3d9f83769",
       "legacyInternalHrefs": [
         "/",
         "/shop/",

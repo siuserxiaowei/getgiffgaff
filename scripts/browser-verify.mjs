@@ -431,8 +431,36 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
     assert.equal(opened.hash, "#ktt-giga-card");
     assert.match(opened.focused, /ktt-modal-panel/);
     assert.equal(opened.qrLoaded, true);
+
+    await page.locator(".ktt-modal-close").click();
+    await page.waitForFunction(() => {
+      const modal = document.querySelector("#ktt-giga-card");
+      return location.hash === ""
+        && modal?.getAttribute("aria-hidden") === "true"
+        && getComputedStyle(modal).display === "none";
+    });
+    assert.equal(await trigger.evaluate((element) => document.activeElement === element), true);
+
+    await trigger.click();
+    await page.waitForFunction(() =>
+      document.querySelector("#ktt-giga-card")?.getAttribute("aria-hidden") === "false",
+    );
+    await page.locator(".ktt-modal-backdrop").click({ position: { x: 8, y: 8 } });
+    await page.waitForFunction(() => {
+      const modal = document.querySelector("#ktt-giga-card");
+      return location.hash === "" && getComputedStyle(modal).display === "none";
+    });
+    assert.equal(await trigger.evaluate((element) => document.activeElement === element), true);
+
+    await trigger.click();
+    await page.waitForFunction(() =>
+      document.querySelector("#ktt-giga-card")?.getAttribute("aria-hidden") === "false",
+    );
     await page.keyboard.press("Escape");
-    await page.waitForFunction(() => location.hash === "");
+    await page.waitForFunction(() => {
+      const modal = document.querySelector("#ktt-giga-card");
+      return location.hash === "" && getComputedStyle(modal).display === "none";
+    });
     assert.equal(await trigger.evaluate((element) => document.activeElement === element), true);
     assert.equal(
       await page.locator('img[alt="微信咨询二维码"]').evaluate((image) => image.naturalWidth > 0),
@@ -527,8 +555,13 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
       await page.locator("#ktt-giga-card img").evaluate((image) => image.naturalWidth > 0),
       true,
     );
-    await page.keyboard.press("Escape");
-    await page.waitForFunction(() => location.hash === "");
+    await page.locator(".ktt-modal-close").click();
+    await page.waitForFunction(() => {
+      const modal = document.querySelector("#ktt-giga-card");
+      return location.hash === ""
+        && modal?.getAttribute("aria-hidden") === "true"
+        && getComputedStyle(modal).display === "none";
+    });
 
     label = "local/interactions/total-cost";
     await openPage(

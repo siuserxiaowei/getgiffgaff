@@ -52,6 +52,9 @@ test("Kuaituantuan modal remains keyboard accessible without Next hydration", as
   assert.match(script, /returnFocus/);
   assert.match(script, /\.focus\(\)/);
   assert.match(script, /event\.shiftKey/);
+  assert.match(script, /classList\.toggle\("ktt-modal-closed", !open\)/);
+  assert.match(script, /history\.replaceState/);
+  assert.match(html, /#ktt-giga-card\.ktt-modal-closed\s*\{\s*display:\s*none;/);
   assert.doesNotMatch(html, /\/_next\/|self\.__next_f/);
 });
 
