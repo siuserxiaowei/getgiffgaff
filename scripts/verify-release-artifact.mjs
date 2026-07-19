@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import worker from "../public/_worker.js";
+import { RELEASE_PROVENANCE_PLACEHOLDER } from "./build-release-artifact.mjs";
 import {
   LEGACY_ROUTES,
   PUBLIC_INDEXABLE_PATHS,
@@ -18,6 +19,7 @@ function contentTypeFor(pathname) {
   if (pathname.endsWith("/") || pathname.endsWith(".html")) return "text/html; charset=utf-8";
   if (pathname.endsWith(".css")) return "text/css; charset=utf-8";
   if (pathname.endsWith(".js")) return "application/javascript; charset=utf-8";
+  if (pathname.endsWith(".json")) return "application/json; charset=utf-8";
   if (pathname.endsWith(".svg")) return "image/svg+xml";
   if (pathname.endsWith(".png")) return "image/png";
   return "application/octet-stream";
@@ -129,14 +131,19 @@ export async function verifyReleaseArtifact(options = {}) {
 
   const contact = await readFile(publicFile(releaseRoot, "/contact/"), "utf8");
   const commerceTokens = [
-    "小玉",
+    "胡小胡",
     "微信咨询",
-    "确认 G0 库存",
-    "确认 G2 库存",
-    "快团团下单",
-    "Giga卡快团团",
+    "查看 G0 小程序码",
+    "查看 G2 小程序码",
+    "快团团小程序码",
+    "扫描前请核对页面主体",
   ];
   for (const token of commerceTokens) assert.match(contact, new RegExp(token), token);
+  const provenance = await readFile(
+    publicFile(releaseRoot, "/release-provenance.json"),
+    "utf8",
+  );
+  assert.equal(provenance, `${JSON.stringify(RELEASE_PROVENANCE_PLACEHOLDER)}\n`);
 
   return {
     manifestPages: Object.keys(ROUTE_MANIFEST).length,

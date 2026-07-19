@@ -1,6 +1,8 @@
 # getgiffgaff SEO / GEO 发布运维清单
 
-> 状态（2026-07-17）：生产仍是 2026-07-16 的 42 路由增长层；当前本地候选为 34 legacy + 12 growth = 46 个公开 HTML 路由，其中 39 个可索引、7 个 `noindex`，sitemap 仍为 39 URL。本地 149/149 测试通过，并产生 240 次精确的路由级安全替换；这些凭证、商业、G2 和 9eSIM 修正尚未部署。本地已建立隐私、条款、退款和物流的 `noindex` 状态页，但生产四路径仍为 404，且缺失真实经营事实的完整政策仍 blocked。Cloudflare 规则应与 45 个非根公开路径完全一致；生产原有 5 个增长路径仍造成 15 个两跳组合，生产 robots 另有 2 个 Managed/仓库来源冲突。G0/G2 真实交易所需 12 份脱敏证据仍缺失。当前任务不执行部署；任一上述门禁未闭环时，禁止合并或推广，任何技术止损部署也必须由发布负责人单独审批。Google/Bing 所有权验证仍有效，IndexNow 曾接收 39 URL，但后台回读仍待账号所有者确认；百度仍受实名与验证码门禁限制。命令不包含密钥；凡标注“需权限”的步骤，必须由对应账号所有者执行并保留结果。
+> 状态（2026-07-19）：当前本地候选为 34 legacy + 12 growth = 46 个公开 HTML 路由，其中 39 个可索引、7 个 `noindex`；新增了微信/Telegram 咨询链路、二维码完整性检查、事件级 Analytics Engine 探针和 `/pay/` 旧路径兼容修正。该候选尚未部署，不能写成“生产已恢复”。发布前只读核验显示当前生产 deployment 为 `3736b62a-4819-4187-b19e-165d23ad8e44`、Source 为 `2173aa0`；GitHub `origin/main` 仍为 `7cac06f`，生产仍缺两张新二维码且 analytics canary 返回 400。四个政策状态页仍缺真实经营事实，G0/G2 交易门禁所需 12 份脱敏证据仍缺失。任何推广或发布必须先通过当前门禁；Google/Bing 后台回读与百度实名/验证码门禁仍需账号所有者处理。
+
+本次候选的运维口径见[咨询链路恢复候选记录](operations/consultation-recovery-2026-07-19.md)、[咨询漏斗 Analytics Engine 口径](operations/analytics-funnel.md)和[支付接入交接](operations/payment-handoff-2026-07-18.md)。
 
 ## 1. 发布门槛与责任人
 
@@ -36,14 +38,14 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 在仓库根目录执行：
 
 ```bash
-npm install --ignore-scripts --no-package-lock
+npm ci --ignore-scripts
 npm test
 npm run test:coverage
 npm run verify
 git diff --check
 ```
 
-当前仓库没有 tracked `package-lock.json`。在依赖锁定方案完成单独审查前，安装命令必须显式使用 `--no-package-lock`，否则会生成未跟踪 lockfile，并被 clean-worktree 门禁拒绝。
+仓库跟踪 `package-lock.json`，并把 Playwright、PNG 比对库和 Wrangler 固定为精确版本。测试与发布前使用 `npm ci`；不要临时改用全局 Wrangler 或让 npm 更新 lockfile。发布和验证脚本通过 `npx --no-install wrangler` 只调用本地锁定版本，发布记录仍需保存实际 Wrangler 版本。
 
 视觉与交互门禁需先安装 Chromium，并在另一个终端用当前 `.release` 启动只读本地服务器：
 
@@ -61,7 +63,7 @@ npm run verify:browser -- http://127.0.0.1:4173 /tmp/getgiffgaff-visual-release
 
 任一项失败即停止，不执行部署。
 
-当前本地候选的已知基线是 149/149 测试、46 路由（39 indexable + 7 noindex）和 240 次路由级安全替换。数量漂移必须先解释并更新验收记录，不得临时放宽测试。
+不要沿用旧记录中的固定测试数量作为当前结果。每次候选变更完成后都要重新运行上述命令，保存当次退出码、实际测试数量和路由清单；数量漂移必须解释，不得临时放宽测试。
 
 ## 4. 本地与 Pages Preview 检查
 
@@ -87,17 +89,11 @@ npm run validate:commerce-evidence -- \
   --max-age-days 30
 ```
 
-Cloudflare 工具只生成待审阅的单条规则片段，不得用它覆盖完整 zone ruleset。离线校验通过后仍需有权限者人工更新规则，并在生产运行 `npm run postdeploy`。
+Cloudflare 工具只生成待审阅的单条规则片段，不得用它覆盖完整 zone ruleset。离线校验通过后仍需有权限者人工更新规则，并在生产运行 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39` 做只读复核。
 
 交易证据模板与字段说明见 [`docs/operations/cloudflare-and-commerce-evidence.md`](operations/cloudflare-and-commerce-evidence.md)。模板默认必然失败；只有 G0/G2 的直达 SKU、订单、支付成功、履约完成、退款完成、售后已解决的实际记录及 12 份脱敏文件齐全时才能通过。该命令不会打开 SKU URL，也不会登录、下单、支付、退款或联系客服。
 
-本地启动 Pages：
-
-```bash
-npx wrangler pages dev .release
-```
-
-另开终端做基础检查（端口以 Wrangler 实际输出为准）：
+本地 `.release` 的静态页面检查沿用第 3 节的只读 HTTP 服务；发布运维手册不提供可复制的 Wrangler 直连命令，避免与受控 Preview/Production 入口混淆。另开终端做基础检查（端口以本地服务实际输出为准）：
 
 ```bash
 curl -sS -D - -o /dev/null http://127.0.0.1:8788/contact/
@@ -106,14 +102,18 @@ curl -sS http://127.0.0.1:8788/robots.txt
 curl -sS http://127.0.0.1:8788/sitemap.xml | rg -o '<loc>' | wc -l
 ```
 
-需要 Cloudflare Pages 权限时，可建立非生产分支 Preview：
+需要 Cloudflare Pages 权限时，在已推送的非 `main` 当前分支建立 Preview：
 
 ```bash
-npx wrangler pages deploy .release --project-name getgiffgaff --branch seo-release-check --commit-dirty=true
-npm run verify:preview -- --base-url https://<deployment-id>.getgiffgaff.pages.dev
+npm run deploy:preview
 ```
 
+该入口不接受调用者提供 SHA、分支或产物目录。它先检查 clean tree，再运行完整 maintenance gate（其中会重新构建 `.release`），fresh fetch 当前分支并要求 `HEAD = origin/<current-branch>`，最后再次检查 clean tree；随后才使用项目内锁定的 Wrangler 上传精确 HEAD。脚本从 Wrangler 结构化输出读取完整 commit 和 deployment URL，并自动执行 `verify:preview`。禁止绕过该入口直接上传 `.release`，也禁止把历史产物或调用者声称的 SHA 当作候选来源。
+
 - [ ] Preview 页面、二维码、弹窗键盘操作和核心链接均可用。
+- [ ] Preview 的 Cloudflare Deployment Source 必须与脚本核验的完整 `HEAD` 前缀一致；只通过页面 smoke、使用脏工作区或省略精确 commit metadata 都不构成最终候选证据。
+- [ ] `verify:preview` 报告 `analyticsStatus: 404`。这是 Preview 在解析事件或触碰 production binding 前拒绝探针的隔离证据，不是生产 analytics 可用性证据。
+- [ ] `/contact/wechat-qr.jpg` 和 `/contact/telegram-qr.jpg` 均为 200 JPEG，且 SHA-256 与 2026-07-19 所有者提供的候选文件一致。
 - [ ] `.pages.dev` Preview 按设计应返回 `noindex, nofollow, noarchive`，防止预览环境被收录。
 - [ ] 不把 Pages Preview 上的 `noindex` 当作生产公开页策略，也不把 Preview URL 提交给搜索引擎。
 
@@ -127,7 +127,15 @@ npm run verify:preview -- --base-url https://<deployment-id>.getgiffgaff.pages.d
 npm run deploy
 ```
 
-`npm run deploy` 会先执行仓库的 `predeploy` 门禁。部署完成后：
+`npm run deploy` 是商业发布入口：它要求真实 `COMMERCE_EVIDENCE_FILE`，依次执行商业门禁、clean-tree、fresh `origin/main = HEAD` 校验，并用项目内 Wrangler 把精确 HEAD SHA 发布到生产。本次仅修复咨询渠道、转化文案和统计能力，没有真实交易证据时，必须显式执行：
+
+```bash
+npm run deploy:maintenance
+```
+
+维护发布同样执行本地验证、外联资产校验、静态商业断言扫描、两次 clean-tree 检查、fresh `origin/main = HEAD` 和生产后 `verify:seo`；它不会读取或绕过商业证据，也不能据此声称库存、交易、支付、履约或退款已核验。所有 release deployment 都会剔除 `ADSENSE_PUBLISHER_ID`；maintenance 还会剔除 `COMMERCE_EVIDENCE_FILE`，因此本次构建不会因调用终端残留变量而暗含 AdSense 或商业证据配置。
+
+生产脚本会在上传前后分别读取 Production deployment metadata，并要求恰好新增一条 `Environment = Production`、`Branch = main`、`Source` 匹配精确 HEAD 的记录；同时校验 Wrangler 结构化输出中的完整 40 位 commit、deployment ID 和 URL。上传后还会再次 fresh fetch `origin/main`，若远端已推进则明确失败（已发生的上传无法由该检查自动回滚）。只有新的 deployment URL 首页返回 200 且 canonical 指向 `https://getgiffgaff.com/`、canonical 生产域的 39 URL `verify:seo` 全绿，并且一次性 Analytics canary 已通过 Cloudflare SQL API 精确回读，脚本才输出 `deployed: true`。SQL 回读使用本机 Wrangler 登录态的 bearer credential，只在子进程内存中使用且不得写入日志或仓库；不支持或权限不足时发布失败关闭。这些检查都在 `deploy-release.mjs` 内执行，不依赖 npm `postdeploy` lifecycle。部署完成后：
 
 2026-07-15 生产实施记录：
 
@@ -142,7 +150,7 @@ npm run deploy
 - Git commit：`f864e35`；Cloudflare Pages deployment：`552d38ec`（`https://552d38ec.getgiffgaff.pages.dev`）。
 - 6 个既有 canonical URL 在不增加 sitemap URL 的前提下完成全面重写：`/guides/2-activate/`、`/guides/3-usage/`、`/more/03-esim/`、`/more/04-esim-qrcode/`、`/guides/4-signal/`、`/answers/`。
 - 本地 `npm run verify` 为 52/52 测试通过；6 个来源、40 个竞品、5 个集群/20 个 spoke/6 份 brief/90 条内链计划的结构校验全部通过。
-- 自动 `postdeploy` 再次执行生产门禁：34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
+- 当次生产 `verify:seo` 再次执行生产门禁：34 个唯一 sitemap URL、34 个页面及全部 canonical 组合变体通过。
 - 生产抽查确认 6 页均为 200、自指 canonical、显式 index 指令和 `x-getgiffgaff-render-mode: edge-static-tutorial`；首页、Contact 与 QA 不再被注入教程目录，只有 `/guides/` 包含该目录。
 - Preview 上同一教程返回 `noindex, nofollow, noarchive`，生产页返回 `index, follow, max-snippet:-1, max-image-preview:large`。
 
@@ -155,23 +163,31 @@ npm run deploy
 - 正式视觉报告见 [`docs/qa/browser-visual-report-2026-07-16.json`](qa/browser-visual-report-2026-07-16.json)：14/14 旧页双视口比较、10/10 新增页截图、34/34 交互，错误 0、阈值失败 0；13 组无像素变化，手机商城 6 个像素变化（0.001823%），SSIM 全部为 1。
 - 公开 canonical HTML 已启用版本化 Cache API：同一路由生产实测 `MISS → HIT → HIT`；Cookie 请求绕过公共缓存并返回 `private, no-store`。
 - IndexNow key 已部署到 `/indexnow-key.txt`；2026-07-16 向 `api.indexnow.org` 提交 39 个可索引 canonical URL，回执为 HTTP 202。该状态只表示批次已接收、key 校验待完成，不表示已经抓取或收录。
-- 截至该次生产记录，已知技术发布阻断是 Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 仍只有 2026-07-15 的 33 个旧路径。需在其 `http.request.uri.path in {...}` 集合中追加 `/guides/7-arrival-checklist`、`/guides/8-uk-sim-choice`、`/tools/keep-number-reminder`、`/tools/china-roaming-cost`、`/tools/g0-g2-total-cost`，保持规则第一优先级、动态目标与 301 设置不变。未补齐前，生产 `postdeploy` 会对这 5 个路由的 `www`、HTTP apex、HTTP www 无尾斜杠组合报告 15 个两跳失败，不能宣称完整 SEO 门禁全绿。
+- 截至该次生产记录，已知技术发布阻断是 Zone Redirect Rule `23a9c07759414918816c2e768101d6f0` 仍只有 2026-07-15 的 33 个旧路径。需在其 `http.request.uri.path in {...}` 集合中追加 `/guides/7-arrival-checklist`、`/guides/8-uk-sim-choice`、`/tools/keep-number-reminder`、`/tools/china-roaming-cost`、`/tools/g0-g2-total-cost`，保持规则第一优先级、动态目标与 301 设置不变。未补齐前，生产 `verify:seo` 会对这 5 个路由的 `www`、HTTP apex、HTTP www 无尾斜杠组合报告 15 个两跳失败，不能宣称完整 SEO 门禁全绿。
 - GSC apex TXT 和 Bing CNAME 所有权验证仍在公网解析；同一个 sitemap URL 曾在两平台提交。当前 39 URL 是否已被平台后台重新读取仍需登录后台确认。百度尚无可核验证明，仍需账号所有者完成实名、手机号和验证码流程。
 
-2026-07-17 本地候选记录（未部署）：
+2026-07-17 本地候选历史记录（未部署，不代表当前测试结果）：
 
 - manifest 为 46 个公开 HTML 路由：34 legacy + 12 growth；39 indexable + 7 noindex。新增的 4 个 noindex 路由是 `/privacy/`、`/terms/`、`/refund/`和 `/shipping/`。
-- 四页只是「信息待经营负责人确认」的状态页，不是完整政策。生产仍为 404；在真实主体、隐私流程、交易条款、退款与物流事实被确认前，必须暂停付款和推广。
-- 构建会先验证 34 个冻结源页签名，再应用 240 次精确、路由级的凭证、商业、G2 和 9eSIM 安全替换。本地通过不代表生产已修复。
-- `npm run test:coverage` 最终复测为 149/149；line 88.29%、branch 77.16%、functions 88.58%。`npm run verify` 已通过本地发布物门禁。
+- 四页只是「信息待经营负责人确认」的状态页，不是完整政策。当时生产仍为 404；该历史状态不能替代当前只读核验。
+- 当日构建先验证 34 个冻结源页签名，再应用精确、路由级的凭证、商业、G2 和 9eSIM 安全替换。本地通过不代表生产已修复。
+- 当日 `npm run test:coverage` 与 `npm run verify` 曾通过；该结果已被后续改动取代，当前候选必须重新运行门禁。
 - 最新隔离端口浏览器运行完成 34 个交互、控制台错误 0，但有 12 个旧页/视口因安全文案变更超出生产视觉阈值。禁止放宽阈值或恢复无证据话术；须人工批准这些预期差异并建立新的发布基线。
-- Cloudflare 本地生成/离线验证的目标是 45 个非根公开 HTML 路径。最后仍必须由有权限者更新生产规则，并使 `npm run postdeploy` 零错误。
-- 最新只读 `postdeploy` 为 21 项：15 个两跳、4 个政策状态页 404、2 个 Cloudflare robots 来源策略冲突（`cohere-ai`、`anthropic-ai`）。
+- Cloudflare 本地生成/离线验证的目标是 45 个非根公开 HTML 路径。最后仍必须由有权限者更新生产规则，并使生产 `verify:seo` 零错误。
+- 当日只读 `verify:seo` 曾为 21 项：15 个两跳、4 个政策状态页 404、2 个 Cloudflare robots 来源策略冲突（`cohere-ai`、`anthropic-ai`）。这是历史记录，不得当作当前状态。
 - G0/G2 真实交易门禁要求每个产品的 SKU、订单、支付、履约、退款和售后六阶段，共 12 份独立脱敏证据文件。当前缺失，空模板必须失败。
 
-- [x] 生产别名传播完成后，34 URL 门禁已成功退出；若自动 `postdeploy` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑，仍失败则按第 9 节回滚或向前修复。
+2026-07-19 咨询链路恢复候选记录（未部署）：
 
-- [x] 在 Cloudflare Pages 中确认生产分支和部署 commit 正确。
+- 新微信二维码 SHA-256 为 `751f8055949c3ee5d13a69dae6eef3aeef925a9e6f8dda1ca00b48e0399e1b43`，离线解码至 `https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4`；Telegram 二维码 SHA-256 为 `9a6ed7d1e30acc7dc35d2dabe2e1078cd2cd0b3ceaecd7bf1d716fa5c1b1b3fa`，离线解码至 `https://t.me/xiaoyuhuai`。
+- `/pay/` 只作为旧 URL 兼容，以 `303` 返回 Contact 页的快团团小程序码，并带 `x-getgiffgaff-payment-mode: contact-qr-handoff`。站内没有经核验的商品直达链接，也不能从仓库推断商品、订单或支付状态。
+- Preview analytics probe 的通过状态是 404；生产 canary 的通过状态是 204，并应写入隔离的 `index1 = 'seo_release_canary'` 及 `blob4 = 'seo_release_canary'`。生产 204 后仍需 SQL 查询确认点已可见，所有运营报表必须排除该 canary。
+- 候选状态、真机验收矩阵和观察口径以[咨询链路恢复候选记录](operations/consultation-recovery-2026-07-19.md)为准。自动测试、二维码哈希和 HTTP 状态都不能证明微信真机拉起、消息送达、订单生成或付款完成。
+- 2026-07-19 发布前只读核验：当前生产 `verify:seo` 因 analytics canary 400 和两张新 JPEG 404 共失败 11 项；当前 Preview `b0d3e1d6` 是脏工作区历史构建，analytics endpoint 返回 204，不满足新候选要求的 404 隔离，也不能作为最终候选证据。
+
+- [x] 生产别名传播完成后，34 URL 门禁已成功退出；若内置 `verify:seo` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑只读门禁，仍失败则按第 9 节回滚或向前修复。
+
+- [ ] 在 Cloudflare Pages 中确认生产分支和部署 commit 正确；GitHub main、Preview Source 和 Production Source 必须是同一个 clean 40 字符 SHA。
 - [ ] 清理受影响的 HTML、`/sitemap.xml`、`/robots.txt`、`/llms.txt` 与 `/llms-full.txt` 缓存。本次响应头策略全站变化时优先执行一次受控的全站清缓存，并记录时间（需 Cloudflare 缓存权限）。
 - [ ] 确认公开 HTML 使用预期边缘缓存；API、订单、带敏感参数的请求和含 `Set-Cookie` 的响应不得进入公共缓存。
 - [ ] 在 Cloudflare Custom Domains 中确认 apex 与 `www` 均绑定正确证书；在 DNS 中确认没有绕过 Worker 的旧记录（需 DNS 权限）。
@@ -216,13 +232,22 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 - [x] sitemap 有 39 个唯一 URL，且都属于 canonical origin。
 - [x] 39/39 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
 - [x] 每页只有一个自指 canonical，且 `og:url` 与 canonical 一致。
-- [ ] HTTP、`www`、无尾斜杠变体均一跳永久重定向。当前 5 个新增路径的 15 个组合变体仍需更新 Zone Redirect Rule 后重跑。
+- [ ] HTTP、`www`、无尾斜杠变体均一跳永久重定向；以发布后的当前门禁为准，不沿用历史失败数。
 - [x] JSON-LD 可解析，不引用 `pages.dev`，不把本站声明为 giffgaff 官方实体、母公司或官方 seller。
 - [x] `/llms.txt`、`/llms-full.txt` 保持 supporting `noindex, follow, noarchive`；404、API 和敏感路由保持 `noindex, nofollow, noarchive`；`robots.txt` 不带继承的 X-Robots-Tag。这些固定探针由 `verify:seo` 自动检查。
 - [x] Product JSON-LD 不包含未经发布证据支持的 `offers`、价格、库存、评价或聚合评分。
-- [ ] 7 个 `noindex` 支持/状态路由均返回 200 且保持 `noindex, follow, noarchive`。当前生产 `/privacy/`、`/terms/`、`/refund/`和 `/shipping/` 仍为 404。
+- [ ] 7 个 `noindex` 支持/状态路由均返回 200 且保持 `noindex, follow, noarchive`；验证器应覆盖四个政策状态页及三个研究/工具预览页。
+- [ ] `/pay/` 返回一个 `303` 到 `https://getgiffgaff.com/contact/#ktt-giga-card`，带 `x-getgiffgaff-payment-mode: contact-qr-handoff`，且不进入 sitemap；不得把它记录为商品页或支付入口。
+- [ ] `/contact/wechat-qr.jpg` 与 `/contact/telegram-qr.jpg` 均为 200 JPEG，内容哈希与批准候选一致。
+- [ ] 生产 analytics canary 返回 204，且受控发布报告 SQL API 已精确回读同一个一次性 `blob5` 探针 ID。204 本身不等于落表已可查询，运营查询必须排除 `blob4 = 'seo_release_canary'`。
 
 再用真实 Googlebot Smartphone 抓取结果确认核心页面。仅用伪造 UA 的 `curl` 不足以证明真实 Googlebot 可访问；最终以 GSC URL Inspection 的“测试实际网址”和 Cloudflare Verified Bot 日志为准。
+
+### 6.1 咨询渠道真机验收
+
+发布后用 iOS、Android 分别在微信内和微信外测试微信与 Telegram 的直达链接，并用另一台设备扫描两张二维码。逐项记录实际结果，不预填“会拉起 App”。`curl`、桌面浏览器、二维码解码和自动化测试都不能代替这一步。
+
+链接或二维码成功打开只证明到达某个页面或 App；它不证明客服收到消息，更不证明商品、订单、付款、退款或履约。完整矩阵和记录要求见[咨询链路恢复候选记录](operations/consultation-recovery-2026-07-19.md)。
 
 ## 7. Verified Bots、AI 爬虫与日志
 
@@ -263,18 +288,18 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 
 ## 10. 首个完整 28 天基线
 
-以“生产门禁首次全绿后的下一个完整自然日”为 D1。D1–D7 每日观察，之后每周汇总；28 天内不把短期波动表述成排名承诺。
+SEO 发布以“生产门禁首次全绿后的首个完整 UTC 自然日”为 D1；咨询恢复候选以其实际生产部署后的首个完整 UTC 自然日为 D1。发布当天的残缺时段不计入 D1。D1–D7 每日观察，用于诊断趋势；D1–D28 持续按日采集、按周汇总，28 个完整 UTC 自然日后才形成首版基线。28 天内不把短期波动表述成排名或收入承诺。
 
 | 维度 | 最低记录项 | 数据权限/前提 |
 | --- | --- | --- |
 | 索引与抓取 | sitemap 发现数、有效索引数、排除原因、核心 URL 最近抓取时间 | GSC、Bing、百度账号 |
 | 搜索表现 | 品牌/非品牌查询的展示、点击、CTR、平均位置 | 先由业务确认品牌词规则 |
-| 站内结果 | 商品/教程 CTA、人工联系、自助解决、下单转化 | 分析工具权限；事件定义需业务确认 |
+| 站内结果 | `page_view`、`commerce_click`、`contact_click` 的采样加权事件量，以及人工实际收到的微信/Telegram 咨询数 | Analytics Engine 与渠道所有者；统一按 UTC，报表排除 `seo_release_canary` |
 | 爬虫健康 | Verified Bot 的请求量、200/3xx/4xx/5xx、缓存命中 | Cloudflare 日志权限 |
 | AI referral | 来源、落地页、会话及转化 | 分析工具能识别 referral，排除内部/机器人流量 |
 | GEO 固定问题集 | 引擎、问题、日期、是否提及品牌、引用 URL、事实准确率 | 固定问题清单和人工复核标准 |
 
-发布记录中同时注明代码变更、内容变更、渠道活动和异常事件，避免把同期外部变化错误归因于 SEO 修复。经营主体、联系方式、SLA、退款结果或“自助解决”口径没有真实资料时，该指标留空并标注“待业务确认”，不能估算填充。
+Analytics Engine 没有访客或会话 ID，不能把 `page_view → commerce_click → contact_click` 串成用户级漏斗。事件间比例只能用于诊断，不能推断消息送达、订单、支付、收入、退款或履约转化。发布记录还要注明代码变更、内容变更、渠道活动和异常事件，避免把同期外部变化错误归因于 SEO 修复。经营主体、联系方式、SLA、退款结果或“自助解决”口径没有真实资料时，该指标留空并标注“待业务确认”，不能估算填充。
 
 ## 11. 品牌许可与迁域决策门
 

@@ -41,7 +41,7 @@ npm run cloudflare:rules:validate -- \
 
 校验项包括：规则为第一顺位且已启用，仅匹配 GET/HEAD，路径集与 manifest 完全相等，301 直达 `https://getgiffgaff.com<path>/`，并保留 query。缺失、额外路径、复制路径、错误目标、302、未保留 query 或顺序错误都会非零退出。
 
-> 离线 JSON 通过不等于生产已生效。最后仍必须运行 `npm run postdeploy`，并保留 39 URL / 全部变体零错误证据。
+> 离线 JSON 通过不等于生产已生效。最后仍必须运行 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39`，并保留 39 URL / 全部变体零错误证据。生产发布脚本会内置执行同一检查。
 
 ## 2. G0/G2 真实交易证据
 

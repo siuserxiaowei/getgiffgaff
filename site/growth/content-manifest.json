@@ -4,7 +4,7 @@
     {
       "path": "/guides/7-arrival-checklist/",
       "title": "giffgaff 收卡验收清单｜G0/G2 到手检查与售后",
-      "description": "国内收到 giffgaff G0/G2 后，按包装、卡状态、账号控制、余额、网络和普通短信逐项验收；附失败分流、商品页与微信小玉售后入口。",
+      "description": "国内收到 giffgaff G0/G2 后，按包装、卡状态、账号控制、余额、网络和普通短信逐项验收；附失败分流、分类页与联系咨询入口。",
       "intent": "giffgaff G0/G2 收卡验收",
       "updatedAt": "2026-07-17",
       "reviewedAt": "2026-07-17",

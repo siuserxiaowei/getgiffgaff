@@ -467,7 +467,7 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
       true,
     );
     const contactText = await page.locator("body").innerText();
-    for (const required of ["小玉", "微信咨询", "确认 G0 库存", "确认 G2 库存", "快团团下单"]) {
+    for (const required of ["胡小胡", "微信咨询", "查看 G0 小程序码", "查看 G2 小程序码", "快团团小程序码"]) {
       assert.match(contactText, new RegExp(required));
     }
 
@@ -484,7 +484,13 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
     await Promise.all([
       waitForImageLoad(
         page,
-        '#wechat-buying-guide-dialog img[src="/contact/wechat-qr.png"]',
+        '#wechat-buying-guide-dialog img[src="/contact/wechat-qr.jpg"]',
+        clock,
+        label,
+      ),
+      waitForImageLoad(
+        page,
+        '#wechat-buying-guide-dialog img[src="/contact/telegram-qr.jpg"]',
         clock,
         label,
       ),
@@ -497,10 +503,16 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
     ]);
     assert.equal(
       await commerceDialog.locator("h2").innerText(),
-      "英国卡购买指南",
+      "英国卡咨询指南",
     );
     assert.equal(
-      await commerceDialog.locator('img[src="/contact/wechat-qr.png"]').evaluate(
+      await commerceDialog.locator('img[src="/contact/wechat-qr.jpg"]').evaluate(
+        (image) => image.naturalWidth > 0,
+      ),
+      true,
+    );
+    assert.equal(
+      await commerceDialog.locator('img[src="/contact/telegram-qr.jpg"]').evaluate(
         (image) => image.naturalWidth > 0,
       ),
       true,
@@ -516,7 +528,8 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
       "/shop/giffgaff-g2/",
       "/guides/1-order/",
       "/contact/#ktt-giga-card",
-      "https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3",
+      "https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4",
+      "https://t.me/xiaoyuhuai",
     ]) {
       assert.equal(
         await commerceDialog.locator(`a[href="${href}"]`).count(),

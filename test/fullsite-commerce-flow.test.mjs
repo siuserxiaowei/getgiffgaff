@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { access, mkdtemp, readFile, rm, stat } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -8,7 +9,13 @@ import { ROUTE_MANIFEST } from "../public/route-manifest.js";
 import { buildReleaseArtifact } from "../scripts/build-release-artifact.mjs";
 
 const COMMERCE_SLOT = 'data-growth-slot="wechat-buying-guide-v1"';
-const WECHAT_URL = "https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3";
+const WECHAT_URL = "https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4";
+const TELEGRAM_URL = "https://t.me/xiaoyuhuai";
+const OLD_WECHAT_URL = "https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3";
+const QR_ASSETS = Object.freeze({
+  "/contact/wechat-qr.jpg": "751f8055949c3ee5d13a69dae6eef3aeef925a9e6f8dda1ca00b48e0399e1b43",
+  "/contact/telegram-qr.jpg": "9a6ed7d1e30acc7dc35d2dabe2e1078cd2cd0b3ceaecd7bf1d716fa5c1b1b3fa",
+});
 const INTERNAL_TARGETS = Object.freeze([
   "/shop/giffgaff-g0/",
   "/shop/giffgaff-g2/",
@@ -16,7 +23,8 @@ const INTERNAL_TARGETS = Object.freeze([
   "/contact/#ktt-giga-card",
 ]);
 const REQUIRED_ASSETS = Object.freeze([
-  "/contact/wechat-qr.png",
+  "/contact/wechat-qr.jpg",
+  "/contact/telegram-qr.jpg",
   "/contact/ktt-giga-card.png",
   "/growth-assets/growth.css",
   "/growth-assets/commerce-ui.js",
@@ -45,7 +53,7 @@ function widgetMarkup(html, route) {
   return matches[0];
 }
 
-test("all 46 release routes expose one safe, complete WeChat purchase guide", async (t) => {
+test("all 46 release routes expose one safe, complete contact and purchase guide", async (t) => {
   const outputRoot = await mkdtemp(
     path.join(os.tmpdir(), "getgiffgaff-commerce-flow-"),
   );
@@ -74,9 +82,24 @@ test("all 46 release routes expose one safe, complete WeChat purchase guide", as
     await access(assetFile);
     assert.ok((await stat(assetFile)).size > 0, `${asset} must not be empty`);
   }
+  for (const [asset, expectedSha256] of Object.entries(QR_ASSETS)) {
+    const bytes = await readFile(publicAssetFile(outputRoot, asset));
+    assert.equal(
+      createHash("sha256").update(bytes).digest("hex"),
+      expectedSha256,
+      `${asset} must remain the exact owner-provided QR image`,
+    );
+  }
+
+  assert.match(contactHtml, new RegExp(`href=["']${escapeRegExp(WECHAT_URL)}["']`, "i"));
+  assert.match(contactHtml, new RegExp(`href=["']${escapeRegExp(TELEGRAM_URL)}["']`, "i"));
+  assert.match(contactHtml, /src=["']\/contact\/wechat-qr\.jpg["']/i);
+  assert.match(contactHtml, /src=["']\/contact\/telegram-qr\.jpg["']/i);
+  assert.doesNotMatch(contactHtml, new RegExp(escapeRegExp(OLD_WECHAT_URL)));
 
   for (const route of routes) {
     const html = await readFile(routeFile(outputRoot, route), "utf8");
+    assert.doesNotMatch(html, /(?:src|href)=["']\/contact\/wechat-qr\.png["']/i, `${route} stale WeChat QR asset`);
     assert.equal(
       (html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length,
       1,
@@ -86,11 +109,11 @@ test("all 46 release routes expose one safe, complete WeChat purchase guide", as
     const widget = widgetMarkup(html, route);
     assert.match(
       widget,
-      /<h2\b[^>]*>\s*\u82f1\u56fd\u5361\u8d2d\u4e70\u6307\u5357\s*<\/h2>/i,
+      /<h2\b[^>]*>\s*\u82f1\u56fd\u5361\u54a8\u8be2\u6307\u5357\s*<\/h2>/i,
       `${route} dialog title`,
     );
 
-    for (const href of [...INTERNAL_TARGETS, WECHAT_URL]) {
+    for (const href of [...INTERNAL_TARGETS, WECHAT_URL, TELEGRAM_URL]) {
       assert.match(
         widget,
         new RegExp(`href=["']${escapeRegExp(href)}["']`, "i"),
@@ -99,7 +122,8 @@ test("all 46 release routes expose one safe, complete WeChat purchase guide", as
     }
 
     for (const image of [
-      "/contact/wechat-qr.png",
+      "/contact/wechat-qr.jpg",
+      "/contact/telegram-qr.jpg",
       "/contact/ktt-giga-card.png",
     ]) {
       assert.match(
@@ -114,6 +138,31 @@ test("all 46 release routes expose one safe, complete WeChat purchase guide", as
       /<(?:form|input|textarea|select)\b/i,
       `${route} widget must not collect purchase or account data`,
     );
+    assert.doesNotMatch(widget, new RegExp(escapeRegExp(OLD_WECHAT_URL)), `${route} old WeChat URL`);
+    assert.doesNotMatch(
+      widget,
+      /资料未补齐前请勿付款|未齐时请勿付款|不得仅凭二维码或口头说明判断可购买/,
+      `${route} global purchase deterrent copy`,
+    );
+    assert.match(
+      widget,
+      /付款前请联系客服核对当前库存、价格、卡片来源与激活状态/,
+      `${route} factual pre-order contact guidance`,
+    );
+
+    for (const [channel, href] of [
+      ["wechat", WECHAT_URL],
+      ["telegram", TELEGRAM_URL],
+    ]) {
+      assert.match(
+        widget,
+        new RegExp(
+          `<a\\b(?=[^>]*\\bhref=["']${escapeRegExp(href)}["'])(?=[^>]*\\bdata-analytics-event=["']contact_click["'])(?=[^>]*\\bdata-analytics-channel=["']${channel}["'])[^>]*>`,
+          "i",
+        ),
+        `${route} ${channel} anonymous contact event`,
+      );
+    }
     assert.match(
       html,
       /href=["']\/growth-assets\/growth\.css["']/i,
@@ -129,5 +178,33 @@ test("all 46 release routes expose one safe, complete WeChat purchase guide", as
       /src=["']\/growth-assets\/analytics\.js["']/i,
       `${route} privacy-safe analytics script`,
     );
+  }
+});
+
+test("only real external contact handoffs emit channel-qualified contact clicks", async (t) => {
+  const outputRoot = await mkdtemp(
+    path.join(os.tmpdir(), "getgiffgaff-contact-events-"),
+  );
+  t.after(async () => rm(outputRoot, { recursive: true, force: true }));
+
+  await buildReleaseArtifact(outputRoot);
+  for (const route of Object.keys(ROUTE_MANIFEST)) {
+    const html = await readFile(routeFile(outputRoot, route), "utf8");
+    const contactEvents = Array.from(
+      html.matchAll(/<a\b[^>]*data-analytics-event=["']contact_click["'][^>]*>/gi),
+      (match) => match[0],
+    );
+    for (const anchor of contactEvents) {
+      assert.match(
+        anchor,
+        /href=["']https:\/\/(?:u\.wechat\.com|t\.me)\//i,
+        `${route} contact_click must be a real external handoff`,
+      );
+      assert.match(
+        anchor,
+        /data-analytics-channel=["'](?:wechat|telegram)["']/i,
+        `${route} contact_click must name its channel`,
+      );
+    }
   }
 });

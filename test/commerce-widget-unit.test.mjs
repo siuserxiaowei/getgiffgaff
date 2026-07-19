@@ -9,7 +9,11 @@ const WIDGET = path.join(ROOT, "site", "growth", "commerce-widget.js");
 const CLIENT = path.join(ROOT, "site", "growth", "assets", "commerce-ui.js");
 const STYLES = path.join(ROOT, "site", "growth", "assets", "growth.css");
 
-test("commerce widget is one additive, accessible British SIM buying guide", async () => {
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+test("commerce widget is one additive, accessible British SIM consultation guide", async () => {
   const { renderCommerceWidget } = await import(
     `${pathToFileURL(WIDGET).href}?test=${Date.now()}`
   );
@@ -27,7 +31,7 @@ test("commerce widget is one additive, accessible British SIM buying guide", asy
     /<dialog\b[^>]*id="wechat-buying-guide-dialog"[^>]*aria-labelledby="wechat-buying-guide-title"[^>]*aria-describedby="wechat-buying-guide-description"/,
   );
   assert.doesNotMatch(html, /<dialog\b[^>]*aria-modal=/i);
-  assert.match(html, /<h2 id="wechat-buying-guide-title">\s*英国卡购买指南\s*<\/h2>/);
+  assert.match(html, /<h2 id="wechat-buying-guide-title">\s*英国卡咨询指南\s*<\/h2>/);
   const description = html.match(/<p id="wechat-buying-guide-description">([\s\S]*?)<\/p>/i);
   assert.ok(description, "visible commerce boundary disclosure");
   assert.match(description[1], /独立第三方/);
@@ -36,14 +40,24 @@ test("commerce widget is one additive, accessible British SIM buying guide", asy
   assert.match(description[1], /不保证实时库存/);
   assert.match(description[1], /支付成功/);
   assert.match(description[1], /OTP 验证码送达/);
-  assert.match(html, /微信客服[“"]客服小玉[”"]/);
+  assert.match(description[1], /付款前请联系客服核对当前库存、价格、卡片来源与激活状态/);
+  assert.match(description[1], /无法核对关键事项时不要付款/);
+  assert.match(html, /微信客服（显示名[“"]胡小胡[”"]）/);
+  assert.doesNotMatch(html, /客服小玉|微信小玉|联系小玉/);
+  assert.match(html, /Telegram @xiaoyuhuai/);
+  assert.doesNotMatch(
+    html,
+    /资料未补齐前请勿付款|未齐时请勿付款|不得仅凭二维码或口头说明判断可购买/,
+  );
+  assert.match(html, /自定义漏斗数据集不记录 Cookie/);
+  assert.doesNotMatch(html, /不会要求或接收[^。]*Cookie/);
   assert.match(html, /data-commerce-close/);
-  assert.match(html, /aria-label="关闭英国卡购买指南"/);
+  assert.match(html, /aria-label="关闭英国卡咨询指南"/);
   assert.doesNotMatch(html, /<dialog\b[^>]*aria-hidden=/i);
   assert.doesNotMatch(html, /<form\b|<input\b|<textarea\b|<select\b/i);
 });
 
-test("commerce widget connects G0, G2, WeChat, tutorial and KTT payment paths", async () => {
+test("commerce widget connects G0, G2, WeChat, Telegram, tutorial and KTT QR paths", async () => {
   const { renderCommerceWidget } = await import(
     `${pathToFileURL(WIDGET).href}?links=${Date.now()}`
   );
@@ -54,22 +68,28 @@ test("commerce widget connects G0, G2, WeChat, tutorial and KTT payment paths", 
     "/shop/giffgaff-g2/",
     "/guides/1-order/",
     "/contact/#ktt-giga-card",
-    "https://getgiffgaff.com/pay/",
-    "https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3",
+    "https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4",
+    "https://t.me/xiaoyuhuai",
   ]) {
     assert.ok(html.includes(`href="${href}"`), `missing ${href}`);
   }
   assert.match(html, />G0 新卡</);
   assert.match(html, />G2 有余额卡</);
-  assert.match(html, /快团团下单与支付/);
-  assert.match(html, /进入快团团托管支付入口/);
+  assert.match(html, /快团团小程序码/);
+  assert.match(html, /本站没有可核验的商品直达链接/);
+  assert.doesNotMatch(html, /托管支付入口|href="https:\/\/getgiffgaff\.com\/pay\/"/);
+  assert.doesNotMatch(html, /https:\/\/u\.wechat\.com\/EDGrPuicwOsumDF_m3vVpEI\?s=3/);
   assert.match(
     html,
-    /<img\b[^>]*src="\/contact\/wechat-qr\.png"[^>]*alt="微信客服小玉二维码"[^>]*width="820"[^>]*height="1229"/,
+    /<img\b[^>]*src="\/contact\/wechat-qr\.jpg"[^>]*alt="微信显示名胡小胡的客服二维码"/,
   );
   assert.match(
     html,
-    /<img\b[^>]*src="\/contact\/ktt-giga-card\.png"[^>]*alt="快团团 giffgaff 手机卡下单与支付二维码"[^>]*width="720"[^>]*height="540"/,
+    /<img\b[^>]*src="\/contact\/telegram-qr\.jpg"[^>]*alt="Telegram 客服 xiaoyuhuai 二维码"/,
+  );
+  assert.match(
+    html,
+    /<img\b[^>]*src="\/contact\/ktt-giga-card\.png"[^>]*alt="快团团 giffgaff 手机卡小程序码"[^>]*width="720"[^>]*height="540"/,
   );
   assert.match(
     html,
@@ -83,6 +103,26 @@ test("commerce widget connects G0, G2, WeChat, tutorial and KTT payment paths", 
     [...new Set(analyticsEvents)].sort(),
     ["commerce_click", "contact_click", "shop_click"],
   );
+
+  for (const [channel, href] of [
+    ["wechat", "https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4"],
+    ["telegram", "https://t.me/xiaoyuhuai"],
+  ]) {
+    assert.match(
+      html,
+      new RegExp(
+        `<a\\b(?=[^>]*\\bhref="${escapeRegExp(href)}")(?=[^>]*\\bdata-analytics-event="contact_click")(?=[^>]*\\bdata-analytics-channel="${channel}")[^>]*>`,
+      ),
+      `${channel} contact button must expose an anonymous channel dimension`,
+    );
+  }
+  assert.doesNotMatch(
+    html,
+    /<a\b(?=[^>]*\bdata-commerce-open)(?=[^>]*\bdata-analytics-event="contact_click")[^>]*>/,
+    "opening the guide is not yet a contact-channel click",
+  );
+  assert.match(html, /若未唤起或跳到微信官网，请使用微信[“"]扫一扫[”"]扫描二维码/);
+  assert.match(html, /手机可直接打开，电脑可扫码/);
 });
 
 test("commerce UI cycles focus and implements modal open, close and hash fallback safely", async () => {
@@ -257,6 +297,7 @@ test("commerce styles support no-JavaScript :target and visible focus without al
 
   assert.match(css, /\.commerce-guide-dialog:target\s*\{/);
   assert.match(css, /\.commerce-wechat-fab:focus-visible/);
+  assert.match(css, /\.commerce-action--telegram\s*\{/);
   assert.match(css, /\.commerce-guide-dialog::backdrop/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.doesNotMatch(css, /(?:^|\n)\s*(?:body|html|\.site-header|\.brand|\.shop-floating-contact)\s*\{/);

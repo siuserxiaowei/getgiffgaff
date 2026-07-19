@@ -16,14 +16,23 @@ const PROJECT_PREVIEW_HOST = "getgiffgaff.pages.dev";
 const ANALYTICS_EVENT_PATH = "/analytics-event-v1";
 const ANALYTICS_EVENT_VERSION = "analytics_event_v1";
 const ANALYTICS_MAX_BYTES = 1024;
+const ANALYTICS_RELEASE_PROBE_HEADER = "x-getgiffgaff-release-probe";
+const ANALYTICS_RELEASE_PROBE_VALUE = "seo_release_canary_v1";
+const ANALYTICS_RELEASE_PROBE_ID_HEADER = "x-getgiffgaff-release-probe-id";
+const ANALYTICS_RELEASE_PROBE_INDEX = "seo_release_canary";
+const ANALYTICS_RELEASE_PROBE_BLOB = "seo_release_canary";
+const RELEASE_PROVENANCE_PATH = "/release-provenance.json";
 const PAYMENT_HANDOFF_PATH = "/pay/";
 const PAYMENT_HANDOFF_TARGET = `${CANONICAL_ORIGIN}/contact/#ktt-giga-card`;
-const EDGE_HTML_CACHE_VERSION = "ktt-modal-close-20260718-v1";
+const RETIRED_WECHAT_QR_PATH = "/contact/wechat-qr.png";
+const VERIFIED_WECHAT_QR_PATH = "/contact/wechat-qr.jpg";
+const EDGE_HTML_CACHE_VERSION = "contact-channels-analytics-20260719-v1";
 const PUBLIC_READ_METHODS = new Set(["GET", "HEAD"]);
 const PUBLIC_STATIC_ASSETS = new Set(PUBLIC_STATIC_ASSET_PATHS);
 const OPTIONAL_PUBLIC_STATIC_ASSETS = new Set(OPTIONAL_PUBLIC_STATIC_ASSET_PATHS);
 const PRIVATE_HANDOFF_PATHS = new Set([PAYMENT_HANDOFF_PATH]);
 const BODYLESS_STATUSES = new Set([101, 204, 205, 304]);
+const PERMANENT_REDIRECT_STATUSES = new Set([301, 308]);
 
 const SUPPORTING_NOINDEX_PATHS = new Set([
   "/llms.txt",
@@ -89,8 +98,13 @@ const ANALYTICS_EVENTS = new Set([
   "commerce_click",
   "contact_click",
   "growth_related_click",
+  "page_view",
   "shop_click",
   "tool_result",
+]);
+const ANALYTICS_CONTACT_CHANNELS = new Set([
+  "telegram",
+  "wechat",
 ]);
 
 function matchesRoutePrefix(pathname, prefix) {
@@ -180,6 +194,17 @@ function privateError(request, status, message) {
   return finalizeResponse(request, upstream, "private-noindex");
 }
 
+function analyticsUnavailable(request) {
+  const upstream = new Response(
+    JSON.stringify({ error: "analytics_unavailable" }),
+    {
+      status: 503,
+      headers: { "content-type": "application/json; charset=utf-8" },
+    },
+  );
+  return finalizeResponse(request, upstream, "private-noindex");
+}
+
 export function policyFor(pathname, status, contentType = "") {
   const normalized = normalizedRoute(pathname);
   const record = routeFor(normalized);
@@ -217,7 +242,13 @@ export function finalizeResponse(request, upstream, policy) {
   const directives = ROBOTS_DIRECTIVES[effectivePolicy];
   if (directives) headers.set("x-robots-tag", directives);
 
-  if (preview || sensitive || effectivePolicy === "private-noindex" || personalized) {
+  if (
+    preview
+    || sensitive
+    || effectivePolicy === "private-noindex"
+    || personalized
+    || requestUrl.pathname === RELEASE_PROVENANCE_PATH
+  ) {
     headers.set("cache-control", "private, no-store");
   } else if (record && upstream.status >= 200 && upstream.status < 300) {
     headers.set(
@@ -229,7 +260,10 @@ export function finalizeResponse(request, upstream, policy) {
       "cache-control",
       "public, max-age=300, s-maxage=600, stale-while-revalidate=3600",
     );
-  } else if (upstream.status >= 200 && upstream.status < 300) {
+  } else if (
+    (upstream.status >= 200 && upstream.status < 300)
+    || PERMANENT_REDIRECT_STATUSES.has(upstream.status)
+  ) {
     headers.set(
       "cache-control",
       "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800",
@@ -296,7 +330,7 @@ export function paymentHandoffResponse(request) {
     status: 303,
     headers: {
       location: PAYMENT_HANDOFF_TARGET,
-      "x-getgiffgaff-payment-mode": "provider-hosted-handoff",
+      "x-getgiffgaff-payment-mode": "contact-qr-handoff",
       "x-getgiffgaff-payment-provider": "kuaituantuan",
     },
   });
@@ -397,6 +431,10 @@ async function fetchStaticAsset(request, env, pathname, context) {
 }
 
 export async function analyticsEventV1(request, env) {
+  const requestUrl = new URL(request.url);
+  if (requestUrl.hostname.toLowerCase() !== CANONICAL_HOST) {
+    return privateError(request, 404, "Not found");
+  }
   if (request.method !== "POST") {
     return privateError(request, 405, "Method not allowed");
   }
@@ -426,8 +464,17 @@ export async function analyticsEventV1(request, env) {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return privateError(request, 400, "Invalid analytics event");
   }
-  const keys = Object.keys(payload).sort();
-  if (keys.join(",") !== "event,path,source,version") {
+  const keys = Object.keys(payload).sort().join(",");
+  const hasChannel = Object.hasOwn(payload, "channel");
+  const hasReleaseProbe = request.headers.has(ANALYTICS_RELEASE_PROBE_HEADER);
+  const hasReleaseProbeId = request.headers.has(ANALYTICS_RELEASE_PROBE_ID_HEADER);
+  const isReleaseProbe =
+    request.headers.get(ANALYTICS_RELEASE_PROBE_HEADER) === ANALYTICS_RELEASE_PROBE_VALUE;
+  const releaseProbeId = request.headers.get(ANALYTICS_RELEASE_PROBE_ID_HEADER) || "";
+  if (
+    keys !== "event,path,source,version" &&
+    keys !== "channel,event,path,source,version"
+  ) {
     return privateError(request, 400, "Invalid analytics event");
   }
   const route = typeof payload.path === "string" ? routeFor(payload.path) : null;
@@ -436,17 +483,40 @@ export async function analyticsEventV1(request, env) {
     !route ||
     route.canonicalPath !== payload.path ||
     !ANALYTICS_SOURCES.has(payload.source) ||
-    !ANALYTICS_EVENTS.has(payload.event)
+    !ANALYTICS_EVENTS.has(payload.event) ||
+    (payload.event === "contact_click" && !hasChannel) ||
+    (hasChannel && (
+      payload.event !== "contact_click" ||
+      !ANALYTICS_CONTACT_CHANNELS.has(payload.channel)
+    )) ||
+    (hasReleaseProbe !== hasReleaseProbeId) ||
+    (hasReleaseProbe && (
+      !isReleaseProbe ||
+      !/^[0-9a-f]{64}$/u.test(releaseProbeId) ||
+      payload.path !== "/" ||
+      payload.source !== "direct" ||
+      payload.event !== "page_view" ||
+      hasChannel
+    ))
   ) {
     return privateError(request, 400, "Invalid analytics event");
   }
 
-  if (env?.ANALYTICS && typeof env.ANALYTICS.writeDataPoint === "function") {
-    env.ANALYTICS.writeDataPoint({
-      indexes: [payload.event],
-      blobs: [payload.path, payload.source, payload.event],
+  if (!env?.ANALYTICS || typeof env.ANALYTICS.writeDataPoint !== "function") {
+    return analyticsUnavailable(request);
+  }
+
+  try {
+    const blobs = [payload.path, payload.source, payload.event];
+    if (hasChannel) blobs.push(payload.channel);
+    if (isReleaseProbe) blobs.push(ANALYTICS_RELEASE_PROBE_BLOB, releaseProbeId);
+    await env.ANALYTICS.writeDataPoint({
+      indexes: [isReleaseProbe ? ANALYTICS_RELEASE_PROBE_INDEX : payload.event],
+      blobs,
       doubles: [1],
     });
+  } catch {
+    return analyticsUnavailable(request);
   }
   return finalizeResponse(
     request,
@@ -473,6 +543,14 @@ async function handleRequest(request, env, context) {
 
   const redirect = canonicalRedirectFor(request);
   if (redirect) return redirect;
+
+  if (url.pathname === RETIRED_WECHAT_QR_PATH) {
+    const upstream = Response.redirect(
+      `${CANONICAL_ORIGIN}${VERIFIED_WECHAT_QR_PATH}`,
+      301,
+    );
+    return finalizeResponse(request, upstream, "none");
+  }
 
   if (url.pathname === ANALYTICS_EVENT_PATH) {
     return analyticsEventV1(request, env);

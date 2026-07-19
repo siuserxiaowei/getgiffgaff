@@ -160,7 +160,7 @@ function header() {
 }
 
 function footer() {
-  return `<footer class="site-footer"><div><h3>getgiffgaff</h3><p>面向中文用户的 giffgaff 英国手机卡购买与教程站。现有 G0/G2 商品、微信小玉和快团团入口继续保留。</p></div><div><h3>常用入口</h3><ul><li><a href="/guides/">中文教程</a></li><li><a href="/shop/">手机卡商城</a></li><li><a href="/contact/">微信联系小玉</a></li></ul></div><p class="footer-warning">本站为独立第三方中文教程与销售服务站，不代表 giffgaff 官方。运营商规则与费用请以核验当日官方页面为准。</p></footer>`;
+  return `<footer class="site-footer"><div><h3>getgiffgaff</h3><p>面向中文用户的 giffgaff 英国手机卡购买与教程站。G0/G2 仅是本站分类；是否有货以及订单、支付和履约安排均须逐批核对。</p></div><div><h3>常用入口</h3><ul><li><a href="/guides/">中文教程</a></li><li><a href="/shop/">手机卡分类</a></li><li><a href="/contact/">微信或 Telegram 联系咨询</a></li></ul></div><p class="footer-warning">本站为独立第三方中文教程与销售服务站，不代表 giffgaff 官方。运营商规则与费用请以核验当日官方页面为准。</p></footer>`;
 }
 
 function classifySectionSourceLinks(html, sources) {
@@ -258,7 +258,7 @@ function analyticsEventForHref(href) {
 function renderRelated(page) {
   return `<section class="growth-related" aria-labelledby="related-title"><h2 id="related-title">相关教程与下一步</h2><div class="growth-related-grid">${page.relatedRoutes
     .map((entry) => `<a href="${escapeHtml(entry.href)}" data-analytics-event="growth_related_click">${escapeHtml(entry.label)}</a>`)
-    .join("")}</div></section><section class="growth-commerce"><div><strong>需要确认库存、订单或售后？</strong><p>保留现有微信小玉与快团团购买路径；敏感账号资料不要发送给本站。</p></div><a class="btn btn-primary" href="${escapeHtml(page.commerceTarget.href)}" data-analytics-event="${analyticsEventForHref(page.commerceTarget.href)}">${escapeHtml(page.commerceTarget.label)}</a></section>`;
+    .join("")}</div></section><section class="growth-commerce"><div><strong>需要确认卡片分类、订单或售后？</strong><p>可通过微信或 Telegram 联系咨询；敏感账号资料不要发送给本站。联系入口不代表库存、订单、支付或履约已经确认。</p></div><a class="btn btn-primary" href="${escapeHtml(page.commerceTarget.href)}" data-analytics-event="${analyticsEventForHref(page.commerceTarget.href)}">${escapeHtml(page.commerceTarget.label)}</a></section>`;
 }
 
 export function renderGrowthPage(page) {

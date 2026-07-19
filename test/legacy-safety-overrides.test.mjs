@@ -107,7 +107,10 @@ test("G2 release copy and structured data fail closed without batch evidence", a
   assert.match(result.html, /"@type":"WebPage"/);
   assert.match(result.html, /G2 库存分类说明/);
   assert.match(result.html, /不是 giffgaff 官方 SKU/);
-  assert.match(result.html, /缺少逐批证据时不要付款/);
+  assert.match(result.html, /付款前请联系客服核对当前库存、价格、卡片来源与激活状态/);
+  assert.match(result.html, /无法核对关键事项时不要付款/);
+  assert.match(result.html, /以支付页面和书面确认信息为准/);
+  assert.doesNotMatch(result.html, /缺少逐批证据时不要付款/);
   assert.match(result.html, /不保证任何平台验证码/);
   assert.doesNotMatch(result.html, /优先推荐|更适合第一次购买或急用|通常含 10-14 英镑余额/);
   assert.equal(

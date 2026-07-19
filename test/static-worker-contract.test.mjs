@@ -172,7 +172,9 @@ function contentTypeFor(pathname) {
   if (pathname.endsWith(".js")) return "application/javascript; charset=utf-8";
   if (pathname.endsWith(".svg")) return "image/svg+xml";
   if (pathname.endsWith(".png")) return "image/png";
+  if (pathname.endsWith(".jpg") || pathname.endsWith(".jpeg")) return "image/jpeg";
   if (pathname.endsWith(".xml")) return "application/xml; charset=utf-8";
+  if (pathname.endsWith(".json")) return "application/json; charset=utf-8";
   return "application/octet-stream";
 }
 
@@ -449,6 +451,23 @@ test("canonical variants normalize host, scheme, slash, index.html and ordinary 
   }
 });
 
+test("retired WeChat QR URL permanently redirects to the owner-verified image", async () => {
+  const root = await releaseRoot();
+  for (const method of ["GET", "HEAD"]) {
+    const env = createAssetsEnvironment(root);
+    const response = await worker.fetch(
+      new Request(`${ORIGIN}/contact/wechat-qr.png`, { method }),
+      env,
+      {},
+    );
+    assert.equal(response.status, 301, method);
+    assert.equal(response.headers.get("location"), `${ORIGIN}/contact/wechat-qr.jpg`, method);
+    assert.match(response.headers.get("cache-control") || "", /public/u, method);
+    assert.doesNotMatch(response.headers.get("x-robots-tag") || "", /noindex/u, method);
+    assert.equal(env.calls.length, 0, `${method} redirect occurs before ASSETS`);
+  }
+});
+
 test("Authorization, sensitive queries and encoded CRLF fail before static assets", async () => {
   const root = await releaseRoot();
   const probes = [
@@ -515,6 +534,11 @@ test("canonical production HTML uses a versioned edge cache while private reques
   assert.equal(env.calls.length, 1);
   await Promise.all(pending);
   assert.equal(env.__STATIC_CACHE.entries.size, 1);
+  assert.deepEqual(
+    [...env.__STATIC_CACHE.entries.keys()],
+    [`${url}?__getgiffgaff_release=contact-channels-analytics-20260719-v1`],
+    "consultation-channel release must rotate the production HTML cache namespace",
+  );
 
   const hit = await worker.fetch(new Request(url), env, context);
   assert.equal(hit.status, 200);
@@ -618,6 +642,10 @@ test("legacy and growth static resources retain their public URLs and never inhe
     } else {
       assert.equal(response.headers.get("x-robots-tag"), null, pathname);
     }
+    if (pathname === "/release-provenance.json") {
+      assert.match(response.headers.get("cache-control") || "", /\bprivate\b/i);
+      assert.match(response.headers.get("cache-control") || "", /\bno-store\b/i);
+    }
     assert.equal(sha256(actual), sha256(expected), pathname);
     assert.ok(!env.calls.some((call) => /\/_next(?:\/|$)/i.test(call.pathname)), pathname);
     if (/\.(?:css|js)$/.test(pathname)) {
@@ -635,6 +663,10 @@ test("legacy and growth static resources retain their public URLs and never inhe
       assertDirectives(head, new Set(["noindex", "follow", "noarchive"]), `${pathname} HEAD`);
     } else {
       assert.equal(head.headers.get("x-robots-tag"), null, `${pathname} HEAD robots`);
+    }
+    if (pathname === "/release-provenance.json") {
+      assert.match(head.headers.get("cache-control") || "", /\bprivate\b/i);
+      assert.match(head.headers.get("cache-control") || "", /\bno-store\b/i);
     }
     assert.equal(head.headers.get("content-length"), String(expected.length), `${pathname} HEAD length`);
   }

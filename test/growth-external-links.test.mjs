@@ -54,7 +54,7 @@ function assertSafeExternalAnchors(html, label) {
       continue;
     }
 
-    if (url.hostname === "u.wechat.com" || url.protocol === "mailto:") {
+    if (["u.wechat.com", "t.me"].includes(url.hostname) || url.protocol === "mailto:") {
       assert.equal(
         attrs.get("data-link-role"),
         "contact-channel",
@@ -75,8 +75,8 @@ test("all eight generated growth pages classify and secure runtime external link
   }
 });
 
-test("commerce widget classifies and secures its external contact link", () => {
+test("commerce widget classifies and secures both external contact links", () => {
   const html = renderCommerceWidget();
   assertSafeExternalAnchors(html, "commerce widget");
-  assert.equal(externalAnchors(html).length, 1, "widget has one external runtime destination");
+  assert.equal(externalAnchors(html).length, 2, "widget has two external contact destinations");
 });

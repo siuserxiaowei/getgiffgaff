@@ -5,6 +5,9 @@ import test from "node:test";
 const CONTACT_CANONICAL = "https://getgiffgaff.com/contact/";
 const EXPECTED_TITLE = "联系 getgiffgaff｜G0/G2 库存、下单与售后支持";
 const EXPECTED_H1 = "联系 getgiffgaff：库存、下单与售后支持";
+const WECHAT_URL = "https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4";
+const TELEGRAM_URL = "https://t.me/xiaoyuhuai";
+const OLD_WECHAT_URL = "https://u.wechat.com/EDGrPuicwOsumDF_m3vVpEI?s=3";
 
 // This deliberately mirrors the important problems in the production Contact
 // document while staying small enough for a focused Worker regression test.
@@ -166,6 +169,13 @@ test("preserves the frozen indexable Contact support and commerce page", async (
     assert.match(html, /(?:无法|不能)(?:代办|处理|承诺)/);
     assert.match(html, /订单号/);
     assert.match(html, /问题截图/);
+  });
+
+  await t.test("keeps verified contact channels outside the frozen source", () => {
+    assert.doesNotMatch(html, new RegExp(`href=["']${WECHAT_URL.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`));
+    assert.doesNotMatch(html, new RegExp(`href=["']${TELEGRAM_URL.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`));
+    assert.doesNotMatch(html, /data-release-slot=["']verified-contact-channels-v1["']/);
+    assert.doesNotMatch(html, new RegExp(OLD_WECHAT_URL.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   });
 
   await t.test("publishes a conservative Organization, WebSite and ContactPage graph", () => {

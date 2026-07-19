@@ -3,17 +3,71 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 import {
+  OWNER_QR_ASSETS,
   SeoReleaseError,
   extractSitemapUrls,
   parseRobotsTxt,
   parseCliOptions,
+  validateAnalyticsCanary,
+  validateOwnerQrAssets,
   validateCanonicalVariants,
   validatePolicyProbes,
   validateRobotsPolicy,
   validateSeoRelease,
 } from "../scripts/verify-seo-release.mjs";
+import { PUBLIC_INDEXABLE_PATHS } from "../public/route-manifest.js";
 
 const BASE_URL = "https://getgiffgaff.test";
+
+test("production analytics canary is a valid marked page view and requires 204", async () => {
+  const requests = [];
+  const fetchImpl = async (input, init) => {
+    requests.push({ url: String(input), init });
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "x-robots-tag": "noindex, nofollow, noarchive",
+        "cache-control": "private, no-store",
+      },
+    });
+  };
+
+  const probeId = "a".repeat(64);
+  const issues = await validateAnalyticsCanary(BASE_URL, {
+    fetchImpl,
+    idFactory: () => probeId,
+  });
+
+  assert.deepEqual(issues, []);
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].url, `${BASE_URL}/analytics-event-v1`);
+  assert.equal(requests[0].init.method, "POST");
+  const headers = new Headers(requests[0].init.headers);
+  assert.equal(headers.get("origin"), BASE_URL);
+  assert.equal(headers.get("content-type"), "application/json");
+  assert.equal(headers.get("x-getgiffgaff-release-probe"), "seo_release_canary_v1");
+  assert.equal(headers.get("x-getgiffgaff-release-probe-id"), probeId);
+  assert.deepEqual(JSON.parse(requests[0].init.body), {
+    version: "analytics_event_v1",
+    path: "/",
+    source: "direct",
+    event: "page_view",
+  });
+
+  const rejected = await validateAnalyticsCanary(BASE_URL, {
+    idFactory: () => probeId,
+    fetchImpl: async () => new Response("unavailable", { status: 503 }),
+  });
+  assert.ok(rejected.some(({ code, message }) =>
+    code === "analytics-canary-status" && /expected.*204.*503/i.test(message)));
+  await assert.rejects(
+    () => validateAnalyticsCanary(BASE_URL, {
+      fetchImpl,
+      idFactory: () => "short",
+    }),
+    /256 bits/,
+  );
+});
 
 function jsonResponse(body, init = {}) {
   return new Response(body, init);
@@ -99,6 +153,7 @@ test("validates sitemap pages without making live requests", async () => {
   const report = await validateSeoRelease({
     baseUrl: BASE_URL,
     expectedUrlCount: 2,
+    indexablePaths: ["/", "/contact/"],
     fetchImpl: fixtureFetch(routes),
     checkCanonicalization: false,
     checkPolicyProbes: false,
@@ -108,6 +163,96 @@ test("validates sitemap pages without making live requests", async () => {
   assert.equal(report.urlCount, 2);
   assert.equal(report.pagesChecked, 2);
   assert.deepEqual(report.issues, []);
+});
+
+test("rejects a same-size sitemap whose pathname set differs from the route manifest", async () => {
+  const missingPathname = PUBLIC_INDEXABLE_PATHS[1];
+  const unexpectedPathname = "/unexpected-but-count-preserving/";
+  const pathnames = PUBLIC_INDEXABLE_PATHS.map((pathname) =>
+    pathname === missingPathname ? unexpectedPathname : pathname,
+  );
+  const sitemap = `<?xml version="1.0"?><urlset>${pathnames
+    .map((pathname) => `<url><loc>${BASE_URL}${pathname}</loc></url>`)
+    .join("")}</urlset>`;
+  const routes = new Map([
+    [`${BASE_URL}/sitemap.xml`, jsonResponse(sitemap)],
+    ...pathnames.map((pathname) => [
+      `${BASE_URL}${pathname}`,
+      jsonResponse(healthyHtml(`${BASE_URL}${pathname}`), {
+        headers: { "content-type": "text/html; charset=utf-8" },
+      }),
+    ]),
+  ]);
+
+  await assert.rejects(
+    validateSeoRelease({
+      baseUrl: BASE_URL,
+      expectedUrlCount: PUBLIC_INDEXABLE_PATHS.length,
+      fetchImpl: fixtureFetch(routes),
+      checkCanonicalization: false,
+      checkPolicyProbes: false,
+    }),
+    (error) => {
+      assert.ok(error instanceof SeoReleaseError);
+      assert.equal(error.issues.some(({ code }) => code === "sitemap-count"), false);
+      assert.equal(error.issues.some(({ code }) => code === "sitemap-unique-count"), false);
+      assert.ok(error.issues.some(({ code, url }) =>
+        code === "sitemap-path-missing" && url === `${BASE_URL}${missingPathname}`));
+      assert.ok(error.issues.some(({ code, url }) =>
+        code === "sitemap-path-unexpected" && url === `${BASE_URL}${unexpectedPathname}`));
+      return true;
+    },
+  );
+});
+
+test("owner QR production smoke requires GET/HEAD JPEG responses with exact non-empty bytes", async () => {
+  const sourceFiles = new Map([
+    ["/contact/wechat-qr.jpg", new URL("../site/legacy/contact/wechat-qr.jpg", import.meta.url)],
+    ["/contact/telegram-qr.jpg", new URL("../site/legacy/contact/telegram-qr.jpg", import.meta.url)],
+  ]);
+  const payloads = new Map(await Promise.all(
+    OWNER_QR_ASSETS.map(async ({ pathname }) => [pathname, await readFile(sourceFiles.get(pathname))]),
+  ));
+  const requests = [];
+  const fetchImpl = async (input, init = {}) => {
+    const url = new URL(typeof input === "string" ? input : input.url);
+    const method = init.method || "GET";
+    requests.push(`${method} ${url.pathname}`);
+    return jsonResponse(method === "HEAD" ? null : payloads.get(url.pathname), {
+      headers: {
+        "content-type": "image/jpeg",
+        "content-length": String(payloads.get(url.pathname).byteLength),
+      },
+    });
+  };
+
+  const issues = await validateOwnerQrAssets(BASE_URL, { fetchImpl });
+
+  assert.deepEqual(issues, []);
+  assert.deepEqual(requests.sort(), OWNER_QR_ASSETS.flatMap(({ pathname }) => [
+    `GET ${pathname}`,
+    `HEAD ${pathname}`,
+  ]).sort());
+});
+
+test("owner QR production smoke rejects wrong MIME, empty content and checksum drift", async () => {
+  const fetchImpl = async (input, init = {}) => {
+    const url = new URL(typeof input === "string" ? input : input.url);
+    const isHead = init.method === "HEAD";
+    const isWechat = url.pathname.includes("wechat");
+    return jsonResponse(isHead ? null : isWechat ? Buffer.from("drifted") : Buffer.alloc(0), {
+      status: isHead && isWechat ? 206 : 200,
+      headers: { "content-type": isWechat ? "text/plain" : "image/jpeg" },
+    });
+  };
+
+  const issues = await validateOwnerQrAssets(BASE_URL, { fetchImpl });
+  const messages = issues.map(({ message }) => message).join("\n");
+
+  assert.match(messages, /GET.*image\/jpeg/i);
+  assert.match(messages, /SHA-256/i);
+  assert.match(messages, /empty/i);
+  assert.match(messages, /HEAD.*200/i);
 });
 
 test("collects duplicate, robots, canonical, OG and JSON-LD failures", async () => {
@@ -186,6 +331,7 @@ test("allows giffgaff as an external Brand but rejects it as this site's publish
   const allowed = await validateSeoRelease({
     baseUrl: BASE_URL,
     expectedUrlCount: 1,
+    indexablePaths: ["/contact/"],
     fetchImpl: fixtureFetch(routesFor({
       about: {
         "@type": "Brand",
@@ -202,6 +348,7 @@ test("allows giffgaff as an external Brand but rejects it as this site's publish
     validateSeoRelease({
       baseUrl: BASE_URL,
       expectedUrlCount: 1,
+      indexablePaths: ["/contact/"],
       fetchImpl: fixtureFetch(routesFor({
         publisher: {
           "@type": "Organization",
@@ -301,6 +448,10 @@ test("validates supporting, private and non-HTML policy probes", async () => {
     [`${BASE_URL}/shipping/`, jsonResponse("status", {
       headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
+    ...["tools/esim-compatibility", "research/china-network-sms", "research/otp-status"].map((name) => [
+      `${BASE_URL}/${name}/`,
+      jsonResponse("preview", { headers: { "x-robots-tag": "noindex, follow, noarchive" } }),
+    ]),
     [`${BASE_URL}/__seo-release-probe-missing__/`, jsonResponse("missing", {
       status: 404,
       headers: privateHeaders,
@@ -497,7 +648,15 @@ test("policy probes read final robots text and fail closed when the body cannot 
       headers: { "x-robots-tag": "noindex, follow, noarchive" },
     })],
     [`${BASE_URL}/llms-full.txt`, jsonResponse("retired", { status: 410, headers: privateHeaders })],
-    ...["privacy", "terms", "refund", "shipping"].map((name) => [
+    ...[
+      "privacy",
+      "terms",
+      "refund",
+      "shipping",
+      "tools/esim-compatibility",
+      "research/china-network-sms",
+      "research/otp-status",
+    ].map((name) => [
       `${BASE_URL}/${name}/`,
       jsonResponse("status", { headers: { "x-robots-tag": "noindex, follow, noarchive" } }),
     ]),

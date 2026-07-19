@@ -8,7 +8,7 @@ import worker, {
 
 const ORIGIN = "https://getgiffgaff.com";
 
-test("payment handoff redirects to the existing Kuaituantuan checkout QR", async () => {
+test("legacy payment handoff redirects to the verified Kuaituantuan contact QR", async () => {
   const request = new Request(`${ORIGIN}/pay/`);
   const response = paymentHandoffResponse(request);
 
@@ -17,7 +17,7 @@ test("payment handoff redirects to the existing Kuaituantuan checkout QR", async
   assert.equal(response.headers.get("x-getgiffgaff-payment-provider"), "kuaituantuan");
   assert.equal(
     response.headers.get("x-getgiffgaff-payment-mode"),
-    "provider-hosted-handoff",
+    "contact-qr-handoff",
   );
   assert.match(response.headers.get("x-robots-tag") || "", /noindex/i);
   assert.equal(response.headers.get("cache-control"), "private, no-store");

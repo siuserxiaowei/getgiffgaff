@@ -127,7 +127,7 @@ export const GROWTH_PAGES = Object.freeze([
     intent: "giffgaff G0/G2 收卡验收",
     title: "giffgaff 收卡验收清单｜G0/G2 到手检查与售后",
     description:
-      "国内收到 giffgaff G0/G2 后，按包装、卡状态、账号控制、余额、网络和普通短信逐项验收；附失败分流、商品页与微信小玉售后入口。",
+      "国内收到 giffgaff G0/G2 后，按包装、卡状态、账号控制、余额、网络和普通短信逐项验收；附失败分流、分类页与联系咨询入口。",
     h1: "giffgaff G0/G2 收卡验收清单",
     deck: "先确认卡片和订单交付是否一致，再进入激活、充值或平台验证。",
     directAnswer:
@@ -167,7 +167,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "查看 G0 新卡", href: "/shop/giffgaff-g0/" },
       { label: "查看 G2 有余额卡", href: "/shop/giffgaff-g2/" },
     ],
-    commerceTarget: { label: "微信联系小玉处理订单与售后", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询订单与售后", href: "/contact/" },
   }),
   page({
     path: "/guides/8-uk-sim-choice/",
@@ -216,7 +216,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "购买与发货流程", href: "/guides/1-order/" },
       { label: "收卡验收清单", href: "/guides/7-arrival-checklist/" },
     ],
-    commerceTarget: { label: "微信咨询小玉确认场景与库存", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询选卡", href: "/contact/" },
   }),
   page({
     path: "/tools/keep-number-reminder/",
@@ -260,7 +260,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "中国漫游成本工具", href: "/tools/china-roaming-cost/" },
       { label: "需要备用卡时查看商城", href: "/shop/" },
     ],
-    commerceTarget: { label: "微信联系小玉处理订单问题", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询订单问题", href: "/contact/" },
   }),
   page({
     path: "/tools/china-roaming-cost/",
@@ -304,7 +304,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "生成保号提醒", href: "/tools/keep-number-reminder/" },
       { label: "需要实体备用卡", href: "/shop/" },
     ],
-    commerceTarget: { label: "微信咨询小玉确认当前卡片", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询当前卡片", href: "/contact/" },
   }),
   page({
     path: "/tools/g0-g2-total-cost/",
@@ -354,7 +354,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "查看 G0 商品", href: "/shop/giffgaff-g0/" },
       { label: "查看 G2 商品", href: "/shop/giffgaff-g2/" },
     ],
-    commerceTarget: { label: "微信联系小玉确认本批状态", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询本批状态", href: "/contact/" },
   }),
   page({
     path: "/tools/esim-compatibility/",
@@ -398,7 +398,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "无信号排查", href: "/guides/4-signal/" },
       { label: "继续使用实体卡", href: "/shop/" },
     ],
-    commerceTarget: { label: "微信联系小玉确认实体卡", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询实体卡", href: "/contact/" },
   }),
   page({
     path: "/research/china-network-sms/",
@@ -442,7 +442,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "平台 OTP 状态板", href: "/research/otp-status/" },
       { label: "未购卡先看选卡", href: "/answers/" },
     ],
-    commerceTarget: { label: "微信联系小玉整理排查信息", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询排查信息", href: "/contact/" },
   }),
   page({
     path: "/research/otp-status/",
@@ -486,7 +486,7 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "未购卡先比较 G0/G2", href: "/answers/" },
       { label: "查看当前手机卡", href: "/shop/" },
     ],
-    commerceTarget: { label: "微信联系小玉整理排查信息", href: "/contact/" },
+    commerceTarget: { label: "微信或 Telegram 咨询排查信息", href: "/contact/" },
   }),
   policyStatusPage({
     path: "/privacy/",
@@ -494,7 +494,7 @@ export const GROWTH_PAGES = Object.freeze([
     h1: "隐私说明：信息待经营负责人确认",
     policyName: "隐私政策",
     missingFacts: "经营主体、实际收集的数据、处理目的与法律依据、支付和客服第三方、存储位置与期限、用户权利、安全事件与未成年人处理",
-    confirmedFactsHtml: `<section aria-labelledby="privacy-confirmed-facts"><h3 id="privacy-confirmed-facts">已确认的有限事实</h3><ul><li>公开隐私联系邮箱：<a href="mailto:siuserxy@gmail.com" target="_blank" rel="noopener noreferrer" data-link-role="contact-channel">siuserxy@gmail.com</a>。</li><li>本站尚未启用 Google AdSense，当前没有 AdSense 账号、publisher ID、广告脚本或广告 Cookie。</li><li>本页仍不是完整隐私政策；其余数据与经营事实未闭环前不开放索引。</li></ul></section>`,
+    confirmedFactsHtml: `<section aria-labelledby="privacy-confirmed-facts"><h3 id="privacy-confirmed-facts">已确认的有限事实</h3><ul><li>公开隐私联系邮箱：<a href="mailto:siuserxy@gmail.com" target="_blank" rel="noopener noreferrer" data-link-role="contact-channel">siuserxy@gmail.com</a>。</li><li>本站尚未启用 Google AdSense，当前没有 AdSense 账号、publisher ID、广告脚本或广告 Cookie。</li><li>本站使用 Cloudflare Analytics Engine 记录不含直接身份标识的事件级页面与咨询漏斗数据，包括 canonical 路径、固定来源类别、事件名称，以及微信、Telegram 这两类白名单联系渠道。事件用于判断页面访问、咨询指引打开和联系点击情况；这些记录不是按访客汇总的匿名用户档案。</li><li>该自定义统计不使用 Cookie 作为识别或存储机制；本站写入 Analytics Engine 的自定义数据集不记录或保存 IP、User-Agent、完整 referrer、URL 查询参数、手机号、账号、订单号或支付信息。来源只归类为 direct、internal、search、social、referral、AI 或 unknown；事件只允许 page_view、contact_click 等固定名称。</li><li>与其他网站请求一样，Cloudflare 作为边缘基础设施提供方仍可能在传输和基础设施层处理 IP、User-Agent、请求头等网络元数据；这些字段不由本站事件代码写入上述自定义数据集。Cloudflare Analytics Engine 的数据保留期按其当前服务规则为三个月。</li><li>本页仍不是完整隐私政策；其余数据与经营事实未闭环前不开放索引。</li></ul></section>`,
   }),
   policyStatusPage({
     path: "/terms/",

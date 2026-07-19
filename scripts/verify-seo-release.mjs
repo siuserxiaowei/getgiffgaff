@@ -1,14 +1,43 @@
 #!/usr/bin/env node
 
+import { createHash, randomBytes } from "node:crypto";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { PUBLIC_INDEXABLE_PATHS } from "../public/route-manifest.js";
+import {
+  PUBLIC_INDEXABLE_PATHS,
+  ROUTE_MANIFEST,
+} from "../public/route-manifest.js";
 
 const DEFAULT_EXPECTED_URL_COUNT = PUBLIC_INDEXABLE_PATHS.length;
 const DEFAULT_CONCURRENCY = 6;
 const DEFAULT_TIMEOUT_MS = 15_000;
 const PERMANENT_REDIRECT_STATUSES = new Set([301, 308]);
 const ROBOTS_NAMES = new Set(["robots", "googlebot", "bingbot"]);
+const ANALYTICS_EVENT_PATH = "/analytics-event-v1";
+const ANALYTICS_RELEASE_PROBE_HEADER = "x-getgiffgaff-release-probe";
+const ANALYTICS_RELEASE_PROBE_VALUE = "seo_release_canary_v1";
+const ANALYTICS_RELEASE_PROBE_ID_HEADER = "x-getgiffgaff-release-probe-id";
+const ANALYTICS_RELEASE_PROBE_PAYLOAD = Object.freeze({
+  version: "analytics_event_v1",
+  path: "/",
+  source: "direct",
+  event: "page_view",
+});
+const PUBLIC_NOINDEX_PATHS = Object.freeze(
+  Object.entries(ROUTE_MANIFEST)
+    .filter(([, record]) => record.indexPolicy === "noindex")
+    .map(([pathname]) => pathname),
+);
+export const OWNER_QR_ASSETS = Object.freeze([
+  Object.freeze({
+    pathname: "/contact/wechat-qr.jpg",
+    sha256: "751f8055949c3ee5d13a69dae6eef3aeef925a9e6f8dda1ca00b48e0399e1b43",
+  }),
+  Object.freeze({
+    pathname: "/contact/telegram-qr.jpg",
+    sha256: "9a6ed7d1e30acc7dc35d2dabe2e1078cd2cd0b3ceaecd7bf1d716fa5c1b1b3fa",
+  }),
+]);
 export const EXPECTED_ROBOTS_POLICY = Object.freeze({
   allow: Object.freeze([
     "Googlebot",
@@ -75,6 +104,47 @@ export function extractSitemapUrls(xml) {
     urls.push(decodeEntities(match[1].trim()));
   }
   return urls;
+}
+
+function expectedSitemapUrls(baseOrigin, indexablePaths = PUBLIC_INDEXABLE_PATHS) {
+  return indexablePaths.map((pathname) => new URL(pathname, `${baseOrigin}/`).href);
+}
+
+export function validateSitemapUrlSet(
+  sitemapUrls,
+  { baseOrigin, indexablePaths = PUBLIC_INDEXABLE_PATHS } = {},
+) {
+  const expectedUrls = expectedSitemapUrls(baseOrigin, indexablePaths);
+  const actualSet = new Set(sitemapUrls);
+  const expectedSet = new Set(expectedUrls);
+  const issues = [];
+
+  for (const expectedUrl of expectedUrls) {
+    if (!actualSet.has(expectedUrl)) {
+      issues.push(issue(
+        "sitemap-path-missing",
+        expectedUrl,
+        `Sitemap is missing manifest indexable pathname ${new URL(expectedUrl).pathname}`,
+      ));
+    }
+  }
+  for (const actualUrl of actualSet) {
+    if (!expectedSet.has(actualUrl)) {
+      let pathname = actualUrl;
+      try {
+        pathname = new URL(actualUrl).pathname;
+      } catch {
+        // The existing absolute URL validation reports malformed values separately.
+      }
+      issues.push(issue(
+        "sitemap-path-unexpected",
+        actualUrl,
+        `Sitemap contains unexpected pathname ${pathname} not present in the indexable manifest`,
+      ));
+    }
+  }
+
+  return issues;
 }
 
 function positiveInteger(value, label) {
@@ -828,10 +898,7 @@ export async function validatePolicyProbes(
   const probePaths = [
     "/llms.txt",
     "/llms-full.txt",
-    "/privacy/",
-    "/terms/",
-    "/refund/",
-    "/shipping/",
+    ...PUBLIC_NOINDEX_PATHS,
     "/__seo-release-probe-missing__/",
     "/api/__seo-release-probe",
     "/robots.txt",
@@ -874,8 +941,10 @@ export async function validatePolicyProbes(
 
     const isLlms = pathname === "/llms.txt";
     const isRetiredLlmsFull = pathname === "/llms-full.txt";
-    const isPolicyPage = ["/privacy/", "/terms/", "/refund/", "/shipping/"].includes(pathname);
-    const isPrivate = isRetiredLlmsFull || (!isLlms && (!isPolicyPage || response.status !== 200));
+    const isPublicNoindexPage = PUBLIC_NOINDEX_PATHS.includes(pathname);
+    const isPrivate = isRetiredLlmsFull || (
+      !isLlms && (!isPublicNoindexPage || response.status !== 200)
+    );
 
     if (isLlms && response.status !== 200) {
       issues.push(issue("llms-status", url, `Expected ${pathname} status 200, received ${response.status}`));
@@ -889,12 +958,12 @@ export async function validatePolicyProbes(
         ),
       );
     }
-    if (isPolicyPage && response.status !== 200) {
+    if (isPublicNoindexPage && response.status !== 200) {
       issues.push(
         issue(
-          "policy-page-status",
+          "noindex-page-status",
           url,
-          `Expected ${pathname} to be a published noindex status page with status 200, received ${response.status}`,
+          `Expected ${pathname} to be a published noindex page with status 200, received ${response.status}`,
         ),
       );
     }
@@ -936,12 +1005,174 @@ export async function validatePolicyProbes(
   return issues;
 }
 
+export async function validateAnalyticsCanary(baseUrl, {
+  fetchImpl = globalThis.fetch,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  idFactory = () => randomBytes(32).toString("hex"),
+} = {}) {
+  const baseOrigin = normalizeBaseUrl(baseUrl);
+  const url = `${baseOrigin}${ANALYTICS_EVENT_PATH}`;
+  const releaseProbeId = String(idFactory()).trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/u.test(releaseProbeId)) {
+    throw new Error("Analytics release probe ID must contain 256 bits of hexadecimal entropy");
+  }
+  let response;
+
+  try {
+    const init = requestInit("*/*", timeoutMs);
+    init.method = "POST";
+    init.headers = {
+      ...init.headers,
+      "content-type": "application/json",
+      origin: baseOrigin,
+      [ANALYTICS_RELEASE_PROBE_HEADER]: ANALYTICS_RELEASE_PROBE_VALUE,
+      [ANALYTICS_RELEASE_PROBE_ID_HEADER]: releaseProbeId,
+    };
+    init.body = JSON.stringify(ANALYTICS_RELEASE_PROBE_PAYLOAD);
+    response = await fetchImpl(url, init);
+  } catch (error) {
+    return [issue(
+      "analytics-canary-fetch",
+      url,
+      `Production analytics canary failed: ${error.message}`,
+    )];
+  }
+
+  const issues = [];
+  if (response.status !== 204) {
+    issues.push(issue(
+      "analytics-canary-status",
+      url,
+      `Expected production analytics canary status 204, received ${response.status}`,
+    ));
+  }
+  const xRobotsTag = response.headers.get("x-robots-tag") || "";
+  const missing = missingDirectives(xRobotsTag, ["noindex", "nofollow", "noarchive"]);
+  if (missing.length > 0) {
+    issues.push(issue(
+      "analytics-canary-robots",
+      url,
+      `Analytics canary response is missing X-Robots-Tag directives: ${missing.join(", ")}`,
+    ));
+  }
+  const cacheControl = response.headers.get("cache-control") || "";
+  if (!/\bprivate\b/i.test(cacheControl) || !/\bno-store\b/i.test(cacheControl)) {
+    issues.push(issue(
+      "analytics-canary-cache",
+      url,
+      `Analytics canary must bypass shared cache; found Cache-Control: ${cacheControl || "missing"}`,
+    ));
+  }
+
+  return issues;
+}
+
+export async function validateOwnerQrAssets(baseUrl, {
+  fetchImpl = globalThis.fetch,
+  timeoutMs = DEFAULT_TIMEOUT_MS,
+  assets = OWNER_QR_ASSETS,
+} = {}) {
+  const baseOrigin = normalizeBaseUrl(baseUrl);
+  const issueGroups = await mapLimit(
+    assets,
+    Math.min(DEFAULT_CONCURRENCY, Math.max(1, assets.length)),
+    async (asset) => {
+      const url = `${baseOrigin}${asset.pathname}`;
+      const issues = [];
+      let getResponse;
+
+      try {
+        getResponse = await fetchImpl(url, requestInit("image/jpeg", timeoutMs));
+      } catch (error) {
+        issues.push(issue("owner-qr-get-fetch", url, `GET owner QR failed: ${error.message}`));
+      }
+
+      if (getResponse) {
+        if (getResponse.status !== 200) {
+          issues.push(issue(
+            "owner-qr-get-status",
+            url,
+            `Expected owner QR GET status 200, received ${getResponse.status}`,
+          ));
+        }
+        const contentType = getResponse.headers.get("content-type") || "";
+        if (contentType.toLowerCase().split(";", 1)[0].trim() !== "image/jpeg") {
+          issues.push(issue(
+            "owner-qr-get-content-type",
+            url,
+            `Expected owner QR GET Content-Type image/jpeg, received ${contentType || "missing"}`,
+          ));
+        }
+        try {
+          const bytes = new Uint8Array(await getResponse.arrayBuffer());
+          if (bytes.byteLength === 0) {
+            issues.push(issue("owner-qr-empty", url, "Owner QR GET response is empty"));
+          } else {
+            const sha256 = createHash("sha256").update(bytes).digest("hex");
+            if (sha256 !== asset.sha256) {
+              issues.push(issue(
+                "owner-qr-checksum",
+                url,
+                `Owner QR SHA-256 mismatch: expected ${asset.sha256}, received ${sha256}`,
+              ));
+            }
+          }
+        } catch (error) {
+          issues.push(issue("owner-qr-get-body", url, `Could not read owner QR GET body: ${error.message}`));
+        }
+      }
+
+      let headResponse;
+      try {
+        headResponse = await fetchImpl(url, {
+          ...requestInit("image/jpeg", timeoutMs),
+          method: "HEAD",
+        });
+      } catch (error) {
+        issues.push(issue("owner-qr-head-fetch", url, `HEAD owner QR failed: ${error.message}`));
+      }
+
+      if (headResponse) {
+        if (headResponse.status !== 200) {
+          issues.push(issue(
+            "owner-qr-head-status",
+            url,
+            `Expected owner QR HEAD status 200, received ${headResponse.status}`,
+          ));
+        }
+        const contentType = headResponse.headers.get("content-type") || "";
+        if (contentType.toLowerCase().split(";", 1)[0].trim() !== "image/jpeg") {
+          issues.push(issue(
+            "owner-qr-head-content-type",
+            url,
+            `Expected owner QR HEAD Content-Type image/jpeg, received ${contentType || "missing"}`,
+          ));
+        }
+        if (headResponse.headers.get("content-length") === "0") {
+          issues.push(issue(
+            "owner-qr-head-empty",
+            url,
+            "Owner QR HEAD response reports an empty Content-Length",
+          ));
+        }
+      }
+
+      return issues;
+    },
+  );
+
+  return issueGroups.flat();
+}
+
 export async function validateSeoRelease({
   baseUrl,
   expectedUrlCount = DEFAULT_EXPECTED_URL_COUNT,
   fetchImpl = globalThis.fetch,
   checkCanonicalization = true,
   checkPolicyProbes = true,
+  checkAnalyticsCanary = checkPolicyProbes,
+  checkOwnerQrAssets = checkPolicyProbes,
+  indexablePaths = PUBLIC_INDEXABLE_PATHS,
   concurrency = DEFAULT_CONCURRENCY,
   timeoutMs = DEFAULT_TIMEOUT_MS,
 } = {}) {
@@ -1002,6 +1233,7 @@ export async function validateSeoRelease({
       ),
     );
   }
+  issues.push(...validateSitemapUrlSet(uniqueUrls, { baseOrigin, indexablePaths }));
 
   const validUrls = [];
   for (const value of uniqueUrls) {
@@ -1044,6 +1276,24 @@ export async function validateSeoRelease({
     );
   }
 
+  if (checkAnalyticsCanary) {
+    issues.push(
+      ...(await validateAnalyticsCanary(baseOrigin, {
+        fetchImpl,
+        timeoutMs,
+      })),
+    );
+  }
+
+  if (checkOwnerQrAssets) {
+    issues.push(
+      ...(await validateOwnerQrAssets(baseOrigin, {
+        fetchImpl,
+        timeoutMs,
+      })),
+    );
+  }
+
   const report = {
     ok: issues.length === 0,
     sitemapUrl,
@@ -1052,6 +1302,8 @@ export async function validateSeoRelease({
     pagesChecked: validUrls.length,
     canonicalizationChecked: checkCanonicalization,
     policyProbesChecked: checkPolicyProbes,
+    analyticsCanaryChecked: checkAnalyticsCanary,
+    ownerQrAssetsChecked: checkOwnerQrAssets,
     issues,
   };
 

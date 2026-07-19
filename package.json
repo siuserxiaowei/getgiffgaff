@@ -18,12 +18,15 @@
     "cloudflare:rules:validate": "node scripts/cloudflare-redirect-rules.mjs validate",
     "validate:commerce-evidence": "node scripts/validate-commerce-evidence.mjs",
     "submit:indexnow": "node scripts/submit-indexnow.mjs",
-    "predeploy": "npm run verify && npm run validate:outreach && npm run validate:commerce-evidence -- --file ${COMMERCE_EVIDENCE_FILE:?Set COMMERCE_EVIDENCE_FILE to the private validated evidence package} && node scripts/assert-clean-worktree.mjs",
-    "deploy": "wrangler pages deploy .release --project-name getgiffgaff --branch main",
-    "postdeploy": "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39"
+    "gate:maintenance": "node scripts/verify-maintenance-release.mjs --mode maintenance",
+    "gate:commerce": "node scripts/verify-maintenance-release.mjs --mode commerce",
+    "deploy": "node scripts/deploy-release.mjs --mode commerce",
+    "deploy:maintenance": "node scripts/deploy-release.mjs --mode maintenance",
+    "deploy:preview": "node scripts/deploy-preview-release.mjs"
   },
   "devDependencies": {
     "playwright": "1.61.1",
-    "pngjs": "7.0.0"
+    "pngjs": "7.0.0",
+    "wrangler": "4.112.0"
   }
 }

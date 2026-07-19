@@ -8,10 +8,13 @@ import { fileURLToPath } from "node:url";
 
 import {
   applyLegacySafetyOverrides,
+  applyReleaseConversionOverrides,
   buildReleaseArtifact,
   ensureGrowthStylesheet,
   injectCommerceWidget,
   injectRelatedTutorials,
+  injectVerifiedContactChannels,
+  replaceRetiredWechatQr,
 } from "../scripts/build-release-artifact.mjs";
 import {
   INDEXABLE_GROWTH_ROUTES,
@@ -28,6 +31,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const LEGACY_ROOT = path.join(ROOT, "site", "legacy");
 const GROWTH_SLOT = 'data-growth-slot="related-tutorials-v1"';
 const COMMERCE_SLOT = 'data-growth-slot="wechat-buying-guide-v1"';
+const POLICY_STATUS_ROUTES = new Set([
+  "/privacy/",
+  "/terms/",
+  "/refund/",
+  "/shipping/",
+]);
+const BLANKET_PAYMENT_DETERRENT =
+  /(?:资料补齐前请勿付款|证据补齐前请勿付款|当前证据未齐，请勿付款|未核验[^。；]{0,24}(?:请勿|不要)付款|缺少(?:书面订单说明|逐批证据)时不要付款|请暂停付款|无法取得时请勿付款)/u;
+const ACTIONABLE_PREPAYMENT_COPY =
+  "付款前请联系客服核对当前库存、价格、卡片来源与激活状态、账号登记和控制权、余额、交付内容、售后边界及发货安排；无法核对关键事项时不要付款；以支付页面和书面确认信息为准。";
 
 function routeFile(root, route) {
   return route === "/"
@@ -121,12 +134,96 @@ test("commerce widget injection is append-only and idempotent", async () => {
   const source = await readFile(routeFile(LEGACY_ROOT, "/"), "utf8");
   const output = injectCommerceWidget(source);
   assert.equal((output.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, 1);
-  assert.match(output, /英国卡购买指南/);
+  assert.match(output, /英国卡咨询指南/);
   assert.match(output, /href=["']\/shop\/giffgaff-g0\//);
   assert.match(output, /href=["']\/shop\/giffgaff-g2\//);
   assert.equal(visibleTextSignature(output), visibleTextSignature(source));
   assert.equal(legacyDomSignature(output), legacyDomSignature(source));
   assert.equal(injectCommerceWidget(output), output);
+});
+
+test("verified Contact channels are a route-scoped, fail-closed release addition", async () => {
+  const source = await readFile(routeFile(LEGACY_ROOT, "/contact/"), "utf8");
+  const output = injectVerifiedContactChannels(source);
+  assert.match(output, /data-release-slot=["']verified-contact-channels-v1["']/);
+  assert.match(output, /https:\/\/u\.wechat\.com\/MOlSxFZ7nu5enWrw4HtvKC4/);
+  assert.match(output, /https:\/\/t\.me\/xiaoyuhuai/);
+  assert.equal(injectVerifiedContactChannels(output), output, "idempotent");
+  assert.throws(
+    () => injectVerifiedContactChannels("<main>no approved anchor</main>"),
+    /no verified insertion anchor/,
+  );
+});
+
+test("retired WeChat QR references are upgraded only in the release transform", () => {
+  const html = '<img src="/contact/wechat-qr.png"><a href="/contact/wechat-qr.png">QR</a>';
+  const output = replaceRetiredWechatQr(html);
+  assert.doesNotMatch(output, /wechat-qr\.png/);
+  assert.equal((output.match(/\/contact\/wechat-qr\.jpg/g) || []).length, 2);
+  assert.equal(replaceRetiredWechatQr(output), output, "idempotent");
+});
+
+test("release-only conversion override reclassifies internal Contact navigation without touching real channels", () => {
+  const internal = '<a href="/contact/" data-analytics-event="contact_click">先联系确认</a>';
+  const external = '<a href="https://t.me/xiaoyuhuai" data-analytics-event="contact_click" data-analytics-channel="telegram">Telegram</a>';
+  const output = applyReleaseConversionOverrides(`${internal}${external}`, "/privacy/", {
+    expectedInternalContactClicks: 1,
+  });
+
+  assert.match(output, /href="\/contact\/" data-analytics-event="commerce_click"/u);
+  assert.match(output, /data-analytics-event="contact_click" data-analytics-channel="telegram"/u);
+  assert.throws(
+    () => applyReleaseConversionOverrides(`${internal}${internal}`, "/privacy/", {
+      expectedInternalContactClicks: 1,
+    }),
+    /1 time\(s\), found 2 \(internal Contact analytics marker\)/i,
+  );
+});
+
+test("release conversion pages replace blanket payment deterrents with actionable confirmation", async (t) => {
+  const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-conversion-copy-"));
+  t.after(() => rm(outputRoot, { recursive: true, force: true }));
+  await buildReleaseArtifact(outputRoot);
+
+  const routes = [
+    ...LEGACY_ROUTES,
+    ...INDEXABLE_GROWTH_ROUTES,
+    ...NOINDEX_GROWTH_ROUTES,
+  ];
+  for (const route of routes) {
+    const html = await readFile(routeFile(outputRoot, route), "utf8");
+    assert.doesNotMatch(
+      html,
+      /href=["']\/contact\/["'][^>]*data-analytics-event=["']contact_click["']/iu,
+      `${route} internal Contact navigation is not a real contact click`,
+    );
+    if (POLICY_STATUS_ROUTES.has(route)) {
+      assert.match(html, /如果具体订单需要依赖本页尚未确认的信息，请暂停付款/u, `${route} narrow policy warning`);
+      assert.match(html, /无法取得时请勿付款/u, `${route} unresolved-order warning`);
+    } else {
+      assert.doesNotMatch(html, BLANKET_PAYMENT_DETERRENT, `${route} blanket payment deterrent`);
+    }
+  }
+
+  for (const route of [
+    "/",
+    "/shop/",
+    "/shop/giffgaff-g0/",
+    "/shop/giffgaff-g2/",
+    "/guides/1-order/",
+  ]) {
+    const html = await readFile(routeFile(outputRoot, route), "utf8");
+    assert.match(
+      html,
+      new RegExp(ACTIONABLE_PREPAYMENT_COPY.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
+      `${route} actionable prepayment guidance`,
+    );
+  }
+
+  const llms = await readFile(path.join(outputRoot, "llms.txt"), "utf8");
+  assert.doesNotMatch(llms, BLANKET_PAYMENT_DETERRENT, "llms.txt blanket payment deterrent");
+  assert.match(llms, /付款前请联系客服核对/u);
+  assert.match(llms, /支付页面和书面确认信息/u);
 });
 
 test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, and 46 commerce widgets", async (t) => {
@@ -154,7 +251,10 @@ test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, 
       expected = injectRelatedTutorials(expected, related[route]);
     }
     expected = injectCommerceWidget(expected);
+    expected = replaceRetiredWechatQr(expected);
+    if (route === "/contact/") expected = injectVerifiedContactChannels(expected);
     expected = applyLegacySafetyOverrides(expected, route).html;
+    expected = applyReleaseConversionOverrides(expected, route);
     const expectedSlots = Object.hasOwn(related, route) ? 2 : 1;
     assert.equal((html.match(/data-growth-slot=/g) || []).length, expectedSlots, route);
     assert.equal((html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, 1, route);
@@ -211,6 +311,10 @@ test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, 
   assert.doesNotMatch(robots, /BEGIN Cloudflare Managed content/i);
 
   for (const asset of Object.values(freeze.assets)) {
+    if (asset.path === "contact/wechat-qr.png") {
+      await assert.rejects(readFile(path.join(outputRoot, asset.path)), { code: "ENOENT" });
+      continue;
+    }
     const source = await readFile(path.join(LEGACY_ROOT, asset.path));
     const built = await readFile(path.join(outputRoot, asset.path));
     assert.equal(sha256(built), sha256(source), asset.path);
@@ -231,7 +335,8 @@ test("llms.txt is a curated task index for exactly the 39 indexable pages", asyn
   assert.match(llms, /运营商规则/);
   assert.match(llms, /库存、价格/);
   assert.match(llms, /不保证.*(?:收录|排名|引用)/);
-  assert.match(llms, /当前无已核验 SKU 或交易证据，请勿付款/);
+  assert.doesNotMatch(llms, BLANKET_PAYMENT_DETERRENT);
+  assert.match(llms, /付款前请联系客服核对/);
   assert.match(llms, /联系入口不等于 SKU、支付或履约证据/);
 
   const entries = [...llms.matchAll(/^- \[([^\]]+)\]\((https:\/\/getgiffgaff\.com\/[^)]*)\)：([^\n]+)$/gm)]

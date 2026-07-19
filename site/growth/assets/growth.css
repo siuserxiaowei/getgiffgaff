@@ -332,7 +332,7 @@
   }
 }
 
-/* Additive site-wide WeChat and buying guide */
+/* Additive site-wide contact and buying guide */
 .commerce-widget {
   --commerce-navy: var(--gg-navy, #0A1F44);
   --commerce-navy-dark: var(--gg-navy-soft, #142A52);
@@ -581,7 +581,7 @@
 }
 
 .commerce-qr-frame--portrait {
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 5 / 8;
 }
 
 .commerce-qr-frame img {
@@ -621,6 +621,14 @@
   background: #116f36;
 }
 
+.commerce-action--telegram {
+  background: #2378b5;
+}
+
+.commerce-action--telegram:hover {
+  background: #1b6092;
+}
+
 .commerce-privacy-note {
   padding: 12px 14px;
   border: 1px solid rgba(165, 62, 62, 0.12);
@@ -630,6 +638,49 @@
 
 body:has(.commerce-guide-dialog:target) {
   overflow: hidden;
+}
+
+/* Owner-verified channels injected into the frozen Contact page at release time. */
+.verified-contact-channels {
+  margin: 22px 0;
+  border-top: 1px solid var(--commerce-line, #d9e0ea);
+  padding-top: 20px;
+}
+
+.verified-contact-channels > h2,
+.verified-contact-card h3 {
+  margin-top: 0;
+}
+
+.verified-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.verified-contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--commerce-line, #d9e0ea);
+  border-radius: var(--gg-radius-sm);
+  background: var(--commerce-surface, #fff);
+}
+
+.verified-contact-card img {
+  display: block;
+  width: min(260px, 100%);
+  height: 320px;
+  margin: 0 auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.verified-contact-card .btn {
+  margin-top: auto;
+  text-align: center;
 }
 
 @media (max-width: 760px) {
@@ -651,7 +702,8 @@ body:has(.commerce-guide-dialog:target) {
   }
 
   .commerce-choice-grid,
-  .commerce-channel-grid {
+  .commerce-channel-grid,
+  .verified-contact-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -676,6 +728,10 @@ body:has(.commerce-guide-dialog:target) {
   .commerce-channel-card .commerce-qr-frame {
     width: min(220px, 100%);
     margin-inline: auto;
+  }
+
+  .verified-contact-card img {
+    height: auto;
   }
 }
 

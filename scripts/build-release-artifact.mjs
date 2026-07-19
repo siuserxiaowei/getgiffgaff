@@ -32,6 +32,250 @@ const PUBLIC_ROOT = path.join(ROOT, "public");
 const DEFAULT_OUTPUT = path.join(ROOT, ".release");
 const GROWTH_MARKER = 'data-growth-slot="related-tutorials-v1"';
 const COMMERCE_MARKER = 'data-growth-slot="wechat-buying-guide-v1"';
+const CONTACT_CHANNEL_MARKER = 'data-release-slot="verified-contact-channels-v1"';
+const ACTIONABLE_PREPAYMENT_GUIDANCE =
+  "付款前请联系客服核对当前库存、价格、卡片来源与激活状态、账号登记和控制权、余额、交付内容、售后边界及发货安排；无法核对关键事项时不要付款；以支付页面和书面确认信息为准。";
+const INTERNAL_CONTACT_ANALYTICS_MARKER =
+  'href="/contact/" data-analytics-event="contact_click"';
+const INTERNAL_CONTACT_NAVIGATION_MARKER =
+  'href="/contact/" data-analytics-event="commerce_click"';
+const GROWTH_BLANKET_PAYMENT_DETERRENT =
+  "当前缺少 SKU 与交易证据，资料补齐前请勿付款。";
+export const RELEASE_PROVENANCE_PLACEHOLDER = Object.freeze({
+  schema: "getgiffgaff_release_provenance_v1",
+  commit: "unbound",
+});
+const CONTACT_RELEASE_COPY_OVERRIDES = Object.freeze([
+  Object.freeze({
+    label: "current WeChat display name",
+    source: "微信客服“客服小玉”，二维码见本页；当前未公布固定在线时段，请以会话中的实际回复为准。",
+    replacement: "微信联系人当前显示名为“胡小胡”，二维码见本页；当前未公布固定在线时段，请以会话中的实际回复为准。",
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "Kuaituantuan contact card",
+    source: '<h2 id="contact-ktt-title">快团团下单</h2><p>需要下单时先选 G0/G2；如果按钮显示库存确认，就先加微信确认当前链接和库存。</p>',
+    replacement: '<h2 id="contact-ktt-title">查看快团团小程序码</h2><p>本站没有可核验的商品直达链接。扫码后请在实际页面自行核对收款方、商品、金额和发货说明。</p>',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "G0 QR action",
+    source: ">确认 G0 库存</a>",
+    replacement: ">查看 G0 小程序码</a>",
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "G2 QR action",
+    source: ">确认 G2 库存</a>",
+    replacement: ">查看 G2 小程序码</a>",
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "Kuaituantuan modal eyebrow",
+    source: '<p class="ktt-modal-eyebrow">快团团下单</p>',
+    replacement: '<p class="ktt-modal-eyebrow">快团团小程序码</p>',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "Kuaituantuan modal title",
+    source: '<h2 class="ktt-modal-title" id="ktt-giga-card-title">进入 Giga卡快团团店铺</h2>',
+    replacement: '<h2 class="ktt-modal-title" id="ktt-giga-card-title">扫描前请核对页面主体</h2>',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "Kuaituantuan modal description",
+    source: '<p class="ktt-modal-copy" id="ktt-giga-card-description">点 G0/G2 后，先在快团团确认库存、余额范围和发货方式；付款或售后问题找客服小玉。</p>',
+    replacement: '<p class="ktt-modal-copy" id="ktt-giga-card-description">本站只能提供小程序码，不能证明扫码后的页面由谁运营，也不能证明商品、库存、订单、支付或履约状态。请在实际页面核对收款方、商品、金额和发货说明；需要沟通时可联系微信“胡小胡”或 Telegram @xiaoyuhuai。</p>',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "Kuaituantuan modal note",
+    source: '<p class="ktt-modal-note">长按识别小程序码，进店确认库存</p>',
+    replacement: '<p class="ktt-modal-note">长按识别小程序码；打开后自行核对页面信息</p>',
+    expectedOccurrences: 1,
+  }),
+]);
+
+const LEGACY_COMMERCIAL_COPY_OVERRIDES = Object.freeze({
+  "/": Object.freeze([
+    Object.freeze({
+      label: "homepage FAQ purchase path",
+      source: "然后通过快团团或客服入口下单。",
+      replacement: "然后通过微信或 Telegram 联系咨询，并在实际支付页面核对信息后决定。",
+      expectedOccurrences: 2,
+    }),
+    Object.freeze({
+      label: "homepage unverified Kuaituantuan facts",
+      source: "价格、库存和 G2 余额范围以快团团商品页或客服确认为准。",
+      replacement: "价格、库存和 G2 余额范围须在当前实际页面与书面沟通中逐项核对。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "homepage classification heading",
+      source: "当前主推两种实体卡",
+      replacement: "当前介绍两种实体卡分类",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "homepage Kuaituantuan status labels",
+      source: "以快团团为准",
+      replacement: "状态须逐批核对",
+      expectedOccurrences: 2,
+    }),
+    Object.freeze({
+      label: "homepage purchase labels",
+      source: "查看并购买",
+      replacement: "查看分类说明",
+      expectedOccurrences: 2,
+    }),
+  ]),
+  "/guides/1-order/": Object.freeze([
+    Object.freeze({
+      label: "guide current-stock description",
+      source: "按购买页整理：实体卡现货、激活须知、官网申请、英国本土购买和收卡检查。",
+      replacement: "按购买路径整理：实体卡分类、激活须知、官网申请、英国本土获取和收卡检查。",
+      expectedOccurrences: 3,
+    }),
+    Object.freeze({
+      label: "guide current-stock headings and anchors",
+      source: "实体卡现货",
+      replacement: "实体卡分类",
+      expectedOccurrences: 5,
+    }),
+    Object.freeze({
+      label: "guide current availability assertion",
+      source: "getgiffgaff 当前提供 giffgaff 实体 SIM 卡，主要分为 G0 新卡和 G2 有余额卡。",
+      replacement: "getgiffgaff 当前介绍 G0 新卡和 G2 有余额卡两种内部分类；是否有货须逐批核对。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "guide buyer behavior assertion",
+      source: "多数客户会直接选择现货实体卡",
+      replacement: "如考虑实体卡，可先核对当前是否有货及交付条件",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "guide unverified Kuaituantuan facts",
+      source: "具体售价、库存数量和 G2 余额范围，以快团团商品页或客服确认为准。",
+      replacement: "具体售价、库存数量和 G2 余额范围，须在当前实际页面与书面沟通中逐项核对。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "guide FAQ order path",
+      source: "后续下单入口以本站快团团按钮和客服确认为准。",
+      replacement: "本站没有可核验的商品直达链接；请先联系咨询，再在实际页面核对收款方、商品、金额和发货说明。",
+      expectedOccurrences: 2,
+    }),
+    Object.freeze({
+      label: "guide Kuaituantuan card heading",
+      source: '<h3 id="order-ktt-title">快团团下单</h3>',
+      replacement: '<h3 id="order-ktt-title">联系咨询后核对实际页面</h3>',
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "guide checkout CTA",
+      source: "看完购买说明后，可以进入快团团下单；如果 G2 库存不确定，付款前先确认。",
+      replacement: "看完购买说明后，先联系咨询；只有在实际页面核对收款方、商品、金额与发货说明后再决定是否付款。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "guide checkout heading",
+      source: "准备下单",
+      replacement: "付款前核对",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "guide order-entry label",
+      source: "实体卡下单入口",
+      replacement: "实体卡分类入口",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "guide Kuaituantuan status labels",
+      source: "以快团团为准",
+      replacement: "状态须逐批核对",
+      expectedOccurrences: 2,
+    }),
+  ]),
+  "/shop/": Object.freeze([
+    Object.freeze({
+      label: "shop unverified Kuaituantuan facts",
+      source: "价格、库存和 G2 余额范围以快团团商品页或客服确认为准。",
+      replacement: "价格、库存和 G2 余额范围须在当前实际页面与书面沟通中逐项核对。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "shop Kuaituantuan status labels",
+      source: "以快团团为准",
+      replacement: "状态须逐批核对",
+      expectedOccurrences: 2,
+    }),
+    Object.freeze({
+      label: "shop purchase labels",
+      source: "查看并购买",
+      replacement: "查看分类说明",
+      expectedOccurrences: 2,
+    }),
+    Object.freeze({
+      label: "shop fulfillment flow assertion",
+      source: "选择商品 → 确认库存 → 快团团下单或微信确认 → 填写收货信息 → 发货。",
+      replacement: "选择分类 → 联系咨询 → 在实际页面核对收款方、商品、金额与发货说明 → 再决定是否付款。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "shop availability heading",
+      source: "选择你的 giffgaff 实体卡",
+      replacement: "查看 giffgaff 实体卡分类",
+      expectedOccurrences: 1,
+    }),
+  ]),
+  "/shop/giffgaff-g0/": Object.freeze([
+    Object.freeze({
+      label: "G0 Kuaituantuan status label",
+      source: "以快团团为准",
+      replacement: "状态须逐批核对",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "G0 availability CTA",
+      source: "确认 G0 库存",
+      replacement: "咨询 G0 当前状态",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "G0 WeChat availability CTA",
+      source: "微信确认库存",
+      replacement: "微信或 Telegram 咨询",
+      expectedOccurrences: 1,
+    }),
+  ]),
+  "/shop/giffgaff-g2/": Object.freeze([
+    Object.freeze({
+      label: "G2 unverified Kuaituantuan metadata",
+      source: "售价、库存和余额范围以快团团商品页或客服确认为准。",
+      replacement: "售价、库存和余额范围须在当前实际页面与书面沟通中逐项核对。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "G2 Kuaituantuan status label",
+      source: "以快团团为准",
+      replacement: "状态须逐批核对",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "G2 availability CTA",
+      source: "确认 G2 库存",
+      replacement: "咨询 G2 当前状态",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "G2 WeChat availability CTA",
+      source: "微信确认库存",
+      replacement: "微信或 Telegram 咨询",
+      expectedOccurrences: 1,
+    }),
+  ]),
+});
 
 function safetyRule(route, issueId, source, replacement, expectedOccurrences, reason) {
   return Object.freeze({
@@ -149,7 +393,7 @@ const LEGACY_COMMERCE_CTA_SAFETY_RULES = Object.entries(LEGACY_COMMERCE_CTA_COUN
     route,
     "SAFE-COMMERCE-CTA",
     "本站主卖 G0 新卡和 G2 有余额卡，购买说明集中放在获取和购买教程里。",
-    "本站保留 G0/G2 分类说明；当前没有已核验的直达 SKU、库存、价格、支付或履约证据，资料补齐前请勿付款。",
+    `本站保留 G0/G2 分类说明。${ACTIONABLE_PREPAYMENT_GUIDANCE}`,
     expectedOccurrences,
     "共享购买 CTA 不得把未经核验的商品状态写成当前在售事实。",
   ),
@@ -176,7 +420,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/",
     "SAFE-COMMERCE-EVIDENCE",
     "购买前确认库存、余额范围、发货方式和使用边界。",
-    "当前没有已核验的 SKU、库存、余额或履约证据；证据补齐前请勿付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "口头确认不能替代当前 SKU 与交易证据。",
   ),
@@ -184,7 +428,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/",
     "SAFE-COMMERCE-EVIDENCE",
     "默认浙江发货，圆通包邮，急单可提前沟通顺丰到付。",
-    "发货地点、承运商、运费与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     2,
     "发货地点、承运商、运费与时效承诺缺少真实履约证据。",
   ),
@@ -192,7 +436,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/",
     "SAFE-COMMERCE-EVIDENCE",
     "默认浙江发货，5 天内发出；圆通包邮，着急可备注顺丰到付。",
-    "发货地点、承运商、运费与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "发货地点、承运商、运费与时效承诺缺少真实履约证据。",
   ),
@@ -224,7 +468,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/shop/",
     "SAFE-COMMERCE-EVIDENCE",
     "getgiffgaff 手机卡商城，提供 G0 新卡和 G2 有余额卡，浙江发货，5 天内发出，购买前可确认库存、余额范围和发货安排。",
-    "getgiffgaff 手机卡信息页；当前缺少可核验 SKU、库存、价格、发货与履约证据，证据补齐前请勿付款。",
+    `getgiffgaff 手机卡信息页。${ACTIONABLE_PREPAYMENT_GUIDANCE}`,
     1,
     "搜索摘要不得发布未经核验的库存、发货和时效断言。",
   ),
@@ -232,7 +476,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/shop/",
     "SAFE-COMMERCE-EVIDENCE",
     "当前主卖 G0 新卡和 G2 有余额卡。先看清楚库存、余额范围、发货方式和使用限制，再选择适合自己的卡。",
-    "本页保留 G0/G2 分类说明；当前没有已核验的 SKU、库存、余额、价格或履约证据，证据补齐前请勿付款。",
+    `本页保留 G0/G2 分类说明。${ACTIONABLE_PREPAYMENT_GUIDANCE}`,
     1,
     "主卖与库存断言缺少当前 SKU 及交易证据。",
   ),
@@ -272,7 +516,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/shop/",
     "SAFE-COMMERCE-EVIDENCE",
     "默认浙江发货，5 天内发出；圆通包邮，着急可备注顺丰到付。",
-    "当前没有已登记的发货地点、承运商、费用或时效证据；缺少书面订单说明时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "物流承诺缺少真实履约记录。",
   ),
@@ -280,7 +524,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/shop/giffgaff-g0/",
     "SAFE-COMMERCE-EVIDENCE",
     "浙江发货，5 天内发出；着急可备注顺丰到付。",
-    "发货地点、承运商、费用与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     2,
     "物流承诺缺少真实履约记录。",
   ),
@@ -304,7 +548,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/shop/giffgaff-g0/",
     "SAFE-COMMERCE-EVIDENCE",
     "常规库存，5 张起发；大批量付款前建议先确认数量。",
-    "当前没有已核验的 SKU、库存或起售数量；证据补齐前请勿付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "库存与起售数量缺少当前 SKU 证据。",
   ),
@@ -312,7 +556,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/shop/giffgaff-g0/",
     "SAFE-COMMERCE-EVIDENCE",
     "售价、库存和余额范围以快团团商品页或客服确认为准。",
-    "当前没有已核验的直达 SKU、售价、库存或余额证据；证据补齐前请勿付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "泛化跳转或口头确认不能替代当前 SKU 与交易证据。",
   ),
@@ -320,7 +564,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/guides/1-order/",
     "SAFE-COMMERCE-EVIDENCE",
     "本站当前以快团团下单为主，默认浙江发货、圆通包邮，着急可备注顺丰到付。",
-    "当前没有已核验的直达 SKU、支付、发货或履约证据；缺少书面订单说明时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "下单渠道和物流承诺缺少真实交易与履约证据。",
   ),
@@ -344,7 +588,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/guides/1-order/",
     "SAFE-COMMERCE-EVIDENCE",
     "浙江发货，5 天内发出；着急可备注顺丰到付。",
-    "发货地点、承运商、费用与时效暂无已核验证据；缺少书面订单说明时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "物流承诺缺少真实履约记录。",
   ),
@@ -352,7 +596,7 @@ const COMMERCE_EVIDENCE_SAFETY_RULES = [
     "/guides/1-order/",
     "SAFE-COMMERCE-EVIDENCE",
     "常规库存，5 张起发；大批量付款前建议先确认数量。",
-    "当前没有已核验的 SKU、库存或起售数量；证据补齐前请勿付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "库存与起售数量缺少当前 SKU 证据。",
   ),
@@ -603,7 +847,7 @@ const G2_SAFETY_RULES = [
     "/shop/giffgaff-g2/",
     "SAFE-COMMERCE-EVIDENCE",
     "需要的客户较多，不保证随时有货；10 英镑以下或 15 英镑以上余额卡可单独议价。",
-    "当前没有已登记的可售批次、余额范围或价格；缺少逐批证据时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "库存、余额和议价断言缺少真实批次记录。",
   ),
@@ -611,7 +855,7 @@ const G2_SAFETY_RULES = [
     "/shop/giffgaff-g2/",
     "SAFE-G2-BATCH",
     "<h1>giffgaff G2 有余额卡</h1>",
-    "<h1>G2 库存分类说明</h1><p><strong>G2 是本站内部库存分类，不是 giffgaff 官方 SKU；当前缺少可核验的在售批次、余额、价格与履约证据，缺少逐批证据时不要付款。</strong></p>",
+    `<h1>G2 库存分类说明</h1><p><strong>G2 是本站内部库存分类，不是 giffgaff 官方 SKU；${ACTIONABLE_PREPAYMENT_GUIDANCE}</strong></p>`,
     1,
     "页面首屏必须明确分类身份与付款禁区。",
   ),
@@ -675,7 +919,7 @@ const G2_SAFETY_RULES = [
     "/guides/1-order/",
     "SAFE-COMMERCE-EVIDENCE",
     "需要的客户较多，不保证随时有货；10 英镑以下或 15 英镑以上余额卡可单独议价。",
-    "当前没有已登记的可售批次、余额范围或价格；缺少逐批证据时不要付款。",
+    ACTIONABLE_PREPAYMENT_GUIDANCE,
     1,
     "库存、余额和议价断言缺少真实批次记录。",
   ),
@@ -817,11 +1061,11 @@ const LLMS_TASK_SECTIONS = Object.freeze([
     pages: Object.freeze([
       ["/", "从本站首页进入 G0/G2 选卡、购买、教程和售后路径。"],
       ["/answers/", "比较 G0 与 G2 的卡状态、账号边界、总成本和风险。"],
-      ["/shop/", "查看 G0/G2 分类与证据缺口；当前无已核验 SKU 或交易证据，请勿付款。"],
+      ["/shop/", `查看 G0/G2 分类并在付款前确认订单信息；${ACTIONABLE_PREPAYMENT_GUIDANCE}`],
       ["/shop/giffgaff-g0/", "了解 G0 分类、激活边界和当前缺失的 SKU 与交易证据。"],
       ["/shop/giffgaff-g2/", "了解 G2 内部分类、风险边界和当前缺失的逐批证据。"],
       ["/guides/0-intro/", "理解 giffgaff 英国手机卡、英国号码和常见使用场景。"],
-      ["/guides/1-order/", "按步骤核对购买前证据与风险；当前证据未齐，请勿付款。"],
+      ["/guides/1-order/", `按步骤核对购买信息与风险；${ACTIONABLE_PREPAYMENT_GUIDANCE}`],
       ["/guides/7-arrival-checklist/", "收到 G0/G2 后逐项验收包装、卡状态、余额、网络和短信。"],
       ["/guides/8-uk-sim-choice/", "按旅行、留学和跨境保号需求选择英国手机卡。"],
       ["/tools/g0-g2-total-cost/", "自行输入卡价、运费、充值和使用支出来比较现金成本。"],
@@ -926,6 +1170,99 @@ export function injectCommerceWidget(html) {
   return `${output.slice(0, closingBody)}${renderCommerceWidget()}${output.slice(closingBody)}`;
 }
 
+/**
+ * Add the owner-verified WeChat and Telegram channels to the frozen Contact
+ * page at release time. The historical capture and its provenance remain
+ * unchanged; this route-scoped slot is independently covered by link and
+ * exact-asset-hash tests.
+ */
+export function injectVerifiedContactChannels(html) {
+  if (html.includes(CONTACT_CHANNEL_MARKER)) return html;
+  const anchor = '<p><strong>咨询资料：</strong>';
+  const offset = html.indexOf(anchor);
+  if (offset === -1) throw new Error("Contact page has no verified insertion anchor");
+  const slot = `<section class="verified-contact-channels" ${CONTACT_CHANNEL_MARKER} aria-labelledby="verified-contact-title">
+  <h2 id="verified-contact-title">微信或 Telegram 联系客服</h2>
+  <p>微信添加后请核对显示名为“胡小胡”；Telegram 账号为 @xiaoyuhuai。如需购买，请先核对当前订单的关键事项；请勿发送密码、短信验证码或完整支付卡信息。</p>
+  <div class="verified-contact-grid">
+    <section class="verified-contact-card" aria-labelledby="verified-wechat-title">
+      <h3 id="verified-wechat-title">微信客服</h3>
+      <img src="/contact/wechat-qr.jpg" alt="微信显示名胡小胡的客服二维码" width="888" height="1135" loading="lazy" decoding="async">
+      <p>手机可尝试打开微信；若未唤起或跳到微信官网，请使用微信“扫一扫”扫描二维码。</p>
+      <a class="btn btn-primary" href="https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4" target="_blank" rel="noopener noreferrer" data-link-role="contact-channel" data-analytics-event="contact_click" data-analytics-channel="wechat">尝试打开微信添加“胡小胡”</a>
+    </section>
+    <section class="verified-contact-card" aria-labelledby="verified-telegram-title">
+      <h3 id="verified-telegram-title">Telegram 客服</h3>
+      <img src="/contact/telegram-qr.jpg" alt="Telegram 客服 xiaoyuhuai 二维码" width="1000" height="1920" loading="lazy" decoding="async">
+      <a class="btn btn-secondary" href="https://t.me/xiaoyuhuai" target="_blank" rel="noopener noreferrer" data-link-role="contact-channel" data-analytics-event="contact_click" data-analytics-channel="telegram">打开 Telegram 联系 @xiaoyuhuai</a>
+    </section>
+  </div>
+</section>`;
+  return `${html.slice(0, offset)}${slot}${html.slice(offset)}`;
+}
+
+export function replaceRetiredWechatQr(html) {
+  return html.replaceAll("/contact/wechat-qr.png", "/contact/wechat-qr.jpg");
+}
+
+function exactReleaseReplacement(output, {
+  route,
+  label,
+  source,
+  replacement,
+  expectedOccurrences,
+}) {
+  const occurrences = output.split(source).length - 1;
+  if (occurrences !== expectedOccurrences) {
+    throw new Error(
+      `${route} expected release copy source text ${JSON.stringify(source)} `
+      + `${expectedOccurrences} time(s), found ${occurrences} (${label})`,
+    );
+  }
+  return output.replaceAll(source, replacement);
+}
+
+/**
+ * Correct generated/injected copy only in the release artifact. This keeps the
+ * frozen capture and generated growth sources intact while making the shipped
+ * analytics language precise.
+ */
+export function applyReleaseConversionOverrides(html, route, options = {}) {
+  const expectedInternalContactClicks = options.expectedInternalContactClicks ?? 0;
+  let output = exactReleaseReplacement(html, {
+    route,
+    label: "internal Contact analytics marker",
+    source: INTERNAL_CONTACT_ANALYTICS_MARKER,
+    replacement: INTERNAL_CONTACT_NAVIGATION_MARKER,
+    expectedOccurrences: expectedInternalContactClicks,
+  });
+  for (const rule of LEGACY_COMMERCIAL_COPY_OVERRIDES[route] || []) {
+    output = exactReleaseReplacement(output, { route, ...rule });
+  }
+  if (route === "/contact/") {
+    for (const rule of CONTACT_RELEASE_COPY_OVERRIDES) {
+      output = exactReleaseReplacement(output, { route, ...rule });
+    }
+  }
+  return output;
+}
+
+function applyGrowthReleaseConversionOverrides(html, route) {
+  let output = applyReleaseConversionOverrides(html, route, {
+    expectedInternalContactClicks: 1,
+  });
+  if (route === "/tools/g0-g2-total-cost/") {
+    output = exactReleaseReplacement(output, {
+      route,
+      label: "growth blanket payment deterrent",
+      source: GROWTH_BLANKET_PAYMENT_DETERRENT,
+      replacement: ACTIONABLE_PREPAYMENT_GUIDANCE,
+      expectedOccurrences: 1,
+    });
+  }
+  return output;
+}
+
 async function copyTree(source, destination, { exclude = new Set() } = {}) {
   await mkdir(destination, { recursive: true });
   for (const entry of await readdir(source, { withFileTypes: true })) {
@@ -1019,6 +1356,7 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
   await copyTree(LEGACY_ROOT, outputRoot, {
     exclude: new Set(["capture.lock.json", "legacy-freeze-manifest.json"]),
   });
+  await rm(path.join(outputRoot, "contact", "wechat-qr.png"), { force: true });
 
   const related = JSON.parse(
     await readFile(path.join(GROWTH_ROOT, "related-links.json"), "utf8"),
@@ -1054,8 +1392,11 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     ) {
       throw new Error(`${route} DOM changed outside the approved growth slot`);
     }
+    built = replaceRetiredWechatQr(built);
+    if (route === "/contact/") built = injectVerifiedContactChannels(built);
     const safetyResult = applyLegacySafetyOverrides(built, route);
     built = safetyResult.html;
+    built = applyReleaseConversionOverrides(built, route);
     safetyOverrides += safetyResult.applied;
     if (links) injectedPages += 1;
     commerceWidgets += 1;
@@ -1066,10 +1407,8 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     const source = routeFile(GROWTH_ROOT, route);
     const destination = routeFile(outputRoot, route);
     await mkdir(path.dirname(destination), { recursive: true });
-    await writeFile(
-      destination,
-      applyGrowthSafetyOverrides(await readFile(source, "utf8"), route),
-    );
+    const growth = applyGrowthSafetyOverrides(await readFile(source, "utf8"), route);
+    await writeFile(destination, applyGrowthReleaseConversionOverrides(growth, route));
   }
 
   for (const route of [
@@ -1097,6 +1436,10 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     await copyFile(path.join(PUBLIC_ROOT, filename), path.join(outputRoot, filename));
   }
   await writeFile(path.join(outputRoot, "sitemap.xml"), sitemapXml());
+  await writeFile(
+    path.join(outputRoot, "release-provenance.json"),
+    `${JSON.stringify(RELEASE_PROVENANCE_PLACEHOLDER)}\n`,
+  );
   await writeFile(path.join(outputRoot, "llms.txt"), await curatedLlmsText(outputRoot));
   const adsense = await configureAdsenseVerification({
     outputRoot,

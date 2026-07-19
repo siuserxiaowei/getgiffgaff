@@ -19,23 +19,28 @@ async function withRelease(t) {
   return root;
 }
 
-test("frozen Contact keeps WeChat Xiaoyu, G0/G2 inventory and Kuaituantuan exits", async (t) => {
+test("release Contact keeps verified WeChat, Telegram, G0/G2 and Kuaituantuan exits", async (t) => {
   const root = await withRelease(t);
   const html = await readFile(routeFile(root, "/contact/"), "utf8");
 
   for (const text of [
-    "小玉",
+    "胡小胡",
     "微信咨询",
-    "确认 G0 库存",
-    "确认 G2 库存",
-    "快团团下单",
-    "进入 Giga卡快团团店铺",
+    "查看 G0 小程序码",
+    "查看 G2 小程序码",
+    "快团团小程序码",
+    "扫描前请核对页面主体",
   ]) {
     assert.match(html, new RegExp(text), text);
   }
   assert.match(html, /href=["']#ktt-giga-card["']/);
-  assert.match(html, /src=["']\/contact\/wechat-qr\.png["']/);
+  assert.match(html, /src=["']\/contact\/wechat-qr\.jpg["']/);
+  assert.match(html, /src=["']\/contact\/telegram-qr\.jpg["']/);
+  assert.match(html, /href=["']https:\/\/u\.wechat\.com\/MOlSxFZ7nu5enWrw4HtvKC4["']/);
+  assert.match(html, /href=["']https:\/\/t\.me\/xiaoyuhuai["']/);
+  assert.doesNotMatch(html, /(?:src|href)=["']\/contact\/wechat-qr\.png["']/);
   assert.match(html, /src=["']\/contact\/ktt-giga-card\.png["']/);
+  assert.doesNotMatch(html, /客服小玉|微信小玉|快团团(?:商品页|店铺|下单)|进店确认库存/);
   assert.doesNotMatch(html, /暂停销售|停止下单|关闭微信|暂停新客/);
 });
 

@@ -1,53 +1,53 @@
 # getgiffgaff 支付接入交接（2026-07-18）
 
-## 当前已上线模式
+> 状态更新（2026-07-19）：本文记录当前仓库候选，不构成生产部署证明。`/pay/` 是旧 URL 兼容别名，不是商品页、支付网关或订单系统。
 
-- 支付入口：`https://getgiffgaff.com/pay/`
-- 当前提供方：快团团托管下单与支付。
-- `/pay/` 不接收金额、订单号、地址、手机号、Cookie 或银行卡信息；只以 `303` 跳转到本站 Contact 页的快团团小程序码。
-- 响应固定为 `noindex, nofollow, noarchive` 与 `private, no-store`，并丢弃来源请求中的查询参数。
-- G0/G2、微信小玉、快团团二维码、旧教程正文和紫色视觉继续保留。
+## 当前仓库边界
 
-这不是站内支付网关。商品、金额、库存、收货地址、支付状态与退款仍由快团团承接；本站不得根据浏览器回跳自行判断“已付款”。
+- `GET` 或 `HEAD https://getgiffgaff.com/pay/` 只返回 `303`，目标为 `https://getgiffgaff.com/contact/#ktt-giga-card`。
+- 响应头 `x-getgiffgaff-payment-mode` 固定为 `contact-qr-handoff`；这表示“回到联系页查看二维码”，不表示支付能力或支付结果。
+- `/pay/` 不接收金额、订单号、地址、手机号、Cookie 或银行卡信息。来源请求的查询参数不会转发到 Contact 页。
+- 响应保持 `noindex, nofollow, noarchive` 与 `private, no-store`；该旧路径不进入 sitemap。
+- 当前站内购买指南只展示 Contact 页的快团团小程序码，不再提供指向 `/pay/` 的按钮。
+- 仓库中没有经过核验的 G0/G2 商品直达链接。
 
-## 生产验证
+仓库代码和二维码文件不能证明扫码后的 SKU、库存、价格、收款方、订单、支付、物流、退款或履约状态，也不能证明第三方页面当前由谁运营。用户扫码后必须在实际页面逐项核对；本站不得根据跳转、回跳或点击事件判断交易结果。
+
+## 授权发布后的生产验证
 
 ```bash
-curl -sS -D - -o /dev/null https://getgiffgaff.com/pay/
-curl -I https://getgiffgaff.com/contact/ktt-giga-card.png
-npm run postdeploy
+curl -sS -D - -o /dev/null --max-redirs 0 https://getgiffgaff.com/pay/
+curl -sS -I https://getgiffgaff.com/contact/ktt-giga-card.png
+npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 ```
 
 预期：
 
-- `/pay/` 返回 `303`，Location 为 `https://getgiffgaff.com/contact/#ktt-giga-card`。
-- 快团团小程序码返回 `200 image/png`。
-- sitemap 仍只有 39 个可索引 URL；支付入口不进入 sitemap。
+- `/pay/` 返回 `303`，`Location` 为 `https://getgiffgaff.com/contact/#ktt-giga-card`，并带 `x-getgiffgaff-payment-mode: contact-qr-handoff`。
+- 快团团小程序码返回 `200` 与 `Content-Type: image/png`。
+- sitemap 保持批准的 39 个可索引 URL，且不包含 `/pay/`。
 
-## 站内托管收银台尚缺的外部条件
+这些 HTTP 检查只验证本站的兼容跳转和静态图片，不能替代扫码后的商品、订单、付款、退款或履约核验。
 
-当前 Cloudflare Pages 项目没有支付 Secret、订单数据库、checkout API 或 webhook。要升级为真正站内发起、支付平台托管收银台，需要业务负责人先确定并开通以下任一合规商户路径：
+## 未来交易能力的前置条件
 
-1. 真实英国/香港主体：Stripe Checkout；再按账户审批结果启用银行卡、Alipay、WeChat Pay。
-2. 中国大陆合格企业主体：微信支付或支付宝网站支付；需满足商户、网站备案和行业材料要求。
+当前 Cloudflare Pages 项目没有支付 Secret、订单数据库、支付会话 API 或 webhook。若未来要让本站发起交易并交给合规支付平台处理，必须先由业务负责人确认经营主体和适用地区，再申请相应商户能力；任何平台或支付方式都要以届时的官方准入、商品类别和账户审批结果为准。
 
-中国大陆不在 Stripe 直接开户地区：[Stripe global availability](https://stripe.com/global)。Paddle 与 Lemon Squeezy 不接受实体商品，不用于实体 SIM。
-
-## 原生支付上线前必须提供
+立项前至少提供：
 
 - 法律经营主体、注册地址、银行账户与已完成 KYC 的支付商户账户。
 - G0/G2 的真实 SKU、服务端价格、币种、库存和每单限购。
 - 发货国家/地区、运费、时效、承运商和地址处理流程。
-- 已审核的隐私、条款、退款与物流政策。
-- 供货/经销/品牌使用材料，以及含余额或预付权益商品的支付平台书面审核结果。
+- 已审核的隐私、交易条款、退款与物流政策。
+- 供货、经销、品牌使用材料，以及含余额或预付权益商品的支付平台书面审核结果。
 
-支付密钥不得进入 Git、聊天记录或构建产物，只能由账户所有者写入 Cloudflare encrypted secrets。订单与 webhook 幂等状态应存入 D1 或独立交易数据库，不能使用 Cache API 或 KV 作为付款真相。
+支付密钥不得进入 Git、聊天记录或构建产物，只能由账户所有者写入 Cloudflare encrypted secrets。订单和 webhook 的幂等状态应存入 D1 或独立交易数据库，不能使用 Cache API 或 KV 作为支付状态真相。
 
-## 推荐原生架构
+未来架构只能在上述条件齐全后实施：
 
 ```text
-浏览器 -> POST /v1/checkout -> 支付平台托管收银台
-支付平台 -> POST /v1/webhooks/provider -> 验签 -> D1
+浏览器 -> POST /v1/payment-sessions -> 合规支付平台
+支付平台 -> POST /v1/webhooks/provider -> 验签与金额核对 -> D1
 ```
 
-只有验签并核对商户、内部订单、金额和币种后的 webhook 才能把订单改为已付款。成功跳转页只显示“正在确认”，不得触发发货。
+只有验签并核对商户、内部订单、金额和币种后的 webhook 才能确认支付状态。浏览器成功跳转页只能显示“正在确认”，不得直接触发发货。

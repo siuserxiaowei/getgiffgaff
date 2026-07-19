@@ -2,7 +2,6 @@ name = "getgiffgaff"
 compatibility_date = "2026-03-17"
 pages_build_output_dir = ".release"
 
-# Optional after the account owner enables Workers Analytics Engine:
-# [[analytics_engine_datasets]]
-# binding = "ANALYTICS"
-# dataset = "getgiffgaff_events_v1"
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "getgiffgaff_events_v1"
