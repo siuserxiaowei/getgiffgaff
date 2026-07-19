@@ -500,6 +500,41 @@ test("production HTML cache verification requires canonical and cookie-bypass bo
   );
 });
 
+test("production HTML cache verification ignores only Cloudflare's terminal Web Analytics beacon", async () => {
+  const html = [
+    "<html><head><link rel=\"canonical\" href=\"https://getgiffgaff.com/\"></head>",
+    "<body><main>release</main></body></html>",
+  ].join("");
+  const cloudflareBeacon = [
+    '<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v1"',
+    ' integrity="sha512-example" data-cf-beacon=\'{"token":"example"}\'',
+    ' crossorigin="anonymous"></script>',
+  ].join("");
+  const withTerminalBeacon = html.replace("</body>", `${cloudflareBeacon}\n</body>`);
+
+  const result = await verifyCanonicalHtmlMatchesDeployment("https://new-id.getgiffgaff.pages.dev", {
+    attempts: 1,
+    fetchImpl: productionFetch({
+      rootHtml: html,
+      canonicalHtml: withTerminalBeacon,
+      bypassHtml: withTerminalBeacon,
+    }),
+  });
+  assert.match(result.sha256, /^[a-f0-9]{64}$/u);
+
+  const unexpectedScript = html.replace(
+    "</body>",
+    '<script src="https://example.invalid/unexpected.js"></script></body>',
+  );
+  await assert.rejects(
+    () => verifyCanonicalHtmlMatchesDeployment("https://new-id.getgiffgaff.pages.dev", {
+      attempts: 1,
+      fetchImpl: productionFetch({ rootHtml: html, canonicalHtml: unexpectedScript }),
+    }),
+    /HTML hash mismatch/,
+  );
+});
+
 test("commerce deployment rejects missing evidence before running any command", async () => {
   for (const env of [{}, { COMMERCE_EVIDENCE_FILE: "   " }]) {
     const harness = releaseRecorder();

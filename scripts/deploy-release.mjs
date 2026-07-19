@@ -24,6 +24,11 @@ const RELEASE_PROVENANCE_SCHEMA = "getgiffgaff_release_provenance_v1";
 const RELEASE_PROVENANCE_MAX_BYTES = 512;
 const EDGE_HTML_CACHE_VERSION_PLACEHOLDER = "__GETGIFFGAFF_RELEASE_COMMIT__";
 const EDGE_HTML_CACHE_VERSION_PATTERN = /const EDGE_HTML_CACHE_VERSION = "([0-9a-f]{40})";/u;
+// Cloudflare Web Analytics appends this first-party beacon after the Worker
+// returns an otherwise identical HTML document. It is deliberately ignored
+// only when it is the final script before </body></html>; any other response
+// mutation remains part of the release comparison.
+const TERMINAL_CLOUDFLARE_INSIGHTS_BEACON = /<script\b(?=[^>]*\bsrc=["']https:\/\/static\.cloudflareinsights\.com\/beacon(?:\.min)?\.js(?:\/[^"']*)?["'])(?=[^>]*\bdata-cf-beacon\s*=)[^>]*>\s*<\/script>\s*(?=<\/body>\s*<\/html>\s*$)/iu;
 const PRODUCTION_DEPLOYMENT_READY_ATTEMPTS = 8;
 const CANONICAL_SEO_READY_ATTEMPTS = 6;
 const CANONICAL_SEO_RETRY_DELAY_MS = 5_000;
@@ -428,6 +433,12 @@ function responseHash(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+function comparableHtmlBytes(bytes) {
+  const source = Buffer.from(bytes).toString("utf8");
+  const comparable = source.replace(TERMINAL_CLOUDFLARE_INSIGHTS_BEACON, "");
+  return Buffer.from(comparable, "utf8");
+}
+
 async function fetchHtmlRepresentation(url, {
   fetchImpl,
   headers,
@@ -453,7 +464,8 @@ async function fetchHtmlRepresentation(url, {
   return {
     status: response.status,
     canonical,
-    sha256: responseHash(bytes),
+    sha256: responseHash(comparableHtmlBytes(bytes)),
+    rawSha256: responseHash(bytes),
     edgeCache: response.headers.get("x-getgiffgaff-edge-cache") || "",
   };
 }
