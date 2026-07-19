@@ -75,6 +75,8 @@ test("analytics persistence uses an isolated index and waits for its exact probe
       sqlCall.init.body,
       new RegExp(`index1 = 'seo_release_canary:${PROBE_ID}'`),
     );
+    assert.match(sqlCall.init.body, /INTERVAL '30' MINUTE/);
+    assert.match(sqlCall.init.body, /blob4 = 'seo_release_canary'/);
     assert.match(sqlCall.init.body, new RegExp(`blob5 = '${PROBE_ID}'`));
     assert.match(sqlCall.init.body, /FORMAT JSON$/);
   }
@@ -247,6 +249,34 @@ test("analytics persistence honors Retry-After and backs off transient SQL failu
   assert.deepEqual(delays, [2_000, 2_000]);
 });
 
+test("Retry-After cannot shorten the bounded local backoff", async () => {
+  const delays = [];
+  let sqlReads = 0;
+  const report = await verifyAnalyticsPersistence({
+    resolveToken: async () => "TOKEN_FIXTURE",
+    verifyAccount: async () => ({ accountId: "ab6289976235fa386fcddcddd7bf62c5" }),
+    idFactory: () => PROBE_ID,
+    attempts: 3,
+    delayMs: 5_000,
+    delay: async (milliseconds) => delays.push(milliseconds),
+    jitterFactory: () => 0,
+    fetchImpl: async (input) => {
+      if (String(input).endsWith("/analytics-event-v1")) return acceptedCanary();
+      sqlReads += 1;
+      if (sqlReads < 3) {
+        return new Response("rate limited", {
+          status: 429,
+          headers: { "retry-after": sqlReads === 1 ? "0" : "1" },
+        });
+      }
+      return sqlResponse([{ probe_id: PROBE_ID, events: 1 }]);
+    },
+  });
+
+  assert.equal(report.queryAttempts, 3);
+  assert.deepEqual(delays, [5_000, 10_000]);
+});
+
 test("Retry-After parser accepts bounded seconds and HTTP dates", () => {
   assert.equal(retryAfterMilliseconds("1.5"), 1_500);
   assert.equal(
@@ -256,7 +286,67 @@ test("Retry-After parser accepts bounded seconds and HTTP dates", () => {
     5_000,
   );
   assert.equal(retryAfterMilliseconds("invalid"), undefined);
-  assert.throws(() => retryAfterMilliseconds("121"), /release budget/);
+  assert.equal(retryAfterMilliseconds("301"), 301_000);
+  assert.throws(() => retryAfterMilliseconds("481"), /release budget/);
+});
+
+test("analytics persistence polls through the bounded eight-minute visibility window", async () => {
+  let nowMs = Date.parse("2026-07-19T12:00:00Z");
+  let sqlReads = 0;
+  const delays = [];
+  const report = await verifyAnalyticsPersistence({
+    resolveToken: async () => "TOKEN_FIXTURE",
+    verifyAccount: async () => ({ accountId: "ab6289976235fa386fcddcddd7bf62c5" }),
+    idFactory: () => PROBE_ID,
+    nowFactory: () => nowMs,
+    delay: async (milliseconds) => {
+      delays.push(milliseconds);
+      nowMs += milliseconds;
+    },
+    jitterFactory: () => 0,
+    fetchImpl: async (input) => {
+      if (String(input).endsWith("/analytics-event-v1")) return acceptedCanary();
+      sqlReads += 1;
+      return sqlReads < 18
+        ? sqlResponse([])
+        : sqlResponse([{ probe_id: PROBE_ID, events: 1 }]);
+    },
+  });
+
+  assert.equal(report.persisted, true);
+  assert.equal(report.queryAttempts, 18);
+  assert.equal(sqlReads, 18);
+  assert.deepEqual(delays, [5_000, 10_000, 20_000, ...Array(14).fill(30_000)]);
+  assert.equal(nowMs, Date.parse("2026-07-19T12:00:00Z") + 455_000);
+
+  sqlReads = 0;
+  nowMs = Date.parse("2026-07-19T12:00:00Z");
+  await assert.rejects(
+    () => verifyAnalyticsPersistence({
+      resolveToken: async () => "TOKEN_FIXTURE",
+      verifyAccount: async () => ({ accountId: "ab6289976235fa386fcddcddd7bf62c5" }),
+      idFactory: () => PROBE_ID,
+      nowFactory: () => nowMs,
+      delay: async (milliseconds) => { nowMs += milliseconds; },
+      jitterFactory: () => 0,
+      fetchImpl: async (input) => {
+        if (String(input).endsWith("/analytics-event-v1")) return acceptedCanary();
+        sqlReads += 1;
+        return sqlResponse([]);
+      },
+    }),
+    /after 18 SQL attempts and 455000 milliseconds \(canary sent 2026-07-19T12:00:00\.000Z\)/,
+  );
+  assert.equal(sqlReads, 18, "the bounded poll must not issue a nineteenth SQL query");
+
+  await assert.rejects(
+    () => verifyAnalyticsPersistence({
+      resolveToken: async () => "TOKEN_FIXTURE",
+      verifyAccount: async () => ({ accountId: "ab6289976235fa386fcddcddd7bf62c5" }),
+      totalBudgetMs: 480_001,
+    }),
+    /480000 milliseconds/,
+  );
 });
 
 test("analytics persistence enforces one wall-clock budget across requests and waits", async () => {

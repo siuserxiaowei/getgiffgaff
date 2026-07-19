@@ -23,12 +23,13 @@ const ANALYTICS_RELEASE_PROBE_PAYLOAD = Object.freeze({
   source: "direct",
   event: "page_view",
 });
-const DEFAULT_ATTEMPTS = 8;
-const DEFAULT_DELAY_MS = 1_000;
+const DEFAULT_ATTEMPTS = 18;
+const DEFAULT_DELAY_MS = 5_000;
 const DEFAULT_TIMEOUT_MS = 15_000;
-const DEFAULT_TOTAL_BUDGET_MS = 120_000;
-const MAX_RETRY_DELAY_MS = 15_000;
-const MAX_RETRY_AFTER_MS = 120_000;
+const DEFAULT_TOTAL_BUDGET_MS = 480_000;
+const MAX_TOTAL_BUDGET_MS = 480_000;
+const MAX_RETRY_DELAY_MS = 30_000;
+const MAX_RETRY_AFTER_MS = MAX_TOTAL_BUDGET_MS;
 
 class RetryableAnalyticsSqlError extends Error {
   constructor(message, { retryAfterMs } = {}) {
@@ -146,7 +147,7 @@ export function analyticsPersistenceSql(releaseProbeId) {
   return [
     "SELECT blob5 AS probe_id, SUM(_sample_interval * double1) AS events",
     `FROM ${ANALYTICS_DATASET}`,
-    "WHERE timestamp >= NOW() - INTERVAL '15' MINUTE",
+    "WHERE timestamp >= NOW() - INTERVAL '30' MINUTE",
     `  AND index1 = '${index}'`,
     `  AND blob4 = '${ANALYTICS_RELEASE_PROBE_BLOB}'`,
     `  AND blob5 = '${id}'`,
@@ -240,10 +241,10 @@ export function retryAfterMilliseconds(value, { nowMs = Date.now() } = {}) {
 }
 
 function retryDelayMilliseconds({ attempt, delayMs, retryAfterMs, jitterFactory }) {
-  const backoff = retryAfterMs ?? Math.min(
+  const backoff = Math.max(retryAfterMs ?? 0, Math.min(
     MAX_RETRY_DELAY_MS,
     delayMs * (2 ** Math.max(0, attempt - 1)),
-  );
+  ));
   const jitterSample = Number(jitterFactory());
   if (!Number.isFinite(jitterSample) || jitterSample < 0 || jitterSample >= 1) {
     throw new TypeError("Analytics persistence jitter must be a number from 0 (inclusive) to 1 (exclusive)");
@@ -343,13 +344,16 @@ export async function verifyAnalyticsPersistence({
   if (!Number.isSafeInteger(delayMs) || delayMs < 0 || delayMs > 30_000) {
     throw new TypeError("Analytics persistence retry delay must be from 0 through 30000 milliseconds");
   }
-  if (!Number.isSafeInteger(totalBudgetMs) || totalBudgetMs < 1 || totalBudgetMs > 120_000) {
-    throw new TypeError("Analytics persistence total budget must be from 1 through 120000 milliseconds");
+  if (!Number.isSafeInteger(totalBudgetMs) || totalBudgetMs < 1 || totalBudgetMs > MAX_TOTAL_BUDGET_MS) {
+    throw new TypeError(
+      `Analytics persistence total budget must be from 1 through ${MAX_TOTAL_BUDGET_MS} milliseconds`,
+    );
   }
   await verifyAccount();
   const token = bearerToken(await resolveToken());
   const releaseProbeId = probeId(idFactory());
-  const deadlineMs = currentTimeMilliseconds(nowFactory) + totalBudgetMs;
+  const canarySentAtMs = currentTimeMilliseconds(nowFactory);
+  const deadlineMs = canarySentAtMs + totalBudgetMs;
   const canaryUrl = `${CANONICAL_ORIGIN}${ANALYTICS_EVENT_PATH}`;
   const canaryResponse = await fetchImpl(canaryUrl, {
     method: "POST",
@@ -376,7 +380,9 @@ export async function verifyAnalyticsPersistence({
   }
 
   let lastFailure = "no SQL response";
+  let queryAttempts = 0;
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    queryAttempts = attempt;
     const remainingBeforeRequest = remainingBudgetMilliseconds(
       deadlineMs,
       nowFactory,
@@ -417,8 +423,14 @@ export async function verifyAnalyticsPersistence({
       }
     }
   }
+  const elapsedMs = Math.max(
+    0,
+    Math.floor(currentTimeMilliseconds(nowFactory) - canarySentAtMs),
+  );
   throw new Error(
-    `Analytics release probe was accepted but not queryable after ${attempts} SQL attempt${attempts === 1 ? "" : "s"}: ${lastFailure}`,
+    `Analytics release probe was accepted but not queryable after ${queryAttempts} SQL `
+    + `attempt${queryAttempts === 1 ? "" : "s"} and ${elapsedMs} milliseconds `
+    + `(canary sent ${new Date(canarySentAtMs).toISOString()}): ${lastFailure}`,
   );
 }
 
