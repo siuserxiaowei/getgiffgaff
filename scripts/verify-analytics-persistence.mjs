@@ -15,7 +15,7 @@ const ANALYTICS_EVENT_PATH = "/analytics-event-v1";
 const ANALYTICS_RELEASE_PROBE_HEADER = "x-getgiffgaff-release-probe";
 const ANALYTICS_RELEASE_PROBE_VALUE = "seo_release_canary_v1";
 const ANALYTICS_RELEASE_PROBE_ID_HEADER = "x-getgiffgaff-release-probe-id";
-const ANALYTICS_RELEASE_PROBE_INDEX = "seo_release_canary";
+const ANALYTICS_RELEASE_PROBE_INDEX_PREFIX = "seo_release_canary:";
 const ANALYTICS_RELEASE_PROBE_BLOB = "seo_release_canary";
 const ANALYTICS_RELEASE_PROBE_PAYLOAD = Object.freeze({
   version: "analytics_event_v1",
@@ -142,11 +142,12 @@ export async function verifyWranglerAccount({
 
 export function analyticsPersistenceSql(releaseProbeId) {
   const id = probeId(releaseProbeId);
+  const index = `${ANALYTICS_RELEASE_PROBE_INDEX_PREFIX}${id}`;
   return [
     "SELECT blob5 AS probe_id, SUM(_sample_interval * double1) AS events",
     `FROM ${ANALYTICS_DATASET}`,
     "WHERE timestamp >= NOW() - INTERVAL '15' MINUTE",
-    `  AND index1 = '${ANALYTICS_RELEASE_PROBE_INDEX}'`,
+    `  AND index1 = '${index}'`,
     `  AND blob4 = '${ANALYTICS_RELEASE_PROBE_BLOB}'`,
     `  AND blob5 = '${id}'`,
     "GROUP BY blob5",

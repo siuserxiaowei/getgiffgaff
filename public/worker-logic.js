@@ -19,7 +19,7 @@ const ANALYTICS_MAX_BYTES = 1024;
 const ANALYTICS_RELEASE_PROBE_HEADER = "x-getgiffgaff-release-probe";
 const ANALYTICS_RELEASE_PROBE_VALUE = "seo_release_canary_v1";
 const ANALYTICS_RELEASE_PROBE_ID_HEADER = "x-getgiffgaff-release-probe-id";
-const ANALYTICS_RELEASE_PROBE_INDEX = "seo_release_canary";
+const ANALYTICS_RELEASE_PROBE_INDEX_PREFIX = "seo_release_canary:";
 const ANALYTICS_RELEASE_PROBE_BLOB = "seo_release_canary";
 const RELEASE_PROVENANCE_PATH = "/release-provenance.json";
 const PAYMENT_HANDOFF_PATH = "/pay/";
@@ -511,7 +511,11 @@ export async function analyticsEventV1(request, env) {
     if (hasChannel) blobs.push(payload.channel);
     if (isReleaseProbe) blobs.push(ANALYTICS_RELEASE_PROBE_BLOB, releaseProbeId);
     await env.ANALYTICS.writeDataPoint({
-      indexes: [isReleaseProbe ? ANALYTICS_RELEASE_PROBE_INDEX : payload.event],
+      indexes: [
+        isReleaseProbe
+          ? `${ANALYTICS_RELEASE_PROBE_INDEX_PREFIX}${releaseProbeId}`
+          : payload.event,
+      ],
       blobs,
       doubles: [1],
     });

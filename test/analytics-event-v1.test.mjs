@@ -138,10 +138,14 @@ test("analytics_event_v1 marks only an exact production page-view release canary
 
   assert.equal(response.status, 204);
   assert.deepEqual(env.writes, [{
-    indexes: ["seo_release_canary"],
+    indexes: [`seo_release_canary:${ANALYTICS_CANARY_ID}`],
     blobs: ["/", "direct", "page_view", "seo_release_canary", ANALYTICS_CANARY_ID],
     doubles: [1],
   }]);
+  assert.ok(
+    Buffer.byteLength(env.writes[0].indexes[0], "utf8") <= 96,
+    "release probe index must stay within the Analytics Engine limit",
+  );
 
   for (const headers of [
     {

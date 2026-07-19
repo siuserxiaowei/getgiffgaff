@@ -177,13 +177,13 @@ npm run deploy:maintenance
 - 当日只读 `verify:seo` 曾为 21 项：15 个两跳、4 个政策状态页 404、2 个 Cloudflare robots 来源策略冲突（`cohere-ai`、`anthropic-ai`）。这是历史记录，不得当作当前状态。
 - G0/G2 真实交易门禁要求每个产品的 SKU、订单、支付、履约、退款和售后六阶段，共 12 份独立脱敏证据文件。当前缺失，空模板必须失败。
 
-2026-07-19 咨询链路恢复候选记录（未部署）：
+2026-07-19 咨询链路与测量能力上线记录：
 
 - 新微信二维码 SHA-256 为 `751f8055949c3ee5d13a69dae6eef3aeef925a9e6f8dda1ca00b48e0399e1b43`，离线解码至 `https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4`；Telegram 二维码 SHA-256 为 `9a6ed7d1e30acc7dc35d2dabe2e1078cd2cd0b3ceaecd7bf1d716fa5c1b1b3fa`，离线解码至 `https://t.me/xiaoyuhuai`。
 - `/pay/` 只作为旧 URL 兼容，以 `303` 返回 Contact 页的快团团小程序码，并带 `x-getgiffgaff-payment-mode: contact-qr-handoff`。站内没有经核验的商品直达链接，也不能从仓库推断商品、订单或支付状态。
-- Preview analytics probe 的通过状态是 404；生产 canary 的通过状态是 204，并应写入隔离的 `index1 = 'seo_release_canary'` 及 `blob4 = 'seo_release_canary'`。生产 204 后仍需 SQL 查询确认点已可见，所有运营报表必须排除该 canary。
-- 候选状态、真机验收矩阵和观察口径以[咨询链路恢复候选记录](operations/consultation-recovery-2026-07-19.md)为准。自动测试、二维码哈希和 HTTP 状态都不能证明微信真机拉起、消息送达、订单生成或付款完成。
-- 2026-07-19 发布前只读核验：当前生产 `verify:seo` 因 analytics canary 400 和两张新 JPEG 404 共失败 11 项；当前 Preview `b0d3e1d6` 是脏工作区历史构建，analytics endpoint 返回 204，不满足新候选要求的 404 隔离，也不能作为最终候选证据。
+- Preview analytics probe 的通过状态是 404；生产 canary 的通过状态是 204，并应写入与一次性 ID 对齐的 `index1 = 'seo_release_canary:<探针 ID>'` 及 `blob4 = 'seo_release_canary'`。生产 204 后仍需 SQL 查询确认点已可见，所有运营报表必须排除该 canary。
+- 上线状态、真机验收矩阵和观察口径以[咨询链路恢复与观察记录](operations/consultation-recovery-2026-07-19.md)为准。当前正式版本以生产 `/release-provenance.json` 返回的完整 Git SHA 为准；自动测试、二维码哈希和 HTTP 状态都不能证明微信真机拉起、消息送达、订单生成或付款完成。
+- 发布门禁要求 GitHub `main`、Preview Source、Production Source 和生产 provenance 使用同一个 clean 40 字符 SHA；Preview analytics probe 必须隔离为 404，生产 probe 必须返回 204 并由 SQL API 精确回读后，发布脚本才可报告 `deployed: true`。
 
 - [x] 生产别名传播完成后，34 URL 门禁已成功退出；若内置 `verify:seo` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑只读门禁，仍失败则按第 9 节回滚或向前修复。
 

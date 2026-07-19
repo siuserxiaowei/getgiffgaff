@@ -71,7 +71,10 @@ test("analytics persistence uses an isolated index and waits for its exact probe
     const headers = new Headers(sqlCall.init.headers);
     assert.equal(headers.get("authorization"), "Bearer TOKEN_FIXTURE");
     assert.equal(headers.get("content-type"), "text/plain; charset=utf-8");
-    assert.match(sqlCall.init.body, /index1 = 'seo_release_canary'/);
+    assert.match(
+      sqlCall.init.body,
+      new RegExp(`index1 = 'seo_release_canary:${PROBE_ID}'`),
+    );
     assert.match(sqlCall.init.body, new RegExp(`blob5 = '${PROBE_ID}'`));
     assert.match(sqlCall.init.body, /FORMAT JSON$/);
   }
