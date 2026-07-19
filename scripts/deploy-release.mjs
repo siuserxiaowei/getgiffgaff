@@ -15,6 +15,9 @@ const ORIGIN_MAIN_REF = "refs/remotes/origin/main";
 const RELEASE_PROVENANCE_PATH = "/release-provenance.json";
 const RELEASE_PROVENANCE_SCHEMA = "getgiffgaff_release_provenance_v1";
 const RELEASE_PROVENANCE_MAX_BYTES = 512;
+const PRODUCTION_DEPLOYMENT_READY_ATTEMPTS = 8;
+const CANONICAL_SEO_READY_ATTEMPTS = 6;
+const CANONICAL_SEO_RETRY_DELAY_MS = 5_000;
 const RELEASE_PROVENANCE_PLACEHOLDER = Object.freeze({
   schema: RELEASE_PROVENANCE_SCHEMA,
   commit: "unbound",
@@ -348,7 +351,7 @@ function canonicalHref(html) {
 
 export async function verifyProductionDeploymentUrl(deploymentUrl, {
   fetchImpl = globalThis.fetch,
-  attempts = 4,
+  attempts = PRODUCTION_DEPLOYMENT_READY_ATTEMPTS,
   delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
 } = {}) {
   let lastFailure = "no response";
@@ -367,9 +370,45 @@ export async function verifyProductionDeploymentUrl(deploymentUrl, {
     } catch (error) {
       lastFailure = error.message;
     }
-    if (attempt < attempts) await delay(750 * attempt);
+    if (attempt < attempts) {
+      await delay(Math.min(5_000, 1_000 * (2 ** Math.max(0, attempt - 1))));
+    }
   }
   throw new Error(`Production deployment URL verification failed for ${deploymentUrl}: ${lastFailure}`);
+}
+
+export async function verifyCanonicalSeoAfterPropagation({
+  runCommand,
+  commandOptions,
+  deploymentId,
+  attempts = CANONICAL_SEO_READY_ATTEMPTS,
+  delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  delayMs = CANONICAL_SEO_RETRY_DELAY_MS,
+} = {}) {
+  if (typeof runCommand !== "function") throw new TypeError("runCommand is required");
+  if (!Number.isSafeInteger(attempts) || attempts < 1 || attempts > 8) {
+    throw new TypeError("Canonical SEO propagation attempts must be an integer from 1 through 8");
+  }
+  if (!Number.isSafeInteger(delayMs) || delayMs < 0 || delayMs > 15_000) {
+    throw new TypeError("Canonical SEO propagation delay must be from 0 through 15000 milliseconds");
+  }
+
+  let lastFailure = "no verifier result";
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      await runCommand("npm", [
+        "run", "verify:seo", "--", "--base-url", CANONICAL_ORIGIN, "--expected-url-count", "39",
+      ], commandOptions);
+      return { attempts: attempt };
+    } catch (error) {
+      lastFailure = error.message;
+    }
+    if (attempt < attempts) await delay(delayMs);
+  }
+  throw new Error(
+    `Production deployment ${deploymentId || "unknown"} failed canonical-domain verification `
+    + `after ${attempts} propagation attempt${attempts === 1 ? "" : "s"}: ${lastFailure}`,
+  );
 }
 
 async function listProduction(runCommand, commandOptions) {
@@ -472,7 +511,7 @@ export async function runReleaseDeployment({
   await verifyReleaseProvenance(deployment.deploymentUrl, {
     expectedCommit: headSha,
     fetchImpl,
-    attempts: 4,
+    attempts: 8,
     delay,
     nonceFactory,
     label: `Production deployment ${deployment.deploymentId}`,
@@ -480,22 +519,21 @@ export async function runReleaseDeployment({
   await verifyReleaseProvenance(CANONICAL_ORIGIN, {
     expectedCommit: headSha,
     fetchImpl,
-    attempts: 1,
+    attempts: 8,
     delay,
     nonceFactory,
     label: "canonical production domain before verify:seo",
   });
-  try {
-    await runCommand("npm", [
-      "run", "verify:seo", "--", "--base-url", CANONICAL_ORIGIN, "--expected-url-count", "39",
-    ], commandOptions);
-  } catch (error) {
-    throw new Error(`Production deployment ${deployment.deploymentId} failed canonical-domain verification: ${error.message}`);
-  }
+  await verifyCanonicalSeoAfterPropagation({
+    runCommand,
+    commandOptions,
+    deploymentId: deployment.deploymentId,
+    delay,
+  });
   await verifyReleaseProvenance(CANONICAL_ORIGIN, {
     expectedCommit: headSha,
     fetchImpl,
-    attempts: 1,
+    attempts: 4,
     delay,
     nonceFactory,
     label: "canonical production domain after verify:seo",

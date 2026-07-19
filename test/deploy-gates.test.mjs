@@ -13,6 +13,8 @@ import {
   runReleaseDeploymentCli,
   validateNewProductionDeployment,
   validateReleaseProvenanceResponse,
+  verifyCanonicalSeoAfterPropagation,
+  verifyProductionDeploymentUrl,
   verifyReleaseProvenance,
 } from "../scripts/deploy-release.mjs";
 import {
@@ -343,6 +345,52 @@ test("release provenance probe is cache-busted, redirect-manual and validates an
   }
 });
 
+test("production readiness checks tolerate bounded Cloudflare propagation without weakening assertions", async () => {
+  const rootDelays = [];
+  let rootReads = 0;
+  const root = await verifyProductionDeploymentUrl("https://new-id.getgiffgaff.pages.dev", {
+    attempts: 4,
+    delay: async (milliseconds) => rootDelays.push(milliseconds),
+    fetchImpl: async () => {
+      rootReads += 1;
+      return rootReads < 3
+        ? new Response("not ready", { status: 404 })
+        : new Response('<link rel="canonical" href="https://getgiffgaff.com/">');
+    },
+  });
+  assert.deepEqual(root, {
+    status: 200,
+    canonical: "https://getgiffgaff.com/",
+  });
+  assert.deepEqual(rootDelays, [1_000, 2_000]);
+
+  const seoDelays = [];
+  let seoRuns = 0;
+  const seo = await verifyCanonicalSeoAfterPropagation({
+    deploymentId: "new-id",
+    attempts: 4,
+    delayMs: 5_000,
+    delay: async (milliseconds) => seoDelays.push(milliseconds),
+    runCommand: async () => {
+      seoRuns += 1;
+      if (seoRuns < 3) throw new Error("mixed edge version");
+    },
+  });
+  assert.deepEqual(seo, { attempts: 3 });
+  assert.deepEqual(seoDelays, [5_000, 5_000]);
+
+  await assert.rejects(
+    () => verifyCanonicalSeoAfterPropagation({
+      deploymentId: "new-id",
+      attempts: 2,
+      delayMs: 0,
+      delay: async () => {},
+      runCommand: async () => { throw new Error("persistent verifier failure"); },
+    }),
+    /after 2 propagation attempts.*persistent verifier failure/s,
+  );
+});
+
 test("commerce deployment rejects missing evidence before running any command", async () => {
   for (const env of [{}, { COMMERCE_EVIDENCE_FILE: "   " }]) {
     const harness = releaseRecorder();
@@ -611,6 +659,7 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
       runCommand: seoHarness.runCommand,
       bindProvenance: boundProvenance(),
       fetchImpl: productionFetch(),
+      delay: async () => {},
     }),
     /canonical production verification failed/,
   );
@@ -630,7 +679,7 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
           return new Response('<link rel="canonical" href="https://getgiffgaff.com/">');
         }
         markerRequests.push({ url, init });
-        const commit = markerRequests.length === 3 ? OTHER_SHA : HEAD_SHA;
+        const commit = markerRequests.length >= 3 ? OTHER_SHA : HEAD_SHA;
         return new Response(JSON.stringify({
           schema: "getgiffgaff_release_provenance_v1",
           commit,
