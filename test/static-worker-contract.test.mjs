@@ -28,14 +28,21 @@ const INDEX_DIRECTIVES = new Set([
 ]);
 const PRIVATE_DIRECTIVES = new Set(["noindex", "nofollow", "noarchive"]);
 const ADDITIVE_SLOT_ROUTES = Object.freeze([
+  "/",
+  "/shop/",
   "/guides/0-intro/",
   "/guides/1-order/",
   "/answers/",
   "/guides/2-activate/",
+  "/guides/3-account/",
+  "/guides/3-app/",
   "/guides/3-usage/",
+  "/guides/4-recharge-service/",
   "/guides/4-signal/",
   "/guides/5-travel-data/",
   "/more/03-esim/",
+  "/qa/02-topup/",
+  "/qa/07-voicemail-switch/",
   "/guides/6-pitfalls/",
 ]);
 const ORIGINAL_FETCH = globalThis.fetch;
@@ -419,7 +426,7 @@ test("module Worker serves GET and HEAD for every manifest page and overrides in
     assert.deepEqual(directiveSet(headResponse), directiveSet(getResponse), `${pathname} GET/HEAD robots`);
   }
 
-  assert.equal(totalSlots, 9);
+  assert.equal(totalSlots, ADDITIVE_SLOT_ROUTES.length);
   assert.equal(totalCommerceWidgets, Object.keys(ROUTE_MANIFEST).length);
   assert.ok(!env.calls.some((call) => /\/_next(?:\/|$)/i.test(call.pathname)));
 });

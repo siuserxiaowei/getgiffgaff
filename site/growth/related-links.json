@@ -1,54 +1,106 @@
 {
+  "/": [
+    { "label": "第一次购买前先看完整避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "按旅行、留学和保号需求选英国手机卡", "href": "/guides/8-uk-sim-choice/" },
+    { "label": "比较 G0/G2 状态、成本和控制风险", "href": "/answers/" },
+    { "label": "收到卡后按步骤完成国内激活", "href": "/guides/2-activate/" }
+  ],
+  "/shop/": [
+    { "label": "付款前检查购买、激活和保号风险", "href": "/guides/6-pitfalls/" },
+    { "label": "试算卡价、运费、首次充值和使用支出", "href": "/tools/g0-g2-total-cost/" },
+    { "label": "收卡后按七步完成 G0/G2 验收", "href": "/guides/7-arrival-checklist/" },
+    { "label": "先比较 G0 与 G2 的状态和控制风险", "href": "/answers/" },
+    { "label": "查看国内购买、发货和收货流程", "href": "/guides/1-order/" }
+  ],
   "/guides/0-intro/": [
-    { "label": "了解 G0/G2 怎么选", "href": "/answers/" },
-    { "label": "查看国内购买流程", "href": "/guides/1-order/" },
-    { "label": "购买 G0 新卡", "href": "/shop/giffgaff-g0/" },
-    { "label": "购买 G2 有余额卡", "href": "/shop/giffgaff-g2/" },
-    { "label": "按场景选择英国手机卡", "href": "/guides/8-uk-sim-choice/" }
+    { "label": "从购卡到保号的完整避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "了解 G0/G2 状态和选择边界", "href": "/answers/" },
+    { "label": "按旅行、留学和保号场景选卡", "href": "/guides/8-uk-sim-choice/" },
+    { "label": "查看国内购买与收货流程", "href": "/guides/1-order/" },
+    { "label": "新卡到手后的国内激活步骤", "href": "/guides/2-activate/" }
   ],
   "/guides/1-order/": [
-    { "label": "对比 G0 与 G2", "href": "/answers/" },
-    { "label": "查看 G0 新卡", "href": "/shop/giffgaff-g0/" },
-    { "label": "查看 G2 有余额卡", "href": "/shop/giffgaff-g2/" },
-    { "label": "下单前试算 G0/G2 总成本", "href": "/tools/g0-g2-total-cost/" },
-    { "label": "收到 G0/G2 后逐项验收", "href": "/guides/7-arrival-checklist/" }
+    { "label": "下单前查看购买与使用避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "核对 G0 与 G2 的状态和账号控制风险", "href": "/answers/" },
+    { "label": "下单前试算 G0/G2 现金总支出", "href": "/tools/g0-g2-total-cost/" },
+    { "label": "收到 G0/G2 后逐项验收", "href": "/guides/7-arrival-checklist/" },
+    { "label": "验收完成后继续国内激活", "href": "/guides/2-activate/" }
   ],
   "/answers/": [
-    { "label": "查看国内购买教程", "href": "/guides/1-order/" },
-    { "label": "购买 G0 新卡", "href": "/shop/giffgaff-g0/" },
-    { "label": "购买 G2 有余额卡", "href": "/shop/giffgaff-g2/" },
-    { "label": "微信确认当前库存", "href": "/contact/" },
-    { "label": "手动试算 G0/G2 总成本", "href": "/tools/g0-g2-total-cost/" }
+    { "label": "选定卡片前查看完整避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "先按旅行、留学或保号需求判断是否适合", "href": "/guides/8-uk-sim-choice/" },
+    { "label": "用相同时间范围试算 G0/G2 总支出", "href": "/tools/g0-g2-total-cost/" },
+    { "label": "查看国内购买、发货和收货流程", "href": "/guides/1-order/" },
+    { "label": "选卡后用本人资料完成国内激活", "href": "/guides/2-activate/" }
   ],
   "/guides/2-activate/": [
-    { "label": "继续设置账号", "href": "/guides/3-account/" },
-    { "label": "查看 App 使用说明", "href": "/guides/3-app/" },
-    { "label": "排查无信号与短信", "href": "/guides/4-signal/" },
+    { "label": "回到购卡、激活和使用避坑总览", "href": "/guides/6-pitfalls/" },
+    { "label": "激活前先核对账号和恢复方式", "href": "/guides/3-account/" },
+    { "label": "激活后在 App 检查余额与账号", "href": "/guides/3-app/" },
+    { "label": "激活完成但无信号或短信时排查", "href": "/guides/4-signal/" },
     { "label": "激活前先完成收卡验收", "href": "/guides/7-arrival-checklist/" }
   ],
+  "/guides/3-account/": [
+    { "label": "账号、App 和激活的完整避坑总览", "href": "/guides/6-pitfalls/" },
+    { "label": "在 App 登录正确账号并检查安全设置", "href": "/guides/3-app/" },
+    { "label": "忘记用户名时的找回和记录方法", "href": "/qa/00-username/" },
+    { "label": "新卡建立账号后的国内激活流程", "href": "/guides/2-activate/" },
+    { "label": "切换 eSIM 前先证明账号可恢复", "href": "/more/03-esim/" }
+  ],
+  "/guides/3-app/": [
+    { "label": "App、保号和收短信的完整避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "App 登录失败时先核对账号和恢复方式", "href": "/guides/3-account/" },
+    { "label": "用网页或 App 查询余额、套餐和消费记录", "href": "/qa/02-topup/" },
+    { "label": "在 App 切换 eSIM 前完成账号恢复检查", "href": "/more/03-esim/" },
+    { "label": "App 正常但无信号或短信时分层排查", "href": "/guides/4-signal/" }
+  ],
   "/guides/3-usage/": [
-    { "label": "生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" },
-    { "label": "查看自助充值问答", "href": "/qa/02-topup/" },
-    { "label": "设置或关闭语音信箱", "href": "/qa/07-voicemail-switch/" },
-    { "label": "使用异常时联系微信", "href": "/contact/" }
+    { "label": "保号、充值和漫游的完整避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "根据最近一次有效动作生成保号提醒", "href": "/tools/keep-number-reminder/" },
+    { "label": "充值并查询余额和消费记录", "href": "/qa/02-topup/" },
+    { "label": "只作短信备用号时设置或关闭语音信箱", "href": "/qa/07-voicemail-switch/" },
+    { "label": "完成保活动作前试算中国漫游费用", "href": "/tools/china-roaming-cost/" }
+  ],
+  "/guides/4-recharge-service/": [
+    { "label": "充值、保号和服务边界避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "先检查官方自助充值和余额记录", "href": "/qa/02-topup/" },
+    { "label": "充值后生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" },
+    { "label": "核对充值与 6 个月 inactive 保号规则", "href": "/guides/3-usage/" }
   ],
   "/guides/4-signal/": [
-    { "label": "查看短信与网络实测方法", "href": "/research/china-network-sms/" },
-    { "label": "查看 OTP 状态板方法", "href": "/research/otp-status/" },
-    { "label": "检查旅行漫游设置", "href": "/guides/5-travel-data/" },
-    { "label": "先估算中国 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" }
+    { "label": "回到网络、短信和 OTP 完整避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "恢复信号和拨号后再设置语音信箱", "href": "/qa/07-voicemail-switch/" },
+    { "label": "检查旅行数据和漫游设置", "href": "/guides/5-travel-data/" },
+    { "label": "在中国使用前试算 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" },
+    { "label": "eSIM 切换后无信号时的线路排查", "href": "/more/03-esim/" }
   ],
   "/guides/5-travel-data/": [
-    { "label": "估算中国漫游费用", "href": "/tools/china-roaming-cost/" },
-    { "label": "查看实体卡转 eSIM", "href": "/more/03-esim/" },
-    { "label": "排查漫游信号", "href": "/guides/4-signal/" },
-    { "label": "购买前咨询卡片选择", "href": "/contact/" }
+    { "label": "中国漫游、短信和保号避坑总览", "href": "/guides/6-pitfalls/" },
+    { "label": "按当前 PAYG 费率试算中国漫游成本", "href": "/tools/china-roaming-cost/" },
+    { "label": "漫游无信号或短信异常时分层排查", "href": "/guides/4-signal/" },
+    { "label": "在中国拨打或接听前检查语音信箱", "href": "/qa/07-voicemail-switch/" },
+    { "label": "旅行前评估实体卡转 eSIM", "href": "/more/03-esim/" }
   ],
   "/more/03-esim/": [
-    { "label": "查看 eSIM 兼容证据门槛", "href": "/tools/esim-compatibility/" },
-    { "label": "回到实体卡激活教程", "href": "/guides/2-activate/" },
-    { "label": "切换后排查信号", "href": "/guides/4-signal/" },
-    { "label": "购买实体卡备用", "href": "/shop/" }
+    { "label": "eSIM、账号恢复和线路安全避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "核对当前 giffgaff App 登录和安全条件", "href": "/guides/3-app/" },
+    { "label": "eSIM 二维码与第三方写卡的安全边界", "href": "/more/04-esim-qrcode/" },
+    { "label": "实体卡激活完成后再评估 eSIM 切换", "href": "/guides/2-activate/" },
+    { "label": "eSIM 切换后无信号或短信异常时排查", "href": "/guides/4-signal/" }
+  ],
+  "/qa/02-topup/": [
+    { "label": "充值、保号和消费记录避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "自助充值不可用时查看人工服务边界", "href": "/guides/4-recharge-service/" },
+    { "label": "充值与 6 个月 inactive 保号规则", "href": "/guides/3-usage/" },
+    { "label": "充值后生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" },
+    { "label": "在 App 查询余额、套餐和消费记录", "href": "/guides/3-app/" }
+  ],
+  "/qa/07-voicemail-switch/": [
+    { "label": "收短信、保号和漫游的完整避坑清单", "href": "/guides/6-pitfalls/" },
+    { "label": "没有信号或无法拨号时先排查网络", "href": "/guides/4-signal/" },
+    { "label": "只作短信备用号时仍需遵守保号规则", "href": "/guides/3-usage/" },
+    { "label": "在中国拨打或接听前试算 PAYG 费用", "href": "/tools/china-roaming-cost/" },
+    { "label": "有信号仍无法设置时带测试结果咨询", "href": "/contact/" }
   ],
   "/guides/6-pitfalls/": [
     {
@@ -63,8 +115,10 @@
       "intent": "after-purchase",
       "description": "已经激活但无信号、普通短信或 OTP 异常时，先按可观察结果分支；仍无法判断可联系咨询。"
     },
-    { "label": "查看研究方法与证据卡", "href": "/research/" },
-    { "label": "按旅行、留学和保号场景选卡", "href": "/guides/8-uk-sim-choice/" },
-    { "label": "本地生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" }
+    { "label": "购卡、G0/G2 比较与总成本试算", "href": "/answers/" },
+    { "label": "账号与激活失败时的分步排查", "href": "/guides/2-activate/" },
+    { "label": "保号、充值和有效动作规则", "href": "/guides/3-usage/" },
+    { "label": "eSIM 官方切换前的账号恢复检查", "href": "/more/03-esim/" },
+    { "label": "在中国使用前试算 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" }
   ]
 }

@@ -19,8 +19,8 @@
         "/answers/",
         "/guides/2-activate/",
         "/guides/4-signal/",
-        "/shop/giffgaff-g0/",
-        "/shop/giffgaff-g2/"
+        "/guides/6-pitfalls/",
+        "/shop/"
       ],
       "commerceTarget": "/contact/",
       "indexPolicy": "index"
@@ -45,7 +45,7 @@
         "/answers/",
         "/shop/",
         "/guides/1-order/",
-        "/guides/7-arrival-checklist/"
+        "/guides/6-pitfalls/"
       ],
       "commerceTarget": "/contact/",
       "indexPolicy": "index"
@@ -65,7 +65,7 @@
         "/guides/3-usage/",
         "/qa/02-topup/",
         "/tools/china-roaming-cost/",
-        "/shop/"
+        "/guides/6-pitfalls/"
       ],
       "commerceTarget": "/contact/",
       "indexPolicy": "index"
@@ -87,7 +87,7 @@
         "/guides/5-travel-data/",
         "/guides/4-signal/",
         "/tools/keep-number-reminder/",
-        "/shop/"
+        "/guides/6-pitfalls/"
       ],
       "commerceTarget": "/contact/",
       "indexPolicy": "index"
@@ -108,8 +108,8 @@
       "relatedRoutes": [
         "/answers/",
         "/guides/1-order/",
-        "/shop/giffgaff-g0/",
-        "/shop/giffgaff-g2/"
+        "/guides/6-pitfalls/",
+        "/shop/"
       ],
       "commerceTarget": "/contact/",
       "indexPolicy": "index"

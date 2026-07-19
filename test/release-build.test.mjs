@@ -230,14 +230,14 @@ test("release conversion pages replace blanket payment deterrents with actionabl
   assert.match(llms, /支付页面和书面确认信息/u);
 });
 
-test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, and 46 commerce widgets", async (t) => {
+test("release build contains frozen pages, growth pages, semantic related slots, and commerce widgets", async (t) => {
   const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-release-"));
   t.after(() => rm(outputRoot, { recursive: true, force: true }));
   const report = await buildReleaseArtifact(outputRoot);
 
   assert.equal(report.legacyPages, 34);
   assert.equal(report.growthPages, 12);
-  assert.equal(report.injectedPages, 9);
+  assert.equal(report.injectedPages, 16);
   assert.equal(report.commerceWidgets, 34);
 
   const related = JSON.parse(

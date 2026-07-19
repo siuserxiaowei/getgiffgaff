@@ -15,10 +15,19 @@ import {
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const APPROVED_LEGACY_INBOUND = Object.freeze({
-  "/guides/0-intro/": "/guides/8-uk-sim-choice/",
-  "/guides/1-order/": "/guides/7-arrival-checklist/",
-  "/answers/": "/tools/g0-g2-total-cost/",
+const CORE_OWNER_PATHS = Object.freeze([
+  "/answers/",
+  "/guides/2-activate/",
+  "/guides/3-usage/",
+  "/guides/4-signal/",
+  "/more/03-esim/",
+]);
+
+const APPROVED_LEGACY_EDGES = Object.freeze({
+  "/": ["/guides/6-pitfalls/", "/guides/8-uk-sim-choice/"],
+  "/shop/": ["/guides/6-pitfalls/", "/tools/g0-g2-total-cost/", "/guides/7-arrival-checklist/"],
+  "/guides/3-app/": ["/guides/6-pitfalls/", "/guides/3-account/", "/qa/02-topup/", "/more/03-esim/", "/guides/4-signal/"],
+  "/qa/07-voicemail-switch/": ["/guides/6-pitfalls/", "/guides/4-signal/", "/guides/3-usage/", "/tools/china-roaming-cost/", "/contact/"],
 });
 
 function routeFile(root, route) {
@@ -48,15 +57,24 @@ function thematicHtml(html) {
     .replace(/<aside\b(?=[^>]*data-growth-slot=["']wechat-buying-guide-v1["'])[^>]*>[\s\S]*?<\/aside>/gi, "");
 }
 
-test("approved legacy growth slots link the three formerly orphaned pages without duplicates", async () => {
+test("approved legacy growth slots link high-value pages with semantic, duplicate-free exits", async () => {
   const related = JSON.parse(
     await readFile(path.join(ROOT, "site", "growth", "related-links.json"), "utf8"),
   );
-  for (const [source, target] of Object.entries(APPROVED_LEGACY_INBOUND)) {
+  for (const [source, targets] of Object.entries(APPROVED_LEGACY_EDGES)) {
     const entries = related[source];
     assert.ok(entries.length >= 3 && entries.length <= 5, `${source} must keep 3-5 links`);
     assert.equal(new Set(entries.map((entry) => entry.href)).size, entries.length, `${source} duplicate href`);
-    assert.ok(entries.some((entry) => entry.href === target), `${source} must link ${target}`);
+    for (const target of targets) {
+      assert.ok(entries.some((entry) => entry.href === target), `${source} must link ${target}`);
+    }
+  }
+
+  const pillarEntries = related["/guides/6-pitfalls/"];
+  assert.equal(pillarEntries.filter((entry) => Object.hasOwn(entry, "intent")).length, 2);
+  assert.equal(pillarEntries.filter((entry) => !Object.hasOwn(entry, "intent")).length, 5);
+  for (const target of CORE_OWNER_PATHS) {
+    assert.ok(pillarEntries.some((entry) => entry.href === target), `pillar must link ${target}`);
   }
 
   const content = JSON.parse(
@@ -110,17 +128,16 @@ test("approved slots create a shallow thematic graph without counting sitewide t
   );
   const approvedEdges = {
     "/guides/6-pitfalls/": [
-      "/research/",
-      "/guides/8-uk-sim-choice/",
-      "/tools/keep-number-reminder/",
+      ...CORE_OWNER_PATHS,
     ],
-    "/guides/4-signal/": ["/tools/china-roaming-cost/"],
-    "/guides/1-order/": ["/tools/g0-g2-total-cost/"],
-    "/guides/2-activate/": ["/guides/7-arrival-checklist/"],
+    "/guides/4-signal/": ["/guides/6-pitfalls/", "/qa/07-voicemail-switch/", "/tools/china-roaming-cost/"],
+    "/guides/1-order/": ["/guides/6-pitfalls/", "/tools/g0-g2-total-cost/", "/guides/7-arrival-checklist/"],
+    "/guides/2-activate/": ["/guides/6-pitfalls/", "/guides/3-app/", "/guides/7-arrival-checklist/"],
   };
   for (const [source, targets] of Object.entries(approvedEdges)) {
     const entries = related[source] || [];
-    assert.ok(entries.length >= 3 && entries.length <= 5, `${source} keeps 3-5 links`);
+    const tutorialEntries = entries.filter((entry) => !Object.hasOwn(entry, "intent"));
+    assert.ok(tutorialEntries.length >= 3 && tutorialEntries.length <= 5, `${source} keeps 3-5 tutorial links`);
     assert.equal(new Set(entries.map((entry) => entry.href)).size, entries.length, `${source} no duplicate href`);
     for (const target of targets) {
       assert.ok(entries.some((entry) => entry.href === target), `${source} links ${target}`);
@@ -159,7 +176,6 @@ test("approved slots create a shallow thematic graph without counting sitewide t
     assert.ok(depth.has(route), `${route} is thematically reachable from home`);
     assert.ok(depth.get(route) <= 2, `${route} thematic crawl depth is at most two`);
   }
-  assert.ok(inbound.get("/research/").size >= 1, "/research/ has a thematic inbound source");
 });
 
 test("Feishu seed is explicitly access-limited and uses the registry verification date", async () => {

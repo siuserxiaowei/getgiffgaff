@@ -46,8 +46,15 @@ test("pitfalls overview splits pre-purchase consultation from post-purchase diag
     /<a\b(?=[^>]*\bdata-analytics-event="contact_click")[^>]*>/,
     "no internal intent card claims a completed contact handoff",
   );
-  assert.match(slot, /href="\/guides\/8-uk-sim-choice\/"/);
-  assert.match(slot, /href="\/tools\/keep-number-reminder\/"/);
+  for (const href of [
+    "/answers/",
+    "/guides/2-activate/",
+    "/guides/3-usage/",
+    "/more/03-esim/",
+    "/tools/china-roaming-cost/",
+  ]) {
+    assert.match(slot, new RegExp(`href="${href.replaceAll("/", "\\/")}"`));
+  }
 
   const legacy = await readFile(
     path.join(ROOT, "site", "legacy", "guides", "6-pitfalls", "index.html"),

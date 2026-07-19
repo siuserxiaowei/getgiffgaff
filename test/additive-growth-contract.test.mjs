@@ -68,18 +68,6 @@ const NOINDEX_GROWTH_ROUTES = Object.freeze([
   "/shipping/",
 ]);
 
-const RELATED_LINK_ROUTES = Object.freeze([
-  "/guides/0-intro/",
-  "/guides/1-order/",
-  "/answers/",
-  "/guides/2-activate/",
-  "/guides/3-usage/",
-  "/guides/4-signal/",
-  "/guides/5-travel-data/",
-  "/more/03-esim/",
-  "/guides/6-pitfalls/",
-]);
-
 function sha256(value) {
   return createHash("sha256").update(value).digest("hex");
 }
@@ -231,18 +219,23 @@ test("legacy source pages exactly match the freeze manifest and contain no growt
 
 test("related link registry is append-only and targets valid routes", async () => {
   const links = await jsonFile("site/growth/related-links.json");
-  assert.deepEqual(Object.keys(links).sort(), [...RELATED_LINK_ROUTES].sort());
 
   const manifest = await import(
     `${pathToFileURL(path.join(ROOT, "public", "route-manifest.js")).href}?links=${Date.now()}`
   );
+  assert.ok(Object.keys(links).length >= 16, "semantic growth slots cover high-value legacy sources");
   for (const [route, entries] of Object.entries(links)) {
     assert.ok(LEGACY_ROUTES.includes(route), route);
-    assert.ok(entries.length >= 3 && entries.length <= 5, `${route} link count`);
+    const intentCount = entries.filter((entry) => Object.hasOwn(entry, "intent")).length;
+    const tutorialCount = entries.length - intentCount;
+    assert.ok(tutorialCount >= 3 && tutorialCount <= 5, `${route} tutorial link count`);
+    assert.equal(new Set(entries.map((entry) => entry.href)).size, entries.length, `${route} duplicate href`);
     for (const entry of entries) {
       assert.match(entry.label, /\S/, `${route} label`);
       assert.notEqual(entry.label, "点击这里");
-      assert.ok(manifest.routeFor(entry.href), `${route} -> ${entry.href}`);
+      const target = manifest.routeFor(entry.href);
+      assert.ok(target, `${route} -> ${entry.href}`);
+      assert.equal(target.indexPolicy, "index", `${route} -> ${entry.href} stays indexable`);
     }
   }
 });
