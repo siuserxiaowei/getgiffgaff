@@ -34,7 +34,7 @@
 ## Analytics 发布核验
 
 - Pages Preview 的合法 analytics probe 必须返回 404，且不得触碰生产 binding。
-- 生产 canary 必须返回 204，并写入查询键对齐的 `index1 = 'seo_release_canary:<一次性探针 ID>'`、`blob4 = 'seo_release_canary'` 与一次性 `blob5` 探针 ID。204 只证明处理器接受请求；受控生产发布随后必须在最多 18 次、8 分钟 wall-clock 硬截止内通过 SQL API 精确回读同一个 ID，回读失败时不得报告 `deployed: true`。该门限覆盖本次观测到的数分钟可见性延迟，不是 Cloudflare SLA。
+- 生产 canary 必须返回 204，并写入查询键对齐的 `index1 = 'seo_release_canary:<一次性探针 ID>'`、`blob4 = 'seo_release_canary'` 与一次性 `blob5` 探针 ID。204 只证明处理器接受请求；受控生产发布随后必须在最多 19 次、8 分钟 wall-clock 硬截止内通过 SQL API 精确回读同一个 ID，回读失败时不得报告 `deployed: true`。该门限覆盖本次观测到的数分钟可见性延迟，不是 Cloudflare SLA。
 - 所有运营查询必须排除 `seo_release_canary`，并用 `SUM(_sample_interval * double1)` 处理采样。
 
 ## D1–D7 诊断与 D1–D28 基线

@@ -307,17 +307,17 @@ test("analytics persistence polls through the bounded eight-minute visibility wi
     fetchImpl: async (input) => {
       if (String(input).endsWith("/analytics-event-v1")) return acceptedCanary();
       sqlReads += 1;
-      return sqlReads < 18
+      return sqlReads < 19
         ? sqlResponse([])
         : sqlResponse([{ probe_id: PROBE_ID, events: 1 }]);
     },
   });
 
   assert.equal(report.persisted, true);
-  assert.equal(report.queryAttempts, 18);
-  assert.equal(sqlReads, 18);
-  assert.deepEqual(delays, [5_000, 10_000, 20_000, ...Array(14).fill(30_000)]);
-  assert.equal(nowMs, Date.parse("2026-07-19T12:00:00Z") + 455_000);
+  assert.equal(report.queryAttempts, 19);
+  assert.equal(sqlReads, 19);
+  assert.deepEqual(delays, [5_000, 10_000, 20_000, ...Array(14).fill(30_000), 20_000]);
+  assert.equal(nowMs, Date.parse("2026-07-19T12:00:00Z") + 475_000);
 
   sqlReads = 0;
   nowMs = Date.parse("2026-07-19T12:00:00Z");
@@ -335,9 +335,9 @@ test("analytics persistence polls through the bounded eight-minute visibility wi
         return sqlResponse([]);
       },
     }),
-    /after 18 SQL attempts and 455000 milliseconds \(canary sent 2026-07-19T12:00:00\.000Z\)/,
+    /after 19 SQL attempts and 475000 milliseconds \(canary sent 2026-07-19T12:00:00\.000Z\)/,
   );
-  assert.equal(sqlReads, 18, "the bounded poll must not issue a nineteenth SQL query");
+  assert.equal(sqlReads, 19, "the bounded poll must not issue a twentieth SQL query");
 
   await assert.rejects(
     () => verifyAnalyticsPersistence({

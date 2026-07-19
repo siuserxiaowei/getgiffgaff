@@ -23,13 +23,14 @@ const ANALYTICS_RELEASE_PROBE_PAYLOAD = Object.freeze({
   source: "direct",
   event: "page_view",
 });
-const DEFAULT_ATTEMPTS = 18;
+const DEFAULT_ATTEMPTS = 19;
 const DEFAULT_DELAY_MS = 5_000;
 const DEFAULT_TIMEOUT_MS = 15_000;
 const DEFAULT_TOTAL_BUDGET_MS = 480_000;
 const MAX_TOTAL_BUDGET_MS = 480_000;
 const MAX_RETRY_DELAY_MS = 30_000;
 const MAX_RETRY_AFTER_MS = MAX_TOTAL_BUDGET_MS;
+const FINAL_QUERY_RESERVE_MS = 5_000;
 
 class RetryableAnalyticsSqlError extends Error {
   constructor(message, { retryAfterMs } = {}) {
@@ -419,7 +420,14 @@ export async function verifyAnalyticsPersistence({
           retryAfterMs: error.retryAfterMs,
           jitterFactory,
         });
-        await delay(Math.min(requestedDelay, remainingBeforeDelay));
+        const finalRetryDelayLimit = attempt === attempts - 1
+          ? Math.max(0, remainingBeforeDelay - Math.min(FINAL_QUERY_RESERVE_MS, remainingBeforeDelay))
+          : remainingBeforeDelay;
+        const delayForRetryAfter = error.retryAfterMs !== undefined
+          && error.retryAfterMs > finalRetryDelayLimit
+          ? remainingBeforeDelay
+          : Math.min(requestedDelay, finalRetryDelayLimit);
+        await delay(delayForRetryAfter);
       }
     }
   }
