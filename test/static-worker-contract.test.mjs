@@ -335,6 +335,29 @@ test("route manifest owns 39 indexable and seven noindex routes with real source
     "/tools/china-roaming-cost/",
     "/tools/g0-g2-total-cost/",
   ]);
+  const internalLinkRefinementRoutes = new Set([
+    "/",
+    "/shop/",
+    "/guides/0-intro/",
+    "/guides/1-order/",
+    "/answers/",
+    "/guides/2-activate/",
+    "/guides/3-account/",
+    "/guides/3-app/",
+    "/guides/3-usage/",
+    "/guides/4-recharge-service/",
+    "/guides/4-signal/",
+    "/guides/5-travel-data/",
+    "/more/03-esim/",
+    "/qa/02-topup/",
+    "/qa/07-voicemail-switch/",
+    "/guides/6-pitfalls/",
+    "/guides/7-arrival-checklist/",
+    "/guides/8-uk-sim-choice/",
+    "/tools/keep-number-reminder/",
+    "/tools/china-roaming-cost/",
+    "/tools/g0-g2-total-cost/",
+  ]);
 
   for (const [pathname, record] of Object.entries(ROUTE_MANIFEST)) {
     assert.equal(record.pathname, pathname);
@@ -352,13 +375,15 @@ test("route manifest owns 39 indexable and seven noindex routes with real source
       assert.ok(!PUBLIC_INDEXABLE_PATHS.includes(pathname), pathname);
     }
 
-    const expectedDate = consultationRecoveryRoutes.has(pathname)
-      ? "2026-07-19"
-      : record.contentSource === "legacy"
-        ? legacyDates.get(pathname)
-        : growthDates.get(pathname);
+    const expectedDate = internalLinkRefinementRoutes.has(pathname)
+      ? "2026-07-19T15:35:26Z"
+      : consultationRecoveryRoutes.has(pathname)
+        ? "2026-07-19"
+        : record.contentSource === "legacy"
+          ? legacyDates.get(pathname)
+          : growthDates.get(pathname);
     assert.equal(record.lastModified, expectedDate, `${pathname} lastModified`);
-    assert.match(record.lastModified, /^\d{4}-\d{2}-\d{2}$/, pathname);
+    assert.match(record.lastModified, /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}Z)?$/, pathname);
   }
 });
 
@@ -590,8 +615,8 @@ test("canonical production HTML uses a versioned edge cache while private reques
   assert.equal(env.__STATIC_CACHE.entries.size, 1);
   assert.deepEqual(
     [...env.__STATIC_CACHE.entries.keys()],
-    [`${url}?__getgiffgaff_release=contact-channels-analytics-20260719-v1`],
-    "consultation-channel release must rotate the production HTML cache namespace",
+    [`${url}?__getgiffgaff_release=__GETGIFFGAFF_RELEASE_COMMIT__`],
+    "source artifacts must never share a production HTML cache namespace",
   );
 
   const hit = await worker.fetch(new Request(url), env, context);

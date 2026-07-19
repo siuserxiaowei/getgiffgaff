@@ -26,7 +26,10 @@ const PAYMENT_HANDOFF_PATH = "/pay/";
 const PAYMENT_HANDOFF_TARGET = `${CANONICAL_ORIGIN}/contact/#ktt-giga-card`;
 const RETIRED_WECHAT_QR_PATH = "/contact/wechat-qr.png";
 const VERIFIED_WECHAT_QR_PATH = "/contact/wechat-qr.jpg";
-const EDGE_HTML_CACHE_VERSION = "contact-channels-analytics-20260719-v1";
+// This placeholder is bound to the exact Git commit in the release artifact.
+// A source checkout intentionally remains unbound, so it can never share the
+// canonical Worker Cache namespace used by a production release.
+const EDGE_HTML_CACHE_VERSION = "__GETGIFFGAFF_RELEASE_COMMIT__";
 const PUBLIC_READ_METHODS = new Set(["GET", "HEAD"]);
 const PUBLIC_STATIC_ASSETS = new Set(PUBLIC_STATIC_ASSET_PATHS);
 const OPTIONAL_PUBLIC_STATIC_ASSETS = new Set(OPTIONAL_PUBLIC_STATIC_ASSET_PATHS);

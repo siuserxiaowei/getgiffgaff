@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 import {
+  bindReleaseEdgeCacheVersion,
   bindReleaseProvenance,
   executeReleaseCommand,
   parseWranglerDetailedDeployment,
@@ -79,6 +80,7 @@ export async function runPreviewReleaseDeployment({
   env = process.env,
   runCommand = executeReleaseCommand,
   bindProvenance = bindReleaseProvenance,
+  bindEdgeCacheVersion = bindReleaseEdgeCacheVersion,
 } = {}) {
   const deploymentEnv = previewEnvironment(env);
   const commandOptions = { cwd, env: deploymentEnv };
@@ -108,6 +110,12 @@ export async function runPreviewReleaseDeployment({
   if (boundProvenance?.commit !== headSha) {
     throw new Error(
       `Release provenance binding returned ${boundProvenance?.commit || "missing"}, expected HEAD ${headSha}`,
+    );
+  }
+  const boundEdgeCacheVersion = await bindEdgeCacheVersion({ cwd, headSha });
+  if (boundEdgeCacheVersion?.commit !== headSha) {
+    throw new Error(
+      `Edge cache version binding returned ${boundEdgeCacheVersion?.commit || "missing"}, expected HEAD ${headSha}`,
     );
   }
 

@@ -2,6 +2,7 @@ const BASELINE_DATE = "2026-06-11";
 const EVIDENCE_DATE = "2026-07-15";
 const GROWTH_DATE = "2026-07-17";
 const CONSULTATION_RECOVERY_DATE = "2026-07-19";
+const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";
 
 export const LEGACY_ROUTES = Object.freeze([
   "/",
@@ -134,6 +135,34 @@ const CONSULTATION_RECOVERY_ROUTES = new Set([
   "/tools/g0-g2-total-cost/",
 ]);
 
+// These pages received substantive, route-specific internal-link or related
+// content changes in commit 3675247 at the timestamp below. A date-only
+// sitemap value hid the second release made on the same day, so retain the
+// precise W3C DateTime value rather than claiming a later calendar date.
+const INTERNAL_LINK_REFINEMENT_ROUTES = new Set([
+  "/",
+  "/shop/",
+  "/guides/0-intro/",
+  "/guides/1-order/",
+  "/answers/",
+  "/guides/2-activate/",
+  "/guides/3-account/",
+  "/guides/3-app/",
+  "/guides/3-usage/",
+  "/guides/4-recharge-service/",
+  "/guides/4-signal/",
+  "/guides/5-travel-data/",
+  "/more/03-esim/",
+  "/qa/02-topup/",
+  "/qa/07-voicemail-switch/",
+  "/guides/6-pitfalls/",
+  "/guides/7-arrival-checklist/",
+  "/guides/8-uk-sim-choice/",
+  "/tools/keep-number-reminder/",
+  "/tools/china-roaming-cost/",
+  "/tools/g0-g2-total-cost/",
+]);
+
 const COLLECTION_ROUTES = new Set([
   "/shop/",
   "/guides/",
@@ -175,6 +204,19 @@ function commerceFor(pathname) {
   return "contextual";
 }
 
+function lastModifiedFor(pathname, contentSource) {
+  if (INTERNAL_LINK_REFINEMENT_ROUTES.has(pathname)) {
+    return INTERNAL_LINK_REFINEMENT_DATE;
+  }
+  if (CONSULTATION_RECOVERY_ROUTES.has(pathname)) {
+    return CONSULTATION_RECOVERY_DATE;
+  }
+  if (contentSource === "legacy") {
+    return EVIDENCE_LEGACY_ROUTES.has(pathname) ? EVIDENCE_DATE : BASELINE_DATE;
+  }
+  return GROWTH_DATE;
+}
+
 function legacyRecord(pathname) {
   return Object.freeze({
     pathname,
@@ -185,11 +227,7 @@ function legacyRecord(pathname) {
     cachePolicy: "public",
     schemaType: schemaTypeFor(pathname),
     contentSource: "legacy",
-    lastModified: CONSULTATION_RECOVERY_ROUTES.has(pathname)
-      ? CONSULTATION_RECOVERY_DATE
-      : EVIDENCE_LEGACY_ROUTES.has(pathname)
-        ? EVIDENCE_DATE
-        : BASELINE_DATE,
+    lastModified: lastModifiedFor(pathname, "legacy"),
     commerce: commerceFor(pathname),
   });
 }
@@ -204,9 +242,7 @@ function growthRecord(pathname, indexPolicy) {
     cachePolicy: "public",
     schemaType: schemaTypeFor(pathname),
     contentSource: "growth",
-    lastModified: CONSULTATION_RECOVERY_ROUTES.has(pathname)
-      ? CONSULTATION_RECOVERY_DATE
-      : GROWTH_DATE,
+    lastModified: lastModifiedFor(pathname, "growth"),
     commerce: commerceFor(pathname),
   });
 }

@@ -6,6 +6,7 @@ import test from "node:test";
 
 import {
   bindReleaseSearchChanges,
+  bindReleaseEdgeCacheVersion,
   bindReleaseProvenance,
   executeReleaseCommand,
   parseReleaseDeploymentCliOptions,
@@ -15,6 +16,7 @@ import {
   validateNewProductionDeployment,
   validateReleaseProvenanceResponse,
   verifyCanonicalSeoAfterPropagation,
+  verifyCanonicalHtmlMatchesDeployment,
   verifyProductionDeploymentUrl,
   verifyReleaseProvenance,
   resolveCanonicalSearchBaseline,
@@ -204,6 +206,13 @@ function boundProvenance(headSha = HEAD_SHA) {
   };
 }
 
+function boundEdgeCacheVersion(headSha = HEAD_SHA) {
+  return async ({ headSha: actualSha }) => {
+    assert.equal(actualSha, headSha);
+    return { commit: actualSha, workerPath: "/fixture/worker-logic.js" };
+  };
+}
+
 function boundSearchChanges(changedPaths = []) {
   return async ({ baselineRef }) => ({ changedPaths, source: baselineRef });
 }
@@ -216,6 +225,8 @@ function productionFetch({
   headSha = HEAD_SHA,
   rootStatus = 200,
   rootHtml = '<link rel="canonical" href="https://getgiffgaff.com/">',
+  canonicalHtml = rootHtml,
+  bypassHtml = canonicalHtml,
   markerCommit = headSha,
   requests = [],
 } = {}) {
@@ -234,7 +245,14 @@ function productionFetch({
         },
       });
     }
-    return new Response(rootHtml, { status: rootStatus });
+    const isCanonical = url.origin === "https://getgiffgaff.com";
+    const body = isCanonical
+      ? (new Headers(init.headers).has("cookie") ? bypassHtml : canonicalHtml)
+      : rootHtml;
+    return new Response(body, {
+      status: rootStatus,
+      headers: isCanonical ? { "x-getgiffgaff-edge-cache": "HIT" } : {},
+    });
   };
 }
 
@@ -252,6 +270,7 @@ test("commerce deployment pins exact HEAD, proves a new Production record and ru
     env,
     runCommand: harness.runCommand,
     bindProvenance: boundProvenance(),
+    bindEdgeCacheVersion: boundEdgeCacheVersion(),
     bindSearchChanges: boundSearchChanges(["/contact/", "/shop/"]),
     resolveSearchBaseline: resolvedSearchBaseline(),
     fetchImpl: productionFetch({ requests: fetches }),
@@ -279,14 +298,15 @@ test("commerce deployment pins exact HEAD, proves a new Production record and ru
   assert.equal(harness.calls[4].options.captureStdout, true);
   assert.equal(harness.calls[7].args.includes("--commit-dirty=true"), false);
   assert.equal(harness.calls[7].options.env.WRANGLER_OUTPUT_FILE_PATH.endsWith("wrangler-output.ndjson"), true);
-  assert.equal(fetches.length, 4);
+  assert.equal(fetches.length, 7);
   assert.equal(fetches[0].url.pathname, "/");
-  assert.deepEqual(fetches.slice(1).map(({ url }) => url.pathname), [
-    "/release-provenance.json",
+  assert.deepEqual(fetches.slice(1, 3).map(({ url }) => url.pathname), [
     "/release-provenance.json",
     "/release-provenance.json",
   ]);
-  assert.equal(new Set(fetches.slice(1).map(({ url }) => url.search)).size, 3);
+  assert.equal(new Set(fetches.slice(1, 3).map(({ url }) => url.search)).size, 2);
+  assert.deepEqual(fetches.slice(3, 6).map(({ url }) => url.pathname), ["/", "/", "/"]);
+  assert.equal(fetches[5].init.headers.cookie, "getgiffgaff_release_cache_probe=1");
   for (const request of fetches.slice(1)) {
     assert.equal(request.init.redirect, "manual");
     assert.equal(request.init.cache, "no-store");
@@ -335,6 +355,30 @@ test("release provenance binding accepts only exact placeholder bytes and verifi
       writeFileImpl: async () => {},
     }),
     /byte verification failed/,
+  );
+});
+
+test("edge cache version binding replaces only the exact release placeholder", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-edge-cache-bind-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const releaseRoot = path.join(root, ".release");
+  const workerPath = path.join(releaseRoot, "worker-logic.js");
+  await mkdir(releaseRoot, { recursive: true });
+  await writeFile(workerPath, [
+    'const EDGE_HTML_CACHE_VERSION = "__GETGIFFGAFF_RELEASE_COMMIT__";',
+    "export default {};",
+  ].join("\n"));
+
+  const report = await bindReleaseEdgeCacheVersion({ cwd: root, headSha: HEAD_SHA });
+  assert.deepEqual(report, { workerPath, commit: HEAD_SHA });
+  assert.equal(
+    await readFile(workerPath, "utf8"),
+    `const EDGE_HTML_CACHE_VERSION = "${HEAD_SHA}";\nexport default {};`,
+  );
+
+  await assert.rejects(
+    () => bindReleaseEdgeCacheVersion({ cwd: root, headSha: HEAD_SHA }),
+    /exact unbound placeholder once/,
   );
 });
 
@@ -430,6 +474,32 @@ test("production readiness checks tolerate bounded Cloudflare propagation withou
   );
 });
 
+test("production HTML cache verification requires canonical and cookie-bypass bodies to match the deployment", async () => {
+  const html = '<link rel="canonical" href="https://getgiffgaff.com/"><main>release</main>';
+  const result = await verifyCanonicalHtmlMatchesDeployment("https://new-id.getgiffgaff.pages.dev", {
+    attempts: 1,
+    fetchImpl: productionFetch({ rootHtml: html }),
+  });
+  assert.equal(result.attempts, 1);
+  assert.equal(result.edgeCache, "HIT");
+  assert.match(result.sha256, /^[a-f0-9]{64}$/u);
+
+  await assert.rejects(
+    () => verifyCanonicalHtmlMatchesDeployment("https://new-id.getgiffgaff.pages.dev", {
+      attempts: 1,
+      fetchImpl: productionFetch({ rootHtml: html, canonicalHtml: `${html}stale` }),
+    }),
+    /HTML hash mismatch/,
+  );
+  await assert.rejects(
+    () => verifyCanonicalHtmlMatchesDeployment("https://new-id.getgiffgaff.pages.dev", {
+      attempts: 1,
+      fetchImpl: productionFetch({ rootHtml: html, bypassHtml: `${html}bypass` }),
+    }),
+    /HTML hash mismatch/,
+  );
+});
+
 test("commerce deployment rejects missing evidence before running any command", async () => {
   for (const env of [{}, { COMMERCE_EVIDENCE_FILE: "   " }]) {
     const harness = releaseRecorder();
@@ -520,6 +590,7 @@ test("post-upload origin/main advancement fails without a deployed:true report",
       env: {},
       runCommand: harness.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges: boundSearchChanges(),
       resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: async () => new Response('<link rel="canonical" href="https://getgiffgaff.com/">'),
@@ -540,6 +611,7 @@ test("post-upload HEAD and origin/main advancing together cannot validate an old
       env: {},
       runCommand: harness.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges: boundSearchChanges(),
       resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: async () => new Response('<link rel="canonical" href="https://getgiffgaff.com/">'),
@@ -581,6 +653,7 @@ test("post-upload remote guard still runs when the post-deploy metadata list fai
   await assert.rejects(
     () => runReleaseDeployment({
       mode: "maintenance", env: {}, runCommand, bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges: boundSearchChanges(), resolveSearchBaseline: resolvedSearchBaseline(),
     }),
     /post-upload metadata capture failed.*metadata API unavailable/s,
@@ -686,6 +759,7 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
       env: {},
       runCommand: httpHarness.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges: boundSearchChanges(),
       resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: async () => new Response("old edge", { status: 404 }),
@@ -704,6 +778,7 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
       env: {},
       runCommand: seoHarness.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges: boundSearchChanges(),
       resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: productionFetch(),
@@ -720,13 +795,16 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
       env: {},
       runCommand: afterSeoHarness.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges: boundSearchChanges(),
       resolveSearchBaseline: resolvedSearchBaseline(),
       nonceFactory: () => "c".repeat(64),
       fetchImpl: async (input, init = {}) => {
         const url = new URL(String(input));
         if (url.pathname === "/") {
-          return new Response('<link rel="canonical" href="https://getgiffgaff.com/">');
+          return new Response('<link rel="canonical" href="https://getgiffgaff.com/">', {
+            headers: { "x-getgiffgaff-edge-cache": "HIT" },
+          });
         }
         markerRequests.push({ url, init });
         const commit = markerRequests.length >= 3 ? OTHER_SHA : HEAD_SHA;
@@ -760,6 +838,7 @@ test("production does not report deployed:true until the analytics SQL readback 
       env: {},
       runCommand: harness.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges: boundSearchChanges(),
       resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: productionFetch(),
@@ -810,6 +889,7 @@ export function routeFor(pathname) { return routes[pathname] || null; }
       env: {},
       runCommand: first.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges,
       resolveSearchBaseline: resolvedSearchBaseline(OTHER_SHA),
       fetchImpl: productionFetch(),
@@ -835,6 +915,7 @@ export function routeFor(pathname) { return routes[pathname] || null; }
       env: {},
       runCommand: second.runCommand,
       bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
       bindSearchChanges,
       resolveSearchBaseline: resolvedSearchBaseline(HEAD_SHA),
       fetchImpl: productionFetch(),
@@ -854,6 +935,7 @@ export function routeFor(pathname) { return routes[pathname] || null; }
     env: {},
     runCommand: third.runCommand,
     bindProvenance: boundProvenance(),
+    bindEdgeCacheVersion: boundEdgeCacheVersion(),
     bindSearchChanges,
     resolveSearchBaseline: resolvedSearchBaseline(HEAD_SHA),
     fetchImpl: productionFetch(),
@@ -887,6 +969,7 @@ test("production fails closed when deployment or canonical provenance is stale",
         env: {},
         runCommand: harness.runCommand,
         bindProvenance: boundProvenance(),
+        bindEdgeCacheVersion: boundEdgeCacheVersion(),
         bindSearchChanges: boundSearchChanges(),
         resolveSearchBaseline: resolvedSearchBaseline(),
         fetchImpl: productionFetch({ markerCommit }),
@@ -1003,6 +1086,7 @@ test("Preview deployment rebuilds maintenance artifact, pins current remote bran
     env,
     runCommand,
     bindProvenance: boundProvenance(),
+    bindEdgeCacheVersion: boundEdgeCacheVersion(),
   });
   assert.deepEqual(calls.map(({ label }) => label), [
     "node scripts/assert-clean-worktree.mjs",
@@ -1062,6 +1146,7 @@ test("Preview post-upload remote advancement fails before URL verification", asy
   await assert.rejects(
     () => runPreviewReleaseDeployment({
       env: {}, runCommand, bindProvenance: boundProvenance(),
+      bindEdgeCacheVersion: boundEdgeCacheVersion(),
     }),
     /post-upload remote guard failed.*origin\/feature/s,
   );

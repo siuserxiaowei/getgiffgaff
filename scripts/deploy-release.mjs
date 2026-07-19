@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -22,6 +22,8 @@ const ORIGIN_MAIN_REF = "refs/remotes/origin/main";
 const RELEASE_PROVENANCE_PATH = "/release-provenance.json";
 const RELEASE_PROVENANCE_SCHEMA = "getgiffgaff_release_provenance_v1";
 const RELEASE_PROVENANCE_MAX_BYTES = 512;
+const EDGE_HTML_CACHE_VERSION_PLACEHOLDER = "__GETGIFFGAFF_RELEASE_COMMIT__";
+const EDGE_HTML_CACHE_VERSION_PATTERN = /const EDGE_HTML_CACHE_VERSION = "([0-9a-f]{40})";/u;
 const PRODUCTION_DEPLOYMENT_READY_ATTEMPTS = 8;
 const CANONICAL_SEO_READY_ATTEMPTS = 6;
 const CANONICAL_SEO_RETRY_DELAY_MS = 5_000;
@@ -139,6 +141,31 @@ export async function bindReleaseProvenance({
     throw new Error(`Release provenance byte verification failed after writing ${markerPath}`);
   }
   return { markerPath, commit: releaseSha, bytes: expected.byteLength };
+}
+
+export async function bindReleaseEdgeCacheVersion({
+  cwd = ROOT,
+  headSha,
+  readFileImpl = readFile,
+  writeFileImpl = writeFile,
+} = {}) {
+  const releaseSha = fullCommitSha(headSha, "edge cache release");
+  const workerPath = path.join(cwd, ".release", "worker-logic.js");
+  const source = await readFileImpl(workerPath, "utf8");
+  const placeholder = `const EDGE_HTML_CACHE_VERSION = "${EDGE_HTML_CACHE_VERSION_PLACEHOLDER}";`;
+  if (!source.includes(placeholder) || source.split(placeholder).length !== 2) {
+    throw new Error(
+      `Refusing to bind edge cache version: ${workerPath} must contain the exact unbound placeholder once`,
+    );
+  }
+  const expected = source.replace(placeholder, `const EDGE_HTML_CACHE_VERSION = "${releaseSha}";`);
+  await writeFileImpl(workerPath, expected);
+  const rebound = await readFileImpl(workerPath, "utf8");
+  const boundVersion = rebound.match(EDGE_HTML_CACHE_VERSION_PATTERN)?.[1] || "";
+  if (rebound !== expected || boundVersion !== releaseSha) {
+    throw new Error(`Edge cache version byte verification failed after writing ${workerPath}`);
+  }
+  return { workerPath, commit: releaseSha };
 }
 
 function releaseEnvironment(env, mode) {
@@ -397,6 +424,40 @@ function canonicalHref(html) {
   return "";
 }
 
+function responseHash(bytes) {
+  return createHash("sha256").update(bytes).digest("hex");
+}
+
+async function fetchHtmlRepresentation(url, {
+  fetchImpl,
+  headers,
+  label,
+} = {}) {
+  const response = await fetchImpl(url, {
+    redirect: "manual",
+    cache: "no-store",
+    headers: {
+      accept: "text/html,application/xhtml+xml;q=0.9,*/*;q=0.1",
+      ...headers,
+    },
+    signal: AbortSignal.timeout(15_000),
+  });
+  const bytes = Buffer.from(await response.arrayBuffer());
+  const html = bytes.toString("utf8");
+  const canonical = canonicalHref(html);
+  if (response.status !== 200 || canonical !== `${CANONICAL_ORIGIN}/`) {
+    throw new Error(
+      `${label}: expected 200 with canonical ${CANONICAL_ORIGIN}/, got status ${response.status} and canonical ${canonical || "missing"}`,
+    );
+  }
+  return {
+    status: response.status,
+    canonical,
+    sha256: responseHash(bytes),
+    edgeCache: response.headers.get("x-getgiffgaff-edge-cache") || "",
+  };
+}
+
 export async function verifyProductionDeploymentUrl(deploymentUrl, {
   fetchImpl = globalThis.fetch,
   attempts = PRODUCTION_DEPLOYMENT_READY_ATTEMPTS,
@@ -423,6 +484,55 @@ export async function verifyProductionDeploymentUrl(deploymentUrl, {
     }
   }
   throw new Error(`Production deployment URL verification failed for ${deploymentUrl}: ${lastFailure}`);
+}
+
+export async function verifyCanonicalHtmlMatchesDeployment(deploymentUrl, {
+  fetchImpl = globalThis.fetch,
+  attempts = CANONICAL_SEO_READY_ATTEMPTS,
+  delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  delayMs = CANONICAL_SEO_RETRY_DELAY_MS,
+} = {}) {
+  if (!Number.isSafeInteger(attempts) || attempts < 1 || attempts > 8) {
+    throw new TypeError("attempts must be an integer from 1 through 8");
+  }
+  if (!Number.isSafeInteger(delayMs) || delayMs < 0 || delayMs > 15_000) {
+    throw new TypeError("delayMs must be from 0 through 15000 milliseconds");
+  }
+
+  const deploymentUrlRoot = `${normalizedUrl(deploymentUrl)}/`;
+  let lastFailure = "no response";
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const deployment = await fetchHtmlRepresentation(deploymentUrlRoot, {
+        fetchImpl,
+        label: "deployment HTML",
+      });
+      const canonical = await fetchHtmlRepresentation(CANONICAL_ORIGIN, {
+        fetchImpl,
+        label: "canonical HTML",
+      });
+      const bypass = await fetchHtmlRepresentation(CANONICAL_ORIGIN, {
+        fetchImpl,
+        headers: { cookie: "getgiffgaff_release_cache_probe=1" },
+        label: "canonical cache-bypass HTML",
+      });
+      if (canonical.sha256 !== deployment.sha256 || bypass.sha256 !== deployment.sha256) {
+        throw new Error(
+          `HTML hash mismatch: deployment ${deployment.sha256}, canonical ${canonical.sha256}, cache-bypass ${bypass.sha256}`,
+        );
+      }
+      if (!canonical.edgeCache) {
+        throw new Error("canonical HTML is missing x-getgiffgaff-edge-cache");
+      }
+      return { attempts: attempt, sha256: deployment.sha256, edgeCache: canonical.edgeCache };
+    } catch (error) {
+      lastFailure = error.message;
+    }
+    if (attempt < attempts) await delay(delayMs);
+  }
+  throw new Error(
+    `Production deployment HTML cache verification failed for ${deploymentUrl} after ${attempts} attempt${attempts === 1 ? "" : "s"}: ${lastFailure}`,
+  );
 }
 
 export async function verifyCanonicalSeoAfterPropagation({
@@ -488,6 +598,7 @@ export async function runReleaseDeployment({
   env = process.env,
   runCommand = executeReleaseCommand,
   bindProvenance = bindReleaseProvenance,
+  bindEdgeCacheVersion = bindReleaseEdgeCacheVersion,
   bindSearchChanges = bindReleaseSearchChanges,
   recordSearchSubmission = recordReleaseSearchSubmission,
   resolveSearchBaseline = resolveCanonicalSearchBaseline,
@@ -511,6 +622,12 @@ export async function runReleaseDeployment({
   if (boundProvenance?.commit !== headSha) {
     throw new Error(
       `Release provenance binding returned ${boundProvenance?.commit || "missing"}, expected HEAD ${headSha}`,
+    );
+  }
+  const boundEdgeCacheVersion = await bindEdgeCacheVersion({ cwd, headSha });
+  if (boundEdgeCacheVersion?.commit !== headSha) {
+    throw new Error(
+      `Edge cache version binding returned ${boundEdgeCacheVersion?.commit || "missing"}, expected HEAD ${headSha}`,
     );
   }
   const searchBaselineRef = await resolveSearchBaseline({
@@ -584,6 +701,10 @@ export async function runReleaseDeployment({
     delay,
     nonceFactory,
     label: "canonical production domain before verify:seo",
+  });
+  await verifyCanonicalHtmlMatchesDeployment(deployment.deploymentUrl, {
+    fetchImpl,
+    delay,
   });
   await verifyCanonicalSeoAfterPropagation({
     runCommand,

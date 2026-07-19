@@ -164,7 +164,7 @@ test("route manifest keeps 34 frozen pages and adds five index plus seven noinde
     const record = manifest.routeFor(route);
     assert.equal(record?.indexPolicy, "index", route);
     assert.equal(record?.contentSource, "legacy", route);
-    assert.match(record?.lastModified || "", /^\d{4}-\d{2}-\d{2}$/, route);
+    assert.match(record?.lastModified || "", /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}Z)?$/, route);
   }
   for (const route of INDEXABLE_GROWTH_ROUTES) {
     assert.equal(manifest.routeFor(route)?.indexPolicy, "index", route);

@@ -287,6 +287,12 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   ]) {
     assert.ok((await readFile(path.join(outputRoot, filename))).length > 0, filename);
   }
+  const workerLogic = await readFile(path.join(outputRoot, "worker-logic.js"), "utf8");
+  assert.match(
+    workerLogic,
+    /const EDGE_HTML_CACHE_VERSION = "__GETGIFFGAFF_RELEASE_COMMIT__";/,
+    "the build artifact stays unbound until its exact release commit is known",
+  );
 
   const sitemap = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");
   assert.equal((sitemap.match(/<url>/g) || []).length, 39);
@@ -340,7 +346,8 @@ test("release search-change binding records only routes whose sitemap lastmod ch
     path.join(ROOT, "public", "route-manifest.js"),
     "utf8",
   ))
-    .replace('const CONSULTATION_RECOVERY_DATE = "2026-07-19";', 'const CONSULTATION_RECOVERY_DATE = "2026-07-17";');
+    .replace('const CONSULTATION_RECOVERY_DATE = "2026-07-19";', 'const CONSULTATION_RECOVERY_DATE = "2026-07-17";')
+    .replace('const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";', 'const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-17";');
 
   const report = await bindReleaseSearchChanges({
     cwd: root,
@@ -355,7 +362,7 @@ test("release search-change binding records only routes whose sitemap lastmod ch
   assert.deepEqual(report.changedPaths, [...report.changedPaths].sort());
   assert.ok(report.changedPaths.includes("/contact/"));
   assert.ok(report.changedPaths.includes("/shop/"));
-  assert.ok(!report.changedPaths.includes("/answers/"));
+  assert.ok(report.changedPaths.includes("/answers/"));
   const artifact = JSON.parse(
     await readFile(path.join(root, ".release", "release-search-changes.json"), "utf8"),
   );
