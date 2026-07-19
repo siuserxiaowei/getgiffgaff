@@ -78,4 +78,29 @@ test("privacy status page accurately discloses de-identified event-level funnel 
   assert.match(html, /contact_click|咨询点击/);
   assert.match(html, /微信、Telegram.*白名单联系渠道/);
   assert.doesNotMatch(html, /微信、Telegram 或快团团这类白名单联系渠道/);
+  assert.match(html, /utm_source/);
+  assert.match(html, /固定白名单/);
+  const attributionSources = [
+    "dist_partner",
+    "dist_private_share",
+    "dist_wechat_group",
+    "dist_wechat_official",
+    "dist_xiaohongshu",
+    "paid_google",
+    "paid_microsoft",
+  ];
+  for (const source of attributionSources) {
+    assert.match(html, new RegExp(source), source);
+  }
+  const disclosedAllowlist = html.match(/当前白名单仅包括 ([\s\S]*?)；其他值/)?.[1];
+  assert.ok(disclosedAllowlist, "attribution allowlist disclosure");
+  assert.deepEqual(
+    [...disclosedAllowlist.matchAll(/<code>([^<]+)<\/code>/g)].map((match) => match[1]),
+    attributionSources,
+    "privacy page exposes exactly the implemented attribution allowlist",
+  );
+  assert.match(html, /当前标签页的 <code>sessionStorage<\/code>/);
+  assert.match(html, /关闭该标签页后不用于跨会话识别/);
+  assert.match(html, /其他值不会写入统计载荷或浏览器存储/);
+  assert.match(html, /不会记录完整查询参数/);
 });

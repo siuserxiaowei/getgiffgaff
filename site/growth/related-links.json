@@ -51,10 +51,20 @@
     { "label": "购买实体卡备用", "href": "/shop/" }
   ],
   "/guides/6-pitfalls/": [
+    {
+      "label": "未购卡：先咨询选卡与当前信息",
+      "href": "/contact/",
+      "intent": "before-purchase",
+      "description": "说明旅行、留学、保号或收短信场景，再核对 G0/G2、当前库存与交易边界。"
+    },
+    {
+      "label": "已购卡：按症状排查信号与短信",
+      "href": "/guides/4-signal/",
+      "intent": "after-purchase",
+      "description": "已经激活但无信号、普通短信或 OTP 异常时，先按可观察结果分支；仍无法判断可联系咨询。"
+    },
     { "label": "查看研究方法与证据卡", "href": "/research/" },
     { "label": "按旅行、留学和保号场景选卡", "href": "/guides/8-uk-sim-choice/" },
-    { "label": "本地生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" },
-    { "label": "排查无信号、普通短信和 OTP", "href": "/guides/4-signal/" },
-    { "label": "查看中国 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" }
+    { "label": "本地生成第 5 个月保号提醒", "href": "/tools/keep-number-reminder/" }
   ]
 }

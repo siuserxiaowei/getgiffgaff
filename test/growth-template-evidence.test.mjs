@@ -180,5 +180,17 @@ test("growth funnels use the anonymous event interface without changing destinat
     for (const related of page.relatedRoutes) {
       assert.match(html, new RegExp(`href="${related.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`));
     }
+    if (page.commerceTarget.href.startsWith("/contact/")) {
+      assert.match(
+        html,
+        /<a\b(?=[^>]*\bhref="\/contact\/")(?=[^>]*\bdata-analytics-event="commerce_click")[^>]*>/,
+        `${page.path} internal Contact CTA remains navigation until a real channel handoff`,
+      );
+      assert.doesNotMatch(
+        html,
+        /<a\b(?=[^>]*\bhref="\/contact\/")(?=[^>]*\bdata-analytics-event="contact_click")[^>]*>/,
+        `${page.path} internal Contact CTA is not a completed contact click`,
+      );
+    }
   }
 });

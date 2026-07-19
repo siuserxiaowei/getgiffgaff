@@ -1,0 +1,21 @@
+{
+  "ads": {
+    "explicitOwnerAuthorization": false,
+    "paidAttributionDeployedAndReadBack": false,
+    "sevenCompleteUtcDays": false,
+    "qualifiedConsultationRecorded": false,
+    "contributionMarginKnown": false,
+    "landingPageAndPolicyReviewed": false,
+    "budgetAndStopLossApproved": false
+  },
+  "payment": {
+    "businessIdentityAndKyc": false,
+    "serverSideSkuPriceStock": false,
+    "reviewedPolicies": false,
+    "ordersAndIdempotentWebhooks": false,
+    "fulfillmentRefundReconciliation": false,
+    "evidencePackageValidated": false,
+    "paymentFrictionObserved": false
+  },
+  "note": "Copy only the relevant nested object into a private local JSON file. Do not add credentials, customer data, payment details or legal identity documents."
+}

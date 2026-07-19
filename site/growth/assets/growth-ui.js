@@ -27,6 +27,12 @@ function fieldValue(root, name) {
   return root.querySelector(`[name="${name}"]`)?.value ?? null;
 }
 
+function emitToolResult() {
+  document.dispatchEvent(new CustomEvent("analytics_event_v1", {
+    detail: { event: "tool_result" },
+  }));
+}
+
 function bindKeepNumber(root) {
   const output = root.querySelector("output");
   const calculate = root.querySelector("[data-calculate]");
@@ -50,6 +56,7 @@ function bindKeepNumber(root) {
     }
     output.textContent = `第 5 个月操作提醒：${reminder}。这不是号码状态保证，请操作前复核官方规则。`;
     download.disabled = false;
+    emitToolResult();
   });
   download.addEventListener("click", () => {
     if (!calendar) return;
@@ -84,6 +91,7 @@ function bindRoamingCost(root) {
       return;
     }
     output.textContent = `PAYG Credit 估算合计 ${money(result.total, "GBP")}：流量 ${money(result.data.amount, "GBP")}；发出短信 ${money(result.sms.amount, "GBP")}；单次拨打 ${money(result.outgoingCall.amount, "GBP")}（按 ${result.outgoingCall.billedSeconds} 秒）；单次接听 ${money(result.incomingCall.amount, "GBP")}（按 ${result.incomingCall.billedMinutes} 个整分钟）。不含 Travel Data Add-on；实际扣费以运营商账单为准。`;
+    emitToolResult();
   });
 }
 
@@ -104,6 +112,7 @@ function bindTotalCost(root) {
       return;
     }
     output.textContent = `按本次输入，现金支出为 ${money(result.cashOutlay, "CNY")}；可用余额记录为 £${result.usableBalance.toFixed(2)}，未按未知汇率抵扣。`;
+    emitToolResult();
   });
 }
 

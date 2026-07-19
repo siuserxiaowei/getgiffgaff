@@ -75,8 +75,24 @@ test("all eight generated growth pages classify and secure runtime external link
   }
 });
 
-test("commerce widget classifies and secures both external contact links", () => {
+test("commerce widget secures quick and detailed links to both contact destinations", () => {
   const html = renderCommerceWidget();
   assertSafeExternalAnchors(html, "commerce widget");
-  assert.equal(externalAnchors(html).length, 2, "widget has two external contact destinations");
+  const links = externalAnchors(html);
+  assert.equal(links.length, 4, "widget has quick and detailed contact handoffs");
+  assert.deepEqual(
+    [...new Set(links.map(({ url }) => url.href))].sort(),
+    [
+      "https://t.me/xiaoyuhuai",
+      "https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4",
+    ],
+    "widget still has exactly two external contact destinations",
+  );
+  for (const destination of new Set(links.map(({ url }) => url.href))) {
+    assert.equal(
+      links.filter(({ url }) => url.href === destination).length,
+      2,
+      `${destination} has one quick and one detailed handoff`,
+    );
+  }
 });

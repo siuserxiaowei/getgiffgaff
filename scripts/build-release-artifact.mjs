@@ -3,9 +3,11 @@ import {
   mkdir,
   readFile,
   readdir,
+  rename,
   rm,
   writeFile,
 } from "node:fs/promises";
+import { createHash, randomUUID } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
@@ -45,6 +47,10 @@ export const RELEASE_PROVENANCE_PLACEHOLDER = Object.freeze({
   schema: "getgiffgaff_release_provenance_v1",
   commit: "unbound",
 });
+export const RELEASE_SEARCH_CHANGES_SCHEMA = "getgiffgaff_search_changes_v1";
+const RELEASE_SEARCH_CHANGES_FILE = "release-search-changes.json";
+const RELEASE_SEARCH_STATE_SCHEMA = "getgiffgaff_search_release_state_v1";
+const RELEASE_SEARCH_STATE_FILE = path.join(".seo-cache", "release-search-state.json");
 const CONTACT_RELEASE_COPY_OVERRIDES = Object.freeze([
   Object.freeze({
     label: "current WeChat display name",
@@ -1131,14 +1137,43 @@ function routeFile(root, route) {
     : path.join(root, route.slice(1), "index.html");
 }
 
+const PITFALLS_FUNNEL_INTENTS = new Set([
+  "after-purchase",
+  "before-purchase",
+]);
+
 function growthModule(links) {
-  const items = links
+  const intentLinks = links.filter((link) => Object.hasOwn(link, "intent"));
+  const tutorialLinks = links.filter((link) => !Object.hasOwn(link, "intent"));
+  if (intentLinks.length > 0) {
+    const intents = intentLinks.map(({ intent }) => intent);
+    if (
+      intents.length !== PITFALLS_FUNNEL_INTENTS.size
+      || new Set(intents).size !== PITFALLS_FUNNEL_INTENTS.size
+      || intents.some((intent) => !PITFALLS_FUNNEL_INTENTS.has(intent))
+    ) {
+      throw new Error(
+        "Related tutorial intent choices must contain exactly one "
+        + "before-purchase and one after-purchase card",
+      );
+    }
+  }
+  const intentCards = intentLinks
+    .map(
+      ({ label, href, intent, description }) =>
+        `<a class="growth-intent-card" href="${escapeHtml(href)}" data-funnel-intent="${escapeHtml(intent)}" data-analytics-event="commerce_click"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(description)}</span></a>`,
+    )
+    .join("");
+  const items = tutorialLinks
     .map(
       ({ label, href }) =>
         `<li><a href="${escapeHtml(href)}" data-analytics-event="growth_related_click">${escapeHtml(label)}</a></li>`,
     )
     .join("");
-  return `<section class="growth-related-slot" ${GROWTH_MARKER} aria-labelledby="growth-related-title"><div class="growth-related-inner"><p class="growth-eyebrow">继续阅读</p><h2 id="growth-related-title">相关教程与下一步</h2><ul>${items}</ul></div></section>`;
+  const intentChooser = intentCards
+    ? `<p class="growth-eyebrow">按当前状态继续</p><h2 id="growth-related-title">你现在要解决哪一步？</h2><div class="growth-intent-grid">${intentCards}</div><h3>继续查资料</h3>`
+    : `<p class="growth-eyebrow">继续阅读</p><h2 id="growth-related-title">相关教程与下一步</h2>`;
+  return `<section class="growth-related-slot" ${GROWTH_MARKER} aria-labelledby="growth-related-title"><div class="growth-related-inner">${intentChooser}<ul>${items}</ul></div></section>`;
 }
 
 export function ensureGrowthStylesheet(html) {
@@ -1248,9 +1283,7 @@ export function applyReleaseConversionOverrides(html, route, options = {}) {
 }
 
 function applyGrowthReleaseConversionOverrides(html, route) {
-  let output = applyReleaseConversionOverrides(html, route, {
-    expectedInternalContactClicks: 1,
-  });
+  let output = applyReleaseConversionOverrides(html, route);
   if (route === "/tools/g0-g2-total-cost/") {
     output = exactReleaseReplacement(output, {
       route,
@@ -1278,12 +1311,251 @@ async function copyTree(source, destination, { exclude = new Set() } = {}) {
   }
 }
 
-function sitemapXml() {
+export function sitemapXml() {
   const entries = PUBLIC_INDEXABLE_PATHS.map((pathname) => {
     const route = routeFor(pathname);
     return `  <url>\n    <loc>https://getgiffgaff.com${pathname}</loc>\n    <lastmod>${route.lastModified}</lastmod>\n  </url>`;
   });
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join("\n")}\n</urlset>\n`;
+}
+
+function sha256(value) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function validateSearchChanges(value) {
+  const changedPaths = Array.isArray(value) ? value : [];
+  const uniquePaths = [...new Set(changedPaths)].sort();
+  if (uniquePaths.length !== changedPaths.length) {
+    throw new Error("release search changes must not contain duplicate routes");
+  }
+  for (const pathname of uniquePaths) {
+    if (!PUBLIC_INDEXABLE_PATHS.includes(pathname)) {
+      throw new Error(`release search changes contains a non-indexable route: ${pathname}`);
+    }
+  }
+  return uniquePaths;
+}
+
+function searchChangesArtifact({ changedPaths, sitemap }) {
+  return Object.freeze({
+    schema: RELEASE_SEARCH_CHANGES_SCHEMA,
+    changedPaths: validateSearchChanges(changedPaths),
+    sitemapSha256: sha256(sitemap),
+  });
+}
+
+function releaseCommit(value, label) {
+  const commit = String(value || "").trim().toLowerCase();
+  if (!/^[0-9a-f]{40}$/u.test(commit)) {
+    throw new Error(`${label} must be a lowercase 40-character Git SHA`);
+  }
+  return commit;
+}
+
+function submissionReceipt(value, changedPaths) {
+  if (value === null) return null;
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("release search submission receipt must be an object or null");
+  }
+  if (value.outcome === "no_changes") {
+    if (
+      changedPaths.length !== 0
+      || value.status !== "noop"
+      || value.submittedUrls !== 0
+    ) {
+      throw new Error("release search no-change receipt does not match the change set");
+    }
+    return Object.freeze({
+      outcome: "no_changes",
+      status: "noop",
+      submittedUrls: 0,
+    });
+  }
+  if (
+    value.outcome !== "accepted"
+    || value.endpoint !== "https://api.indexnow.org/indexnow"
+    || ![200, 202].includes(value.status)
+    || value.submittedUrls !== changedPaths.length
+    || value.keyLocation !== "https://getgiffgaff.com/indexnow-key.txt"
+  ) {
+    throw new Error("release search IndexNow receipt does not match the change set");
+  }
+  return Object.freeze({
+    outcome: "accepted",
+    endpoint: value.endpoint,
+    status: value.status,
+    submittedUrls: value.submittedUrls,
+    keyLocation: value.keyLocation,
+  });
+}
+
+function releaseSearchState(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    throw new Error("release search state must be an object");
+  }
+  if (value.schema !== RELEASE_SEARCH_STATE_SCHEMA) {
+    throw new Error(`Unsupported release search state schema: ${value.schema || "missing"}`);
+  }
+  const changedPaths = validateSearchChanges(value.changedPaths);
+  const sitemapSha256 = String(value.sitemapSha256 || "");
+  if (!/^[a-f0-9]{64}$/u.test(sitemapSha256)) {
+    throw new Error("release search state has an invalid sitemap SHA-256");
+  }
+  return Object.freeze({
+    schema: RELEASE_SEARCH_STATE_SCHEMA,
+    baselineCommit: releaseCommit(value.baselineCommit, "release search baseline"),
+    candidateCommit: releaseCommit(value.candidateCommit, "release search candidate"),
+    changedPaths,
+    sitemapSha256,
+    submissionReceipt: submissionReceipt(value.submissionReceipt, changedPaths),
+  });
+}
+
+async function readReleaseSearchState(cwd) {
+  const statePath = path.join(cwd, RELEASE_SEARCH_STATE_FILE);
+  try {
+    return { statePath, state: releaseSearchState(JSON.parse(await readFile(statePath, "utf8"))) };
+  } catch (error) {
+    if (error?.code === "ENOENT") return { statePath, state: null };
+    throw new Error(`Unable to read release search state ${statePath}: ${error.message}`);
+  }
+}
+
+async function writeReleaseSearchState(cwd, value) {
+  const state = releaseSearchState(value);
+  const statePath = path.join(cwd, RELEASE_SEARCH_STATE_FILE);
+  await mkdir(path.dirname(statePath), { recursive: true });
+  const temporaryPath = `${statePath}.${process.pid}.${randomUUID()}.tmp`;
+  try {
+    await writeFile(temporaryPath, `${JSON.stringify(state)}\n`, { flag: "wx" });
+    await rename(temporaryPath, statePath);
+  } finally {
+    await rm(temporaryPath, { force: true });
+  }
+  return { statePath, state };
+}
+
+function changedPathsFromSitemaps(previousSitemap, nextSitemap) {
+  const entries = (xml) => new Map(
+    [...String(xml || "").matchAll(
+      /<url>\s*<loc>https:\/\/getgiffgaff\.com([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>\s*<\/url>/gu,
+    )].map((match) => [match[1], match[2]]),
+  );
+  const before = entries(previousSitemap);
+  const after = entries(nextSitemap);
+  return [...after]
+    .filter(([pathname, lastModified]) => before.get(pathname) !== lastModified)
+    .map(([pathname]) => pathname);
+}
+
+export async function bindReleaseSearchChanges({
+  cwd = ROOT,
+  baselineRef,
+  candidateCommit,
+  runGit,
+} = {}) {
+  const baselineCommit = releaseCommit(baselineRef, "release search baseline");
+  const candidate = releaseCommit(candidateCommit, "release search candidate");
+  const releaseRoot = path.join(cwd, ".release");
+  const sitemapPath = path.join(releaseRoot, "sitemap.xml");
+  const nextSitemap = await readFile(sitemapPath, "utf8");
+  const nextSitemapSha256 = sha256(nextSitemap);
+  const existing = await readReleaseSearchState(cwd);
+  if (
+    existing.state?.candidateCommit === candidate
+    && (
+      baselineCommit === existing.state.baselineCommit
+      || baselineCommit === candidate
+    )
+  ) {
+    if (existing.state.sitemapSha256 !== nextSitemapSha256) {
+      throw new Error(
+        `Release search state for candidate ${candidate} does not match the built sitemap`,
+      );
+    }
+    const artifact = searchChangesArtifact({
+      changedPaths: existing.state.changedPaths,
+      sitemap: nextSitemap,
+    });
+    await writeFile(
+      path.join(releaseRoot, RELEASE_SEARCH_CHANGES_FILE),
+      `${JSON.stringify(artifact)}\n`,
+    );
+    return {
+      changedPaths: existing.state.changedPaths,
+      source: existing.state.baselineCommit,
+      candidateCommit: candidate,
+      submissionReceipt: existing.state.submissionReceipt,
+      statePath: existing.statePath,
+      reused: true,
+    };
+  }
+  const gitShow = runGit || (async (spec) => {
+    const { execFile } = await import("node:child_process");
+    const { promisify } = await import("node:util");
+    return (await promisify(execFile)("git", ["show", spec], {
+      cwd,
+      encoding: "utf8",
+      maxBuffer: 1024 * 1024,
+    })).stdout;
+  });
+  let previousSitemap;
+  try {
+    const previousManifest = await gitShow(`${baselineCommit}:public/route-manifest.js`);
+    const dataUrl = `data:text/javascript;base64,${Buffer.from(previousManifest).toString("base64")}`;
+    const previousRoutes = await import(dataUrl);
+    previousSitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${previousRoutes.PUBLIC_INDEXABLE_PATHS.map((pathname) => {
+      const route = previousRoutes.routeFor(pathname);
+      return `  <url>\n    <loc>https://getgiffgaff.com${pathname}</loc>\n    <lastmod>${route.lastModified}</lastmod>\n  </url>`;
+    }).join("\n")}\n</urlset>\n`;
+  } catch (error) {
+    throw new Error(`Unable to resolve search-change baseline ${baselineCommit}: ${error.message}`);
+  }
+  const changedPaths = validateSearchChanges(changedPathsFromSitemaps(
+    previousSitemap,
+    nextSitemap,
+  ));
+  const artifact = searchChangesArtifact({ changedPaths, sitemap: nextSitemap });
+  await writeFile(
+    path.join(releaseRoot, RELEASE_SEARCH_CHANGES_FILE),
+    `${JSON.stringify(artifact)}\n`,
+  );
+  const persisted = await writeReleaseSearchState(cwd, {
+    schema: RELEASE_SEARCH_STATE_SCHEMA,
+    baselineCommit,
+    candidateCommit: candidate,
+    changedPaths,
+    sitemapSha256: nextSitemapSha256,
+    submissionReceipt: changedPaths.length === 0
+      ? { outcome: "no_changes", status: "noop", submittedUrls: 0 }
+      : null,
+  });
+  return {
+    changedPaths,
+    source: baselineCommit,
+    candidateCommit: candidate,
+    submissionReceipt: persisted.state.submissionReceipt,
+    statePath: persisted.statePath,
+    reused: false,
+  };
+}
+
+export async function recordReleaseSearchSubmission({
+  cwd = ROOT,
+  candidateCommit,
+  receipt,
+} = {}) {
+  const candidate = releaseCommit(candidateCommit, "release search candidate");
+  const current = await readReleaseSearchState(cwd);
+  if (!current.state || current.state.candidateCommit !== candidate) {
+    throw new Error(`No persisted release search state exists for candidate ${candidate}`);
+  }
+  const persisted = await writeReleaseSearchState(cwd, {
+    ...current.state,
+    submissionReceipt: submissionReceipt(receipt, current.state.changedPaths),
+  });
+  return persisted.state.submissionReceipt;
 }
 
 function decodeHtmlText(value) {
@@ -1435,7 +1707,12 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
   ]) {
     await copyFile(path.join(PUBLIC_ROOT, filename), path.join(outputRoot, filename));
   }
-  await writeFile(path.join(outputRoot, "sitemap.xml"), sitemapXml());
+  const sitemap = sitemapXml();
+  await writeFile(path.join(outputRoot, "sitemap.xml"), sitemap);
+  await writeFile(
+    path.join(outputRoot, RELEASE_SEARCH_CHANGES_FILE),
+    `${JSON.stringify(searchChangesArtifact({ changedPaths: [], sitemap }))}\n`,
+  );
   await writeFile(
     path.join(outputRoot, "release-provenance.json"),
     `${JSON.stringify(RELEASE_PROVENANCE_PLACEHOLDER)}\n`,

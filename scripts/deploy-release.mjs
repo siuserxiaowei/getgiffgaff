@@ -7,6 +7,13 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import {
+  bindReleaseSearchChanges,
+  recordReleaseSearchSubmission,
+} from "./build-release-artifact.mjs";
+
+export { bindReleaseSearchChanges };
+
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const MODES = new Set(["maintenance", "commerce"]);
 const PROJECT_NAME = "getgiffgaff";
@@ -194,7 +201,9 @@ export function validateReleaseProvenanceResponse(response, bytes, {
   expectedCommit,
   label = RELEASE_PROVENANCE_PATH,
 } = {}) {
-  const expectedSha = fullCommitSha(expectedCommit, "expected release provenance");
+  const expectedSha = expectedCommit === undefined
+    ? ""
+    : fullCommitSha(expectedCommit, "expected release provenance");
   const failures = [];
   const body = Buffer.from(bytes || []);
   const contentType = response?.headers?.get("content-type") || "";
@@ -213,6 +222,7 @@ export function validateReleaseProvenanceResponse(response, bytes, {
     failures.push(`response body is ${body.byteLength} bytes, limit is ${RELEASE_PROVENANCE_MAX_BYTES}`);
   }
 
+  let actualCommit = "";
   if (body.byteLength > 0 && body.byteLength <= RELEASE_PROVENANCE_MAX_BYTES) {
     try {
       const payload = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(body));
@@ -227,8 +237,10 @@ export function validateReleaseProvenanceResponse(response, bytes, {
       }
       if (typeof payload?.commit !== "string" || !/^[0-9a-f]{40}$/u.test(payload.commit)) {
         failures.push("commit is not a lowercase 40-character Git SHA");
-      } else if (payload.commit !== expectedSha) {
+      } else if (expectedSha && payload.commit !== expectedSha) {
         failures.push(`commit ${payload.commit} does not equal expected release ${expectedSha}`);
+      } else {
+        actualCommit = payload.commit;
       }
     } catch (error) {
       failures.push(`invalid JSON: ${error.message}`);
@@ -243,7 +255,7 @@ export function validateReleaseProvenanceResponse(response, bytes, {
     contentType: mime,
     cacheControl,
     bytes: body.byteLength,
-    commit: expectedSha,
+    commit: actualCommit,
   };
 }
 
@@ -282,6 +294,42 @@ export async function verifyReleaseProvenance(origin, {
   throw new Error(
     `Release provenance probe failed for ${label} after ${attempts} attempt${attempts === 1 ? "" : "s"}: ${lastFailure}`,
   );
+}
+
+export async function resolveCanonicalSearchBaseline(options = {}) {
+  const result = await verifyReleaseProvenance(CANONICAL_ORIGIN, {
+    ...options,
+    expectedCommit: undefined,
+    attempts: options.attempts ?? 4,
+    label: "canonical production search-change baseline",
+  });
+  return result.commit;
+}
+
+function indexNowReceipt(commandResult, expectedUrls) {
+  const records = String(commandResult?.stdout || "")
+    .split(/\r?\n/u)
+    .map((line) => line.trim())
+    .filter((line) => line.startsWith("{") && line.endsWith("}"))
+    .flatMap((line) => {
+      try {
+        return [JSON.parse(line)];
+      } catch {
+        return [];
+      }
+    });
+  const receipt = records.at(-1);
+  if (
+    !receipt
+    || receipt.outcome !== "accepted"
+    || receipt.endpoint !== "https://api.indexnow.org/indexnow"
+    || ![200, 202].includes(receipt.status)
+    || receipt.submittedUrls !== expectedUrls
+    || receipt.keyLocation !== `${CANONICAL_ORIGIN}/indexnow-key.txt`
+  ) {
+    throw new Error("IndexNow command did not return an exact accepted submission receipt");
+  }
+  return receipt;
 }
 
 export function validateNewProductionDeployment({ before, after, detailed, headSha }) {
@@ -440,6 +488,9 @@ export async function runReleaseDeployment({
   env = process.env,
   runCommand = executeReleaseCommand,
   bindProvenance = bindReleaseProvenance,
+  bindSearchChanges = bindReleaseSearchChanges,
+  recordSearchSubmission = recordReleaseSearchSubmission,
+  resolveSearchBaseline = resolveCanonicalSearchBaseline,
   fetchImpl = globalThis.fetch,
   delay,
   nonceFactory,
@@ -462,6 +513,16 @@ export async function runReleaseDeployment({
       `Release provenance binding returned ${boundProvenance?.commit || "missing"}, expected HEAD ${headSha}`,
     );
   }
+  const searchBaselineRef = await resolveSearchBaseline({
+    fetchImpl,
+    delay,
+    nonceFactory,
+  });
+  const searchChanges = await bindSearchChanges({
+    cwd,
+    baselineRef: searchBaselineRef,
+    candidateCommit: headSha,
+  });
 
   const before = await listProduction(runCommand, commandOptions);
   const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-production-deploy-"));
@@ -539,6 +600,29 @@ export async function runReleaseDeployment({
     label: "canonical production domain after verify:seo",
   });
   await runCommand("node", ["scripts/verify-analytics-persistence.mjs"], commandOptions);
+  let indexNow;
+  if (searchChanges.changedPaths.length > 0) {
+    if (searchChanges.submissionReceipt?.outcome === "accepted") {
+      indexNow = {
+        submitted: false,
+        alreadySubmitted: true,
+        changedPaths: searchChanges.changedPaths,
+      };
+    } else {
+      const result = await runCommand(
+        "npm",
+        ["run", "submit:indexnow"],
+        { ...commandOptions, captureStdout: true },
+      );
+      const receipt = indexNowReceipt(result, searchChanges.changedPaths.length);
+      if (searchChanges.statePath) {
+        await recordSearchSubmission({ cwd, candidateCommit: headSha, receipt });
+      }
+      indexNow = { submitted: true, changedPaths: searchChanges.changedPaths };
+    }
+  } else {
+    indexNow = { submitted: false, changedPaths: [] };
+  }
 
   return {
     mode,
@@ -547,6 +631,7 @@ export async function runReleaseDeployment({
     postUploadOriginMainSha: postUpload.originMainSha,
     deploymentId: deployment.deploymentId,
     deploymentUrl: deployment.deploymentUrl,
+    indexNow,
     deployed: true,
   };
 }

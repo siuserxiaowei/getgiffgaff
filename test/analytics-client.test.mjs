@@ -23,8 +23,10 @@ function replaceGlobal(name, value) {
 function fakeBrowser({
   beaconResult = true,
   canonicalHref = "https://getgiffgaff.com/contact/?phone=13800000000",
+  currentHref = "https://getgiffgaff.com/contact/?phone=13800000000",
   includeBeacon = true,
   referrer = "https://www.google.com/search?q=never-store-this",
+  storedSource = null,
   visibilityState = "visible",
 } = {}) {
   const listeners = new Map();
@@ -53,14 +55,27 @@ function fakeBrowser({
     fetches.push({ url, options });
     return Promise.resolve(new Response(null, { status: 204 }));
   };
+  const storage = new Map();
+  if (storedSource !== null) {
+    storage.set("getgiffgaff_attribution_source_v1", storedSource);
+  }
+  const sessionStorage = {
+    getItem(key) {
+      return storage.get(key) ?? null;
+    },
+    setItem(key, value) {
+      storage.set(key, String(value));
+    },
+  };
   const restores = [
     replaceGlobal("document", document),
     replaceGlobal("navigator", navigator),
     replaceGlobal("location", {
       origin: "https://getgiffgaff.com",
-      href: "https://getgiffgaff.com/contact/?phone=13800000000",
+      href: currentHref,
       pathname: "/contact/",
     }),
+    replaceGlobal("sessionStorage", sessionStorage),
     replaceGlobal("fetch", fetch),
   ];
 
@@ -68,6 +83,7 @@ function fakeBrowser({
     beacons,
     fetches,
     listeners,
+    storage,
     restore() {
       for (const restore of restores.reverse()) restore();
     },
@@ -88,6 +104,51 @@ test("client analytics reduces referrers to a fixed category and emits an allowl
   assert.equal(analytics.sourceCategory("https://x.com/example/status/1", "https://getgiffgaff.com"), "social");
   assert.equal(analytics.sourceCategory("https://example.org/post?phone=13800000000", "https://getgiffgaff.com"), "referral");
   assert.equal(analytics.sourceCategory("not a url", "https://getgiffgaff.com"), "unknown");
+
+  for (const sourceName of [
+    "dist_partner",
+    "dist_private_share",
+    "dist_wechat_group",
+    "dist_wechat_official",
+    "dist_xiaohongshu",
+    "paid_google",
+    "paid_microsoft",
+  ]) {
+    assert.equal(
+      analytics.attributionSource(`https://getgiffgaff.com/?utm_source=${sourceName}`),
+      sourceName,
+    );
+  }
+  for (const unsafe of [
+    "xiaohongshu",
+    "DIST_PARTNER",
+    "13800000000",
+    "partner-name",
+  ]) {
+    assert.equal(
+      analytics.attributionSource(`https://getgiffgaff.com/?utm_source=${unsafe}`),
+      null,
+    );
+  }
+  const attributionStorage = new Map();
+  const storage = {
+    getItem: (key) => attributionStorage.get(key) ?? null,
+    setItem: (key, value) => attributionStorage.set(key, value),
+  };
+  assert.equal(
+    analytics.sourceForPage(
+      "https://www.google.com/search?q=secret",
+      "https://getgiffgaff.com",
+      "https://getgiffgaff.com/guides/?utm_source=dist_partner&utm_campaign=do-not-store",
+      storage,
+    ),
+    "dist_partner",
+  );
+  assert.deepEqual([...attributionStorage.values()], ["dist_partner"]);
+  assert.equal(
+    analytics.sourceForPage("", "https://getgiffgaff.com", "https://getgiffgaff.com/contact/", storage),
+    "dist_partner",
+  );
 
   assert.deepEqual(
     analytics.analyticsPayload("/guides/7-arrival-checklist/", "internal", "commerce_click"),
@@ -135,7 +196,82 @@ test("client analytics reduces referrers to a fixed category and emits an allowl
       event: "commerce_click",
     },
   );
-  assert.doesNotMatch(source, /document\.cookie|location\.search|URLSearchParams|localStorage|sessionStorage/i);
+  assert.deepEqual(
+    analytics.analyticsPayload(
+      "/guides/6-pitfalls/",
+      "internal",
+      "commerce_click",
+      undefined,
+      "before-purchase",
+    ),
+    {
+      version: "analytics_event_v1",
+      path: "/guides/6-pitfalls/",
+      source: "internal",
+      event: "commerce_click",
+      intent: "before-purchase",
+    },
+  );
+  for (const [event, intent] of [
+    ["commerce_click", "BEFORE-PURCHASE"],
+    ["commerce_click", "private DOM text"],
+    ["page_view", "before-purchase"],
+    ["contact_click", "after-purchase"],
+  ]) {
+    assert.deepEqual(
+      analytics.analyticsPayload(
+        "/guides/6-pitfalls/",
+        "internal",
+        event,
+        event === "contact_click" ? "wechat" : undefined,
+        intent,
+      ),
+      {
+        version: "analytics_event_v1",
+        path: "/guides/6-pitfalls/",
+        source: "internal",
+        event,
+        ...(event === "contact_click" ? { channel: "wechat" } : {}),
+      },
+    );
+  }
+  assert.doesNotMatch(source, /document\.cookie|localStorage|utm_(?:campaign|content|term|medium)/i);
+});
+
+test("client keeps only an allowlisted distribution source across the current tab", async () => {
+  const browser = fakeBrowser({
+    currentHref:
+      "https://getgiffgaff.com/contact/?utm_source=dist_xiaohongshu&utm_campaign=private-note",
+    referrer: "https://www.xiaohongshu.com/explore/private-note",
+  });
+  try {
+    await import(`${pathToFileURL(SCRIPT).href}?attribution=${Date.now()}`);
+    assert.deepEqual(JSON.parse(await browser.beacons[0].body.text()), {
+      version: "analytics_event_v1",
+      path: "/contact/",
+      source: "dist_xiaohongshu",
+      event: "page_view",
+    });
+    assert.equal(
+      browser.storage.get("getgiffgaff_attribution_source_v1"),
+      "dist_xiaohongshu",
+    );
+    assert.doesNotMatch(JSON.stringify(JSON.parse(await browser.beacons[0].body.text())), /private-note/);
+  } finally {
+    browser.restore();
+  }
+
+  const followUp = fakeBrowser({
+    currentHref: "https://getgiffgaff.com/shop/",
+    referrer: "https://getgiffgaff.com/contact/",
+    storedSource: "dist_xiaohongshu",
+  });
+  try {
+    await import(`${pathToFileURL(SCRIPT).href}?attribution-follow-up=${Date.now()}`);
+    assert.equal(JSON.parse(await followUp.beacons[0].body.text()).source, "dist_xiaohongshu");
+  } finally {
+    followUp.restore();
+  }
 });
 
 test("client emits one automatic page view and allowlisted click dimensions through sendBeacon", async () => {
@@ -211,6 +347,67 @@ test("client emits one automatic page view and allowlisted click dimensions thro
       source: "search",
       event: "tool_result",
     });
+  } finally {
+    browser.restore();
+  }
+});
+
+test("client distinguishes only the two fixed pitfalls intent cards", async () => {
+  const browser = fakeBrowser({
+    canonicalHref: "https://getgiffgaff.com/guides/6-pitfalls/",
+    currentHref: "https://getgiffgaff.com/guides/6-pitfalls/",
+  });
+  try {
+    await import(`${pathToFileURL(SCRIPT).href}?pitfalls-intents=${Date.now()}`);
+    for (const [analyticsEvent, funnelIntent, analyticsChannel] of [
+      ["commerce_click", "before-purchase"],
+      ["commerce_click", "after-purchase"],
+      ["commerce_click", "secret arbitrary DOM value"],
+      ["page_view", "before-purchase"],
+      ["contact_click", "after-purchase", "wechat"],
+    ]) {
+      browser.listeners.get("click")({
+        target: {
+          closest() {
+            return {
+              dataset: { analyticsEvent, funnelIntent, analyticsChannel },
+              href: "https://private.example/never-read",
+              textContent: "never send arbitrary DOM text",
+            };
+          },
+        },
+      });
+    }
+
+    const payloads = await Promise.all(
+      browser.beacons.map(async ({ body }) => JSON.parse(await body.text())),
+    );
+    assert.deepEqual(payloads, [
+      {
+        version: "analytics_event_v1",
+        path: "/guides/6-pitfalls/",
+        source: "search",
+        event: "page_view",
+      },
+      {
+        version: "analytics_event_v1",
+        path: "/guides/6-pitfalls/",
+        source: "search",
+        event: "commerce_click",
+        intent: "before-purchase",
+      },
+      {
+        version: "analytics_event_v1",
+        path: "/guides/6-pitfalls/",
+        source: "search",
+        event: "commerce_click",
+        intent: "after-purchase",
+      },
+    ]);
+    assert.doesNotMatch(
+      JSON.stringify(payloads),
+      /private\.example|never-read|arbitrary DOM text/,
+    );
   } finally {
     browser.restore();
   }

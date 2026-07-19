@@ -1,4 +1,5 @@
 const SLOT_SELECTOR = '[data-growth-slot="wechat-buying-guide-v1"]';
+const CONSULTATION_ENTRY_SELECTOR = "[data-consultation-entry]";
 const FOCUSABLE_SELECTOR = [
   "a[href]",
   "button:not([disabled])",
@@ -13,6 +14,34 @@ export function nextFocusableIndex(currentIndex, total, backward = false) {
   return backward
     ? (currentIndex - 1 + total) % total
     : (currentIndex + 1) % total;
+}
+
+/**
+ * Keep consultation context route-level and anonymous. The widget never copies
+ * a query string or hash into its DOM context, and unknown path shapes fall
+ * back to the homepage instead of exposing arbitrary URL content.
+ */
+export function normalizeConsultationSource(pathname) {
+  if (typeof pathname !== "string") return "/";
+  let normalized = pathname.trim().split(/[?#]/, 1)[0].replace(/\/{2,}/g, "/");
+  if (
+    normalized.length > 160
+    || !/^\/[a-z0-9/_-]*$/i.test(normalized)
+    || /\d{6,}/.test(normalized)
+  ) return "/";
+  if (!normalized) return "/";
+  if (normalized !== "/" && !normalized.endsWith("/")) normalized += "/";
+  return normalized;
+}
+
+function applyConsultationContext(slot) {
+  const pathname = typeof location === "undefined" ? "/" : location.pathname;
+  const source = normalizeConsultationSource(pathname);
+  slot.dataset.consultationSource = source;
+  for (const entry of slot.querySelectorAll(CONSULTATION_ENTRY_SELECTOR)) {
+    entry.dataset.consultationSource = source;
+  }
+  return source;
 }
 
 function focusableElements(dialog) {
@@ -37,6 +66,7 @@ export function initCommerceWidget(slot) {
   if (!dialog || openers.length === 0 || closers.length === 0) return null;
 
   slot.dataset.commerceReady = "true";
+  applyConsultationContext(slot);
   let previousFocus = null;
 
   const restoreFocus = () => {

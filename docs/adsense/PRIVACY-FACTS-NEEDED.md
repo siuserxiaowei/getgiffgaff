@@ -14,4 +14,4 @@
 - 未成年人受众判定、EEA/UK/Switzerland 受众与 CMP 选择。
 - Google/第三方 Cookie、web beacon、IP 和其他标识符的披露，以及同意、拒绝和撤回路径。
 
-当前一方事件分析只允许 canonical path、粗粒度来源类别和 allowlisted event，不使用 Cookie/localStorage/sessionStorage。这不能推导整个业务在法律意义上是“匿名”。
+当前一方事件分析只允许 canonical path、粗粒度或固定白名单来源和 allowlisted event，不使用 Cookie 或 `localStorage`。如果 URL 中的 `utm_source` 精确匹配固定白名单来源，该值只保存在当前标签页的 `sessionStorage`，用于本标签页跨页归因；关闭标签页后不用于跨会话识别。实现不保存完整查询参数。这不能推导整个业务在法律意义上是“匿名”。

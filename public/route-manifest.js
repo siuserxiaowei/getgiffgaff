@@ -1,6 +1,7 @@
 const BASELINE_DATE = "2026-06-11";
 const EVIDENCE_DATE = "2026-07-15";
 const GROWTH_DATE = "2026-07-17";
+const CONSULTATION_RECOVERY_DATE = "2026-07-19";
 
 export const LEGACY_ROUTES = Object.freeze([
   "/",
@@ -97,6 +98,42 @@ const EVIDENCE_LEGACY_ROUTES = new Set([
   "/research/",
 ]);
 
+// The consultation-recovery release materially changed the search-facing
+// sales guidance or the primary contact path on these pages. Other pages only
+// inherited a shared widget/analytics change, which is not a reason to claim a
+// newer document-level lastmod in the sitemap.
+const CONSULTATION_RECOVERY_ROUTES = new Set([
+  "/",
+  "/guides/0-intro/",
+  "/guides/1-order/",
+  "/guides/3-account/",
+  "/guides/3-app/",
+  "/guides/4-recharge-service/",
+  "/guides/5-travel-data/",
+  "/guides/6-pitfalls/",
+  "/guides/7-arrival-checklist/",
+  "/guides/8-uk-sim-choice/",
+  "/more/00-wechat/",
+  "/more/02-telegram/",
+  "/qa/00-username/",
+  "/qa/01-change-number/",
+  "/qa/02-topup/",
+  "/qa/03-reissue/",
+  "/qa/04-choose-number/",
+  "/qa/05-multiple-number/",
+  "/qa/06-activation-expiration/",
+  "/qa/07-voicemail-switch/",
+  "/qa/08-gv/",
+  "/qa/09-spread/",
+  "/shop/",
+  "/shop/giffgaff-g0/",
+  "/shop/giffgaff-g2/",
+  "/contact/",
+  "/tools/keep-number-reminder/",
+  "/tools/china-roaming-cost/",
+  "/tools/g0-g2-total-cost/",
+]);
+
 const COLLECTION_ROUTES = new Set([
   "/shop/",
   "/guides/",
@@ -148,9 +185,11 @@ function legacyRecord(pathname) {
     cachePolicy: "public",
     schemaType: schemaTypeFor(pathname),
     contentSource: "legacy",
-    lastModified: EVIDENCE_LEGACY_ROUTES.has(pathname)
-      ? EVIDENCE_DATE
-      : BASELINE_DATE,
+    lastModified: CONSULTATION_RECOVERY_ROUTES.has(pathname)
+      ? CONSULTATION_RECOVERY_DATE
+      : EVIDENCE_LEGACY_ROUTES.has(pathname)
+        ? EVIDENCE_DATE
+        : BASELINE_DATE,
     commerce: commerceFor(pathname),
   });
 }
@@ -165,7 +204,9 @@ function growthRecord(pathname, indexPolicy) {
     cachePolicy: "public",
     schemaType: schemaTypeFor(pathname),
     contentSource: "growth",
-    lastModified: GROWTH_DATE,
+    lastModified: CONSULTATION_RECOVERY_ROUTES.has(pathname)
+      ? CONSULTATION_RECOVERY_DATE
+      : GROWTH_DATE,
     commerce: commerceFor(pathname),
   });
 }

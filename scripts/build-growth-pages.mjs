@@ -250,7 +250,6 @@ export function applyGrowthSafetyOverrides(html, route) {
 }
 
 function analyticsEventForHref(href) {
-  if (href.startsWith("/contact/")) return "contact_click";
   if (href.startsWith("/shop/")) return "shop_click";
   return "commerce_click";
 }

@@ -8,13 +8,13 @@
 | --- | --- | --- |
 | `index1` | 事件名，也是主查询索引；发布探针使用与查询键完全一致的低频唯一索引 | 普通事件为 `page_view`、`commerce_click`、`shop_click`、`contact_click`、`growth_related_click`、`tool_result`；发布探针为 `seo_release_canary:<一次性探针 ID>` |
 | `blob1` | canonical 路径 | `/`、`/shop/`、`/contact/` |
-| `blob2` | 粗粒度来源 | `direct`、`internal`、`search`、`social`、`referral`、`ai`、`unknown` |
+| `blob2` | 粗粒度或固定分发来源 | `direct`、`internal`、`search`、`social`、`referral`、`ai`、`unknown`，或隐私页披露的 7 个固定 `utm_source` 白名单值 |
 | `blob3` | 事件名副本 | 与 `index1` 相同 |
-| `blob4` | 条件维度 | `contact_click` 时为 `wechat` 或 `telegram`；生产发布探针时为 `seo_release_canary`；其他事件不写第四个 blob |
+| `blob4` | 条件维度 | `contact_click` 时为 `wechat` 或 `telegram`；`/guides/6-pitfalls/` 的两个固定 `commerce_click` 分支为 `before-purchase` 或 `after-purchase`；生产发布探针时为 `seo_release_canary`；其他事件不写第四个 blob |
 | `blob5` | 生产发布探针 ID | 仅生产发布探针写入一次性 256-bit 十六进制 ID；普通访客事件和联系点击不写 |
 | `double1` | 原始事件权重 | 固定为 `1` |
 
-`contact_click` 与发布探针互斥。所有运营查询必须带上 `blob4 != 'seo_release_canary'`；不要把探针当作首页访问。Preview 主机在解析 payload 或触碰 binding 前返回 404，不写生产数据集。
+联系渠道、避坑页意图与发布探针三类条件维度互斥。意图值只接受两个固定枚举，不读取链接 URL、文案或任意 DOM 值。所有运营查询必须带上 `blob4 != 'seo_release_canary'`；不要把探针当作首页访问。Preview 主机在解析 payload 或触碰 binding 前返回 404，不写生产数据集。
 
 这些是“不含直接身份标识的事件级数据”，不是独立访客、会话或匿名用户档案。自定义数据集不写入 IP、User-Agent、完整 referrer、查询参数、手机号、账号、订单号或支付信息；Cloudflare 作为边缘基础设施提供方仍可能在传输层处理网络元数据。
 
@@ -42,14 +42,14 @@ GROUP BY day_utc, event, channel
 ORDER BY day_utc ASC, event ASC, channel ASC
 ```
 
-按落地页和来源诊断 `page_view → commerce_click → contact_click`：
+按落地页和来源并排诊断 `page_view`、`commerce_click`、`contact_click`，并区分避坑页固定意图：
 
 ```sql
 SELECT
   blob1 AS canonical_path,
   blob2 AS source,
   index1 AS event,
-  blob4 AS channel,
+  blob4 AS channel_or_intent,
   SUM(_sample_interval * double1) AS events
 FROM getgiffgaff_events_v1
 WHERE timestamp >= NOW() - INTERVAL '7' DAY
@@ -59,7 +59,7 @@ GROUP BY blob1, blob2, index1, blob4
 ORDER BY events DESC
 ```
 
-页面事件不是独立访客数。同一人刷新、重复打开弹窗或多次点击会产生多条记录，且不同事件之间没有访客或会话 ID 可供关联。因此这里只能比较事件量的相对变化，不能计算用户级漏斗转化率。诊断咨询下滑时，还要与微信、Telegram 实际收到的咨询数按同一 UTC 日期对照；至少积累 7 个完整自然日后再判断趋势，积累 28 个完整自然日后才形成首版基线。
+页面事件不是独立访客数。同一人刷新、重复打开弹窗或多次点击会产生多条记录，且不同事件之间没有访客或会话 ID 可供关联。`commerce_click` 还混合弹窗、内部联系导航、选卡/教程及快团团引导，不能作为 `contact_click` 的稳定漏斗分母。因此这里只能把各事件量作为独立趋势信号，不能计算用户级或顺序漏斗转化率。避坑页的 `before-purchase` / `after-purchase` 只用于比较两个固定分支的事件量，也不证明咨询送达。诊断咨询下滑时，还要与微信、Telegram 实际收到的咨询数按同一 UTC 日期对照；至少积累 7 个完整自然日后再判断趋势，积累 28 个完整自然日后才形成首版基线。
 
 ## 发布核验
 

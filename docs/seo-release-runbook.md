@@ -1,6 +1,6 @@
 # getgiffgaff SEO / GEO 发布运维清单
 
-> 状态（2026-07-19）：当前本地候选为 34 legacy + 12 growth = 46 个公开 HTML 路由，其中 39 个可索引、7 个 `noindex`；新增了微信/Telegram 咨询链路、二维码完整性检查、事件级 Analytics Engine 探针和 `/pay/` 旧路径兼容修正。该候选尚未部署，不能写成“生产已恢复”。发布前只读核验显示当前生产 deployment 为 `3736b62a-4819-4187-b19e-165d23ad8e44`、Source 为 `2173aa0`；GitHub `origin/main` 仍为 `7cac06f`，生产仍缺两张新二维码且 analytics canary 返回 400。四个政策状态页仍缺真实经营事实，G0/G2 交易门禁所需 12 份脱敏证据仍缺失。任何推广或发布必须先通过当前门禁；Google/Bing 后台回读与百度实名/验证码门禁仍需账号所有者处理。
+> 本轮发布前基线快照（2026-07-19）：production deployment 为 `ae1015eb-b023-47c6-9fdb-cd71897f4123`，Source 与 canonical `/release-provenance.json` 均为 `8304ff3c56689c22c7191367128436fbf6325e16`；GitHub `origin/main` 同 SHA。生产 sitemap 为 39 个可索引 URL，39 URL SEO 门禁已通过。Google Search Console 与 Bing Webmaster Tools 已完成授权现场读取，具体时间窗数据见[增长恢复运营手册](operations/growth-operations-runbook-2026-07-19.md)；Bing Site Scan 当时仍为 `Queued`，GSC 索引报告仍为 `processing`，百度仍需账号所有者完成实名/验证码。相对该基线，本轮新增增长/CRO/增量 IndexNow 变更必须以生产 `/release-provenance.json` 为准判断是否已经部署；四个政策状态页仍缺真实经营事实，G0/G2 商业证据与站内支付门禁仍未满足。
 
 本次候选的运维口径见[咨询链路恢复候选记录](operations/consultation-recovery-2026-07-19.md)、[咨询漏斗 Analytics Engine 口径](operations/analytics-funnel.md)和[支付接入交接](operations/payment-handoff-2026-07-18.md)。
 
@@ -184,8 +184,11 @@ npm run deploy:maintenance
 - Preview analytics probe 的通过状态是 404；生产 canary 的通过状态是 204，并应写入与一次性 ID 对齐的 `index1 = 'seo_release_canary:<探针 ID>'` 及 `blob4 = 'seo_release_canary'`。生产 204 后仍需在最多 19 次、8 分钟 wall-clock 硬截止内由 SQL 查询确认点已可见，所有运营报表必须排除该 canary。
 - 上线状态、真机验收矩阵和观察口径以[咨询链路恢复与观察记录](operations/consultation-recovery-2026-07-19.md)为准。当前正式版本以生产 `/release-provenance.json` 返回的完整 Git SHA 为准；自动测试、二维码哈希和 HTTP 状态都不能证明微信真机拉起、消息送达、订单生成或付款完成。
 - 发布门禁要求 GitHub `main`、Preview Source、Production Source 和生产 provenance 使用同一个 clean 40 字符 SHA；Preview analytics probe 必须隔离为 404，生产 probe 必须返回 204 并由 SQL API 精确回读后，发布脚本才可报告 `deployed: true`。
+- sitemap 的 `lastmod` 只在页面主体、搜索摘要或主要咨询/购买路径发生实质变化时更新；共享样式、埋点或无关页脚变化不得把全部 39 个 URL 伪装成同一天更新。
+- 构建生成 `release-search-changes.json`；生产发布前将其绑定到当前线上 `/release-provenance.json` 对应提交，与候选 sitemap 比较得到真实变化 URL，并用 sitemap SHA-256 防止提交旧清单。
+- 生产验证完成后，变化集合非空才自动运行 `npm run submit:indexnow`。该命令默认只提交此集合；人工确需重提全部 canonical URL 时，必须显式执行 `npm run submit:indexnow:all` 并记录原因。IndexNow 的 200/202 只表示批次被接收，不代表抓取、收录或排名。
 
-- [x] 生产别名传播完成后，34 URL 门禁已成功退出；若内置 `verify:seo` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑只读门禁，仍失败则按第 9 节回滚或向前修复。
+- [x] 生产别名传播完成后，39 URL 门禁已成功退出；若内置 `verify:seo` 恰逢别名传播而命中旧边缘版本，等待传播完成后必须重跑只读门禁，仍失败则按第 9 节回滚或向前修复。
 
 - [ ] 在 Cloudflare Pages 中确认生产分支和部署 commit 正确；GitHub main、Preview Source 和 Production Source 必须是同一个 clean 40 字符 SHA。
 - [ ] 清理受影响的 HTML、`/sitemap.xml`、`/robots.txt`、`/llms.txt` 与 `/llms-full.txt` 缓存。本次响应头策略全站变化时优先执行一次受控的全站清缓存，并记录时间（需 Cloudflare 缓存权限）。

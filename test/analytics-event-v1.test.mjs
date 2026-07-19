@@ -124,6 +124,124 @@ test("analytics_event_v1 accepts page views and requires an allowlisted contact 
   ]);
 });
 
+test("analytics_event_v1 accepts only fixed privacy-safe distribution sources", async () => {
+  const allowed = [
+    "dist_partner",
+    "dist_private_share",
+    "dist_wechat_group",
+    "dist_wechat_official",
+    "dist_xiaohongshu",
+    "paid_google",
+    "paid_microsoft",
+  ];
+  const env = analyticsEnv();
+  for (const source of allowed) {
+    const response = await worker.fetch(eventRequest({
+      version: "analytics_event_v1",
+      path: "/",
+      source,
+      event: "page_view",
+    }), env, {});
+    assert.equal(response.status, 204, source);
+  }
+  assert.deepEqual(
+    env.writes.map((entry) => entry.blobs[1]),
+    allowed,
+  );
+
+  for (const source of ["xiaohongshu", "DIST_PARTNER", "partner-name", "13800000000"]) {
+    const rejectedEnv = analyticsEnv();
+    const response = await worker.fetch(eventRequest({
+      version: "analytics_event_v1",
+      path: "/",
+      source,
+      event: "page_view",
+    }), rejectedEnv, {});
+    assert.equal(response.status, 400, source);
+    assert.equal(rejectedEnv.writes.length, 0, source);
+  }
+});
+
+test("analytics_event_v1 stores only fixed pitfalls commerce intents", async () => {
+  const env = analyticsEnv();
+  for (const intent of ["before-purchase", "after-purchase"]) {
+    const response = await worker.fetch(eventRequest({
+      version: "analytics_event_v1",
+      path: "/guides/6-pitfalls/",
+      source: "search",
+      event: "commerce_click",
+      intent,
+    }), env, {});
+    assert.equal(response.status, 204, intent);
+  }
+  assert.deepEqual(env.writes, [
+    {
+      indexes: ["commerce_click"],
+      blobs: [
+        "/guides/6-pitfalls/",
+        "search",
+        "commerce_click",
+        "before-purchase",
+      ],
+      doubles: [1],
+    },
+    {
+      indexes: ["commerce_click"],
+      blobs: [
+        "/guides/6-pitfalls/",
+        "search",
+        "commerce_click",
+        "after-purchase",
+      ],
+      doubles: [1],
+    },
+  ]);
+
+  for (const payload of [
+    {
+      version: "analytics_event_v1",
+      path: "/guides/6-pitfalls/",
+      source: "search",
+      event: "commerce_click",
+      intent: "BEFORE-PURCHASE",
+    },
+    {
+      version: "analytics_event_v1",
+      path: "/guides/6-pitfalls/",
+      source: "search",
+      event: "commerce_click",
+      intent: "arbitrary DOM text or URL",
+    },
+    {
+      version: "analytics_event_v1",
+      path: "/guides/6-pitfalls/",
+      source: "search",
+      event: "page_view",
+      intent: "before-purchase",
+    },
+    {
+      version: "analytics_event_v1",
+      path: "/contact/",
+      source: "search",
+      event: "commerce_click",
+      intent: "before-purchase",
+    },
+    {
+      version: "analytics_event_v1",
+      path: "/contact/",
+      source: "search",
+      event: "contact_click",
+      channel: "wechat",
+      intent: "after-purchase",
+    },
+  ]) {
+    const rejectedEnv = analyticsEnv();
+    const response = await worker.fetch(eventRequest(payload), rejectedEnv, {});
+    assert.equal(response.status, 400, JSON.stringify(payload));
+    assert.equal(rejectedEnv.writes.length, 0, JSON.stringify(payload));
+  }
+});
+
 test("analytics_event_v1 marks only an exact production page-view release canary", async () => {
   const env = analyticsEnv();
   const response = await worker.fetch(eventRequest({
@@ -268,6 +386,7 @@ test("analytics_event_v1 rejects unknown routes, fields, origins, events and ove
     eventRequest({ version: "analytics_event_v1", path: "/contact/", source: "direct", event: "contact_click", channel: "13800000000" }),
     eventRequest({ version: "analytics_event_v1", path: "/contact/", source: "direct", event: "contact_click" }),
     eventRequest({ version: "analytics_event_v1", path: "/shop/", source: "direct", event: "shop_click", channel: "wechat" }),
+    eventRequest({ version: "analytics_event_v1", path: "/shop/", source: "direct", event: "shop_click", intent: "before-purchase" }),
     eventRequest({ version: "analytics_event_v1", path: "/shop/", source: "direct", event: "shop_click" }, { origin: "https://evil.example" }),
     new Request(`${ORIGIN}/analytics-event-v1`, {
       method: "POST",

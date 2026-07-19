@@ -523,17 +523,17 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
       ),
       true,
     );
-    for (const href of [
-      "/shop/giffgaff-g0/",
-      "/shop/giffgaff-g2/",
-      "/guides/1-order/",
-      "/contact/#ktt-giga-card",
-      "https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4",
-      "https://t.me/xiaoyuhuai",
+    for (const [href, expectedCount] of [
+      ["/shop/giffgaff-g0/", 1],
+      ["/shop/giffgaff-g2/", 1],
+      ["/guides/1-order/", 1],
+      ["/contact/#ktt-giga-card", 2],
+      ["https://u.wechat.com/MOlSxFZ7nu5enWrw4HtvKC4", 2],
+      ["https://t.me/xiaoyuhuai", 2],
     ]) {
       assert.equal(
         await commerceDialog.locator(`a[href="${href}"]`).count(),
-        1,
+        expectedCount,
         `commerce guide missing ${href}`,
       );
     }
@@ -553,7 +553,7 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
     );
     await commerceTrigger.click();
     const kttPaymentLink = commerceDialog.locator(
-      'a[href="/contact/#ktt-giga-card"]',
+      'a[href="/contact/#ktt-giga-card"][data-consultation-entry="quick-ktt"]',
     );
     await Promise.all([
       page.waitForURL(`${localOrigin}/contact/#ktt-giga-card`),

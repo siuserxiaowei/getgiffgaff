@@ -279,6 +279,13 @@
   color: var(--gg-navy);
 }
 
+.growth-related-slot h3 {
+  margin: 20px 0 0;
+  color: var(--gg-navy);
+  font-size: 16px;
+  line-height: 1.4;
+}
+
 .growth-related-slot p {
   margin: 8px 0 0;
   color: var(--gg-muted);
@@ -292,6 +299,32 @@
   margin: 16px 0 0;
   padding: 0;
   list-style: none;
+}
+
+.growth-intent-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.growth-related-slot .growth-intent-card {
+  display: grid;
+  gap: 7px;
+  min-height: 112px;
+  border-color: var(--gg-gold);
+  background: linear-gradient(135deg, var(--gg-white), var(--gg-gold-pale));
+}
+
+.growth-intent-card strong {
+  color: var(--gg-navy);
+}
+
+.growth-intent-card span {
+  color: var(--gg-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
 }
 
 .growth-related-slot a {
@@ -312,6 +345,11 @@
   box-shadow: var(--gg-shadow);
 }
 
+.growth-related-slot a:focus-visible {
+  outline: 3px solid #0A1F44;
+  outline-offset: 3px;
+}
+
 @media (max-width: 760px) {
   .growth-page {
     width: min(100% - 28px, 1140px);
@@ -322,6 +360,7 @@
   .growth-tool,
   .growth-source-list,
   .growth-related-grid,
+  .growth-intent-grid,
   .growth-related-slot ul {
     grid-template-columns: 1fr;
   }
@@ -380,10 +419,11 @@
 
 .commerce-wechat-fab:focus-visible,
 .commerce-guide-close:focus-visible,
+.commerce-quick-action:focus-visible,
 .commerce-choice-card:focus-visible,
 .commerce-text-link:focus-visible,
 .commerce-action:focus-visible {
-  outline: 3px solid var(--commerce-gold);
+  outline: 3px solid #0A1F44;
   outline-offset: 3px;
 }
 
@@ -466,6 +506,72 @@
   color: var(--commerce-muted);
   font-size: 15px;
   line-height: 1.7;
+}
+
+.commerce-quick-channels {
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid rgba(201, 162, 39, 0.42);
+  border-radius: var(--gg-radius-sm);
+  background: linear-gradient(135deg, #FFFCF2, var(--commerce-soft));
+}
+
+.commerce-quick-channels h3 {
+  margin: 0;
+  color: var(--commerce-ink);
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.commerce-quick-channel-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.commerce-quick-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--commerce-surface);
+  background: var(--commerce-navy);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  transition: filter 0.16s, transform 0.16s;
+}
+
+.commerce-quick-action:hover {
+  filter: brightness(0.92);
+  transform: translateY(-1px);
+}
+
+.commerce-quick-action--wechat {
+  background: #168743;
+}
+
+.commerce-quick-action--telegram {
+  background: #2378b5;
+}
+
+.commerce-quick-action--ktt {
+  border-color: var(--commerce-navy);
+  color: var(--commerce-navy);
+  background: var(--commerce-surface);
+}
+
+.commerce-quick-channels > p:last-child {
+  margin: 9px 0 0;
+  color: var(--commerce-muted);
+  font-size: 13px;
+  line-height: 1.55;
 }
 
 .commerce-guide-close {
@@ -702,6 +808,7 @@ body:has(.commerce-guide-dialog:target) {
   }
 
   .commerce-choice-grid,
+  .commerce-quick-channel-grid,
   .commerce-channel-grid,
   .verified-contact-grid {
     grid-template-columns: 1fr;
@@ -736,7 +843,8 @@ body:has(.commerce-guide-dialog:target) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .commerce-wechat-fab {
+  .commerce-wechat-fab,
+  .commerce-quick-action {
     transition: none;
   }
 }

@@ -9,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import {
   applyLegacySafetyOverrides,
   applyReleaseConversionOverrides,
+  bindReleaseSearchChanges,
   buildReleaseArtifact,
   ensureGrowthStylesheet,
   injectCommerceWidget,
@@ -29,6 +30,9 @@ import {
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const LEGACY_ROOT = path.join(ROOT, "site", "legacy");
+const HEAD_SHA = "0123456789abcdef0123456789abcdef01234567";
+const BASELINE_SHA = "89abcdef0123456789abcdef0123456789abcdef";
+const NEXT_SHA = "fedcba9876543210fedcba9876543210fedcba98";
 const GROWTH_SLOT = 'data-growth-slot="related-tutorials-v1"';
 const COMMERCE_SLOT = 'data-growth-slot="wechat-buying-guide-v1"';
 const POLICY_STATUS_ROUTES = new Set([
@@ -273,6 +277,7 @@ test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, 
     "worker-logic.js",
     "route-manifest.js",
     "sitemap.xml",
+    "release-search-changes.json",
     "robots.txt",
     "growth-assets/growth.css",
     "growth-assets/growth-ui.js",
@@ -288,6 +293,12 @@ test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, 
   for (const route of NOINDEX_GROWTH_ROUTES) {
     assert.doesNotMatch(sitemap, new RegExp(route.replaceAll("/", "\\/")), route);
   }
+  const searchChanges = JSON.parse(
+    await readFile(path.join(outputRoot, "release-search-changes.json"), "utf8"),
+  );
+  assert.equal(searchChanges.schema, "getgiffgaff_search_changes_v1");
+  assert.deepEqual(searchChanges.changedPaths, []);
+  assert.equal(searchChanges.sitemapSha256, sha256(sitemap));
 
   const robots = await readFile(path.join(outputRoot, "robots.txt"), "utf8");
   const sourceRobots = await readFile(path.join(ROOT, "public", "robots.txt"), "utf8");
@@ -319,6 +330,85 @@ test("release build contains 34 frozen pages, 12 growth pages, 9 related slots, 
     const built = await readFile(path.join(outputRoot, asset.path));
     assert.equal(sha256(built), sha256(source), asset.path);
   }
+});
+
+test("release search-change binding records only routes whose sitemap lastmod changed", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-search-changes-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await buildReleaseArtifact(path.join(root, ".release"));
+  const baselineManifest = (await readFile(
+    path.join(ROOT, "public", "route-manifest.js"),
+    "utf8",
+  ))
+    .replace('const CONSULTATION_RECOVERY_DATE = "2026-07-19";', 'const CONSULTATION_RECOVERY_DATE = "2026-07-17";');
+
+  const report = await bindReleaseSearchChanges({
+    cwd: root,
+    baselineRef: BASELINE_SHA,
+    candidateCommit: HEAD_SHA,
+    runGit: async (spec) => {
+      assert.equal(spec, `${BASELINE_SHA}:public/route-manifest.js`);
+      return baselineManifest;
+    },
+  });
+  assert.ok(report.changedPaths.length > 0);
+  assert.deepEqual(report.changedPaths, [...report.changedPaths].sort());
+  assert.ok(report.changedPaths.includes("/contact/"));
+  assert.ok(report.changedPaths.includes("/shop/"));
+  assert.ok(!report.changedPaths.includes("/answers/"));
+  const artifact = JSON.parse(
+    await readFile(path.join(root, ".release", "release-search-changes.json"), "utf8"),
+  );
+  assert.deepEqual(artifact.changedPaths, report.changedPaths);
+  assert.match(artifact.sitemapSha256, /^[a-f0-9]{64}$/u);
+
+  const statePath = path.join(root, ".seo-cache", "release-search-state.json");
+  const state = JSON.parse(await readFile(statePath, "utf8"));
+  assert.equal(state.baselineCommit, BASELINE_SHA);
+  assert.equal(state.candidateCommit, HEAD_SHA);
+  assert.deepEqual(state.changedPaths, report.changedPaths);
+  assert.equal(state.submissionReceipt, null);
+  await assert.rejects(
+    () => readFile(path.join(root, ".release", "release-search-state.json")),
+    { code: "ENOENT" },
+  );
+
+  const reused = await bindReleaseSearchChanges({
+    cwd: root,
+    baselineRef: HEAD_SHA,
+    candidateCommit: HEAD_SHA,
+    runGit: async () => {
+      throw new Error("a matching candidate must reuse the pre-upload baseline");
+    },
+  });
+  assert.equal(reused.reused, true);
+  assert.equal(reused.source, BASELINE_SHA);
+  assert.deepEqual(reused.changedPaths, report.changedPaths);
+
+  const currentManifest = await readFile(
+    path.join(ROOT, "public", "route-manifest.js"),
+    "utf8",
+  );
+  const nextCandidate = await bindReleaseSearchChanges({
+    cwd: root,
+    baselineRef: HEAD_SHA,
+    candidateCommit: NEXT_SHA,
+    runGit: async (spec) => {
+      assert.equal(spec, `${HEAD_SHA}:public/route-manifest.js`);
+      return currentManifest;
+    },
+  });
+  assert.equal(nextCandidate.reused, false);
+  assert.equal(nextCandidate.source, HEAD_SHA);
+  assert.deepEqual(nextCandidate.changedPaths, []);
+  const nextState = JSON.parse(await readFile(statePath, "utf8"));
+  assert.equal(nextState.baselineCommit, HEAD_SHA);
+  assert.equal(nextState.candidateCommit, NEXT_SHA);
+  assert.deepEqual(nextState.submissionReceipt, {
+    outcome: "no_changes",
+    status: "noop",
+    submittedUrls: 0,
+  });
 });
 
 test("llms.txt is a curated task index for exactly the 39 indexable pages", async (t) => {

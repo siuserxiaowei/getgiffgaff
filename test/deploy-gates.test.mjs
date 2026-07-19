@@ -5,6 +5,7 @@ import path from "node:path";
 import test from "node:test";
 
 import {
+  bindReleaseSearchChanges,
   bindReleaseProvenance,
   executeReleaseCommand,
   parseReleaseDeploymentCliOptions,
@@ -16,6 +17,7 @@ import {
   verifyCanonicalSeoAfterPropagation,
   verifyProductionDeploymentUrl,
   verifyReleaseProvenance,
+  resolveCanonicalSearchBaseline,
 } from "../scripts/deploy-release.mjs";
 import {
   parsePreviewDeploymentCliOptions,
@@ -74,6 +76,8 @@ test("package scripts make commerce the default, keep maintenance explicit and e
   );
   assert.equal(pkg.scripts["deploy:preview"], "node scripts/deploy-preview-release.mjs");
   assert.equal(pkg.scripts["validate:commerce-evidence"], "node scripts/validate-commerce-evidence.mjs");
+  assert.equal(pkg.scripts["submit:indexnow"], "node scripts/submit-indexnow.mjs");
+  assert.equal(pkg.scripts["submit:indexnow:all"], "node scripts/submit-indexnow.mjs --all");
   assert.equal(Object.hasOwn(pkg.scripts, "deploy:pages"), false);
   assert.equal(Object.hasOwn(pkg.scripts, "deploy:commerce"), false);
   assert.equal(Object.hasOwn(pkg.scripts, "predeploy"), false);
@@ -177,6 +181,17 @@ function releaseRecorder({
     if (label.includes("pages deploy .release")) {
       await writeFile(options.env.WRANGLER_OUTPUT_FILE_PATH, `${JSON.stringify(deployment)}\n`);
     }
+    if (label === "npm run submit:indexnow") {
+      return {
+        stdout: `\n> submit:indexnow\n${JSON.stringify({
+          outcome: "accepted",
+          endpoint: "https://api.indexnow.org/indexnow",
+          status: 200,
+          submittedUrls: 2,
+          keyLocation: "https://getgiffgaff.com/indexnow-key.txt",
+        })}\n`,
+      };
+    }
     return { stdout: "" };
   };
   return { calls, runCommand };
@@ -187,6 +202,14 @@ function boundProvenance(headSha = HEAD_SHA) {
     assert.equal(actualSha, headSha);
     return { commit: actualSha, bytes: 100, markerPath: "/fixture/release-provenance.json" };
   };
+}
+
+function boundSearchChanges(changedPaths = []) {
+  return async ({ baselineRef }) => ({ changedPaths, source: baselineRef });
+}
+
+function resolvedSearchBaseline(commit = OTHER_SHA) {
+  return async () => commit;
 }
 
 function productionFetch({
@@ -229,6 +252,8 @@ test("commerce deployment pins exact HEAD, proves a new Production record and ru
     env,
     runCommand: harness.runCommand,
     bindProvenance: boundProvenance(),
+    bindSearchChanges: boundSearchChanges(["/contact/", "/shop/"]),
+    resolveSearchBaseline: resolvedSearchBaseline(),
     fetchImpl: productionFetch({ requests: fetches }),
     nonceFactory: () => (++nonce).toString(16).padStart(64, "0"),
   });
@@ -248,6 +273,7 @@ test("commerce deployment pins exact HEAD, proves a new Production record and ru
     "git rev-parse --verify refs/remotes/origin/main",
     "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39",
     "node scripts/verify-analytics-persistence.mjs",
+    "npm run submit:indexnow",
   ]);
   assert.equal(harness.calls[3].options.captureStdout, true);
   assert.equal(harness.calls[4].options.captureStdout, true);
@@ -275,6 +301,7 @@ test("commerce deployment pins exact HEAD, proves a new Production record and ru
     postUploadOriginMainSha: HEAD_SHA,
     deploymentId: "new-id",
     deploymentUrl: "https://new-id.getgiffgaff.pages.dev",
+    indexNow: { submitted: true, changedPaths: ["/contact/", "/shop/"] },
     deployed: true,
   });
 });
@@ -343,6 +370,18 @@ test("release provenance probe is cache-busted, redirect-manual and validates an
       pattern,
     );
   }
+});
+
+test("canonical search baseline resolves the currently deployed release commit", async () => {
+  const requests = [];
+  const commit = await resolveCanonicalSearchBaseline({
+    attempts: 1,
+    nonceFactory: () => "d".repeat(64),
+    fetchImpl: productionFetch({ headSha: OTHER_SHA, requests }),
+  });
+  assert.equal(commit, OTHER_SHA);
+  assert.equal(requests.length, 1);
+  assert.equal(requests[0].url.pathname, "/release-provenance.json");
 });
 
 test("production readiness checks tolerate bounded Cloudflare propagation without weakening assertions", async () => {
@@ -481,6 +520,8 @@ test("post-upload origin/main advancement fails without a deployed:true report",
       env: {},
       runCommand: harness.runCommand,
       bindProvenance: boundProvenance(),
+      bindSearchChanges: boundSearchChanges(),
+      resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: async () => new Response('<link rel="canonical" href="https://getgiffgaff.com/">'),
     }),
     new RegExp(`HEAD .*${HEAD_SHA}.*origin/main .*${OTHER_SHA}`, "s"),
@@ -499,6 +540,8 @@ test("post-upload HEAD and origin/main advancing together cannot validate an old
       env: {},
       runCommand: harness.runCommand,
       bindProvenance: boundProvenance(),
+      bindSearchChanges: boundSearchChanges(),
+      resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: async () => new Response('<link rel="canonical" href="https://getgiffgaff.com/">'),
     }),
     new RegExp(`post-upload release guard failed.*uploaded release ${HEAD_SHA}.*current HEAD ${OTHER_SHA}.*current origin/main ${OTHER_SHA}`, "s"),
@@ -538,6 +581,7 @@ test("post-upload remote guard still runs when the post-deploy metadata list fai
   await assert.rejects(
     () => runReleaseDeployment({
       mode: "maintenance", env: {}, runCommand, bindProvenance: boundProvenance(),
+      bindSearchChanges: boundSearchChanges(), resolveSearchBaseline: resolvedSearchBaseline(),
     }),
     /post-upload metadata capture failed.*metadata API unavailable/s,
   );
@@ -642,6 +686,8 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
       env: {},
       runCommand: httpHarness.runCommand,
       bindProvenance: boundProvenance(),
+      bindSearchChanges: boundSearchChanges(),
+      resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: async () => new Response("old edge", { status: 404 }),
       delay: async () => {},
     }),
@@ -658,6 +704,8 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
       env: {},
       runCommand: seoHarness.runCommand,
       bindProvenance: boundProvenance(),
+      bindSearchChanges: boundSearchChanges(),
+      resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: productionFetch(),
       delay: async () => {},
     }),
@@ -672,6 +720,8 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
       env: {},
       runCommand: afterSeoHarness.runCommand,
       bindProvenance: boundProvenance(),
+      bindSearchChanges: boundSearchChanges(),
+      resolveSearchBaseline: resolvedSearchBaseline(),
       nonceFactory: () => "c".repeat(64),
       fetchImpl: async (input, init = {}) => {
         const url = new URL(String(input));
@@ -710,6 +760,8 @@ test("production does not report deployed:true until the analytics SQL readback 
       env: {},
       runCommand: harness.runCommand,
       bindProvenance: boundProvenance(),
+      bindSearchChanges: boundSearchChanges(),
+      resolveSearchBaseline: resolvedSearchBaseline(),
       fetchImpl: productionFetch(),
     }),
     /analytics canary is not queryable/,
@@ -718,6 +770,112 @@ test("production does not report deployed:true until the analytics SQL readback 
     harness.calls.filter(({ label }) => label === "node scripts/verify-analytics-persistence.mjs").length,
     1,
   );
+});
+
+test("a retry after production switched commits reuses the original IndexNow change set", async (t) => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-release-retry-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const releaseRoot = path.join(root, ".release");
+  await mkdir(releaseRoot, { recursive: true });
+  await writeFile(releaseRoot + "/sitemap.xml", `<?xml version="1.0"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://getgiffgaff.com/contact/</loc><lastmod>2026-07-19</lastmod></url>
+  <url><loc>https://getgiffgaff.com/shop/</loc><lastmod>2026-07-19</lastmod></url>
+</urlset>\n`);
+  const baselineManifest = `
+const routes = {
+  "/contact/": { lastModified: "2026-07-18" },
+  "/shop/": { lastModified: "2026-07-18" },
+};
+export const PUBLIC_INDEXABLE_PATHS = Object.keys(routes);
+export function routeFor(pathname) { return routes[pathname] || null; }
+`;
+  const baselineSpecs = [];
+  const bindSearchChanges = (options) => bindReleaseSearchChanges({
+    ...options,
+    runGit: async (spec) => {
+      baselineSpecs.push(spec);
+      return baselineManifest;
+    },
+  });
+
+  const first = releaseRecorder({
+    failLabel: "node scripts/verify-analytics-persistence.mjs",
+    failure: new Error("analytics canary is not queryable"),
+  });
+  await assert.rejects(
+    () => runReleaseDeployment({
+      mode: "maintenance",
+      cwd: root,
+      env: {},
+      runCommand: first.runCommand,
+      bindProvenance: boundProvenance(),
+      bindSearchChanges,
+      resolveSearchBaseline: resolvedSearchBaseline(OTHER_SHA),
+      fetchImpl: productionFetch(),
+    }),
+    /analytics canary is not queryable/,
+  );
+
+  const statePath = path.join(root, ".seo-cache", "release-search-state.json");
+  const pending = JSON.parse(await readFile(statePath, "utf8"));
+  assert.equal(pending.baselineCommit, OTHER_SHA);
+  assert.equal(pending.candidateCommit, HEAD_SHA);
+  assert.deepEqual(pending.changedPaths, ["/contact/", "/shop/"]);
+  assert.equal(pending.submissionReceipt, null);
+
+  const second = releaseRecorder({
+    failLabel: "npm run submit:indexnow",
+    failure: new Error("IndexNow temporarily unavailable"),
+  });
+  await assert.rejects(
+    () => runReleaseDeployment({
+      mode: "maintenance",
+      cwd: root,
+      env: {},
+      runCommand: second.runCommand,
+      bindProvenance: boundProvenance(),
+      bindSearchChanges,
+      resolveSearchBaseline: resolvedSearchBaseline(HEAD_SHA),
+      fetchImpl: productionFetch(),
+    }),
+    /IndexNow temporarily unavailable/,
+  );
+  assert.equal(
+    JSON.parse(await readFile(statePath, "utf8")).submissionReceipt,
+    null,
+    "a failed submission must remain retryable",
+  );
+
+  const third = releaseRecorder();
+  const report = await runReleaseDeployment({
+    mode: "maintenance",
+    cwd: root,
+    env: {},
+    runCommand: third.runCommand,
+    bindProvenance: boundProvenance(),
+    bindSearchChanges,
+    resolveSearchBaseline: resolvedSearchBaseline(HEAD_SHA),
+    fetchImpl: productionFetch(),
+  });
+
+  assert.deepEqual(baselineSpecs, [`${OTHER_SHA}:public/route-manifest.js`]);
+  assert.deepEqual(report.indexNow.changedPaths, ["/contact/", "/shop/"]);
+  assert.equal(report.indexNow.submitted, true);
+  assert.equal(
+    third.calls.filter(({ label }) => label === "npm run submit:indexnow").length,
+    1,
+  );
+  const completed = JSON.parse(await readFile(statePath, "utf8"));
+  assert.equal(completed.baselineCommit, OTHER_SHA);
+  assert.equal(completed.candidateCommit, HEAD_SHA);
+  assert.deepEqual(completed.submissionReceipt, {
+    outcome: "accepted",
+    endpoint: "https://api.indexnow.org/indexnow",
+    status: 200,
+    submittedUrls: 2,
+    keyLocation: "https://getgiffgaff.com/indexnow-key.txt",
+  });
 });
 
 test("production fails closed when deployment or canonical provenance is stale", async () => {
@@ -729,6 +887,8 @@ test("production fails closed when deployment or canonical provenance is stale",
         env: {},
         runCommand: harness.runCommand,
         bindProvenance: boundProvenance(),
+        bindSearchChanges: boundSearchChanges(),
+        resolveSearchBaseline: resolvedSearchBaseline(),
         fetchImpl: productionFetch({ markerCommit }),
         delay: async () => {},
         nonceFactory: () => "b".repeat(64),

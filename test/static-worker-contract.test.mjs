@@ -297,6 +297,37 @@ test("route manifest owns 39 indexable and seven noindex routes with real source
   const legacyDates = new Map(capture.pages.map((page) => [page.route, page.lastModified]));
   const growth = await readJson("site/growth/content-manifest.json");
   const growthDates = new Map(growth.pages.map((page) => [page.path, page.updatedAt]));
+  const consultationRecoveryRoutes = new Set([
+    "/",
+    "/guides/0-intro/",
+    "/guides/1-order/",
+    "/guides/3-account/",
+    "/guides/3-app/",
+    "/guides/4-recharge-service/",
+    "/guides/5-travel-data/",
+    "/guides/6-pitfalls/",
+    "/guides/7-arrival-checklist/",
+    "/guides/8-uk-sim-choice/",
+    "/more/00-wechat/",
+    "/more/02-telegram/",
+    "/qa/00-username/",
+    "/qa/01-change-number/",
+    "/qa/02-topup/",
+    "/qa/03-reissue/",
+    "/qa/04-choose-number/",
+    "/qa/05-multiple-number/",
+    "/qa/06-activation-expiration/",
+    "/qa/07-voicemail-switch/",
+    "/qa/08-gv/",
+    "/qa/09-spread/",
+    "/shop/",
+    "/shop/giffgaff-g0/",
+    "/shop/giffgaff-g2/",
+    "/contact/",
+    "/tools/keep-number-reminder/",
+    "/tools/china-roaming-cost/",
+    "/tools/g0-g2-total-cost/",
+  ]);
 
   for (const [pathname, record] of Object.entries(ROUTE_MANIFEST)) {
     assert.equal(record.pathname, pathname);
@@ -314,9 +345,11 @@ test("route manifest owns 39 indexable and seven noindex routes with real source
       assert.ok(!PUBLIC_INDEXABLE_PATHS.includes(pathname), pathname);
     }
 
-    const expectedDate = record.contentSource === "legacy"
-      ? legacyDates.get(pathname)
-      : growthDates.get(pathname);
+    const expectedDate = consultationRecoveryRoutes.has(pathname)
+      ? "2026-07-19"
+      : record.contentSource === "legacy"
+        ? legacyDates.get(pathname)
+        : growthDates.get(pathname);
     assert.equal(record.lastModified, expectedDate, `${pathname} lastModified`);
     assert.match(record.lastModified, /^\d{4}-\d{2}-\d{2}$/, pathname);
   }
@@ -424,9 +457,10 @@ test("sitemap is generated from the same manifest for GET and HEAD", async () =>
   assert.equal(headResponse.headers.get("x-robots-tag"), null);
 });
 
-test("canonical variants normalize host, scheme, slash, index.html and ordinary query in one hop", async () => {
+test("canonical variants keep only allowlisted attribution and normalize in one hop", async () => {
   const root = await releaseRoot();
   const canonical = `${ORIGIN}/guides/7-arrival-checklist/`;
+  const attributed = `${canonical}?utm_source=dist_wechat_group`;
   const cases = new Map([
     ["http://getgiffgaff.com/guides/7-arrival-checklist/", canonical],
     ["https://www.getgiffgaff.com/guides/7-arrival-checklist/", canonical],
@@ -434,10 +468,18 @@ test("canonical variants normalize host, scheme, slash, index.html and ordinary 
     ["https://getgiffgaff.com/guides/7-arrival-checklist", canonical],
     ["https://getgiffgaff.com/guides/7-arrival-checklist/index.html", canonical],
     ["https://getgiffgaff.com//guides//7-arrival-checklist//", canonical],
-    ["https://getgiffgaff.com/guides/7-arrival-checklist/?utm_source=contract&utm_campaign=seo", canonical],
     [
-      "http://www.getgiffgaff.com//guides//7-arrival-checklist/index.html?utm_source=contract",
-      canonical,
+      "https://getgiffgaff.com/guides/7-arrival-checklist/?utm_source=dist_wechat_group",
+      null,
+    ],
+    [
+      "https://getgiffgaff.com/guides/7-arrival-checklist/?utm_source=dist_wechat_group&utm_campaign=private-note",
+      attributed,
+    ],
+    ["https://getgiffgaff.com/guides/7-arrival-checklist/?utm_source=contract", canonical],
+    [
+      "http://www.getgiffgaff.com//guides//7-arrival-checklist/index.html?utm_source=dist_partner",
+      `${canonical}?utm_source=dist_partner`,
     ],
     ["https://getgiffgaff.com/index.html", `${ORIGIN}/`],
   ]);
@@ -445,6 +487,11 @@ test("canonical variants normalize host, scheme, slash, index.html and ordinary 
   for (const [input, expected] of cases) {
     const env = createAssetsEnvironment(root);
     const response = await worker.fetch(new Request(input), env, {});
+    if (expected === null) {
+      assert.equal(response.status, 200, input);
+      assert.equal(env.calls.length, 1, `${input} is already canonical`);
+      continue;
+    }
     assert.equal(response.status, 301, input);
     assert.equal(response.headers.get("location"), expected, input);
     assert.equal(env.calls.length, 0, `${input} must redirect before ASSETS`);
@@ -688,6 +735,20 @@ test("retired llms-full remains a private 410 for GET and HEAD", async () => {
   assert.equal(await head.text(), "");
   assertDirectives(head, PRIVATE_DIRECTIVES, `${url} HEAD`);
   assert.equal(env.calls.length, 0, "retired llms-full HEAD must not reach static assets");
+});
+
+test("release search-change manifest remains an internal deployment artifact", async () => {
+  const root = await releaseRoot();
+  assert.ok((await readFile(path.join(root, "release-search-changes.json"))).length > 0);
+  const env = createAssetsEnvironment(root);
+  const response = await worker.fetch(
+    new Request(`${ORIGIN}/release-search-changes.json`),
+    env,
+    {},
+  );
+  assert.equal(response.status, 404);
+  assertDirectives(response, PRIVATE_DIRECTIVES, "/release-search-changes.json");
+  assert.equal(env.calls.length, 0, "internal manifest must fail before ASSETS");
 });
 
 test("every root-relative asset referenced by release HTML is Worker-allowlisted", async () => {

@@ -88,11 +88,28 @@ const ROBOTS_DIRECTIVES = Object.freeze({
 const ANALYTICS_SOURCES = new Set([
   "ai",
   "direct",
+  "dist_partner",
+  "dist_private_share",
+  "dist_wechat_group",
+  "dist_wechat_official",
+  "dist_xiaohongshu",
+  "paid_google",
+  "paid_microsoft",
   "internal",
   "referral",
   "search",
   "social",
   "unknown",
+]);
+const ATTRIBUTION_QUERY_PARAMETER = "utm_source";
+const ATTRIBUTION_SOURCES = new Set([
+  "dist_partner",
+  "dist_private_share",
+  "dist_wechat_group",
+  "dist_wechat_official",
+  "dist_xiaohongshu",
+  "paid_google",
+  "paid_microsoft",
 ]);
 const ANALYTICS_EVENTS = new Set([
   "commerce_click",
@@ -105,6 +122,11 @@ const ANALYTICS_EVENTS = new Set([
 const ANALYTICS_CONTACT_CHANNELS = new Set([
   "telegram",
   "wechat",
+]);
+const ANALYTICS_PITFALLS_INTENT_PATH = "/guides/6-pitfalls/";
+const ANALYTICS_PITFALLS_INTENTS = new Set([
+  "after-purchase",
+  "before-purchase",
 ]);
 
 function matchesRoutePrefix(pathname, prefix) {
@@ -314,8 +336,15 @@ export function canonicalRedirectFor(request) {
     changed = true;
   }
   if (routeFor(normalizedPath) && canonical.search) {
-    canonical.search = "";
-    changed = true;
+    const attribution = canonical.searchParams.get(ATTRIBUTION_QUERY_PARAMETER);
+    const safeAttribution = ATTRIBUTION_SOURCES.has(attribution) ? attribution : null;
+    const expectedSearch = safeAttribution
+      ? `?${ATTRIBUTION_QUERY_PARAMETER}=${encodeURIComponent(safeAttribution)}`
+      : "";
+    if (canonical.search !== expectedSearch) {
+      canonical.search = expectedSearch;
+      changed = true;
+    }
   }
   if (canonical.hash) {
     canonical.hash = "";
@@ -466,6 +495,7 @@ export async function analyticsEventV1(request, env) {
   }
   const keys = Object.keys(payload).sort().join(",");
   const hasChannel = Object.hasOwn(payload, "channel");
+  const hasIntent = Object.hasOwn(payload, "intent");
   const hasReleaseProbe = request.headers.has(ANALYTICS_RELEASE_PROBE_HEADER);
   const hasReleaseProbeId = request.headers.has(ANALYTICS_RELEASE_PROBE_ID_HEADER);
   const isReleaseProbe =
@@ -473,7 +503,8 @@ export async function analyticsEventV1(request, env) {
   const releaseProbeId = request.headers.get(ANALYTICS_RELEASE_PROBE_ID_HEADER) || "";
   if (
     keys !== "event,path,source,version" &&
-    keys !== "channel,event,path,source,version"
+    keys !== "channel,event,path,source,version" &&
+    keys !== "event,intent,path,source,version"
   ) {
     return privateError(request, 400, "Invalid analytics event");
   }
@@ -489,6 +520,11 @@ export async function analyticsEventV1(request, env) {
       payload.event !== "contact_click" ||
       !ANALYTICS_CONTACT_CHANNELS.has(payload.channel)
     )) ||
+    (hasIntent && (
+      payload.path !== ANALYTICS_PITFALLS_INTENT_PATH ||
+      payload.event !== "commerce_click" ||
+      !ANALYTICS_PITFALLS_INTENTS.has(payload.intent)
+    )) ||
     (hasReleaseProbe !== hasReleaseProbeId) ||
     (hasReleaseProbe && (
       !isReleaseProbe ||
@@ -496,7 +532,8 @@ export async function analyticsEventV1(request, env) {
       payload.path !== "/" ||
       payload.source !== "direct" ||
       payload.event !== "page_view" ||
-      hasChannel
+      hasChannel ||
+      hasIntent
     ))
   ) {
     return privateError(request, 400, "Invalid analytics event");
@@ -509,6 +546,7 @@ export async function analyticsEventV1(request, env) {
   try {
     const blobs = [payload.path, payload.source, payload.event];
     if (hasChannel) blobs.push(payload.channel);
+    if (hasIntent) blobs.push(payload.intent);
     if (isReleaseProbe) blobs.push(ANALYTICS_RELEASE_PROBE_BLOB, releaseProbeId);
     await env.ANALYTICS.writeDataPoint({
       indexes: [

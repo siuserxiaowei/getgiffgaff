@@ -149,6 +149,15 @@ test("all 46 release routes expose one safe, complete contact and purchase guide
       /付款前请联系客服核对当前库存、价格、卡片来源与激活状态/,
       `${route} factual pre-order contact guidance`,
     );
+    assert.match(widget, /先选最方便的咨询方式/, `${route} quick channel chooser`);
+    assert.match(widget, /同一手机可改用 Telegram/, `${route} same-device WeChat fallback`);
+    assert.match(widget, /Telegram 内搜索 @xiaoyuhuai/, `${route} Telegram search fallback`);
+    assert.match(widget, /当前设备没有微信时，可先通过 Telegram 核对/, `${route} KTT no-WeChat fallback`);
+    assert.ok(
+      widget.indexOf('class="commerce-quick-channels"')
+        < widget.indexOf('class="commerce-choice-section"'),
+      `${route} quick channels must precede the longer choice guide`,
+    );
 
     for (const [channel, href] of [
       ["wechat", WECHAT_URL],
@@ -161,6 +170,32 @@ test("all 46 release routes expose one safe, complete contact and purchase guide
           "i",
         ),
         `${route} ${channel} anonymous contact event`,
+      );
+      assert.equal(
+        (
+          widget.match(
+            new RegExp(
+              `<a\\b(?=[^>]*\\bhref=["']${escapeRegExp(href)}["'])(?=[^>]*\\bdata-analytics-event=["']contact_click["'])(?=[^>]*\\bdata-analytics-channel=["']${channel}["'])[^>]*>`,
+              "gi",
+            ),
+          ) || []
+        ).length,
+        2,
+        `${route} ${channel} quick and detailed contact handoffs`,
+      );
+    }
+    for (const [entry, fallback] of [
+      ["quick-wechat", "telegram"],
+      ["quick-telegram", "wechat-qr"],
+      ["quick-ktt", "telegram"],
+    ]) {
+      assert.match(
+        widget,
+        new RegExp(
+          `<a\\b(?=[^>]*\\bdata-consultation-entry=["']${entry}["'])(?=[^>]*\\bdata-channel-fallback=["']${fallback}["'])[^>]*>`,
+          "i",
+        ),
+        `${route} ${entry} fallback metadata`,
       );
     }
     assert.match(
