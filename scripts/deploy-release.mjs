@@ -567,7 +567,7 @@ export async function verifyCanonicalSeoAfterPropagation({
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
       await runCommand("npm", [
-        "run", "verify:seo", "--", "--base-url", CANONICAL_ORIGIN, "--expected-url-count", "39",
+        "run", "verify:seo", "--", "--base-url", CANONICAL_ORIGIN, "--expected-url-count", "43",
       ], commandOptions);
       return { attempts: attempt };
     } catch (error) {

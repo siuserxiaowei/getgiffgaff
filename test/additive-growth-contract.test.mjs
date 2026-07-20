@@ -53,6 +53,10 @@ const LEGACY_ROUTES = Object.freeze([
 const INDEXABLE_GROWTH_ROUTES = Object.freeze([
   "/guides/7-arrival-checklist/",
   "/guides/8-uk-sim-choice/",
+  "/guides/9-number-balance-data-check/",
+  "/guides/apn-settings/",
+  "/more/esim-new-phone/",
+  "/more/esim-deleted/",
   "/tools/keep-number-reminder/",
   "/tools/china-roaming-cost/",
   "/tools/g0-g2-total-cost/",
@@ -149,7 +153,7 @@ function internalHrefs(html) {
     .filter((href) => href.startsWith("/") && !href.startsWith("//"));
 }
 
-test("route manifest keeps 34 frozen pages and adds five index plus seven noindex pages", async () => {
+test("route manifest keeps 34 frozen pages and adds nine index plus seven noindex pages", async () => {
   const modulePath = path.join(ROOT, "public", "route-manifest.js");
   await access(modulePath);
   const manifest = await import(`${pathToFileURL(modulePath).href}?t=${Date.now()}`);
@@ -157,8 +161,8 @@ test("route manifest keeps 34 frozen pages and adds five index plus seven noinde
   assert.deepEqual(manifest.LEGACY_ROUTES, LEGACY_ROUTES);
   assert.deepEqual(manifest.INDEXABLE_GROWTH_ROUTES, INDEXABLE_GROWTH_ROUTES);
   assert.deepEqual(manifest.NOINDEX_GROWTH_ROUTES, NOINDEX_GROWTH_ROUTES);
-  assert.equal(manifest.PUBLIC_INDEXABLE_PATHS.length, 39);
-  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 46);
+  assert.equal(manifest.PUBLIC_INDEXABLE_PATHS.length, 43);
+  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 50);
 
   for (const route of LEGACY_ROUTES) {
     const record = manifest.routeFor(route);

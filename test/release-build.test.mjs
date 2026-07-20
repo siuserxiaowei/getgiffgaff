@@ -15,6 +15,7 @@ import {
   injectCommerceWidget,
   injectRelatedTutorials,
   injectVerifiedContactChannels,
+  improveShopHeroImageAccessibility,
   replaceRetiredWechatQr,
 } from "../scripts/build-release-artifact.mjs";
 import {
@@ -167,6 +168,16 @@ test("retired WeChat QR references are upgraded only in the release transform", 
   assert.equal(replaceRetiredWechatQr(output), output, "idempotent");
 });
 
+test("shop hero image gets descriptive alt text only in the release artifact", () => {
+  const frozen = '<div class="shop-hero__visual" aria-hidden="true"><img alt="" width="620" height="420" decoding="async" data-nimg="1" class="shop-hero__image" style="color:transparent" src="/gg-card-hero.png"/></div>';
+  const output = improveShopHeroImageAccessibility(frozen, "/shop/");
+  assert.match(output, /<div class="shop-hero__visual">/);
+  assert.match(output, /<img alt="giffgaff 英国手机卡购买页面示意图"/);
+  assert.doesNotMatch(output, /aria-hidden="true"/);
+  assert.equal(improveShopHeroImageAccessibility(output, "/shop/"), output, "idempotent");
+  assert.equal(improveShopHeroImageAccessibility(frozen, "/guides/1-order/"), frozen);
+});
+
 test("release-only conversion override reclassifies internal Contact navigation without touching real channels", () => {
   const internal = '<a href="/contact/" data-analytics-event="contact_click">先联系确认</a>';
   const external = '<a href="https://t.me/xiaoyuhuai" data-analytics-event="contact_click" data-analytics-channel="telegram">Telegram</a>';
@@ -182,6 +193,27 @@ test("release-only conversion override reclassifies internal Contact navigation 
     }),
     /1 time\(s\), found 2 \(internal Contact analytics marker\)/i,
   );
+});
+
+test("release-only top-up override gives account lookups to the dedicated guide", async () => {
+  const source = await readFile(routeFile(LEGACY_ROOT, "/qa/02-topup/"), "utf8");
+  const output = applyReleaseConversionOverrides(source, "/qa/02-topup/");
+
+  assert.match(source, /giffgaff 如何充值\/查询余额\/查消费记录/u, "frozen source stays unchanged");
+  assert.match(output, /<title>giffgaff 充值、voucher 与支付失败 · getgiffgaff<\/title>/u);
+  assert.match(output, /<h1>giffgaff 充值、voucher 与支付失败<\/h1>/u);
+  assert.match(
+    output,
+    /<meta name="description" content="giffgaff 充值、voucher 充值券与支付失败处理；说明自助充值与第三方代充的边界。"\/>/u,
+  );
+  assert.match(output, /<h2>银行卡或 PayPal 支付失败时先核对什么<\/h2>/u);
+  assert.match(output, /<h2>第三方代充的服务边界<\/h2>/u);
+  assert.match(
+    output,
+    /<a href="\/guides\/9-number-balance-data-check\/">手机号、Credit、套餐和流量查询教程<\/a>/u,
+  );
+  assert.doesNotMatch(output, /查询余额和消费记录/u);
+  assert.doesNotMatch(output, /接收短信会扣余额吗？/u);
 });
 
 test("release conversion pages replace blanket payment deterrents with actionable confirmation", async (t) => {
@@ -236,8 +268,8 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   const report = await buildReleaseArtifact(outputRoot);
 
   assert.equal(report.legacyPages, 34);
-  assert.equal(report.growthPages, 12);
-  assert.equal(report.injectedPages, 16);
+  assert.equal(report.growthPages, 16);
+  assert.equal(report.injectedPages, 17);
   assert.equal(report.commerceWidgets, 34);
 
   const related = JSON.parse(
@@ -256,6 +288,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
     }
     expected = injectCommerceWidget(expected);
     expected = replaceRetiredWechatQr(expected);
+    expected = improveShopHeroImageAccessibility(expected, route);
     if (route === "/contact/") expected = injectVerifiedContactChannels(expected);
     expected = applyLegacySafetyOverrides(expected, route).html;
     expected = applyReleaseConversionOverrides(expected, route);
@@ -264,6 +297,14 @@ test("release build contains frozen pages, growth pages, semantic related slots,
     assert.equal((html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, 1, route);
     assert.equal(html, expected, `${route} only approved release transformations`);
     assert.doesNotMatch(html, /(?:src|href)=["']\/_next\//i, route);
+    const imageTags = html.match(/<img\b[^>]*>/gi) || [];
+    for (const image of imageTags) {
+      assert.match(image, /\balt\s*=\s*["'][^"']*["']/i, `${route} image alt`);
+    }
+    if (route === "/shop/") {
+      assert.match(html, /<img alt="giffgaff 英国手机卡购买页面示意图"[^>]*src="\/gg-card-hero\.png"/);
+      assert.doesNotMatch(html, /<div class="shop-hero__visual" aria-hidden="true">/);
+    }
   }
 
   for (const route of [...INDEXABLE_GROWTH_ROUTES, ...NOINDEX_GROWTH_ROUTES]) {
@@ -295,7 +336,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   );
 
   const sitemap = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");
-  assert.equal((sitemap.match(/<url>/g) || []).length, 39);
+  assert.equal((sitemap.match(/<url>/g) || []).length, 43);
   for (const route of NOINDEX_GROWTH_ROUTES) {
     assert.doesNotMatch(sitemap, new RegExp(route.replaceAll("/", "\\/")), route);
   }
@@ -418,7 +459,7 @@ test("release search-change binding records only routes whose sitemap lastmod ch
   });
 });
 
-test("llms.txt is a curated task index for exactly the 39 indexable pages", async (t) => {
+test("llms.txt is a curated task index for exactly the 43 indexable pages", async (t) => {
   const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-llms-"));
   t.after(() => rm(outputRoot, { recursive: true, force: true }));
   await buildReleaseArtifact(outputRoot);
@@ -438,7 +479,7 @@ test("llms.txt is a curated task index for exactly the 39 indexable pages", asyn
 
   const entries = [...llms.matchAll(/^- \[([^\]]+)\]\((https:\/\/getgiffgaff\.com\/[^)]*)\)：([^\n]+)$/gm)]
     .map((match) => ({ title: match[1], url: match[2], purpose: match[3].trim() }));
-  assert.equal(entries.length, 39, "one titled purpose entry per indexable page");
+  assert.equal(entries.length, 43, "one titled purpose entry per indexable page");
   assert.deepEqual(
     entries.map((entry) => new URL(entry.url).pathname).sort(),
     [...PUBLIC_INDEXABLE_PATHS].sort(),

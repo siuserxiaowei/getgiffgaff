@@ -26,7 +26,7 @@ const CORE_OWNER_PATHS = Object.freeze([
 const APPROVED_LEGACY_EDGES = Object.freeze({
   "/": ["/guides/6-pitfalls/", "/guides/8-uk-sim-choice/"],
   "/shop/": ["/guides/6-pitfalls/", "/tools/g0-g2-total-cost/", "/guides/7-arrival-checklist/"],
-  "/guides/3-app/": ["/guides/6-pitfalls/", "/guides/3-account/", "/qa/02-topup/", "/more/03-esim/", "/guides/4-signal/"],
+  "/guides/3-app/": ["/guides/6-pitfalls/", "/guides/3-account/", "/guides/9-number-balance-data-check/", "/more/03-esim/", "/more/esim-new-phone/"],
   "/qa/07-voicemail-switch/": ["/guides/6-pitfalls/", "/guides/4-signal/", "/guides/3-usage/", "/tools/china-roaming-cost/", "/contact/"],
 });
 
@@ -89,7 +89,7 @@ test("approved legacy growth slots link high-value pages with semantic, duplicat
   }
 });
 
-test("all five indexable growth pages have inbound links and are reachable from home", async (t) => {
+test("all indexable growth pages have inbound links and are reachable from home", async (t) => {
   const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-link-graph-"));
   t.after(() => rm(outputRoot, { recursive: true, force: true }));
   await buildReleaseArtifact(outputRoot);

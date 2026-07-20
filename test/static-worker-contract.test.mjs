@@ -41,6 +41,7 @@ const ADDITIVE_SLOT_ROUTES = Object.freeze([
   "/guides/4-signal/",
   "/guides/5-travel-data/",
   "/more/03-esim/",
+  "/more/04-esim-qrcode/",
   "/qa/02-topup/",
   "/qa/07-voicemail-switch/",
   "/guides/6-pitfalls/",
@@ -285,13 +286,13 @@ function sitemapEntries(xml) {
   return entries;
 }
 
-test("route manifest owns 39 indexable and seven noindex routes with real source dates", async () => {
+test("route manifest owns 43 indexable and seven noindex routes with real source dates", async () => {
   assert.equal(LEGACY_ROUTES.length, 34);
-  assert.equal(INDEXABLE_GROWTH_ROUTES.length, 5);
+  assert.equal(INDEXABLE_GROWTH_ROUTES.length, 9);
   assert.equal(NOINDEX_GROWTH_ROUTES.length, 7);
-  assert.equal(Object.keys(ROUTE_MANIFEST).length, 46);
-  assert.equal(PUBLIC_INDEXABLE_PATHS.length, 39);
-  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 39);
+  assert.equal(Object.keys(ROUTE_MANIFEST).length, 50);
+  assert.equal(PUBLIC_INDEXABLE_PATHS.length, 43);
+  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 43);
   assert.equal(new Set(PUBLIC_STATIC_ASSET_PATHS).size, PUBLIC_STATIC_ASSET_PATHS.length);
 
   const noindexRoutes = Object.values(ROUTE_MANIFEST)
@@ -467,8 +468,8 @@ test("sitemap is generated from the same manifest for GET and HEAD", async () =>
   assert.equal(getResponse.status, 200);
   assert.match(getResponse.headers.get("content-type") || "", /(?:application|text)\/xml/i);
   assert.equal(getResponse.headers.get("x-robots-tag"), null);
-  assert.equal(entries.length, 39);
-  assert.equal(new Set(entries.map((entry) => entry.location)).size, 39);
+  assert.equal(entries.length, 43);
+  assert.equal(new Set(entries.map((entry) => entry.location)).size, 43);
   assert.deepEqual(
     entries.map((entry) => entry.location),
     PUBLIC_INDEXABLE_PATHS.map((pathname) => `${ORIGIN}${pathname}`),

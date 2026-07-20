@@ -4,6 +4,7 @@ import test from "node:test";
 import { GROWTH_PAGES } from "../site/growth/content-registry.js";
 
 const EXPECTED_UPDATED_AT = "2026-07-17";
+const HIGH_INTENT_ANSWER_UPDATED_AT = "2026-07-20";
 const EXPECTED_EXPIRY = "2026-08-15";
 
 function growthPage(path) {
@@ -18,12 +19,15 @@ function sectionText(page, id) {
   return section.html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
 }
 
-test("E05 publishes dated answer-first boundaries on all five indexable growth pages", () => {
+test("E05 publishes dated answer-first boundaries on all indexable growth pages", () => {
   const pages = GROWTH_PAGES.filter((page) => page.indexPolicy === "index");
-  assert.equal(pages.length, 5);
+  assert.equal(pages.length, 9);
   for (const page of pages) {
-    assert.equal(page.updatedAt, EXPECTED_UPDATED_AT, `${page.path} updatedAt`);
-    assert.equal(page.reviewedAt, EXPECTED_UPDATED_AT, `${page.path} reviewedAt`);
+    const expectedDate = ["/guides/9-number-balance-data-check/", "/guides/apn-settings/", "/more/esim-new-phone/", "/more/esim-deleted/"].includes(page.path)
+      ? HIGH_INTENT_ANSWER_UPDATED_AT
+      : EXPECTED_UPDATED_AT;
+    assert.equal(page.updatedAt, expectedDate, `${page.path} updatedAt`);
+    assert.equal(page.reviewedAt, expectedDate, `${page.path} reviewedAt`);
     assert.ok(page.directAnswer.length >= 70, `${page.path} self-contained direct answer`);
   }
 
@@ -32,6 +36,27 @@ test("E05 publishes dated answer-first boundaries on all five indexable growth p
   for (const page of expiringTools) {
     assert.match(page.sections.map(({ html }) => html).join(" "), new RegExp(EXPECTED_EXPIRY));
   }
+});
+
+test("new high-intent pages keep APN, eSIM migration and deletion recovery distinct", () => {
+  const account = growthPage("/guides/9-number-balance-data-check/");
+  assert.match(account.directAnswer, /43430.*Number/);
+  assert.match(account.directAnswer, /85075.*INFO/);
+  assert.match(sectionText(account, "check-credit-and-plan"), /Usage statement/);
+
+  const apn = growthPage("/guides/apn-settings/");
+  assert.match(apn.directAnswer, /giffgaff\.com/);
+  assert.match(apn.directAnswer, /IPv4v6/);
+  assert.match(sectionText(apn, "when-apn-applies"), /有信号.*数据失败/);
+
+  const migration = growthPage("/more/esim-new-phone/");
+  assert.match(migration.directAnswer, /Replace my SIM/);
+  assert.match(migration.directAnswer, /MFA/);
+  assert.match(sectionText(migration, "before-moving"), /旧 eSIM|旧线路/);
+
+  const deleted = growthPage("/more/esim-deleted/");
+  assert.match(deleted.directAnswer, /至少等待 24 小时/);
+  assert.match(sectionText(deleted, "two-swaps"), /实体 SIM.*(?:新|new) eSIM/);
 });
 
 test("arrival answer is an evidence-led acceptance check rather than a sales handoff", () => {

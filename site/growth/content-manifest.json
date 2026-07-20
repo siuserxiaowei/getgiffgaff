@@ -51,6 +51,95 @@
       "indexPolicy": "index"
     },
     {
+      "path": "/guides/9-number-balance-data-check/",
+      "title": "giffgaff 怎么查手机号、余额和流量｜Credit 与使用记录",
+      "description": "查询 giffgaff 手机号、Credit、套餐、流量与使用记录时，分别使用官方 Dashboard、App 或短信入口；查不到时按激活、账号和网络状态分层排查。",
+      "intent": "giffgaff 手机号、Credit、套餐和使用记录查询",
+      "updatedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "sources": [
+        "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+        "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit",
+        "https://help.giffgaff.com/en/articles/258872-guide-to-the-usage-statement",
+        "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting"
+      ],
+      "relatedRoutes": [
+        "/guides/2-activate/",
+        "/guides/4-signal/",
+        "/guides/3-usage/",
+        "/tools/keep-number-reminder/",
+        "/guides/6-pitfalls/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/guides/apn-settings/",
+      "title": "giffgaff APN 设置｜有信号但移动数据不能用怎么办",
+      "description": "giffgaff 有信号、通话短信正常但移动数据或热点不能用时，按官方 APN 参数检查 iPhone 和 Android 设置，并区分余额、漫游与网络故障。",
+      "intent": "giffgaff APN 与移动数据故障排查",
+      "updatedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "sources": [
+        "https://help.giffgaff.com/en/articles/245215-internet-apn-settings-guide",
+        "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+        "https://help.giffgaff.com/en/articles/229483-i-m-having-problems-roaming-abroad"
+      ],
+      "relatedRoutes": [
+        "/guides/4-signal/",
+        "/guides/5-travel-data/",
+        "/tools/china-roaming-cost/",
+        "/guides/3-app/",
+        "/guides/6-pitfalls/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/more/esim-new-phone/",
+      "title": "giffgaff eSIM 换手机怎么迁移｜新旧手机与 MFA 检查",
+      "description": "已有 giffgaff eSIM 换新手机时，先确认新机兼容、账号可登录和短信 MFA，再按官方 App 的 Replace my SIM 流程切换。",
+      "intent": "giffgaff eSIM 换手机迁移",
+      "updatedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "sources": [
+        "https://help.giffgaff.com/en/articles/240399-continuing-to-use-your-esim-if-you-switch-to-a-different-phone",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+        "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting"
+      ],
+      "relatedRoutes": [
+        "/more/03-esim/",
+        "/more/esim-deleted/",
+        "/guides/3-account/",
+        "/guides/4-signal/",
+        "/more/04-esim-qrcode/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/more/esim-deleted/",
+      "title": "giffgaff eSIM 误删了怎么办｜实体 SIM 中转与账号恢复",
+      "description": "误删 giffgaff eSIM 后不能直接恢复原配置；按官方说明先换到从未激活、状态可核验的实体 SIM，再至少间隔 24 小时切换为新 eSIM。",
+      "intent": "giffgaff eSIM 误删恢复",
+      "updatedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "sources": [
+        "https://help.giffgaff.com/en/articles/240403-what-to-do-if-you-delete-your-esim",
+        "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff"
+      ],
+      "relatedRoutes": [
+        "/more/esim-new-phone/",
+        "/more/03-esim/",
+        "/guides/3-account/",
+        "/qa/03-reissue/",
+        "/more/04-esim-qrcode/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
       "path": "/tools/keep-number-reminder/",
       "title": "giffgaff 保号提醒工具｜本地生成第 5 个月提醒",
       "description": "输入最近一次有效动作日期，在浏览器本地生成第 5 个月提醒并导出 .ics；不上传号码、账号或日期，不承诺永久保号。",

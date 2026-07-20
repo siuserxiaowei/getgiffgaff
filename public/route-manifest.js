@@ -3,6 +3,7 @@ const EVIDENCE_DATE = "2026-07-15";
 const GROWTH_DATE = "2026-07-17";
 const CONSULTATION_RECOVERY_DATE = "2026-07-19";
 const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";
+const SEARCH_CONTENT_EXPANSION_DATE = "2026-07-20";
 
 export const LEGACY_ROUTES = Object.freeze([
   "/",
@@ -44,6 +45,10 @@ export const LEGACY_ROUTES = Object.freeze([
 export const INDEXABLE_GROWTH_ROUTES = Object.freeze([
   "/guides/7-arrival-checklist/",
   "/guides/8-uk-sim-choice/",
+  "/guides/9-number-balance-data-check/",
+  "/guides/apn-settings/",
+  "/more/esim-new-phone/",
+  "/more/esim-deleted/",
   "/tools/keep-number-reminder/",
   "/tools/china-roaming-cost/",
   "/tools/g0-g2-total-cost/",
@@ -163,6 +168,15 @@ const INTERNAL_LINK_REFINEMENT_ROUTES = new Set([
   "/tools/g0-g2-total-cost/",
 ]);
 
+// These routes received new evidence-led content for distinct, high-intent
+// troubleshooting queries. Do not make unrelated pages appear freshly edited.
+const SEARCH_CONTENT_EXPANSION_ROUTES = new Set([
+  "/guides/9-number-balance-data-check/",
+  "/guides/apn-settings/",
+  "/more/esim-new-phone/",
+  "/more/esim-deleted/",
+]);
+
 const COLLECTION_ROUTES = new Set([
   "/shop/",
   "/guides/",
@@ -205,6 +219,9 @@ function commerceFor(pathname) {
 }
 
 function lastModifiedFor(pathname, contentSource) {
+  if (SEARCH_CONTENT_EXPANSION_ROUTES.has(pathname)) {
+    return SEARCH_CONTENT_EXPANSION_DATE;
+  }
   if (INTERNAL_LINK_REFINEMENT_ROUTES.has(pathname)) {
     return INTERNAL_LINK_REFINEMENT_DATE;
   }

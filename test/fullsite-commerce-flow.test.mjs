@@ -53,7 +53,7 @@ function widgetMarkup(html, route) {
   return matches[0];
 }
 
-test("all 46 release routes expose one safe, complete contact and purchase guide", async (t) => {
+test("all 50 release routes expose one safe, complete contact and purchase guide", async (t) => {
   const outputRoot = await mkdtemp(
     path.join(os.tmpdir(), "getgiffgaff-commerce-flow-"),
   );
@@ -62,7 +62,7 @@ test("all 46 release routes expose one safe, complete contact and purchase guide
   await buildReleaseArtifact(outputRoot);
 
   const routes = Object.keys(ROUTE_MANIFEST);
-  assert.equal(routes.length, 46, "route manifest must contain all 46 public pages");
+  assert.equal(routes.length, 50, "route manifest must contain all 50 public pages");
 
   for (const target of INTERNAL_TARGETS) {
     const targetRoute = target.split("#", 1)[0];

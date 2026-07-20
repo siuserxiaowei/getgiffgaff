@@ -1,5 +1,6 @@
 const REVIEWED_AT = "2026-07-17";
 const EXPIRES_AT = "2026-08-15";
+const SEARCH_CONTENT_REVIEWED_AT = "2026-07-20";
 
 const official = Object.freeze({
   activation: {
@@ -9,6 +10,10 @@ const official = Object.freeze({
   credit: {
     label: "giffgaff 官方 Credit 说明",
     url: "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit",
+  },
+  usageStatement: {
+    label: "giffgaff 官方使用明细说明",
+    url: "https://help.giffgaff.com/en/articles/258872-guide-to-the-usage-statement",
   },
   network: {
     label: "giffgaff 官方网络与服务排障",
@@ -29,6 +34,22 @@ const official = Object.freeze({
   esim: {
     label: "giffgaff 官方 eSIM 切换说明",
     url: "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+  },
+  esimNewPhone: {
+    label: "giffgaff 官方 eSIM 换机说明",
+    url: "https://help.giffgaff.com/en/articles/240399-continuing-to-use-your-esim-if-you-switch-to-a-different-phone",
+  },
+  esimDeleted: {
+    label: "giffgaff 官方 eSIM 误删恢复说明",
+    url: "https://help.giffgaff.com/en/articles/240403-what-to-do-if-you-delete-your-esim",
+  },
+  apn: {
+    label: "giffgaff 官方互联网 APN 设置",
+    url: "https://help.giffgaff.com/en/articles/245215-internet-apn-settings-guide",
+  },
+  roamingTroubleshooting: {
+    label: "giffgaff 官方境外漫游故障排查",
+    url: "https://help.giffgaff.com/en/articles/229483-i-m-having-problems-roaming-abroad",
   },
   roamingChina: {
     label: "giffgaff 中国漫游费率",
@@ -217,6 +238,194 @@ export const GROWTH_PAGES = Object.freeze([
       { label: "确定适合后查看购买、激活和保号避坑", href: "/guides/6-pitfalls/" },
     ],
     commerceTarget: { label: "微信或 Telegram 咨询选卡", href: "/contact/" },
+  }),
+  page({
+    path: "/guides/9-number-balance-data-check/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: SEARCH_CONTENT_REVIEWED_AT,
+    reviewedAt: SEARCH_CONTENT_REVIEWED_AT,
+    intent: "giffgaff 手机号、Credit、套餐和使用记录查询",
+    title: "giffgaff 怎么查手机号、余额和流量｜Credit 与使用记录",
+    description:
+      "查询 giffgaff 手机号、Credit、套餐、流量与使用记录时，分别使用官方 Dashboard、App 或短信入口；查不到时按激活、账号和网络状态分层排查。",
+    h1: "giffgaff 怎么查手机号、余额、套餐和流量",
+    deck: "先分清号码、Credit、当前 plan 与 Usage statement；它们对应不同的官方入口，不能互相替代。",
+    directAnswer:
+      "查询 giffgaff 手机号可登录官方 Dashboard、查看 App 首页，或在能正常发短信时向 43430 发送 Number。查询 Credit 与当前 plan，优先看 Dashboard 或 App，也可向 85075 发送 INFO；已产生的通话、短信和数据使用记录则看 App 中的 Usage statement。若无法登录、无信号或短信没有回复，先排查激活、账号和网络状态，不要把一次查询失败直接当成号码或余额不存在。",
+    answerSources: [official.activation, official.credit, official.usageStatement],
+    sections: [
+      {
+        id: "before-checking",
+        title: "先分清：未激活、已激活但无信号，还是只是找不到信息",
+        html: `<div class="growth-table-wrap" role="region" tabindex="0" aria-label="giffgaff 查询前的状态分流"><table><caption>先按可观察状态分流</caption><thead><tr><th>你现在看到的情况</th><th>先做什么</th><th>不要据此推断什么</th></tr></thead><tbody><tr><th>新卡还没有号码或不能正常使用</th><td>先完成官方激活流程；激活最长可能需要 24 小时。</td><td>不要把卡板上的识别码当作已可用手机号。</td></tr><tr><th>可登录账号，但不确定手机号</th><td>查看 Dashboard、App 首页，或按官方方式发送 Number 到 43430。</td><td>不要公开完整手机号、SIM 序列号或验证码。</td></tr><tr><th>想看余额、套餐或使用情况</th><td>先区分 Credit、当前 plan 和流量使用；优先 Dashboard 或 App。</td><td>不要把 Credit 余额当成所有套餐或流量都仍可用的证明。</td></tr><tr><th>查不到或短信无回复</th><td>保留时间、网络和错误信息，转入网络/短信排查。</td><td>不要连续大量发送查询短信或重复提交激活。</td></tr></tbody></table></div>`,
+      },
+      {
+        id: "find-number",
+        title: "查 giffgaff 手机号：三个官方入口",
+        html: `<ol class="growth-steps"><li><strong>Dashboard：</strong>登录 giffgaff 官方 Dashboard 后查看号码。</li><li><strong>App 首页：</strong>打开 giffgaff App 的首页查看号码；App 可用不代表短信或网络一定正常。</li><li><strong>短信查询：</strong>向 <code>43430</code> 发送 <code>Number</code>。这需要卡已经能正常发送短信；无法收到或发送短信时，不要把没有回复直接当成号码不存在。</li></ol><p>以上三个入口由<a href="${official.activation.url}" target="_blank" rel="noopener noreferrer">${official.activation.label}</a>列明（核验 ${SEARCH_CONTENT_REVIEWED_AT}）。若卡还在激活阶段，官方说明可能需要最多 24 小时；先按激活状态处理。</p>`,
+      },
+      {
+        id: "check-credit-and-plan",
+        title: "查 Credit、套餐和流量：先看 Dashboard 或 App",
+        html: `<p><strong>Credit</strong> 是账户中用于套餐以外服务或套餐到期后服务的金额，不等同于“所有流量”。官方说明可以在 Dashboard 或 App 查看 Credit 与套餐信息；也可向 <code>85075</code> 发送 <code>INFO</code> 获得 Credit 和套餐信息的短信回复。见<a href="${official.credit.url}" target="_blank" rel="noopener noreferrer">${official.credit.label}</a>（核验 ${SEARCH_CONTENT_REVIEWED_AT}）。</p><p>若要看已产生的通话、短信或数据使用记录，查看官方的 Usage statement；官方说明该记录可以在 giffgaff App 中查看。见<a href="${official.usageStatement.url}" target="_blank" rel="noopener noreferrer">${official.usageStatement.label}</a>（核验 ${SEARCH_CONTENT_REVIEWED_AT}）。</p><ul class="growth-list"><li>先记录你看到的是 Credit、当前 plan，还是使用量，避免把页面字段混在一起。</li><li>如果在境外，优先用 Wi-Fi 登录 Dashboard 或 App，避免为了一次查询产生额外移动数据费用。</li><li>页面显示的当前信息只说明当时的账户展示；实际扣费、套餐条件与漫游以操作当日官方页面和账单为准。</li></ul>`,
+      },
+      {
+        id: "when-it-does-not-work",
+        title: "查询无结果时，按层排查而不是反复重试",
+        html: `<p>如果 Dashboard/App 无法登录，先核对账号与恢复方式；如果可登录但手机无信号、任何短信无法收发或查询短信无回复，记录设备、所在国家/地区、网络名称和时间后，按<a href="${official.network.url}" target="_blank" rel="noopener noreferrer">${official.network.label}</a>逐层排查（核验 ${SEARCH_CONTENT_REVIEWED_AT}）。普通短信正常而某个平台 OTP 不到，则属于另一条问题线，不能用余额或号码页面替代诊断。</p><p class="growth-warning">联系支持时不要发送密码、短信验证码、完整 SIM 序列号、完整 ICCID 或支付资料。只提供必要的错误摘要、设备和时间线。</p>`,
+      },
+    ],
+    sources: [official.activation, official.credit, official.usageStatement, official.network],
+    relatedRoutes: [
+      { label: "激活失败或新卡状态不明确时怎么处理", href: "/guides/2-activate/" },
+      { label: "无信号、短信或验证码异常的分层排查", href: "/guides/4-signal/" },
+      { label: "保号与有效动作规则", href: "/guides/3-usage/" },
+      { label: "用本地工具生成第 5 个月保号提醒", href: "/tools/keep-number-reminder/" },
+      { label: "购买前查看完整避坑清单", href: "/guides/6-pitfalls/" },
+    ],
+    commerceTarget: { label: "微信或 Telegram 咨询订单问题", href: "/contact/" },
+  }),
+  page({
+    path: "/guides/apn-settings/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: SEARCH_CONTENT_REVIEWED_AT,
+    reviewedAt: SEARCH_CONTENT_REVIEWED_AT,
+    intent: "giffgaff APN 与移动数据故障排查",
+    title: "giffgaff APN 设置｜有信号但移动数据不能用怎么办",
+    description:
+      "giffgaff 有信号、通话短信正常但移动数据或热点不能用时，按官方 APN 参数检查 iPhone 和 Android 设置，并区分余额、漫游与网络故障。",
+    h1: "giffgaff APN 设置：有信号但移动数据不能用怎么办",
+    deck: "APN 只负责设备如何接入移动数据；无信号、账号停用、余额不足或漫游未开启时，改 APN 不能解决根因。",
+    directAnswer:
+      "如果 giffgaff 已有信号且通话、短信正常，但移动数据不能用，可以核对官方 Internet APN：APN 为 giffgaff.com，用户名 gg，密码 p，MCC 234，MNC 10，认证类型 PAP，APN protocol 为 IPv4v6，APN roaming protocol 为 IPv4，Proxy 留空。保存后重启数据连接；如果仍失败，再检查 Credit/plan、移动数据与数据漫游、可用网络和账号状态。",
+    answerSources: [official.apn, official.network],
+    sections: [
+      {
+        id: "when-apn-applies",
+        title: "先判断是不是 APN 问题",
+        html: `<p>APN 更适合处理“手机已经注册到网络，通话或短信可用，但移动数据打不开”的情况。若状态栏完全没有运营商、账号中的号码消失、SIM/eSIM 线路未启用，或所有通话短信数据都失败，应先回到网络、账号和 SIM 层排查，不要连续新建多个 APN。</p><div class="growth-table-wrap" role="region" tabindex="0" aria-label="APN 问题分流"><table><caption>症状与优先排查层级</caption><thead><tr><th>症状</th><th>先查什么</th><th>APN 是否优先</th></tr></thead><tbody><tr><th>有信号、短信正常、数据失败</th><td>移动数据开关、Credit/plan、APN</td><td>是</td></tr><tr><th>境外有信号、数据失败</th><td>数据漫游、余额/适用产品、APN、可用网络</td><td>可检查，但不是唯一原因</td></tr><tr><th>无信号且所有服务失败</th><td>账号、SIM/eSIM、设备锁、选网与当地网络</td><td>否</td></tr><tr><th>只有热点失败</th><td>先确认手机本机数据可用，再查热点与系统限制</td><td>第二步</td></tr></tbody></table></div>`,
+      },
+      {
+        id: "official-values",
+        title: "官方 Internet APN 参数",
+        html: `<p>giffgaff 官方 Internet APN 页面在 ${SEARCH_CONTENT_REVIEWED_AT} 核验时列出以下参数。界面名称会因系统、地区和制造商而变化，实际填写前请重新打开<a href="${official.apn.url}" target="_blank" rel="noopener noreferrer">${official.apn.label}</a>核对。</p><div class="growth-table-wrap" role="region" tabindex="0" aria-label="giffgaff 官方 Internet APN 参数"><table><caption>Internet APN 参数（核验 ${SEARCH_CONTENT_REVIEWED_AT}）</caption><thead><tr><th>字段</th><th>值</th></tr></thead><tbody><tr><th>APN</th><td><code>giffgaff.com</code></td></tr><tr><th>Username</th><td><code>gg</code></td></tr><tr><th>Password</th><td><code>p</code></td></tr><tr><th>Proxy</th><td>留空</td></tr><tr><th>MCC / MNC</th><td><code>234</code> / <code>10</code></td></tr><tr><th>Authentication type</th><td><code>PAP</code></td></tr><tr><th>APN protocol</th><td><code>IPv4v6</code></td></tr><tr><th>APN roaming protocol</th><td><code>IPv4</code></td></tr></tbody></table></div><p class="growth-warning">不要从论坛旧帖复制额外代理、端口或 MMS 参数到 Internet APN；MMS 是另一组用途不同的设置。</p>`,
+      },
+      {
+        id: "iphone-android",
+        title: "iPhone 和 Android 在哪里检查",
+        html: `<p>官方当前说明，Apple 设备通常从“设置 → 蜂窝网络/移动服务 → 蜂窝数据网络”进入；Android 通常在“移动网络/网络 → 移动网络 → 接入点名称（APN）”中检查。不同系统版本的翻译和菜单层级可能不同。</p><ol class="growth-steps"><li>先截取现有设置的脱敏画面，避免改错后无法回退。</li><li>只保留一组用于 Internet 的正确 APN；不要同时启用多组来源不明的重复配置。</li><li>Android 新建或修改后要在菜单中点击保存，并选中该 APN。</li><li>关闭再开启移动数据，必要时重启手机；不要在同一分钟内反复重置所有网络设置。</li><li>确认本机移动数据恢复后，再单独测试热点。热点是否可用还会受设备系统与连接端设置影响。</li></ol>`,
+      },
+      {
+        id: "still-not-working",
+        title: "参数正确仍不能上网：按这四层继续排查",
+        html: `<ol class="growth-steps"><li><strong>账户层：</strong>登录 Dashboard 或 App，确认号码、Credit/plan 和服务状态；APN 不会补足余额或恢复停用号码。</li><li><strong>设备层：</strong>确认移动数据线路选择正确、飞行模式关闭、设备无网络锁，双卡手机没有把数据分配给另一张卡。</li><li><strong>漫游层：</strong>境外使用时确认数据漫游与当前产品适用范围。中国使用前可先查看<a href="/tools/china-roaming-cost/">中国漫游费用试算</a>，避免后台流量意外扣费。</li><li><strong>网络层：</strong>记录时间、地点、设备、系统、信号和错误，按<a href="${official.network.url}" target="_blank" rel="noopener noreferrer">${official.network.label}</a>及<a href="${official.roamingTroubleshooting.url}" target="_blank" rel="noopener noreferrer">${official.roamingTroubleshooting.label}</a>继续排查（核验 ${SEARCH_CONTENT_REVIEWED_AT}）。</li></ol><p>如果通话短信和数据全部失败，请转到无信号排查；如果普通数据正常、只有某个 App 或网站失败，则还要检查该服务自身、DNS、权限或平台限制。</p>`,
+      },
+    ],
+    sources: [official.apn, official.network, official.roamingTroubleshooting],
+    relatedRoutes: [
+      { label: "无信号、短信与验证码分层排查", href: "/guides/4-signal/" },
+      { label: "旅行数据与漫游设置", href: "/guides/5-travel-data/" },
+      { label: "试算中国 PAYG 漫游费用", href: "/tools/china-roaming-cost/" },
+      { label: "在 App 检查账户和套餐", href: "/guides/3-app/" },
+      { label: "购买、激活和使用避坑总览", href: "/guides/6-pitfalls/" },
+    ],
+    commerceTarget: { label: "微信或 Telegram 咨询订单问题", href: "/contact/" },
+  }),
+  page({
+    path: "/more/esim-new-phone/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: SEARCH_CONTENT_REVIEWED_AT,
+    reviewedAt: SEARCH_CONTENT_REVIEWED_AT,
+    intent: "giffgaff eSIM 换手机迁移",
+    title: "giffgaff eSIM 换手机怎么迁移｜新旧手机与 MFA 检查",
+    description:
+      "已有 giffgaff eSIM 换新手机时，先确认新机兼容、账号可登录和短信 MFA，再按官方 App 的 Replace my SIM 流程切换。",
+    h1: "giffgaff eSIM 换手机：先保住 MFA，再开始迁移",
+    deck: "这页只处理已经在用 eSIM 后更换设备；第一次把实体 SIM 转成 eSIM，请回到 eSIM 转换总指南。",
+    directAnswer:
+      "giffgaff 官方当前说明：新手机必须兼容 eSIM；可在设置中检查，或拨 *#06# 查看是否出现 EID。随后在新手机下载并登录 giffgaff App，进入 Account → SIM → Replace my SIM → Switch to new eSIM，按屏幕步骤完成。切换需要短信 MFA；旧手机、旧 eSIM 和账号恢复方式在成功前不要提前删除或清空。",
+    answerSources: [official.esimNewPhone, official.esim],
+    sections: [
+      {
+        id: "before-moving",
+        title: "开始前的五项 Go / No-Go 检查",
+        html: `<ol class="growth-steps"><li><strong>具体新机兼容：</strong>不要只看系列名；核对型号、地区版本与系统是否原生支持 eSIM。官方提示可查看设置或拨 <code>*#06#</code>，出现 EID 才是一个可用信号。</li><li><strong>设备无锁：</strong>确认新机没有运营商网络锁，并能正常安装最新版 giffgaff App。</li><li><strong>账号可恢复：</strong>先在新机登录正确的 giffgaff 账号，确认邮箱、密码和必要验证可用。</li><li><strong>短信 MFA 可接收：</strong>官方当前说明换机需要短信安全码；若旧线路已经收不到短信，不要贸然开始。</li><li><strong>保留回退条件：</strong>新 eSIM 正常注册、账号和基础服务确认前，不抹掉旧手机，不删除旧 eSIM，也不转发任何激活凭证。</li></ol>`,
+      },
+      {
+        id: "official-flow",
+        title: "官方 App 的换机路径",
+        html: `<p>根据<a href="${official.esimNewPhone.url}" target="_blank" rel="noopener noreferrer">${official.esimNewPhone.label}</a>（核验 ${SEARCH_CONTENT_REVIEWED_AT}），在新手机上下载并登录 giffgaff App，进入 <strong>Account → SIM → Replace my SIM → Switch to new eSIM</strong>，再按屏幕提示完成。</p><p>按钮名称属于当前界面，不应当作永久不变的路径。如果 App 未显示 eSIM 选项，先停下来核对设备兼容、App 版本和账号状态；不要安装改版 App，也不要尝试从旧设备提取或上传 eSIM 激活信息。</p>`,
+      },
+      {
+        id: "mfa-failure",
+        title: "收不到 MFA 时不要连续重试",
+        html: `<p>官方页面明确提示，完成 eSIM swap 需要短信发送的 MFA 安全码。如果短信无法接收，页面还提到可以评估先换到实体 SIM。这里的重点不是绕过安全检查，而是保留一个能够恢复号码和账号的官方路径。</p><ul class="growth-list"><li>先确认旧线路仍启用、有信号且能收到普通短信。</li><li>不要在多个设备、多个账号或多个窗口同时触发替换流程。</li><li>若短信基线失败，先按<a href="/guides/4-signal/">信号与短信排查</a>处理。</li><li>账号不可登录或已失去验证条件时，停止自助切换并联系 giffgaff 官方支持。</li></ul>`,
+      },
+      {
+        id: "after-moving",
+        title: "切换后按顺序验收，不要只看信号格",
+        html: `<ol class="growth-steps"><li>确认 App 和 Dashboard 中仍是原来的号码与正确账号。</li><li>确认新 eSIM 线路已启用，记录运营商名称和网络注册结果。</li><li>先测试基础服务，再测试普通短信；第三方平台 OTP 另行判断，不能承诺必到。</li><li>需要移动数据时检查 APN、数据线路和漫游设置，可参考<a href="/guides/apn-settings/">giffgaff APN 设置</a>。</li><li>全部验收完成后，再按设备厂商的安全流程处理旧手机。</li></ol><p>第一次从实体 SIM 切换到 eSIM 的前置条件和旧卡失效边界，仍由<a href="/more/03-esim/">eSIM 转换总指南</a>负责；本页不重复建立平行入口。</p>`,
+      },
+    ],
+    sources: [official.esimNewPhone, official.esim, official.network],
+    relatedRoutes: [
+      { label: "第一次实体卡转 eSIM 的完整检查", href: "/more/03-esim/" },
+      { label: "eSIM 误删后的恢复边界", href: "/more/esim-deleted/" },
+      { label: "账号与恢复方式检查", href: "/guides/3-account/" },
+      { label: "换机后无信号或短信时排查", href: "/guides/4-signal/" },
+      { label: "eSIM 二维码与第三方写卡安全边界", href: "/more/04-esim-qrcode/" },
+    ],
+    commerceTarget: { label: "微信或 Telegram 咨询订单问题", href: "/contact/" },
+  }),
+  page({
+    path: "/more/esim-deleted/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: SEARCH_CONTENT_REVIEWED_AT,
+    reviewedAt: SEARCH_CONTENT_REVIEWED_AT,
+    intent: "giffgaff eSIM 误删恢复",
+    title: "giffgaff eSIM 误删了怎么办｜实体 SIM 中转与账号恢复",
+    description:
+      "误删 giffgaff eSIM 后不能直接恢复原配置；按官方说明先换到从未激活、状态可核验的实体 SIM，再至少间隔 24 小时切换为新 eSIM。",
+    h1: "giffgaff eSIM 误删：原配置不能直接恢复",
+    deck: "不要寻找旧二维码、缓存或第三方提取工具。先判断账号能否登录，再选择官方实体 SIM 中转或支持恢复。",
+    directAnswer:
+      "giffgaff 官方当前说明，删除 eSIM 会把它从设备永久移除，不能靠重新选择原 eSIM 直接恢复。仍能登录账号时，需要一张从未激活、状态可核验的 giffgaff 实体 SIM：先登录原账号，把号码换到实体 SIM；至少等待 24 小时后，再通过 App 把实体 SIM 换成新的 eSIM。若误删后无法登录或无法接收验证码，应联系 giffgaff 官方帮助恢复账号。",
+    answerSources: [official.esimDeleted, official.activation],
+    sections: [
+      {
+        id: "stop-first",
+        title: "先停止三种高风险操作",
+        html: `<ul class="growth-list"><li>不要反复扫描旧截图、旧二维码或从聊天记录中寻找激活凭证；官方已说明被删 eSIM 不能直接恢复。</li><li>不要把账号 Cookie、密码、短信验证码、二维码或激活字符串交给第三方“恢复工具”。</li><li>不要在另一个新账号里激活替换卡，否则可能无法接回原号码、plan 和 Credit。</li></ul><p>误删 eSIM 是线路恢复问题，不等于号码已经永久丢失；但是否能自助恢复，取决于原账号访问权、验证条件和一张从未激活且状态可核验的实体 SIM。</p>`,
+      },
+      {
+        id: "account-branch",
+        title: "先分支：原账号还能不能登录",
+        html: `<div class="growth-table-wrap" role="region" tabindex="0" aria-label="eSIM 误删恢复分支"><table><caption>按账号访问权选择路径</caption><thead><tr><th>当前条件</th><th>正确方向</th><th>不要做什么</th></tr></thead><tbody><tr><th>能登录原账号，也有从未激活且状态可核验的实体 SIM</th><td>按官方两次 SIM swap 路径恢复</td><td>不要创建新账号</td></tr><tr><th>能登录，但暂时没有实体 SIM</th><td>先取得一张从未激活且状态可核验的 giffgaff SIM</td><td>不要强行跳过实体 SIM 中转</td></tr><tr><th>不能登录或无法通过验证</th><td>联系 giffgaff 官方支持恢复访问</td><td>不要向本站或陌生人发送凭证</td></tr><tr><th>人在境外且只有这一条验证线路</th><td>优先保护账号并准备替代通信方式</td><td>不要假设立刻恢复</td></tr></tbody></table></div>`,
+      },
+      {
+        id: "two-swaps",
+        title: "官方恢复路径：先实体 SIM，再新 eSIM",
+        html: `<p>根据<a href="${official.esimDeleted.url}" target="_blank" rel="noopener noreferrer">${official.esimDeleted.label}</a>（核验 ${SEARCH_CONTENT_REVIEWED_AT}），自助恢复要完成两次替换：</p><ol class="growth-steps"><li>准备一张从未激活、状态可核验的 giffgaff 实体 SIM。</li><li><strong>先登录原号码对应的账号</strong>，再从 App 的 Account → SIM → Replace my SIM → Switch to a new physical SIM，或从网页 Dashboard 的 Replace my SIM 进入。</li><li>按屏幕步骤把原号码换到实体 SIM，等待线路完成切换。</li><li>官方当前要求两次 SIM switch 之间至少等待 24 小时；不要在等待期重复提交。</li><li>再次登录 giffgaff App，进入 Account → SIM → Replace my SIM → Switch to a new eSIM，按屏幕提示取得新的 eSIM。</li></ol><p>官方页面还列出当前可操作时间窗；时间窗可能更新，执行当日必须打开官方页面重核，本站不把静态时间写成永久规则。</p>`,
+      },
+      {
+        id: "after-recovery",
+        title: "恢复后做四项验收与安全收尾",
+        html: `<ol class="growth-steps"><li>核对 Dashboard/App 中号码、Credit 和 plan 是否仍属于原账号。</li><li>测试信号、基础通话或普通短信；平台 OTP 结果不能代替基础服务验收。</li><li>检查新 eSIM 线路与移动数据，必要时参考<a href="/guides/apn-settings/">官方 APN 参数</a>。</li><li>更新自己的设备与恢复记录，但不要保存或转发 eSIM 凭证、完整 ICCID、密码或验证码。</li></ol><p>如果收到替换卡后号码、余额或账号不符合预期，停止继续换卡，保留脱敏时间线并交给 giffgaff 官方 agent。第三方写卡与凭证处理的停止条件见<a href="/more/04-esim-qrcode/">eSIM 安全边界</a>。</p>`,
+      },
+    ],
+    sources: [official.esimDeleted, official.activation, official.esim],
+    relatedRoutes: [
+      { label: "eSIM 换手机前的 MFA 检查", href: "/more/esim-new-phone/" },
+      { label: "第一次实体 SIM 转 eSIM", href: "/more/03-esim/" },
+      { label: "账号无法登录时先检查恢复方式", href: "/guides/3-account/" },
+      { label: "实体 SIM 丢失或损坏后的补卡路径", href: "/qa/03-reissue/" },
+      { label: "eSIM 凭证与第三方写卡安全边界", href: "/more/04-esim-qrcode/" },
+    ],
+    commerceTarget: { label: "微信或 Telegram 咨询订单问题", href: "/contact/" },
   }),
   page({
     path: "/tools/keep-number-reminder/",

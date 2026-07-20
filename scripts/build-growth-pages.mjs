@@ -29,6 +29,35 @@ const INDEXABLE_ANSWER_EVIDENCE = Object.freeze({
       "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
     ]),
   }),
+  "/guides/9-number-balance-data-check/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+      "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit",
+      "https://help.giffgaff.com/en/articles/258872-guide-to-the-usage-statement",
+    ]),
+  }),
+  "/guides/apn-settings/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://help.giffgaff.com/en/articles/245215-internet-apn-settings-guide",
+      "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+    ]),
+  }),
+  "/more/esim-new-phone/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://help.giffgaff.com/en/articles/240399-continuing-to-use-your-esim-if-you-switch-to-a-different-phone",
+      "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+    ]),
+  }),
+  "/more/esim-deleted/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://help.giffgaff.com/en/articles/240403-what-to-do-if-you-delete-your-esim",
+      "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+    ]),
+  }),
   "/tools/keep-number-reminder/": Object.freeze({
     kind: "mixed",
     method: "本站提醒日期计算方法",
@@ -318,7 +347,7 @@ export function renderGrowthPage(page) {
       <p class="growth-disclosure"><strong>实体与范围说明：</strong>本站是独立第三方中文教程与销售服务站，不代表 giffgaff 官方。G0 / G2 是本站用于区分库存状态和交付方式的库存分类，不是 giffgaff 官方产品名。本文为独立原创内容，不复制竞品正文、截图或图片。</p>
       <div class="legacy-answer"><strong>直接答案</strong><p>${escapeHtml(page.directAnswer)}</p></div>
       ${renderInlineEvidence(page)}
-      ${threshold}
+${threshold ? `      ${threshold}\n` : ""}
       <nav class="doc-toc" aria-label="本页目录"><strong>本页目录</strong><ol>${toc}<li><a href="#official-sources">官方来源与核验日期</a></li></ol></nav>
       <div class="article-body">${sections}</div>
       ${renderSources(page)}

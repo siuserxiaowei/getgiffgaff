@@ -35,6 +35,8 @@ const DEFAULT_OUTPUT = path.join(ROOT, ".release");
 const GROWTH_MARKER = 'data-growth-slot="related-tutorials-v1"';
 const COMMERCE_MARKER = 'data-growth-slot="wechat-buying-guide-v1"';
 const CONTACT_CHANNEL_MARKER = 'data-release-slot="verified-contact-channels-v1"';
+const SHOP_HERO_IMAGE_SOURCE = '<div class="shop-hero__visual" aria-hidden="true"><img alt="" width="620" height="420" decoding="async" data-nimg="1" class="shop-hero__image" style="color:transparent" src="/gg-card-hero.png"/></div>';
+const SHOP_HERO_IMAGE_REPLACEMENT = '<div class="shop-hero__visual"><img alt="giffgaff 英国手机卡购买页面示意图" width="620" height="420" decoding="async" data-nimg="1" class="shop-hero__image" style="color:transparent" src="/gg-card-hero.png"/></div>';
 const ACTIONABLE_PREPAYMENT_GUIDANCE =
   "付款前请联系客服核对当前库存、价格、卡片来源与激活状态、账号登记和控制权、余额、交付内容、售后边界及发货安排；无法核对关键事项时不要付款；以支付页面和书面确认信息为准。";
 const INTERNAL_CONTACT_ANALYTICS_MARKER =
@@ -282,6 +284,57 @@ const LEGACY_COMMERCIAL_COPY_OVERRIDES = Object.freeze({
     }),
   ]),
 });
+
+/**
+ * The frozen QA capture combined two distinct search jobs: paying for a top
+ * up and looking up an already-active account. Keep the historical capture
+ * immutable, but let the shipped page own only the payment intent. The
+ * dedicated guide owns phone-number, Credit, plan, and usage lookups.
+ */
+const TOPUP_INTENT_RELEASE_COPY_OVERRIDES = Object.freeze([
+  Object.freeze({
+    label: "top-up page title, navigation label, headline, and breadcrumb",
+    source: "giffgaff 如何充值/查询余额/查消费记录",
+    replacement: "giffgaff 充值、voucher 与支付失败",
+    expectedOccurrences: 6,
+  }),
+  Object.freeze({
+    label: "top-up page description",
+    source: "giffgaff 余额充值、voucher、套餐、余额查询和消费记录说明。",
+    replacement: "giffgaff 充值、voucher 充值券与支付失败处理；说明自助充值与第三方代充的边界。",
+    expectedOccurrences: 3,
+  }),
+  Object.freeze({
+    label: "top-up FAQ structured data",
+    source: '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"接收短信会扣余额吗？","acceptedAnswer":{"@type":"Answer","text":"接收短信通常不扣余额，但具体以运营商实时规则和号码状态为准。"}},{"@type":"Question","name":"充值后多久显示？","acceptedAnswer":{"@type":"Answer","text":"通常会较快显示，但支付渠道和系统处理可能有延迟。先看账户记录再判断。"}}]}',
+    replacement: '{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"voucher 充值券和套餐是一回事吗？","acceptedAnswer":{"@type":"Answer","text":"不是。选择前按官方账户页面显示的产品名称、金额和用途核对；不确定时不要根据第三方简称判断。"}},{"@type":"Question","name":"充值后支付仍显示失败怎么办？","acceptedAnswer":{"@type":"Answer","text":"先不要重复付款。保存页面提示和交易参考信息，分别向支付服务方或 giffgaff 官方支持核对；第三方代充不能处理密码、短信验证码或账户恢复。"}}]}',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "top-up table of contents",
+    source: '<nav class="doc-toc" aria-label="本页内容"><strong>本页内容</strong><ol><li><a href="#充值和套餐的区别">充值和套餐的区别</a></li><li><a href="#查询余额和消费记录">查询余额和消费记录</a></li><li><a href="#什么时候需要代充">什么时候需要代充</a></li></ol></nav>',
+    replacement: '<nav class="doc-toc" aria-label="本页内容"><strong>本页内容</strong><ol><li><a href="#official-topup">先选官方充值或 voucher</a></li><li><a href="#payment-failure">支付失败时先核对什么</a></li><li><a href="#third-party-boundary">第三方代充的服务边界</a></li></ol></nav>',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "top-up answer-first summary",
+    source: '<div class="doc-answer"><strong>先看结论</strong><p>giffgaff 常见充值方式包括信用卡/借记卡、PayPal 和 voucher 充值券。国内用户如果支付被拒，可以检查卡片海外支付权限、账单信息和风控状态；没有可用支付方式时，可以考虑充值券或代充。</p></div>',
+    replacement: '<div class="doc-answer"><strong>先看结论</strong><p>先使用 giffgaff 官方账户提供的充值入口，并确认你要添加的是 Credit 还是套餐；有 voucher 充值券时，按账户页面提示核对兑换步骤。银行卡、PayPal 或其他支付方式被拒时，先检查支付权限、账单资料和账户提示，不要连续反复提交。没有可用支付方式才考虑第三方代充，且第三方不能代替官方账户、号码或验证码问题的处理。</p></div>',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "top-up payment-focused article body",
+    source: '<div class="doc-body"><section id="充值和套餐的区别"><h2>充值和套餐的区别</h2><p>余额适合按量扣费用，套餐更适合有通话、短信或数据使用需求。国内低频收短信的用户通常更关注余额和号码状态。</p><p>页面里不同入口可能分别对应 add credit、goodybag 或其他服务，下单前先确认自己要的是哪一种。</p></section><section id="查询余额和消费记录"><h2>查询余额和消费记录</h2><p>可以通过网页端或 App 查看余额、套餐和消费记录。G2 到手后建议先截图保存当前余额。</p><p>如果余额与付款前确认不一致，先不要继续操作，保留截图和订单记录联系售后。</p></section><section id="什么时候需要代充"><h2>什么时候需要代充</h2><p>如果银行卡或 PayPal 被拒，且你只想完成激活或保号，可以看代充说明。代充前确认号码、金额、到账时间和必要信息边界。</p><p>代充解决的是支付问题，不代表平台验证码和保号结果一定稳定。</p></section></div>',
+    replacement: '<div class="doc-body"><section id="official-topup"><h2>先选官方充值或 voucher</h2><p>充值前先确认你要添加的是 Credit 还是套餐：它们用途不同，不能只按“充值”一词判断。通过官方账户页面可见的自助入口操作时，确认金额、货币和页面提示后再提交。</p><p>有 voucher 充值券时，只使用官方账户内与 voucher 相符的兑换入口；不要把兑换码、密码、短信验证码或完整支付卡信息交给第三方。</p></section><section id="payment-failure"><h2>银行卡或 PayPal 支付失败时先核对什么</h2><p>支付被拒时，先检查支付卡是否允许对应交易、账单资料是否一致，以及支付服务方或账户是否提示风控、限额或验证要求。不要短时间反复提交同一笔付款；保留错误时间、页面提示和订单或交易参考信息，必要时向支付服务方或 giffgaff 官方支持核对。</p><p>支付失败不等于号码失效，也不能靠继续充值解决无信号、普通短信或第三方验证码等问题；这些应按账号、网络和短信路径分别排查。</p></section><section id="third-party-boundary"><h2>第三方代充的服务边界</h2><p>没有可用支付方式时，可先阅读<a href="/guides/4-recharge-service/">本站的代充说明</a>，再决定是否继续。第三方服务仅应处理已确认的充值金额和必要的非敏感信息，不应要求密码、短信验证码、Cookie、完整支付卡信息或 SIM 序列号。</p><p>代充也不承诺支付一定成功、号码长期有效、平台验证码送达或账户状态恢复。若要查询手机号、Credit、套餐、流量或使用明细，请到<a href="/guides/9-number-balance-data-check/">手机号、Credit、套餐和流量查询教程</a>，按官方 Dashboard、App 或官方短信入口核对。</p></section></div>',
+    expectedOccurrences: 1,
+  }),
+  Object.freeze({
+    label: "top-up visible FAQ",
+    source: '<section class="doc-faq"><h2>相关问题</h2><details open=""><summary>接收短信会扣余额吗？</summary><p>接收短信通常不扣余额，但具体以运营商实时规则和号码状态为准。</p></details><details><summary>充值后多久显示？</summary><p>通常会较快显示，但支付渠道和系统处理可能有延迟。先看账户记录再判断。</p></details></section>',
+    replacement: '<section class="doc-faq"><h2>相关问题</h2><details open=""><summary>voucher 充值券和套餐是一回事吗？</summary><p>不是。选择前按官方账户页面显示的产品名称、金额和用途核对；不确定时不要根据第三方简称判断。</p></details><details><summary>充值后支付仍显示失败怎么办？</summary><p>先不要重复付款。保存页面提示和交易参考信息，分别向支付服务方或 giffgaff 官方支持核对；第三方代充不能处理密码、短信验证码或账户恢复。</p></details></section>',
+    expectedOccurrences: 1,
+  }),
+]);
 
 function safetyRule(route, issueId, source, replacement, expectedOccurrences, reason) {
   return Object.freeze({
@@ -1085,12 +1138,14 @@ const LLMS_TASK_SECTIONS = Object.freeze([
       ["/guides/2-activate/", "在中国境内按官方边界激活实体 SIM 并排查失败。"],
       ["/guides/3-account/", "管理用户名、密码、邮箱和账号恢复信息。"],
       ["/guides/3-app/", "使用 giffgaff App 登录、查余额、看套餐和管理安全设置。"],
+      ["/guides/9-number-balance-data-check/", "查询手机号、Credit、当前套餐和 App 中的使用记录。"],
       ["/guides/3-usage/", "核对六个月 inactive 规则、有效动作和停用边界。"],
       ["/guides/4-recharge-service/", "判断何时需要代充值服务并准备必要的非敏感信息。"],
+      ["/guides/apn-settings/", "有信号但移动数据或热点失败时核对官方 APN 参数。"],
       ["/tools/keep-number-reminder/", "在浏览器本地生成第五月保号缓冲提醒并导出日历。"],
       ["/qa/00-username/", "查找或修改 giffgaff 用户名并处理常见登录问题。"],
       ["/qa/01-change-number/", "了解更换号码的入口、限制和操作前备份事项。"],
-      ["/qa/02-topup/", "查询 Credit、voucher、套餐、余额充值和消费记录。"],
+      ["/qa/02-topup/", "处理官方充值、voucher、支付失败和第三方代充的安全边界。"],
       ["/qa/03-reissue/", "实体卡损坏或丢失后准备验证并申请补卡。"],
       ["/qa/04-choose-number/", "了解挑选或更换号码时的限制和账号绑定风险。"],
       ["/qa/05-multiple-number/", "理解多号码与账号管理的边界并建立卡片记录。"],
@@ -1115,6 +1170,8 @@ const LLMS_TASK_SECTIONS = Object.freeze([
     heading: "eSIM、安全与研究方法",
     pages: Object.freeze([
       ["/more/03-esim/", "按官方 App 路径核对 eSIM 兼容、切换和失败恢复边界。"],
+      ["/more/esim-new-phone/", "换手机前核对 eSIM 兼容、账号登录与短信 MFA 条件。"],
+      ["/more/esim-deleted/", "误删 eSIM 后按官方实体 SIM 中转路径恢复原号码。"],
       ["/more/04-esim-qrcode/", "区分官方 eSIM 凭证与第三方写卡并避免敏感凭证泄露。"],
       ["/qa/", "浏览用户名、换号、充值、补卡、挑号和平台验证问答。"],
       ["/guides/6-pitfalls/", "从总览检查购买、激活、保号、漫游、eSIM 和 OTP 风险。"],
@@ -1240,6 +1297,23 @@ export function replaceRetiredWechatQr(html) {
   return html.replaceAll("/contact/wechat-qr.png", "/contact/wechat-qr.jpg");
 }
 
+/**
+ * The shop hero is the page's primary visual, so it must not be hidden from
+ * assistive technology or represented by an empty alt attribute. This remains
+ * a release-only correction so the captured legacy baseline stays immutable.
+ */
+export function improveShopHeroImageAccessibility(html, route) {
+  if (route !== "/shop/") return html;
+  if (html.includes(SHOP_HERO_IMAGE_REPLACEMENT)) return html;
+  return exactReleaseReplacement(html, {
+    route,
+    label: "shop hero image alternative text",
+    source: SHOP_HERO_IMAGE_SOURCE,
+    replacement: SHOP_HERO_IMAGE_REPLACEMENT,
+    expectedOccurrences: 1,
+  });
+}
+
 function exactReleaseReplacement(output, {
   route,
   label,
@@ -1273,6 +1347,11 @@ export function applyReleaseConversionOverrides(html, route, options = {}) {
   });
   for (const rule of LEGACY_COMMERCIAL_COPY_OVERRIDES[route] || []) {
     output = exactReleaseReplacement(output, { route, ...rule });
+  }
+  if (route === "/qa/02-topup/") {
+    for (const rule of TOPUP_INTENT_RELEASE_COPY_OVERRIDES) {
+      output = exactReleaseReplacement(output, { route, ...rule });
+    }
   }
   if (route === "/contact/") {
     for (const rule of CONTACT_RELEASE_COPY_OVERRIDES) {
@@ -1601,7 +1680,7 @@ async function curatedLlmsText(outputRoot) {
     "- 运营商规则、号码状态、资费和网络能力以操作当日的 giffgaff 官方页面与账户显示为准。",
     "- 本站库存、价格、余额范围、发货和售后安排可能按批次变化，付款前需通过本站购买路径确认。",
     "- 本站不保证号码永久有效、第三方 OTP 送达、搜索引擎收录或排名，也不保证被 AI 系统检索或引用。",
-    "- 下列清单只包含本站 39 个可索引 canonical URL；方法预览和证据不足页面不在此清单中。",
+    `- 下列清单只包含本站 ${PUBLIC_INDEXABLE_PATHS.length} 个可索引 canonical URL；方法预览和证据不足页面不在此清单中。`,
   ];
 
   for (const section of LLMS_TASK_SECTIONS) {
@@ -1665,6 +1744,7 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
       throw new Error(`${route} DOM changed outside the approved growth slot`);
     }
     built = replaceRetiredWechatQr(built);
+    built = improveShopHeroImageAccessibility(built, route);
     if (route === "/contact/") built = injectVerifiedContactChannels(built);
     const safetyResult = applyLegacySafetyOverrides(built, route);
     built = safetyResult.html;

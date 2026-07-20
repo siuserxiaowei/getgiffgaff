@@ -67,7 +67,7 @@ function assertSafeExternalAnchors(html, label) {
   }
 }
 
-test("all eight generated growth pages classify and secure runtime external links", async () => {
+test("all generated growth pages classify and secure runtime external links", async () => {
   for (const page of GROWTH_PAGES) {
     const filename = path.join(ROOT, "site", "growth", page.path.slice(1), "index.html");
     const html = await readFile(filename, "utf8");

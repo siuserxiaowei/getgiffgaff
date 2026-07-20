@@ -40,7 +40,7 @@ test("every growth direct answer carries an adjacent primary-source citation", (
   }
 });
 
-test("all five indexable growth answers declare route-specific evidence instead of a first-source fallback", () => {
+test("all indexable growth answers declare route-specific evidence instead of a first-source fallback", () => {
   const expectations = new Map([
     [
       "/guides/7-arrival-checklist/",
@@ -55,6 +55,34 @@ test("all five indexable growth answers declare route-specific evidence instead 
       {
         kind: "official",
         sources: ["boiler-plate/terms", "ofcom.org.uk/mobile-coverage-checker", "261570-switching"],
+      },
+    ],
+    [
+      "/guides/9-number-balance-data-check/",
+      {
+        kind: "official",
+        sources: ["240393-activating", "240847-everything", "258872-guide-to-the-usage-statement"],
+      },
+    ],
+    [
+      "/guides/apn-settings/",
+      {
+        kind: "official",
+        sources: ["245215-internet-apn", "639659-network"],
+      },
+    ],
+    [
+      "/more/esim-new-phone/",
+      {
+        kind: "official",
+        sources: ["240399-continuing", "261570-switching"],
+      },
+    ],
+    [
+      "/more/esim-deleted/",
+      {
+        kind: "official",
+        sources: ["240403-what-to-do", "240393-activating"],
       },
     ],
     [

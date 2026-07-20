@@ -16,6 +16,10 @@ import {
 const NEW_PATHS = [
   "/guides/7-arrival-checklist",
   "/guides/8-uk-sim-choice",
+  "/guides/9-number-balance-data-check",
+  "/guides/apn-settings",
+  "/more/esim-new-phone",
+  "/more/esim-deleted",
   "/tools/keep-number-reminder",
   "/tools/china-roaming-cost",
   "/tools/g0-g2-total-cost",
@@ -26,8 +30,8 @@ test("Cloudflare canonical rule is generated from every non-root public HTML pat
   const ruleset = buildCloudflareRedirectRuleset();
   const rule = ruleset.rules[0];
 
-  assert.equal(EXPECTED_NO_TRAILING_SLASH_PATHS.length, 45);
-  assert.equal(new Set(EXPECTED_NO_TRAILING_SLASH_PATHS).size, 45);
+  assert.equal(EXPECTED_NO_TRAILING_SLASH_PATHS.length, 49);
+  assert.equal(new Set(EXPECTED_NO_TRAILING_SLASH_PATHS).size, 49);
   assert.ok(EXPECTED_NO_TRAILING_SLASH_PATHS.every((pathname) => !pathname.endsWith("/")));
   for (const pathname of NEW_PATHS) assert.ok(EXPECTED_NO_TRAILING_SLASH_PATHS.includes(pathname));
   for (const pathname of POLICY_PATHS) assert.ok(EXPECTED_NO_TRAILING_SLASH_PATHS.includes(pathname));
@@ -91,7 +95,7 @@ test("offline validator reads a Cloudflare-exported JSON file without an API cal
     const result = await validateCloudflareRedirectExportFile(exportedPath, {
       ruleId: "23a9c07759414918816c2e768101d6f0",
     });
-    assert.equal(result.pathCount, 45);
+    assert.equal(result.pathCount, 49);
     assert.deepEqual(result.errors, []);
   } finally {
     await rm(root, { recursive: true, force: true });

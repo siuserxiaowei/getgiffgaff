@@ -16,7 +16,7 @@ import {
 
 const KEY = "9d5c7277ec252fbb3b6f9ea0249ef612";
 
-test("explicit full IndexNow payload contains exactly the 39 canonical sitemap routes", () => {
+test("explicit full IndexNow payload contains exactly the 43 canonical sitemap routes", () => {
   const payload = createIndexNowPayload(
     KEY,
     "https://getgiffgaff.com",
@@ -25,8 +25,8 @@ test("explicit full IndexNow payload contains exactly the 39 canonical sitemap r
   assert.equal(payload.host, "getgiffgaff.com");
   assert.equal(payload.key, KEY);
   assert.equal(payload.keyLocation, `https://getgiffgaff.com/indexnow-key.txt`);
-  assert.equal(payload.urlList.length, 39);
-  assert.equal(new Set(payload.urlList).size, 39);
+  assert.equal(payload.urlList.length, 43);
+  assert.equal(new Set(payload.urlList).size, 43);
   assert.deepEqual(
     payload.urlList,
     PUBLIC_INDEXABLE_PATHS.map((pathname) => `https://getgiffgaff.com${pathname}`),
