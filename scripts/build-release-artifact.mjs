@@ -46,6 +46,7 @@ const INTERNAL_CONTACT_NAVIGATION_MARKER =
   'href="/contact/" data-analytics-event="commerce_click"';
 const GROWTH_BLANKET_PAYMENT_DETERRENT =
   "当前缺少 SKU 与交易证据，资料补齐前请勿付款。";
+const SEARCH_FAVICON_LINKS = '<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon-48x48.png" type="image/png" sizes="48x48"><link rel="shortcut icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">';
 export const RELEASE_PROVENANCE_PLACEHOLDER = Object.freeze({
   schema: "getgiffgaff_release_provenance_v1",
   commit: "unbound",
@@ -1449,6 +1450,16 @@ function applyGrowthReleaseConversionOverrides(html, route) {
   return output;
 }
 
+export function ensureSearchFaviconLinks(html) {
+  const source = String(html || "");
+  if (source.includes(SEARCH_FAVICON_LINKS)) return source;
+  const matches = source.match(/<link rel="icon" href="\/favicon\.svg"\s*\/?\s*>/gu) || [];
+  if (matches.length !== 1) {
+    throw new Error(`expected one favicon.svg declaration, found ${matches.length}`);
+  }
+  return source.replace(matches[0], SEARCH_FAVICON_LINKS);
+}
+
 async function copyTree(source, destination, { exclude = new Set() } = {}) {
   await mkdir(destination, { recursive: true });
   for (const entry of await readdir(source, { withFileTypes: true })) {
@@ -1829,6 +1840,7 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
       throw new Error(`${route} DOM changed outside the approved growth slot`);
     }
     built = replaceRetiredWechatQr(built);
+    built = ensureSearchFaviconLinks(built);
     built = improveShopHeroImageAccessibility(built, route);
     if (route === "/contact/") built = injectVerifiedContactChannels(built);
     const safetyResult = applyLegacySafetyOverrides(built, route);
@@ -1844,10 +1856,10 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     const source = routeFile(GROWTH_ROOT, route);
     const destination = routeFile(outputRoot, route);
     await mkdir(path.dirname(destination), { recursive: true });
-    const growth = ensureGrowthStylesheet(
+    const growth = ensureSearchFaviconLinks(ensureGrowthStylesheet(
       applyGrowthSafetyOverrides(await readFile(source, "utf8"), route),
       growthCssVersion,
-    );
+    ));
     await writeFile(destination, applyGrowthReleaseConversionOverrides(growth, route));
   }
 
@@ -1865,6 +1877,14 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     path.join(GROWTH_ROOT, "assets"),
     path.join(outputRoot, "growth-assets"),
   );
+
+  for (const filename of [
+    "favicon.ico",
+    "favicon-48x48.png",
+    "apple-touch-icon.png",
+  ]) {
+    await copyFile(path.join(PUBLIC_ROOT, filename), path.join(outputRoot, filename));
+  }
 
   for (const filename of [
     "robots.txt",

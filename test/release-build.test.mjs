@@ -12,6 +12,7 @@ import {
   bindReleaseSearchChanges,
   buildReleaseArtifact,
   ensureGrowthStylesheet,
+  ensureSearchFaviconLinks,
   growthStylesheetVersion,
   injectCommerceWidget,
   injectRelatedTutorials,
@@ -47,6 +48,35 @@ const BLANKET_PAYMENT_DETERRENT =
   /(?:资料补齐前请勿付款|证据补齐前请勿付款|当前证据未齐，请勿付款|未核验[^。；]{0,24}(?:请勿|不要)付款|缺少(?:书面订单说明|逐批证据)时不要付款|请暂停付款|无法取得时请勿付款)/u;
 const ACTIONABLE_PREPAYMENT_COPY =
   "付款前请联系客服核对当前库存、价格、卡片来源与激活状态、账号登记和控制权、余额、交付内容、售后边界及发货安排；无法核对关键事项时不要付款；以支付页面和书面确认信息为准。";
+
+test("release ships search-compatible favicon assets", async () => {
+  const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-favicon-release-"));
+  try {
+    await buildReleaseArtifact(outputRoot);
+    const expectations = new Map([
+      ["favicon.svg", 1],
+      ["favicon.ico", 100],
+      ["favicon-48x48.png", 100],
+      ["apple-touch-icon.png", 100],
+    ]);
+    for (const [filename, minimumBytes] of expectations) {
+      const bytes = await readFile(path.join(outputRoot, filename));
+      assert.ok(bytes.byteLength >= minimumBytes, `${filename} is populated`);
+    }
+  } finally {
+    await rm(outputRoot, { recursive: true, force: true });
+  }
+});
+
+test("favicon declarations cover SVG, 48px PNG, ICO and Apple touch", () => {
+  const source = '<head><link rel="icon" href="/favicon.svg"></head>';
+  const output = ensureSearchFaviconLinks(source);
+  assert.match(output, /href="\/favicon\.svg" type="image\/svg\+xml"/u);
+  assert.match(output, /href="\/favicon-48x48\.png" type="image\/png" sizes="48x48"/u);
+  assert.match(output, /rel="shortcut icon" href="\/favicon\.ico"/u);
+  assert.match(output, /rel="apple-touch-icon" href="\/apple-touch-icon\.png" sizes="180x180"/u);
+  assert.equal(ensureSearchFaviconLinks(output), output, "idempotent");
+});
 
 function routeFile(root, route) {
   return route === "/"
@@ -351,6 +381,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
     }
     expected = injectCommerceWidget(expected);
     expected = replaceRetiredWechatQr(expected);
+    expected = ensureSearchFaviconLinks(expected);
     expected = improveShopHeroImageAccessibility(expected, route);
     if (route === "/contact/") expected = injectVerifiedContactChannels(expected);
     expected = applyLegacySafetyOverrides(expected, route).html;
@@ -391,6 +422,10 @@ test("release build contains frozen pages, growth pages, semantic related slots,
     "sitemap.xml",
     "release-search-changes.json",
     "robots.txt",
+    "favicon.ico",
+    "favicon.svg",
+    "favicon-48x48.png",
+    "apple-touch-icon.png",
     "growth-assets/growth.css",
     "growth-assets/growth-ui.js",
     "growth-assets/tools.js",
