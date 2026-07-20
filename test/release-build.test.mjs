@@ -135,6 +135,51 @@ test("related tutorial injection is append-only, exact, and idempotent", async (
   assert.equal(injectRelatedTutorials(output, links), output);
 });
 
+test("homepage Claude hub uses one fail-closed additive slot before products", async () => {
+  const source = await readFile(routeFile(LEGACY_ROOT, "/"), "utf8");
+  const links = JSON.parse(
+    await readFile(path.join(ROOT, "site", "growth", "related-links.json"), "utf8"),
+  )["/"];
+  const options = {
+    homepage: true,
+    insertionAnchor: '<section class="gg-products">',
+  };
+  const output = injectRelatedTutorials(source, links, options);
+  const slot = output.match(
+    /<section\b(?=[^>]*data-growth-slot="related-tutorials-v1")[^>]*>[\s\S]*?<\/section>/i,
+  )?.[0] || "";
+
+  assert.equal((output.match(new RegExp(GROWTH_SLOT, "g")) || []).length, 1);
+  assert.ok(output.indexOf('class="gg-answer-hub"') < output.indexOf(GROWTH_SLOT));
+  assert.ok(output.indexOf(GROWTH_SLOT) < output.indexOf('class="gg-products"'));
+  assert.match(slot, /先分清身份 KYC、手机号验证和账号申诉/);
+  assert.match(slot, /不能恢复被禁用的账号/);
+  assert.match(slot, /不保证 Claude 接受号码或发送验证码/);
+  for (const route of [
+    "/guides/claude-identity-verification/",
+    "/guides/claude-phone-verification/",
+    "/guides/claude-account-disabled-appeal/",
+  ]) {
+    assert.match(slot, new RegExp(`href="${route.replaceAll("/", "\\/")}"`));
+  }
+  assert.doesNotMatch(slot, /href="\/(?:shop|contact)\//);
+  assert.equal(visibleTextSignature(output), visibleTextSignature(source));
+  assert.equal(legacyDomSignature(output), legacyDomSignature(source));
+  assert.equal(injectRelatedTutorials(output, links, options), output);
+  assert.throws(
+    () => injectRelatedTutorials(source, links, { ...options, insertionAnchor: '<section class="missing">' }),
+    /no related tutorial insertion anchor/,
+  );
+  assert.throws(
+    () => injectRelatedTutorials(
+      source.replace('<section class="gg-products">', '<section class="gg-products"><section class="gg-products">'),
+      links,
+      options,
+    ),
+    /multiple related tutorial insertion anchors/,
+  );
+});
+
 test("commerce widget injection is append-only and idempotent", async () => {
   const source = await readFile(routeFile(LEGACY_ROOT, "/"), "utf8");
   const output = injectCommerceWidget(source);
@@ -284,7 +329,13 @@ test("release build contains frozen pages, growth pages, semantic related slots,
     const source = await readFile(routeFile(LEGACY_ROOT, route), "utf8");
     let expected = ensureGrowthStylesheet(source);
     if (Object.hasOwn(related, route)) {
-      expected = injectRelatedTutorials(expected, related[route]);
+      expected = injectRelatedTutorials(
+        expected,
+        related[route],
+        route === "/"
+          ? { homepage: true, insertionAnchor: '<section class="gg-products">' }
+          : {},
+      );
     }
     expected = injectCommerceWidget(expected);
     expected = replaceRetiredWechatQr(expected);
@@ -395,8 +446,8 @@ test("release search-change binding records only routes whose sitemap lastmod ch
     path.join(ROOT, "public", "route-manifest.js"),
     "utf8",
   )).replace(
-    'const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-20T06:15:00Z";',
-    'const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-19T15:35:26Z";',
+    'const HOMEPAGE_PLATFORM_HUB_DATE = "2026-07-20T06:51:08Z";',
+    'const HOMEPAGE_PLATFORM_HUB_DATE = "2026-07-20T06:15:00Z";',
   );
 
   const report = await bindReleaseSearchChanges({
@@ -408,16 +459,7 @@ test("release search-change binding records only routes whose sitemap lastmod ch
       return baselineManifest;
     },
   });
-  assert.deepEqual(report.changedPaths, [
-    "/",
-    "/guides/3-account/",
-    "/guides/4-signal/",
-    "/guides/6-pitfalls/",
-    "/guides/claude-account-disabled-appeal/",
-    "/guides/claude-identity-verification/",
-    "/guides/claude-phone-verification/",
-    "/shop/",
-  ]);
+  assert.deepEqual(report.changedPaths, ["/"]);
   const artifact = JSON.parse(
     await readFile(path.join(root, ".release", "release-search-changes.json"), "utf8"),
   );

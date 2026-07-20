@@ -350,6 +350,77 @@
   outline-offset: 3px;
 }
 
+.growth-related-slot--platform {
+  width: min(1120px, calc(100% - 32px));
+  margin-block: 34px;
+  border-color: rgba(68, 51, 136, 0.28);
+  background: linear-gradient(145deg, #fff 0%, #f7f4ff 58%, #fff9e8 100%);
+  padding: clamp(22px, 4vw, 38px);
+}
+
+.growth-related-slot--platform .growth-platform-intro {
+  max-width: 900px;
+  margin-top: 12px;
+  color: var(--gg-ink);
+}
+
+.growth-platform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.growth-related-slot--platform .growth-platform-card {
+  display: flex;
+  min-width: 0;
+  min-height: 220px;
+  flex-direction: column;
+  gap: 10px;
+  border-color: rgba(68, 51, 136, 0.22);
+  padding: 18px;
+}
+
+.growth-platform-card strong {
+  color: var(--gg-navy);
+  font-size: 18px;
+}
+
+.growth-platform-card span {
+  color: var(--gg-muted);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+.growth-platform-card em {
+  margin-top: auto;
+  color: var(--gg-navy);
+  font-size: 14px;
+  font-style: normal;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.growth-related-slot--platform .growth-platform-warning {
+  margin-top: 16px;
+  border-left: 4px solid #a53e3e;
+  background: var(--gg-risk-soft);
+  padding: 11px 13px;
+  color: #6f2525;
+  font-size: 14px;
+}
+
+.commerce-boundary-first {
+  margin: 14px 0 0;
+  border-left: 4px solid #a53e3e;
+  background: var(--gg-risk-soft);
+  padding: 11px 13px;
+  color: #6f2525;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 @media (max-width: 760px) {
   .growth-page {
     width: min(100% - 28px, 1140px);
@@ -361,8 +432,18 @@
   .growth-source-list,
   .growth-related-grid,
   .growth-intent-grid,
+  .growth-platform-grid,
   .growth-related-slot ul {
     grid-template-columns: 1fr;
+  }
+
+  .growth-related-slot--platform {
+    width: min(100% - 24px, 1120px);
+    padding: 20px;
+  }
+
+  .growth-related-slot--platform .growth-platform-card {
+    min-height: 0;
   }
 
   .growth-commerce {

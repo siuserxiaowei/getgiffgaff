@@ -5,6 +5,7 @@ const CONSULTATION_RECOVERY_DATE = "2026-07-19";
 const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";
 const SEARCH_CONTENT_EXPANSION_DATE = "2026-07-20";
 const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-20T06:15:00Z";
+const HOMEPAGE_PLATFORM_HUB_DATE = "2026-07-20T06:51:08Z";
 
 export const LEGACY_ROUTES = Object.freeze([
   "/",
@@ -238,6 +239,9 @@ function commerceFor(pathname) {
 }
 
 function lastModifiedFor(pathname, contentSource) {
+  if (pathname === "/") {
+    return HOMEPAGE_PLATFORM_HUB_DATE;
+  }
   if (ACCOUNT_VERIFICATION_EXPANSION_ROUTES.has(pathname)) {
     return ACCOUNT_VERIFICATION_EXPANSION_DATE;
   }

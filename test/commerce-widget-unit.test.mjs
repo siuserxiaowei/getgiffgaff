@@ -59,8 +59,14 @@ test("commerce widget is one additive, accessible British SIM consultation guide
   assert.doesNotMatch(html, /客服小玉|微信小玉|联系小玉/);
   assert.match(html, /Telegram @xiaoyuhuai/);
   assert.match(html, /先选最方便的咨询方式/);
+  assert.match(html, /平台手机号与账号问题/);
+  assert.match(html, /短信 OTP、身份核验与官方申诉/);
+  assert.ok(
+    html.indexOf('class="commerce-boundary-first"')
+      < html.indexOf('class="commerce-quick-channels"'),
+    "screen-reader safety boundary precedes contact shortcuts",
+  );
   assert.match(html, /想买英国卡/);
-  assert.match(html, /ChatGPT \/ Claude 等平台验证/);
   assert.match(html, /已有卡收不到短信/);
   assert.match(html, /英国号码不等于通过 KYC/);
   assert.match(html, /手机号验证、短信 OTP、MFA、证件身份核验和账号申诉是不同步骤/);

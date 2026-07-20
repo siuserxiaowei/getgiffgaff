@@ -17,13 +17,12 @@ import {
 const KEY = "9d5c7277ec252fbb3b6f9ea0249ef612";
 const ACCOUNT_VERIFICATION_LASTMOD = "2026-07-20T06:15:00Z";
 
-test("account verification release marks exactly its three owners and five changed entry pages", () => {
+test("account verification release marks exactly its three owners and four supporting entry pages", () => {
   assert.deepEqual(
     PUBLIC_INDEXABLE_PATHS.filter(
       (pathname) => ROUTE_MANIFEST[pathname].lastModified === ACCOUNT_VERIFICATION_LASTMOD,
     ),
     [
-      "/",
       "/shop/",
       "/guides/3-account/",
       "/guides/4-signal/",

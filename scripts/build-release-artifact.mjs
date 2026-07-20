@@ -33,6 +33,7 @@ const GROWTH_ROOT = path.join(ROOT, "site", "growth");
 const PUBLIC_ROOT = path.join(ROOT, "public");
 const DEFAULT_OUTPUT = path.join(ROOT, ".release");
 const GROWTH_MARKER = 'data-growth-slot="related-tutorials-v1"';
+const HOMEPAGE_RELATED_INSERTION_ANCHOR = '<section class="gg-products">';
 const COMMERCE_MARKER = 'data-growth-slot="wechat-buying-guide-v1"';
 const CONTACT_CHANNEL_MARKER = 'data-release-slot="verified-contact-channels-v1"';
 const SHOP_HERO_IMAGE_SOURCE = '<div class="shop-hero__visual" aria-hidden="true"><img alt="" width="620" height="420" decoding="async" data-nimg="1" class="shop-hero__image" style="color:transparent" src="/gg-card-hero.png"/></div>';
@@ -135,6 +136,24 @@ const LEGACY_COMMERCIAL_COPY_OVERRIDES = Object.freeze({
       source: "查看并购买",
       replacement: "查看分类说明",
       expectedOccurrences: 2,
+    }),
+    Object.freeze({
+      label: "homepage broad AI registration claim",
+      source: "AI 工具注册",
+      replacement: "AI 工具账号安全",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "homepage broad phone verification claim",
+      source: "适合需要海外手机号辅助注册、验证或长期使用 AI 工具的用户。",
+      replacement: "涉及平台时，先分清短信手机号验证、证件身份核验和账号申诉；英国号码不能代替证件或恢复账号。",
+      expectedOccurrences: 1,
+    }),
+    Object.freeze({
+      label: "homepage card and AI subscription coupling",
+      source: "如果你买手机卡是为了注册、验证或长期使用 AI 工具，也可以直接前往 Nano Banana 查看 ChatGPT Plus、Claude、Gemini、Grok 等 AI 订阅购买入口。",
+      replacement: "如果你正在长期使用 AI 工具，也可以前往 Nano Banana 查看 ChatGPT Plus、Claude、Gemini、Grok 等 AI 订阅信息；AI 订阅与手机号、身份验证和账号申诉是不同事项。",
+      expectedOccurrences: 1,
     }),
   ]),
   "/guides/1-order/": Object.freeze([
@@ -1202,7 +1221,41 @@ const PITFALLS_FUNNEL_INTENTS = new Set([
   "before-purchase",
 ]);
 
-function growthModule(links) {
+const HOMEPAGE_CLAUDE_ROUTES = new Set([
+  "/guides/claude-identity-verification/",
+  "/guides/claude-phone-verification/",
+  "/guides/claude-account-disabled-appeal/",
+]);
+
+function homepageGrowthModule(links) {
+  const claudeLinks = links.filter(({ href }) => HOMEPAGE_CLAUDE_ROUTES.has(href));
+  const otherLinks = links.filter(({ href }) => !HOMEPAGE_CLAUDE_ROUTES.has(href));
+  if (
+    claudeLinks.length !== HOMEPAGE_CLAUDE_ROUTES.size
+    || claudeLinks.some(({ description, action }) => !description || !action)
+    || otherLinks.length !== 2
+  ) {
+    throw new Error(
+      "Homepage related tutorials must contain the three described Claude routes and two other tutorials",
+    );
+  }
+  const cards = claudeLinks
+    .map(
+      ({ label, href, description, action }) =>
+        `<a class="growth-platform-card" href="${escapeHtml(href)}" data-analytics-event="growth_related_click"><strong>${escapeHtml(label)}</strong><span>${escapeHtml(description)}</span><em>${escapeHtml(action)}</em></a>`,
+    )
+    .join("");
+  const otherItems = otherLinks
+    .map(
+      ({ label, href }) =>
+        `<li><a href="${escapeHtml(href)}" data-analytics-event="growth_related_click">${escapeHtml(label)}</a></li>`,
+    )
+    .join("");
+  return `<section class="growth-related-slot growth-related-slot--platform" ${GROWTH_MARKER} aria-labelledby="growth-related-title"><div class="growth-related-inner"><p class="growth-eyebrow">Claude 验证与账号问题</p><h2 id="growth-related-title">先分清身份 KYC、手机号验证和账号申诉</h2><p class="growth-platform-intro">三种问题不能互相替代。英国号码最多只涉及受支持地区的短信手机号验证；不能替代政府证件、自拍、年龄或地区资格，也不能恢复被禁用的账号。本站不提供接码、借证、假身份、代验证或绕过限制服务。</p><div class="growth-platform-grid">${cards}</div><p class="growth-platform-warning">请勿向本站发送密码、Cookie、验证码、恢复码、证件、人脸照片或完整付款信息。</p><h3>继续看 giffgaff 热门教程</h3><ul>${otherItems}</ul></div></section>`;
+}
+
+function growthModule(links, { homepage = false } = {}) {
+  if (homepage) return homepageGrowthModule(links);
   const intentLinks = links.filter((link) => Object.hasOwn(link, "intent"));
   const tutorialLinks = links.filter((link) => !Object.hasOwn(link, "intent"));
   if (intentLinks.length > 0) {
@@ -1246,15 +1299,25 @@ export function ensureGrowthStylesheet(html) {
   return output;
 }
 
-export function injectRelatedTutorials(html, links) {
+export function injectRelatedTutorials(html, links, options = {}) {
   if (!Array.isArray(links) || links.length === 0) return html;
   if (html.includes(GROWTH_MARKER)) return html;
 
   const output = ensureGrowthStylesheet(html);
-
-  const closingMain = output.toLowerCase().lastIndexOf("</main>");
-  if (closingMain === -1) throw new Error("Legacy page has no closing main");
-  return `${output.slice(0, closingMain)}${growthModule(links)}${output.slice(closingMain)}`;
+  const insertionAnchor = options.insertionAnchor || "</main>";
+  const requireUniqueAnchor = Boolean(options.insertionAnchor);
+  const normalizedOutput = output.toLowerCase();
+  const normalizedAnchor = insertionAnchor.toLowerCase();
+  const firstOffset = normalizedOutput.indexOf(normalizedAnchor);
+  const lastOffset = normalizedOutput.lastIndexOf(normalizedAnchor);
+  if (firstOffset === -1) {
+    throw new Error(`Legacy page has no related tutorial insertion anchor ${insertionAnchor}`);
+  }
+  if (requireUniqueAnchor && firstOffset !== lastOffset) {
+    throw new Error(`Legacy page has multiple related tutorial insertion anchors ${insertionAnchor}`);
+  }
+  const insertionOffset = requireUniqueAnchor ? firstOffset : lastOffset;
+  return `${output.slice(0, insertionOffset)}${growthModule(links, options)}${output.slice(insertionOffset)}`;
 }
 
 export function injectCommerceWidget(html) {
@@ -1731,7 +1794,15 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     const original = staticizeLegacyHtml(await readFile(filename, "utf8"));
     const links = related[route];
     let built = ensureGrowthStylesheet(original);
-    if (links) built = injectRelatedTutorials(built, links);
+    if (links) {
+      built = injectRelatedTutorials(
+        built,
+        links,
+        route === "/"
+          ? { homepage: true, insertionAnchor: HOMEPAGE_RELATED_INSERTION_ANCHOR }
+          : {},
+      );
+    }
     built = injectCommerceWidget(built);
     const frozen = frozenByRoute.get(route);
     if (!frozen) {

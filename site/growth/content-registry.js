@@ -427,7 +427,7 @@ export const GROWTH_PAGES = Object.freeze([
     sources: [official.ofcomCoverage, official.terms, official.plans, official.simOrder, official.esim, official.roamingChina, official.smsPolicy],
     relatedRoutes: [
       { label: "比较 G0 与 G2", href: "/answers/" },
-      { label: "查看当前手机卡", href: "/shop/" },
+      { label: "eSIM 换新手机前检查设备与短信 MFA", href: "/more/esim-new-phone/" },
       { label: "购买与发货流程", href: "/guides/1-order/" },
       { label: "确定适合后查看购买、激活和保号避坑", href: "/guides/6-pitfalls/" },
     ],

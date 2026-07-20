@@ -160,7 +160,13 @@ test("commerce-relevant routes expose one safe, complete contact and purchase gu
       `${route} factual pre-order contact guidance`,
     );
     assert.match(widget, /先选最方便的咨询方式/, `${route} quick channel chooser`);
-    assert.match(widget, /ChatGPT \/ Claude 等平台验证/, `${route} platform-verification reason`);
+    assert.match(widget, /平台手机号与账号问题/, `${route} platform-verification reason`);
+    assert.match(widget, /短信 OTP、身份核验与官方申诉/, `${route} platform-verification branches`);
+    assert.ok(
+      widget.indexOf('class="commerce-boundary-first"')
+        < widget.indexOf('class="commerce-quick-channels"'),
+      `${route} screen-reader safety boundary precedes contact shortcuts`,
+    );
     assert.match(widget, /英国号码不等于通过 KYC/, `${route} KYC boundary`);
     assert.match(widget, /同一手机可改用 Telegram/, `${route} same-device WeChat fallback`);
     assert.match(widget, /Telegram 内搜索 @xiaoyuhuai/, `${route} Telegram search fallback`);

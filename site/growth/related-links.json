@@ -2,9 +2,24 @@
   "/": [
     { "label": "第一次购买前先看完整避坑清单", "href": "/guides/6-pitfalls/" },
     { "label": "按旅行、留学和保号需求选英国手机卡", "href": "/guides/8-uk-sim-choice/" },
-    { "label": "分清 Claude 身份 KYC、手机号验证和申诉", "href": "/guides/claude-identity-verification/" },
-    { "label": "换新手机前检查 giffgaff eSIM 迁移与短信 MFA", "href": "/more/esim-new-phone/" },
-    { "label": "收到卡后按步骤完成国内激活", "href": "/guides/2-activate/" }
+    {
+      "label": "身份验证 / KYC",
+      "href": "/guides/claude-identity-verification/",
+      "description": "核对本人有效、政府签发的实体照片证件、实时自拍、Persona 数据处理与官方帮助表单。买号码不能替代此流程。",
+      "action": "查看证件与自拍要求"
+    },
+    {
+      "label": "手机号验证 / 六位短信代码",
+      "href": "/guides/claude-phone-verification/",
+      "description": "先核对支持地区、号码类型、五分钟后重试、号码已使用与长期保号。giffgaff 不保证 Claude 接受号码或发送验证码。",
+      "action": "排查收不到验证码"
+    },
+    {
+      "label": "账号禁用 / 403 / 申诉",
+      "href": "/guides/claude-account-disabled-appeal/",
+      "description": "403 不自动等于封号。先区分登录故障、技术性 403、个人账号禁用、组织暂停和 warning；换号不能解封。",
+      "action": "查看官方申诉分流"
+    }
   ],
   "/shop/": [
     { "label": "付款前检查购买、激活和保号风险", "href": "/guides/6-pitfalls/" },

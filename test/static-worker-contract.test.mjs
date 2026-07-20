@@ -386,8 +386,10 @@ test("route manifest owns 46 indexable and seven noindex routes with real source
       assert.ok(!PUBLIC_INDEXABLE_PATHS.includes(pathname), pathname);
     }
 
-    const expectedDate = accountVerificationExpansionRoutes.has(pathname)
-      ? "2026-07-20T06:15:00Z"
+    const expectedDate = pathname === "/"
+      ? "2026-07-20T06:51:08Z"
+      : accountVerificationExpansionRoutes.has(pathname)
+        ? "2026-07-20T06:15:00Z"
       : internalLinkRefinementRoutes.has(pathname)
         ? "2026-07-19T15:35:26Z"
       : consultationRecoveryRoutes.has(pathname)

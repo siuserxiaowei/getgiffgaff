@@ -25,9 +25,10 @@ export function renderCommerceWidget() {
           <h2 id="${TITLE_ID}">先选你的问题，再联系咨询</h2>
           <nav class="commerce-reason-nav" aria-label="咨询问题分类">
             <a href="#commerce-choice-title" data-consultation-entry="reason-buy" data-analytics-event="commerce_click"><strong>想买英国卡</strong><span>比较 G0/G2、库存与订单</span></a>
-            <a href="#commerce-platform-title" data-consultation-entry="reason-platform" data-analytics-event="commerce_click"><strong>ChatGPT / Claude 等平台验证</strong><span>先区分手机号、OTP、身份核验与账号恢复</span></a>
+            <a href="#commerce-platform-title" data-consultation-entry="reason-platform" data-analytics-event="commerce_click"><strong>平台手机号与账号问题</strong><span>先区分短信 OTP、身份核验与官方申诉</span></a>
             <a href="/guides/4-signal/" data-consultation-entry="reason-troubleshoot" data-analytics-event="commerce_click"><strong>已有卡收不到短信</strong><span>按普通短信、网络与平台 OTP 分层排查</span></a>
           </nav>
+          <p class="commerce-boundary-first"><strong>英国号码只可能涉及短信手机号验证，不能替代证件 KYC，也不能恢复被禁用账号。</strong> 本站不提供接码、借证、假身份、代验证或绕过限制服务。</p>
           <section class="commerce-quick-channels" aria-label="快速选择咨询方式">
             <h3>先选最方便的咨询方式</h3>
             <div class="commerce-quick-channel-grid">
