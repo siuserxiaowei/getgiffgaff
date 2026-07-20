@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">验证码先做二分诊断</title>
+  <desc id="desc">暖白色封面，展示普通短信与平台验证码的双分支诊断图，不含真实验证码或平台标志。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7f5f0"/><stop offset="1" stop-color="#e5edf2"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#1f3c55" flood-opacity=".15"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1350" cy="116" r="316" fill="#d8e5ee"/><circle cx="1500" cy="725" r="232" fill="#f1d6bd" opacity=".55"/>
+  <text x="118" y="165" fill="#a75d27" font-family="Arial, 'PingFang SC', sans-serif" font-size="30" font-weight="700" letter-spacing="3">短信异常排查</text>
+  <text x="118" y="300" fill="#183850" font-family="Arial, 'PingFang SC', sans-serif" font-size="94" font-weight="800">验证码先做</text>
+  <text x="118" y="413" fill="#183850" font-family="Arial, 'PingFang SC', sans-serif" font-size="94" font-weight="800">二分诊断</text>
+  <text x="122" y="485" fill="#4f6879" font-family="Arial, 'PingFang SC', sans-serif" font-size="35">先判断基础短信，再排查平台与账号环境</text>
+  <line x1="122" y1="535" x2="680" y2="535" stroke="#a75d27" stroke-width="7" stroke-linecap="round"/>
+  <g filter="url(#shadow)">
+    <rect x="814" y="153" width="582" height="557" rx="38" fill="#fffdf9"/>
+    <circle cx="1105" cy="286" r="83" fill="#dce8ee" stroke="#315a71" stroke-width="6"/>
+    <path d="M1061 276h88v62h-88z" fill="#315a71" rx="10"/><path d="M1065 282l40 32 40-32" fill="none" stroke="#f7f5f0" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M1105 369v60M1105 429L940 522M1105 429l166 93" fill="none" stroke="#7a98a7" stroke-width="7" stroke-linecap="round"/>
+    <rect x="858" y="523" width="285" height="120" rx="27" fill="#e9f1f3" stroke="#567b8c" stroke-width="4"/>
+    <rect x="1067" y="523" width="285" height="120" rx="27" fill="#f4eadf" stroke="#b6774f" stroke-width="4"/>
+    <text x="905" y="566" fill="#21445a" font-family="Arial, 'PingFang SC', sans-serif" font-size="31" font-weight="800">普通短信</text><text x="895" y="608" fill="#496675" font-family="Arial, 'PingFang SC', sans-serif" font-size="25">也收不到？</text>
+    <text x="1114" y="566" fill="#85502d" font-family="Arial, 'PingFang SC', sans-serif" font-size="31" font-weight="800">平台验证码</text><text x="1107" y="608" fill="#8c6c56" font-family="Arial, 'PingFang SC', sans-serif" font-size="25">单独不到？</text>
+    <text x="899" y="683" fill="#21445a" font-family="Arial, 'PingFang SC', sans-serif" font-size="23">查 SIM / 设备 / 漫游</text><text x="1099" y="683" fill="#85502d" font-family="Arial, 'PingFang SC', sans-serif" font-size="23">查平台 / 账号环境</text>
+  </g>
+  <text x="121" y="779" fill="#5d7180" font-family="Arial, 'PingFang SC', sans-serif" font-size="24">一次只改一项 · 不承诺任何平台验证码送达</text>
+</svg>

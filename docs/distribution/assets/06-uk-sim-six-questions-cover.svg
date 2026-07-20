@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">英国手机卡先问六件事</title>
+  <desc id="desc">暖白色封面，以英国地图轮廓、手机卡和六项决策清单呈现选择英国手机卡前的判断框架。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8f5ef"/><stop offset="1" stop-color="#e8eef0"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#19324a" flood-opacity=".16"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1300" cy="112" r="305" fill="#d5e3e6" opacity=".72"/><circle cx="1498" cy="684" r="238" fill="#e7cdbf" opacity=".55"/>
+  <text x="118" y="163" fill="#9c3b35" font-family="Arial, 'PingFang SC', sans-serif" font-size="30" font-weight="700" letter-spacing="3">留学 · 旅行 · 长期维护</text>
+  <text x="118" y="300" fill="#132f46" font-family="Arial, 'PingFang SC', sans-serif" font-size="94" font-weight="800">英国手机卡</text>
+  <text x="118" y="413" fill="#132f46" font-family="Arial, 'PingFang SC', sans-serif" font-size="94" font-weight="800">先问 6 件事</text>
+  <text x="122" y="485" fill="#44606d" font-family="Arial, 'PingFang SC', sans-serif" font-size="35">先写需求，再看候选</text>
+  <line x1="122" y1="535" x2="618" y2="535" stroke="#9c3b35" stroke-width="7" stroke-linecap="round"/>
+  <g filter="url(#shadow)">
+    <rect x="843" y="142" width="543" height="596" rx="42" fill="#fffdf8"/>
+    <path d="M1154 204l86 44 35 96-42 73 21 95-76 91-85-27-40-82 34-79-25-101z" fill="#dce8e7" stroke="#355c67" stroke-width="7"/>
+    <circle cx="1142" cy="333" r="12" fill="#9c3b35"/><circle cx="1081" cy="415" r="12" fill="#9c3b35"/><circle cx="1177" cy="512" r="12" fill="#9c3b35"/>
+    <rect x="900" y="559" width="196" height="121" rx="19" fill="#18384e" transform="rotate(-8 900 559)"/>
+    <rect x="927" y="590" width="122" height="20" rx="10" fill="#cfe2df" transform="rotate(-8 927 590)"/>
+    <rect x="927" y="627" width="78" height="16" rx="8" fill="#cfe2df" opacity=".75" transform="rotate(-8 927 627)"/>
+    <g font-family="Arial, 'PingFang SC', sans-serif" font-size="27" font-weight="700" fill="#18384e">
+      <rect x="1196" y="230" width="142" height="47" rx="23" fill="#edf2ef"/><text x="1217" y="263">停留用途</text>
+      <rect x="1210" y="302" width="128" height="47" rx="23" fill="#edf2ef"/><text x="1232" y="335">邮编覆盖</text>
+      <rect x="1191" y="374" width="147" height="47" rx="23" fill="#edf2ef"/><text x="1212" y="407">付费期限</text>
+      <rect x="1199" y="446" width="139" height="47" rx="23" fill="#edf2ef"/><text x="1221" y="479">SIM 形态</text>
+      <rect x="1191" y="518" width="147" height="47" rx="23" fill="#edf2ef"/><text x="1212" y="551">获取验收</text>
+      <rect x="1191" y="590" width="147" height="47" rx="23" fill="#edf2ef"/><text x="1212" y="623">长期维护</text>
+    </g>
+  </g>
+  <text x="121" y="779" fill="#5d7180" font-family="Arial, 'PingFang SC', sans-serif" font-size="24">独立第三方中文教程 · 规则以运营商当天官方页面为准</text>
+</svg>
