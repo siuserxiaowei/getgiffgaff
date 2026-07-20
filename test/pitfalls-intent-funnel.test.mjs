@@ -30,7 +30,7 @@ test("pitfalls overview splits pre-purchase consultation from post-purchase diag
   assert.equal((slot.match(/class="growth-intent-card"/g) || []).length, 2);
 
   for (const [href, intent] of [
-    ["/contact/", "before-purchase"],
+    ["#wechat-buying-guide-dialog", "before-purchase"],
     ["/guides/4-signal/", "after-purchase"],
   ]) {
     assert.match(
@@ -46,12 +46,17 @@ test("pitfalls overview splits pre-purchase consultation from post-purchase diag
     /<a\b(?=[^>]*\bdata-analytics-event="contact_click")[^>]*>/,
     "no internal intent card claims a completed contact handoff",
   );
+  assert.match(
+    slot,
+    /<a\b(?=[^>]*\bhref="#wechat-buying-guide-dialog")(?=[^>]*\bdata-funnel-intent="before-purchase")(?=[^>]*\bdata-analytics-event="commerce_click")[^>]*>/,
+    "pre-purchase intent opens the same-page contact chooser without claiming an external handoff",
+  );
   for (const href of [
     "/answers/",
     "/guides/2-activate/",
     "/guides/3-usage/",
+    "/guides/claude-identity-verification/",
     "/more/03-esim/",
-    "/tools/china-roaming-cost/",
   ]) {
     assert.match(slot, new RegExp(`href="${href.replaceAll("/", "\\/")}"`));
   }

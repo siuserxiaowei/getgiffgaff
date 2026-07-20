@@ -1156,6 +1156,9 @@ const LLMS_TASK_SECTIONS = Object.freeze([
   Object.freeze({
     heading: "信号、短信、平台与中国漫游",
     pages: Object.freeze([
+      ["/guides/claude-identity-verification/", "区分 Claude 身份 KYC、手机号验证，并按官方证件与自拍要求处理失败。"],
+      ["/guides/claude-phone-verification/", "核对 Claude 支持地区、号码类型、六位短信代码和长期保号边界。"],
+      ["/guides/claude-account-disabled-appeal/", "区分 Claude 403、登录故障与账号禁用，并准备官方申诉资料。"],
       ["/guides/4-signal/", "从账号、设备和选网逐层排查无信号、普通短信与 OTP。"],
       ["/guides/5-travel-data/", "区分旅行流量、漫游使用和中国境内低频短信场景。"],
       ["/tools/china-roaming-cost/", "按已核验的中国漫游费率输入用量并估算费用。"],

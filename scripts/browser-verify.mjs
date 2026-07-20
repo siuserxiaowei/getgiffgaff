@@ -21,6 +21,9 @@ const LEGACY_ROUTES = Object.freeze([
   ["contact", "/contact/", "#ktt-giga-card"],
 ]);
 const GROWTH_ROUTES = Object.freeze([
+  ["claude-identity", "/guides/claude-identity-verification/"],
+  ["claude-phone", "/guides/claude-phone-verification/"],
+  ["claude-appeal", "/guides/claude-account-disabled-appeal/"],
   ["arrival-checklist", "/guides/7-arrival-checklist/"],
   ["uk-sim-choice", "/guides/8-uk-sim-choice/"],
   ["keep-number-reminder", "/tools/keep-number-reminder/"],
@@ -503,7 +506,7 @@ async function verifyInteractions(browser, localOrigin, contextOptions, clock) {
     ]);
     assert.equal(
       await commerceDialog.locator("h2").innerText(),
-      "英国卡咨询指南",
+      "先选你的问题，再联系咨询",
     );
     assert.equal(
       await commerceDialog.locator('img[src="/contact/wechat-qr.jpg"]').evaluate(

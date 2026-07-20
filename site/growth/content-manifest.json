@@ -2,6 +2,78 @@
   "schemaVersion": "growth-frontmatter-v1",
   "pages": [
     {
+      "path": "/guides/claude-identity-verification/",
+      "title": "Claude 身份验证与 KYC｜证件、自拍和失败处理",
+      "description": "Claude 身份验证与手机号验证不是一回事：核对政府签发的实体照片证件、实时自拍、Persona 流程、失败重试、账号申诉与隐私安全边界。",
+      "intent": "Claude 身份验证、KYC 与失败处理",
+      "updatedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "sources": [
+        "https://support.claude.com/en/articles/14328960-identity-verification-on-claude",
+        "https://claude.com/form/identity-verification-help",
+        "https://www.anthropic.com/legal/privacy",
+        "https://support.claude.com/en/articles/8287232-verify-your-phone-number",
+        "https://support.claude.com/en/articles/8241253-safeguards-warnings-and-appeals"
+      ],
+      "relatedRoutes": [
+        "/guides/claude-phone-verification/",
+        "/guides/claude-account-disabled-appeal/",
+        "/guides/4-signal/",
+        "/guides/6-pitfalls/"
+      ],
+      "commerceTarget": "/guides/claude-phone-verification/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/guides/claude-phone-verification/",
+      "title": "Claude 手机号验证｜收不到六位验证码与号码限制",
+      "description": "按 Claude 官方规则排查手机号验证：支持地区、实体移动号码、六位短信验证码、VoIP 限制、号码使用次数、无法换绑及 giffgaff 普通短信边界。",
+      "intent": "Claude 手机号验证、验证码与号码限制",
+      "updatedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "sources": [
+        "https://support.claude.com/en/articles/8287232-verify-your-phone-number",
+        "https://support.claude.com/en/articles/8461763-where-can-i-access-claude",
+        "https://support.claude.com/en/articles/13189465-log-in-to-your-claude-account",
+        "https://help.giffgaff.com/en/articles/229548-using-your-mobile-phone-in-the-rest-of-the-world",
+        "https://help.giffgaff.com/en/articles/229483-i-m-having-problems-roaming-abroad",
+        "https://help.giffgaff.com/en/articles/258873-how-to-perform-a-manual-roam",
+        "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+        "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated"
+      ],
+      "relatedRoutes": [
+        "/guides/4-signal/",
+        "/guides/claude-identity-verification/",
+        "/guides/3-usage/",
+        "/guides/8-uk-sim-choice/",
+        "/shop/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/guides/claude-account-disabled-appeal/",
+      "title": "Claude 封号或 403｜判断账号禁用并走官方申诉",
+      "description": "Claude 封号、账号被禁用或出现 403 时，先区分登录错误、个人账号禁用与组织暂停，再保存错误信息并通过官方申诉；新号码不能解封。",
+      "intent": "Claude 封号、403 与官方申诉",
+      "updatedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "sources": [
+        "https://support.claude.com/en/articles/8241253-safeguards-warnings-and-appeals",
+        "https://claude.ai/restricted",
+        "https://support.claude.com/en/articles/13189465-log-in-to-your-claude-account",
+        "https://support.claude.com/en/articles/14328960-identity-verification-on-claude"
+      ],
+      "relatedRoutes": [
+        "/guides/claude-identity-verification/",
+        "/guides/claude-phone-verification/",
+        "/guides/4-signal/",
+        "/guides/3-account/"
+      ],
+      "commerceTarget": "/guides/claude-identity-verification/",
+      "indexPolicy": "index"
+    },
+    {
       "path": "/guides/7-arrival-checklist/",
       "title": "giffgaff 收卡验收清单｜G0/G2 到手检查与售后",
       "description": "国内收到 giffgaff G0/G2 后，按包装、卡状态、账号控制、余额、网络和普通短信逐项验收；附失败分流、分类页与联系咨询入口。",

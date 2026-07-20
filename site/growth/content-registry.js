@@ -1,6 +1,7 @@
 const REVIEWED_AT = "2026-07-17";
 const EXPIRES_AT = "2026-08-15";
 const SEARCH_CONTENT_REVIEWED_AT = "2026-07-20";
+const ACCOUNT_VERIFICATION_REVIEWED_AT = "2026-07-20";
 
 const official = Object.freeze({
   activation: {
@@ -83,6 +84,42 @@ const official = Object.freeze({
     label: "Ofcom 英国移动网络覆盖比较",
     url: "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
   },
+  claudeIdentity: {
+    label: "Claude 官方身份验证说明",
+    url: "https://support.claude.com/en/articles/14328960-identity-verification-on-claude",
+  },
+  claudePhone: {
+    label: "Claude 官方手机号验证说明",
+    url: "https://support.claude.com/en/articles/8287232-verify-your-phone-number",
+  },
+  claudeAppeals: {
+    label: "Claude 官方保障措施警告与申诉说明",
+    url: "https://support.claude.com/en/articles/8241253-safeguards-warnings-and-appeals",
+  },
+  claudeRestrictedAppeal: {
+    label: "Claude 个人账号官方申诉入口",
+    url: "https://claude.ai/restricted",
+  },
+  claudeIdentityHelp: {
+    label: "Claude 身份验证官方帮助表单",
+    url: "https://claude.com/form/identity-verification-help",
+  },
+  anthropicPrivacy: {
+    label: "Anthropic 官方隐私政策",
+    url: "https://www.anthropic.com/legal/privacy",
+  },
+  claudeLogin: {
+    label: "Claude 官方账号登录说明",
+    url: "https://support.claude.com/en/articles/13189465-log-in-to-your-claude-account",
+  },
+  claudeLocations: {
+    label: "Claude 官方支持地区说明",
+    url: "https://support.claude.com/en/articles/8461763-where-can-i-access-claude",
+  },
+  roamingRestOfWorld: {
+    label: "giffgaff 官方境外漫游使用说明",
+    url: "https://help.giffgaff.com/en/articles/229548-using-your-mobile-phone-in-the-rest-of-the-world",
+  },
 });
 
 function page(frontmatter) {
@@ -141,6 +178,163 @@ function policyStatusPage({
 }
 
 export const GROWTH_PAGES = Object.freeze([
+  page({
+    path: "/guides/claude-identity-verification/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: ACCOUNT_VERIFICATION_REVIEWED_AT,
+    reviewedAt: ACCOUNT_VERIFICATION_REVIEWED_AT,
+    intent: "Claude 身份验证、KYC 与失败处理",
+    title: "Claude 身份验证与 KYC｜证件、自拍和失败处理",
+    description:
+      "Claude 身份验证与手机号验证不是一回事：核对政府签发的实体照片证件、实时自拍、Persona 流程、失败重试、账号申诉与隐私安全边界。",
+    h1: "Claude 身份验证 / KYC：证件、自拍与失败处理",
+    deck: "先判断你遇到的是政府证件身份核验，还是六位短信手机号验证；两者需要的资料和解决路径完全不同。",
+    directAnswer:
+      "Claude 官方身份验证是一项真实身份核验：在部分场景中，用户需要提交本人持有的、政府签发且带照片的实体证件，并可能完成实时自拍；截图、扫描件、数字证件和学生证不符合当前官方说明。它不是手机号短信验证，英国号码不能替代证件、自拍、年龄或地区资格。失败时只按官方页面重新拍摄、改用本人其他合格证件或联系官方支持，不要购买身份资料、借用证件或找人代验证。",
+    answerSources: [official.claudeIdentity],
+    sections: [
+      {
+        id: "identity-or-phone",
+        title: "先分清：身份 KYC 还是手机号短信验证",
+        html: `<div class="growth-table-wrap" role="region" tabindex="0" aria-label="Claude 身份验证与手机号验证区别"><table><caption>两个流程不能互相替代</caption><thead><tr><th>流程</th><th>核验什么</th><th>giffgaff 是否相关</th></tr></thead><tbody><tr><th>身份验证 / KYC</th><td>本人政府照片证件，并可能进行实时自拍</td><td>不相关；手机号不能替代身份资料</td></tr><tr><th>手机号验证</th><td>用户能否访问一个可收短信的受支持号码</td><td>可能与实体英国号码和普通短信有关，但平台是否接受与发送不保证</td></tr></tbody></table></div><p>当前官方身份验证说明见<a href="${official.claudeIdentity.url}" target="_blank" rel="noopener noreferrer">${official.claudeIdentity.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。如果页面向你发送六位短信代码，请转到<a href="/guides/claude-phone-verification/">Claude 手机号验证排查</a>。</p>`,
+      },
+      {
+        id: "prepare",
+        title: "提交前准备本人实体证件和拍摄环境",
+        html: `<p>官方列举的常见合格证件包括护照、驾照或州/省身份证、国家身份证；具体国家和证件是否接受仍由当前验证流程判断。</p><ul class="growth-list"><li>使用本人当前有效、政府签发且带照片的原始实体证件。</li><li>清洁镜头，在光线均匀、无反光和无遮挡的环境拍摄完整证件。</li><li>如流程要求自拍，必须由证件本人实时完成，不使用旧照片、滤镜或合成图。</li><li>只在 Claude 官方页面跳转的身份验证流程中提交，不通过微信、Telegram 或陌生表单发送证件。</li></ul><p><a href="${official.claudeIdentity.url}" target="_blank" rel="noopener noreferrer">${official.claudeIdentity.label}</a>当前明确不接受复印件、截图、扫描件、照片翻拍、数字或移动证件、非政府证件（包括学生证、员工卡、图书证和银行卡）以及临时纸质证件（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "persona-privacy",
+        title: "Persona 与验证数据怎么处理",
+        html: `<p>Anthropic 当前选择 Persona Identities 作为身份验证合作方。<strong>Anthropic 是数据控制者</strong>，决定验证数据的用途和保留规则；Persona 按 Anthropic 的指示代为处理、收集和保存证件与自拍。Anthropic 可在需要时通过 Persona 平台访问验证记录，但官方称不会把证件和自拍图片复制或存储到自己的系统。</p><p>官方当前还说明验证数据不用于训练模型或营销，并按既定保留限制与适用法律删除；这些是动态政策，不应扩张为“永久不保存任何数据”。详见<a href="${official.claudeIdentity.url}" target="_blank" rel="noopener noreferrer">${official.claudeIdentity.label}</a>与<a href="${official.anthropicPrivacy.url}" target="_blank" rel="noopener noreferrer">${official.anthropicPrivacy.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "failed",
+        title: "身份验证失败后怎么处理",
+        html: `<ol class="growth-steps"><li>保存不含证件号码和人脸图像的错误文字与发生时间。</li><li>按官方提示重新拍摄，检查证件有效期、边缘、清晰度、光线和遮挡。</li><li>如果本人持有另一种官方接受的实体政府照片证件，可改用该证件。</li><li>用尽流程内提供的尝试次数后，使用<a href="${official.claudeIdentityHelp.url}" target="_blank" rel="noopener noreferrer">${official.claudeIdentityHelp.label}</a>联系官方；不要把证件、密码或验证码交给本站。</li></ol><p>官方身份说明也提到验证后账号仍可能被停用；只有官方明确显示账号禁用时，才转到<a href="/guides/claude-account-disabled-appeal/">Claude 封号与申诉页</a>。身份验证帮助表单不能替代账号封禁申诉，本页也不能判断个案原因或申诉结果（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "privacy-boundary",
+        title: "隐私与合规边界：本站不能代做什么",
+        html: `<p class="growth-warning">本站不接收证件、人脸照片、密码、Cookie、一次性验证码或申诉账号；不提供假身份、借证、证件生成、代刷脸、地区伪装或绕过验证服务。</p><p>手机号验证、身份核验、年龄核验、地区资格和账号申诉是不同任务。购买英国号码不会改变你的真实身份、年龄、所在地或平台资格，也不能解封已有账号。</p>`,
+      },
+    ],
+    sources: [official.claudeIdentity, official.claudeIdentityHelp, official.anthropicPrivacy, official.claudePhone, official.claudeAppeals],
+    relatedRoutes: [
+      { label: "Claude 手机号验证与六位短信代码", href: "/guides/claude-phone-verification/" },
+      { label: "Claude 被禁用或 403 后的官方申诉", href: "/guides/claude-account-disabled-appeal/" },
+      { label: "英国手机号收不到验证码的基础排查", href: "/guides/4-signal/" },
+      { label: "giffgaff 账号、激活与 OTP 避坑总览", href: "/guides/6-pitfalls/" },
+    ],
+    commerceWidget: false,
+    commerceHeading: "先判断是否真的卡在短信验证",
+    commerceDescription: "证件 KYC 和封号申诉不能靠买号码解决；只有实际需要长期英国实体号码时，才继续查看手机号验证规则。",
+    commerceTarget: { label: "实际卡在短信验证？先看手机号规则", href: "/guides/claude-phone-verification/" },
+  }),
+  page({
+    path: "/guides/claude-phone-verification/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: ACCOUNT_VERIFICATION_REVIEWED_AT,
+    reviewedAt: ACCOUNT_VERIFICATION_REVIEWED_AT,
+    intent: "Claude 手机号验证、验证码与号码限制",
+    title: "Claude 手机号验证｜收不到六位验证码与号码限制",
+    description:
+      "按 Claude 官方规则排查手机号验证：支持地区、实体移动号码、六位短信验证码、VoIP 限制、号码使用次数、无法换绑及 giffgaff 普通短信边界。",
+    h1: "Claude 手机号验证：收不到六位验证码怎么办",
+    deck: "先核对平台资格和号码类型，再用普通短信判断是 giffgaff 通信故障，还是 Claude 平台没有接受或发送 OTP。",
+    directAnswer:
+      "Claude 当前官方说明要求新账号使用来自支持地区、能接收短信的电话号码，并发送六位代码验证；VoIP、Google Voice、应用生成号码和座机不被接受，也不能跳过该步骤。号码验证后目前不能更改，因此应使用本人长期控制的号码。giffgaff 实体英国号码只可能满足“实体移动号码和普通短信”这一层，不能证明用户位于支持地区，也不保证 Claude 接受具体号码、发送代码或让账号通过审核。",
+    answerSources: [official.claudePhone, official.claudeLocations],
+    sections: [
+      {
+        id: "requirements",
+        title: "Claude 当前接受什么样的电话号码",
+        html: `<p>Claude 官方称手机号验证用于防止垃圾信息和滥用，并确认用户能访问该号码；它不是政府证件身份核验。</p><ul class="growth-list"><li>用户与号码必须满足 Claude 当前支持地区要求。</li><li>号码需要能接收普通短信，并由本人长期访问和控制。</li><li>官方当前不接受 VoIP、Google Voice、应用生成号码、座机或其他不能正常接收短信的号码。</li><li>没有符合要求的号码时，官方说明不能跳过手机号验证。</li></ul><p>以上条件来自<a href="${official.claudePhone.url}" target="_blank" rel="noopener noreferrer">${official.claudePhone.label}</a>与<a href="${official.claudeLocations.url}" target="_blank" rel="noopener noreferrer">${official.claudeLocations.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。英国号码不等于用户身处英国，也不改变真实地区资格。</p>`,
+      },
+      {
+        id: "no-code",
+        title: "收不到六位验证码：先做二分诊断",
+        html: `<ol class="growth-steps"><li><strong>先测普通短信：</strong>如果所有普通短信都收不到，检查 SIM 是否激活、号码是否停用、漫游开关、设备和手动选网。境外漫游、网络排查和手动选网分别见<a href="${official.roamingRestOfWorld.url}" target="_blank" rel="noopener noreferrer">${official.roamingRestOfWorld.label}</a>、<a href="${official.roamingTroubleshooting.url}" target="_blank" rel="noopener noreferrer">${official.roamingTroubleshooting.label}</a>和<a href="${official.manualRoam.url}" target="_blank" rel="noopener noreferrer">${official.manualRoam.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）；也可继续看<a href="/guides/4-signal/">英国手机号收不到验证码的基础排查</a>。</li><li><strong>普通短信正常：</strong>如果只有 Claude 代码不到，问题更可能在号码接受规则、账号、平台风控或发送路由；换 APN 或充值不能保证解决。</li><li><strong>等满五分钟：</strong>代码可能延迟几分钟；超过五分钟仍未收到，按官方界面点 <code>Try again</code> 重置，再重新输入并核对号码。官方没有给出无限重试或其他“安全频率”。</li><li><strong>代码过期：</strong>临时代码会失效，只使用最新一次收到的六位代码；重开流程后尽快输入新代码。</li><li><strong>显示号码已使用或使用过多：</strong>这可能表示另一个 Claude 账号已经绑定该号码。知道对应邮箱时，登录原账号联系官方 Support 请求 unlink；否则可使用一个符合地区和号码类型要求、且尚未用于 Claude 验证的本人长期号码。这不是绕过封禁、地区资格或平台风控的方法。</li></ol><p>上述五分钟、<code>Try again</code>、发送错误、临时代码和号码解除关联分支均来自<a href="${official.claudePhone.url}" target="_blank" rel="noopener noreferrer">${official.claudePhone.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "cannot-change",
+        title: "为什么验证前要规划长期保号",
+        html: `<p>Claude 官方当前说明，电话号码完成验证后不能更改。把号码用于重要账号前，应确认号码由本人长期控制，并为停用、丢卡、换卡、漫游失效和账号恢复预留方案。Claude 日常登录当前使用 Google 或邮件安全链接；跨设备代码属于邮件登录流程，不应误当成每次都通过 SMS 登录，见<a href="${official.claudeLogin.url}" target="_blank" rel="noopener noreferrer">${official.claudeLogin.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p><p>giffgaff SIM 连续六个月没有官方列出的有效使用可能停用。有效动作包括主动通话、主动发送短信或 MMS、移动数据连接、购买 Airtime Credit 或 plan；<strong>只接收验证码不在官方列出的保活动作中</strong>。详见<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）、<a href="/guides/3-usage/">保号规则教程</a>和<a href="/tools/keep-number-reminder/">本地保号提醒工具</a>。它们降低号码意外停用风险，但不保证第三方平台继续接受该号码。</p>`,
+      },
+      {
+        id: "giffgaff-boundary",
+        title: "giffgaff 能解决什么，不能解决什么",
+        html: `<div class="growth-table-wrap" role="region" tabindex="0" aria-label="giffgaff 与 Claude 手机号验证边界"><table><caption>购买前先按责任层分流</caption><thead><tr><th>可以检查</th><th>不能承诺</th></tr></thead><tbody><tr><td>实体卡交付、激活、号码状态、设备、漫游、普通短信</td><td>Claude 接受具体号码、验证码必达、地区资格、身份 KYC 或账号批准</td></tr><tr><td>长期保号和丢卡后的运营商恢复准备</td><td>绕过号码次数、平台风控、封号或官方申诉结果</td></tr></tbody></table></div><p class="growth-warning">咨询时不要发送密码、Cookie、六位验证码、证件或完整账号资料。客服只能排查卡片与普通通信，不能代过验证。</p>`,
+      },
+    ],
+    sources: [official.claudePhone, official.claudeLocations, official.claudeLogin, official.roamingRestOfWorld, official.roamingTroubleshooting, official.manualRoam, official.network, official.inactive],
+    relatedRoutes: [
+      { label: "英国手机号收不到验证码的基础排查", href: "/guides/4-signal/" },
+      { label: "Claude 身份 KYC、证件与自拍", href: "/guides/claude-identity-verification/" },
+      { label: "giffgaff 六个月 inactive 保号规则", href: "/guides/3-usage/" },
+      { label: "按旅行、留学与长期收短信需求选卡", href: "/guides/8-uk-sim-choice/" },
+      { label: "查看当前 giffgaff 卡片分类", href: "/shop/" },
+    ],
+    commerceHeading: "确实需要长期控制的英国实体号码？",
+    commerceDescription: "可咨询卡片交付、激活、漫游与普通短信；不保证 Claude 接受号码、发送验证码或批准账号，也不要发送密码、证件或验证码。",
+    commerceTarget: { label: "微信或 Telegram 咨询实体卡与普通短信", href: "/contact/" },
+  }),
+  page({
+    path: "/guides/claude-account-disabled-appeal/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: ACCOUNT_VERIFICATION_REVIEWED_AT,
+    reviewedAt: ACCOUNT_VERIFICATION_REVIEWED_AT,
+    intent: "Claude 封号、403 与官方申诉",
+    title: "Claude 封号或 403｜判断账号禁用并走官方申诉",
+    description:
+      "Claude 封号、账号被禁用或出现 403 时，先区分登录错误、个人账号禁用与组织暂停，再保存错误信息并通过官方申诉；新号码不能解封。",
+    h1: "Claude 封号 / 账号被禁用 / 403：怎么申诉",
+    deck: "403 不自动等于封号；先保存官方错误原文和账号类型，再决定是登录排障、组织管理员处理，还是官方账号申诉。",
+    directAnswer:
+      "看到 Claude 403、登录失败或无法使用时，不要先认定为封号。先记录错误原文、时间、入口和账号类型，区分普通登录故障、个人账号被禁用、组织工作区被暂停或客户端/API 技术错误；只有 Claude 明确提示账号被禁用或终止时，才进入官方申诉。新买手机号、换 giffgaff 卡、重注册账号或修改地区都不能恢复已被禁用的原账号，也不应被当作绕过平台措施的方法。",
+    answerSources: [official.claudeAppeals, official.claudeLogin],
+    sections: [
+      {
+        id: "diagnose",
+        title: "先判断 403、登录失败还是明确账号禁用",
+        html: `<div class="growth-table-wrap" role="region" tabindex="0" aria-label="Claude 账号状态分流"><table><caption>按你实际看到的状态处理</caption><thead><tr><th>可观察状态</th><th>下一步</th></tr></thead><tbody><tr><th>邮件登录链接、Google 登录或会话失败</th><td>按<a href="${official.claudeLogin.url}" target="_blank" rel="noopener noreferrer">${official.claudeLogin.label}</a>核对原登录方式、邮箱、垃圾邮件或隔离区、浏览器与服务状态（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</td></tr><tr><th>手机号发送错误、代码过期或号码已使用</th><td>这是手机号验证故障，转到<a href="/guides/claude-phone-verification/">Claude 手机号验证页</a>，不能使用封号申诉入口。</td></tr><tr><th>身份验证拍摄失败</th><td>转到<a href="/guides/claude-identity-verification/">Claude 身份验证页</a>；身份帮助表单不能替代账号申诉。</td></tr><tr><th>客户端或 API 显示 403，但网页没有禁用通知</th><td>记录请求入口、时间和错误原文，先做产品、API 或组织权限排查，不把状态码单独当作封号证明。</td></tr><tr><th>个人账号明确显示 disabled / terminated</th><td>阅读官方通知与邮件，登录原被限制账号后使用个人账号申诉入口。</td></tr><tr><th>个人账号正常，但组织因 unusual activity 被 hold</th><td>登录 restricted screen，选择受影响组织并点击 <code>Request a review</code>；一般成员或账单权限问题仍应联系组织管理员。</td></tr><tr><th>Usage Policy warning 有异议</th><td>按官方当前说明发送邮件到 <a href="mailto:usersafety@anthropic.com" target="_blank" rel="noopener noreferrer" data-link-role="contact-channel">usersafety@anthropic.com</a>，说明情况和必要账号上下文；该邮箱不能替代个人账号封禁申诉。</td></tr></tbody></table></div><p>组织 <code>Request a review</code> 和 warning 邮箱的分流来自<a href="${official.claudeAppeals.url}" target="_blank" rel="noopener noreferrer">${official.claudeAppeals.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "possible-reasons",
+        title: "官方列举的是可能原因，不是个案结论",
+        html: `<p>Claude 官方申诉说明列举的可能原因包括：重复违反 Usage Policy、从不支持的地区创建账号，以及违反 Terms of Service。身份验证页还单独列出未满 18 岁使用这一可能情况。</p><p>这些只能帮助准备申诉，不能据此判断你的实际原因。平台可能使用未公开的个案证据，本站也没有权限查看。来源：<a href="${official.claudeAppeals.url}" target="_blank" rel="noopener noreferrer">${official.claudeAppeals.label}</a>与<a href="${official.claudeIdentity.url}" target="_blank" rel="noopener noreferrer">${official.claudeIdentity.label}</a>（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "prepare-appeal",
+        title: "官方申诉前准备什么",
+        html: `<ul class="growth-list"><li>账号使用的邮箱和原登录方式，不在公开文章或第三方群聊展示。</li><li>Claude 官方显示的完整错误文字、发生时间、使用入口和账号/组织类型。</li><li>说明你认为判断有误的具体原因，以及你已经采取的纠正措施；只写可验证事实。</li><li>如官方要求关联支持工单或通知编号，只通过官方表单提交。</li></ul><p>个人账号必须先登录被限制的原账号，再进入<a href="${official.claudeRestrictedAppeal.url}" target="_blank" rel="noopener noreferrer">${official.claudeRestrictedAppeal.label}</a>；匿名访问可能被拒绝。申诉入口和其他状态的分流以<a href="${official.claudeAppeals.url}" target="_blank" rel="noopener noreferrer">${official.claudeAppeals.label}</a>为准（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。本站不知道个案原因，也没有官方申诉成功率或固定处理时间。</p>`,
+      },
+      {
+        id: "identity-branch",
+        title: "身份验证失败与验证后禁用不是同一件事",
+        html: `<p>证件拍摄失败时，应先回到<a href="/guides/claude-identity-verification/">Claude 身份验证与 KYC 排查</a>；身份流程完成后又明确显示账号禁用时，再走申诉。不能根据时间先后就推断真实封禁原因。</p><p><a href="${official.claudeIdentity.url}" target="_blank" rel="noopener noreferrer">${official.claudeIdentity.label}</a>列出的只是可能导致账号停用的情况和官方衔接，不足以替平台对具体账号下结论（核验 ${ACCOUNT_VERIFICATION_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "do-not-bypass",
+        title: "不要用换号、买号或改地区绕过",
+        html: `<p class="growth-warning">不要发送密码、Cookie、API Key、一次性代码、恢复码、证件、完整付款信息或完整支持邮件给本站；不要购买“解封服务”、批量账号、假身份或临时号码。</p><p>新号码最多只可能在平台允许的手机号验证流程中证明号码控制权，不能恢复既有账号，也不能替代原账号的登录方式、原邮箱、既有可信设备、政策申诉或真实身份。不要使用代理或 VPN 伪装地区、换设备或修改设备指纹、重新注册账号来规避平台限制。此页面不放购卡硬入口，因为换卡不是解封工具。</p>`,
+      },
+    ],
+    sources: [official.claudeAppeals, official.claudeRestrictedAppeal, official.claudeLogin, official.claudeIdentity],
+    relatedRoutes: [
+      { label: "Claude 身份验证失败与证件要求", href: "/guides/claude-identity-verification/" },
+      { label: "Claude 手机号验证和收不到代码", href: "/guides/claude-phone-verification/" },
+      { label: "英国号码普通短信与平台 OTP 分层排查", href: "/guides/4-signal/" },
+      { label: "giffgaff 账号与恢复信息管理", href: "/guides/3-account/" },
+    ],
+    commerceWidget: false,
+    commerceHeading: "账号禁用只走官方申诉",
+    commerceDescription: "本站不销售解封服务，也不收集账号、证件、密码或验证码；新号码不能恢复被禁用的原账号。",
+    commerceTarget: { label: "返回 Claude 身份验证与官方分流", href: "/guides/claude-identity-verification/" },
+  }),
   page({
     path: "/guides/7-arrival-checklist/",
     indexPolicy: "index",

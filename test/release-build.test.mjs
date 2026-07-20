@@ -139,7 +139,7 @@ test("commerce widget injection is append-only and idempotent", async () => {
   const source = await readFile(routeFile(LEGACY_ROOT, "/"), "utf8");
   const output = injectCommerceWidget(source);
   assert.equal((output.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, 1);
-  assert.match(output, /英国卡咨询指南/);
+  assert.match(output, /先选你的问题，再联系咨询/);
   assert.match(output, /href=["']\/shop\/giffgaff-g0\//);
   assert.match(output, /href=["']\/shop\/giffgaff-g2\//);
   assert.equal(visibleTextSignature(output), visibleTextSignature(source));
@@ -268,7 +268,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   const report = await buildReleaseArtifact(outputRoot);
 
   assert.equal(report.legacyPages, 34);
-  assert.equal(report.growthPages, 16);
+  assert.equal(report.growthPages, 19);
   assert.equal(report.injectedPages, 17);
   assert.equal(report.commerceWidgets, 34);
 
@@ -294,7 +294,11 @@ test("release build contains frozen pages, growth pages, semantic related slots,
     expected = applyReleaseConversionOverrides(expected, route);
     const expectedSlots = Object.hasOwn(related, route) ? 2 : 1;
     assert.equal((html.match(/data-growth-slot=/g) || []).length, expectedSlots, route);
-    assert.equal((html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, 1, route);
+    const expectedWidgets = [
+      "/guides/claude-identity-verification/",
+      "/guides/claude-account-disabled-appeal/",
+    ].includes(route) ? 0 : 1;
+    assert.equal((html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, expectedWidgets, route);
     assert.equal(html, expected, `${route} only approved release transformations`);
     assert.doesNotMatch(html, /(?:src|href)=["']\/_next\//i, route);
     const imageTags = html.match(/<img\b[^>]*>/gi) || [];
@@ -309,7 +313,11 @@ test("release build contains frozen pages, growth pages, semantic related slots,
 
   for (const route of [...INDEXABLE_GROWTH_ROUTES, ...NOINDEX_GROWTH_ROUTES]) {
     const html = await readFile(routeFile(outputRoot, route), "utf8");
-    assert.equal((html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, 1, route);
+    const expectedWidgets = [
+      "/guides/claude-identity-verification/",
+      "/guides/claude-account-disabled-appeal/",
+    ].includes(route) ? 0 : 1;
+    assert.equal((html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length, expectedWidgets, route);
     assert.doesNotMatch(html, /(?:src|href)=["']\/_next\//i, route);
   }
 
@@ -336,7 +344,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   );
 
   const sitemap = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");
-  assert.equal((sitemap.match(/<url>/g) || []).length, 43);
+  assert.equal((sitemap.match(/<url>/g) || []).length, 46);
   for (const route of NOINDEX_GROWTH_ROUTES) {
     assert.doesNotMatch(sitemap, new RegExp(route.replaceAll("/", "\\/")), route);
   }
@@ -386,9 +394,10 @@ test("release search-change binding records only routes whose sitemap lastmod ch
   const baselineManifest = (await readFile(
     path.join(ROOT, "public", "route-manifest.js"),
     "utf8",
-  ))
-    .replace('const CONSULTATION_RECOVERY_DATE = "2026-07-19";', 'const CONSULTATION_RECOVERY_DATE = "2026-07-17";')
-    .replace('const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";', 'const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-17";');
+  )).replace(
+    'const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-20T06:15:00Z";',
+    'const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-19T15:35:26Z";',
+  );
 
   const report = await bindReleaseSearchChanges({
     cwd: root,
@@ -399,11 +408,16 @@ test("release search-change binding records only routes whose sitemap lastmod ch
       return baselineManifest;
     },
   });
-  assert.ok(report.changedPaths.length > 0);
-  assert.deepEqual(report.changedPaths, [...report.changedPaths].sort());
-  assert.ok(report.changedPaths.includes("/contact/"));
-  assert.ok(report.changedPaths.includes("/shop/"));
-  assert.ok(report.changedPaths.includes("/answers/"));
+  assert.deepEqual(report.changedPaths, [
+    "/",
+    "/guides/3-account/",
+    "/guides/4-signal/",
+    "/guides/6-pitfalls/",
+    "/guides/claude-account-disabled-appeal/",
+    "/guides/claude-identity-verification/",
+    "/guides/claude-phone-verification/",
+    "/shop/",
+  ]);
   const artifact = JSON.parse(
     await readFile(path.join(root, ".release", "release-search-changes.json"), "utf8"),
   );
@@ -459,7 +473,7 @@ test("release search-change binding records only routes whose sitemap lastmod ch
   });
 });
 
-test("llms.txt is a curated task index for exactly the 43 indexable pages", async (t) => {
+test("llms.txt is a curated task index for exactly the 46 indexable pages", async (t) => {
   const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-llms-"));
   t.after(() => rm(outputRoot, { recursive: true, force: true }));
   await buildReleaseArtifact(outputRoot);
@@ -479,7 +493,7 @@ test("llms.txt is a curated task index for exactly the 43 indexable pages", asyn
 
   const entries = [...llms.matchAll(/^- \[([^\]]+)\]\((https:\/\/getgiffgaff\.com\/[^)]*)\)：([^\n]+)$/gm)]
     .map((match) => ({ title: match[1], url: match[2], purpose: match[3].trim() }));
-  assert.equal(entries.length, 43, "one titled purpose entry per indexable page");
+  assert.equal(entries.length, 46, "one titled purpose entry per indexable page");
   assert.deepEqual(
     entries.map((entry) => new URL(entry.url).pathname).sort(),
     [...PUBLIC_INDEXABLE_PATHS].sort(),

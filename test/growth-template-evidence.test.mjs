@@ -43,6 +43,27 @@ test("every growth direct answer carries an adjacent primary-source citation", (
 test("all indexable growth answers declare route-specific evidence instead of a first-source fallback", () => {
   const expectations = new Map([
     [
+      "/guides/claude-identity-verification/",
+      {
+        kind: "official",
+        sources: ["14328960-identity-verification"],
+      },
+    ],
+    [
+      "/guides/claude-phone-verification/",
+      {
+        kind: "official",
+        sources: ["8287232-verify-your-phone-number", "8461763-where-can-i-access-claude"],
+      },
+    ],
+    [
+      "/guides/claude-account-disabled-appeal/",
+      {
+        kind: "official",
+        sources: ["8241253-safeguards-warnings-and-appeals", "13189465-log-in-to-your-claude-account"],
+      },
+    ],
+    [
       "/guides/7-arrival-checklist/",
       {
         kind: "mixed",
@@ -166,15 +187,20 @@ test("growth commerce safety override is route-scoped, exact and fail closed", (
   );
 });
 
-test("every growth page shows the same independent-site and G0/G2 scope disclosure above its answer", () => {
+test("every growth page shows a route-appropriate independent-site scope disclosure above its answer", () => {
   for (const page of GROWTH_PAGES) {
     const html = renderGrowthPage(page);
     const disclosure = html.match(/<p class="growth-disclosure">([\s\S]*?)<\/p>/i);
     assert.ok(disclosure, `${page.path} visible disclosure`);
     assert.match(disclosure[1], /独立第三方/);
-    assert.match(disclosure[1], /不代表 giffgaff 官方/);
-    assert.match(disclosure[1], /G0 \/ G2 是本站.*库存分类/);
-    assert.match(disclosure[1], /不是 giffgaff 官方产品名/);
+    if (page.path.startsWith("/guides/claude-")) {
+      assert.match(disclosure[1], /不代表 Claude、Anthropic 或 giffgaff 官方/);
+      assert.match(disclosure[1], /英国号码不能替代身份、年龄、地区资格或账号申诉/);
+    } else {
+      assert.match(disclosure[1], /不代表 giffgaff 官方/);
+      assert.match(disclosure[1], /G0 \/ G2 是本站.*库存分类/);
+      assert.match(disclosure[1], /不是 giffgaff 官方产品名/);
+    }
     assert.ok(
       html.indexOf(disclosure[0]) < html.indexOf('<div class="legacy-answer">'),
       `${page.path} disclosure must precede the direct answer`,
@@ -204,7 +230,12 @@ test("growth funnels use the anonymous event interface without changing destinat
     const html = renderGrowthPage(page);
     assert.match(html, /src="\/growth-assets\/analytics\.js"/);
     assert.match(html, /data-analytics-event="growth_related_click"/);
-    assert.match(html, /data-analytics-event="(?:commerce_click|contact_click|shop_click)"/);
+    if (page.commerceWidget === false) {
+      assert.match(html, /data-analytics-event="commerce_click"/);
+      assert.doesNotMatch(html, /data-analytics-event="contact_click"/);
+    } else {
+      assert.match(html, /data-analytics-event="(?:commerce_click|contact_click|shop_click)"/);
+    }
     for (const related of page.relatedRoutes) {
       assert.match(html, new RegExp(`href="${related.href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`));
     }

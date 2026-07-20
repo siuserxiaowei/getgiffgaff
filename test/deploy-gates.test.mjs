@@ -290,7 +290,7 @@ test("commerce deployment pins exact HEAD, proves a new Production record and ru
     "git fetch --quiet origin +refs/heads/main:refs/remotes/origin/main",
     "git rev-parse --verify HEAD",
     "git rev-parse --verify refs/remotes/origin/main",
-    "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 43",
+    "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 46",
     "node scripts/verify-analytics-persistence.mjs",
     "npm run submit:indexnow",
   ]);
@@ -632,7 +632,7 @@ test("post-upload origin/main advancement fails without a deployed:true report",
     }),
     new RegExp(`HEAD .*${HEAD_SHA}.*origin/main .*${OTHER_SHA}`, "s"),
   );
-  assert.equal(harness.calls.some(({ label }) => label === "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 43"), false);
+  assert.equal(harness.calls.some(({ label }) => label === "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 46"), false);
 });
 
 test("post-upload HEAD and origin/main advancing together cannot validate an older upload", async () => {
@@ -654,7 +654,7 @@ test("post-upload HEAD and origin/main advancing together cannot validate an old
     new RegExp(`post-upload release guard failed.*uploaded release ${HEAD_SHA}.*current HEAD ${OTHER_SHA}.*current origin/main ${OTHER_SHA}`, "s"),
   );
   assert.equal(
-    harness.calls.some(({ label }) => label === "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 43"),
+    harness.calls.some(({ label }) => label === "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 46"),
     false,
   );
 });
@@ -804,7 +804,7 @@ test("postdeploy HTTP or canonical SEO failure prevents deployed:true even via t
   );
 
   const seoHarness = releaseRecorder({
-    failLabel: "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 43",
+    failLabel: "npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 46",
     failure: new Error("canonical production verification failed"),
   });
   await assert.rejects(

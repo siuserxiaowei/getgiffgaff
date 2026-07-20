@@ -36,8 +36,8 @@ function allNodes(documents) {
   );
 }
 
-test("growth registry owns nine indexable pages and seven evidence-gated pages", () => {
-  assert.equal(GROWTH_PAGES.length, 16);
+test("growth registry owns twelve indexable pages and seven evidence-gated pages", () => {
+  assert.equal(GROWTH_PAGES.length, 19);
   assert.deepEqual(
     GROWTH_PAGES.filter((page) => page.indexPolicy === "index").map((page) => page.path),
     INDEXABLE_GROWTH_ROUTES,
@@ -46,8 +46,8 @@ test("growth registry owns nine indexable pages and seven evidence-gated pages",
     GROWTH_PAGES.filter((page) => page.indexPolicy === "noindex").map((page) => page.path),
     NOINDEX_GROWTH_ROUTES,
   );
-  assert.equal(new Set(GROWTH_PAGES.map((page) => page.title)).size, 16);
-  assert.equal(new Set(GROWTH_PAGES.map((page) => page.intent)).size, 16);
+  assert.equal(new Set(GROWTH_PAGES.map((page) => page.title)).size, 19);
+  assert.equal(new Set(GROWTH_PAGES.map((page) => page.intent)).size, 19);
 
   for (const page of GROWTH_PAGES) {
     for (const key of [

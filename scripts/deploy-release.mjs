@@ -11,6 +11,7 @@ import {
   bindReleaseSearchChanges,
   recordReleaseSearchSubmission,
 } from "./build-release-artifact.mjs";
+import { PUBLIC_INDEXABLE_PATHS } from "../public/route-manifest.js";
 
 export { bindReleaseSearchChanges };
 
@@ -567,7 +568,7 @@ export async function verifyCanonicalSeoAfterPropagation({
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
     try {
       await runCommand("npm", [
-        "run", "verify:seo", "--", "--base-url", CANONICAL_ORIGIN, "--expected-url-count", "43",
+        "run", "verify:seo", "--", "--base-url", CANONICAL_ORIGIN, "--expected-url-count", String(PUBLIC_INDEXABLE_PATHS.length),
       ], commandOptions);
       return { attempts: attempt };
     } catch (error) {

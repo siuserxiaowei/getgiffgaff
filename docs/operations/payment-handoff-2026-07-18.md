@@ -18,14 +18,14 @@
 ```bash
 curl -sS -D - -o /dev/null --max-redirs 0 https://getgiffgaff.com/pay/
 curl -sS -I https://getgiffgaff.com/contact/ktt-giga-card.png
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 43
+npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 46
 ```
 
 预期：
 
 - `/pay/` 返回 `303`，`Location` 为 `https://getgiffgaff.com/contact/#ktt-giga-card`，并带 `x-getgiffgaff-payment-mode: contact-qr-handoff`。
 - 快团团小程序码返回 `200` 与 `Content-Type: image/png`。
-- sitemap 保持批准的 43 个可索引 URL，且不包含 `/pay/`。
+- sitemap 保持批准的 46 个可索引 URL，且不包含 `/pay/`。
 
 这些 HTTP 检查只验证本站的兼容跳转和静态图片，不能替代扫码后的商品、订单、付款、退款或履约核验。
 

@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
-import { PUBLIC_INDEXABLE_PATHS } from "../public/route-manifest.js";
+import { PUBLIC_INDEXABLE_PATHS, ROUTE_MANIFEST } from "../public/route-manifest.js";
 import {
   createIndexNowPayload,
   parseIndexNowCliOptions,
@@ -15,8 +15,27 @@ import {
 } from "../scripts/submit-indexnow.mjs";
 
 const KEY = "9d5c7277ec252fbb3b6f9ea0249ef612";
+const ACCOUNT_VERIFICATION_LASTMOD = "2026-07-20T06:15:00Z";
 
-test("explicit full IndexNow payload contains exactly the 43 canonical sitemap routes", () => {
+test("account verification release marks exactly its three owners and five changed entry pages", () => {
+  assert.deepEqual(
+    PUBLIC_INDEXABLE_PATHS.filter(
+      (pathname) => ROUTE_MANIFEST[pathname].lastModified === ACCOUNT_VERIFICATION_LASTMOD,
+    ),
+    [
+      "/",
+      "/shop/",
+      "/guides/3-account/",
+      "/guides/4-signal/",
+      "/guides/6-pitfalls/",
+      "/guides/claude-identity-verification/",
+      "/guides/claude-phone-verification/",
+      "/guides/claude-account-disabled-appeal/",
+    ],
+  );
+});
+
+test("explicit full IndexNow payload contains exactly the 46 canonical sitemap routes", () => {
   const payload = createIndexNowPayload(
     KEY,
     "https://getgiffgaff.com",
@@ -25,8 +44,8 @@ test("explicit full IndexNow payload contains exactly the 43 canonical sitemap r
   assert.equal(payload.host, "getgiffgaff.com");
   assert.equal(payload.key, KEY);
   assert.equal(payload.keyLocation, `https://getgiffgaff.com/indexnow-key.txt`);
-  assert.equal(payload.urlList.length, 43);
-  assert.equal(new Set(payload.urlList).size, 43);
+  assert.equal(payload.urlList.length, 46);
+  assert.equal(new Set(payload.urlList).size, 46);
   assert.deepEqual(
     payload.urlList,
     PUBLIC_INDEXABLE_PATHS.map((pathname) => `https://getgiffgaff.com${pathname}`),

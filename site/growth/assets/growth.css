@@ -594,17 +594,76 @@
 }
 
 .commerce-choice-section,
+.commerce-platform-section,
 .commerce-channel-grid,
 .commerce-privacy-note {
   margin-top: 22px;
 }
 
 .commerce-choice-section h3,
+.commerce-platform-section h3,
 .commerce-channel-card h3 {
   margin: 0;
   color: var(--commerce-ink);
   font-size: 18px;
   line-height: 1.35;
+}
+
+.commerce-reason-nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.commerce-reason-nav a {
+  display: grid;
+  gap: 5px;
+  min-height: 88px;
+  padding: 12px;
+  border: 1px solid var(--commerce-line);
+  border-radius: 8px;
+  color: var(--commerce-ink);
+  background: var(--commerce-surface);
+  text-decoration: none;
+}
+
+.commerce-reason-nav a:hover {
+  border-color: var(--commerce-gold);
+  background: #FFFCF2;
+}
+
+.commerce-reason-nav span {
+  color: var(--commerce-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.commerce-platform-section {
+  padding: 16px;
+  border: 1px solid var(--commerce-line);
+  border-radius: var(--gg-radius-sm);
+  background: var(--commerce-soft);
+}
+
+.commerce-platform-section p {
+  margin: 8px 0 0;
+  color: var(--commerce-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.commerce-platform-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.commerce-platform-links a {
+  color: var(--commerce-navy);
+  font-size: 13px;
+  font-weight: 800;
 }
 
 .commerce-choice-grid {
@@ -808,6 +867,7 @@ body:has(.commerce-guide-dialog:target) {
   }
 
   .commerce-choice-grid,
+  .commerce-reason-nav,
   .commerce-quick-channel-grid,
   .commerce-channel-grid,
   .verified-contact-grid {

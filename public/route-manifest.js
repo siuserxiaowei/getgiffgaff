@@ -4,6 +4,7 @@ const GROWTH_DATE = "2026-07-17";
 const CONSULTATION_RECOVERY_DATE = "2026-07-19";
 const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";
 const SEARCH_CONTENT_EXPANSION_DATE = "2026-07-20";
+const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-20T06:15:00Z";
 
 export const LEGACY_ROUTES = Object.freeze([
   "/",
@@ -43,6 +44,9 @@ export const LEGACY_ROUTES = Object.freeze([
 ]);
 
 export const INDEXABLE_GROWTH_ROUTES = Object.freeze([
+  "/guides/claude-identity-verification/",
+  "/guides/claude-phone-verification/",
+  "/guides/claude-account-disabled-appeal/",
   "/guides/7-arrival-checklist/",
   "/guides/8-uk-sim-choice/",
   "/guides/9-number-balance-data-check/",
@@ -177,6 +181,17 @@ const SEARCH_CONTENT_EXPANSION_ROUTES = new Set([
   "/more/esim-deleted/",
 ]);
 
+const ACCOUNT_VERIFICATION_EXPANSION_ROUTES = new Set([
+  "/",
+  "/shop/",
+  "/guides/3-account/",
+  "/guides/4-signal/",
+  "/guides/6-pitfalls/",
+  "/guides/claude-identity-verification/",
+  "/guides/claude-phone-verification/",
+  "/guides/claude-account-disabled-appeal/",
+]);
+
 const COLLECTION_ROUTES = new Set([
   "/shop/",
   "/guides/",
@@ -214,11 +229,18 @@ function schemaTypeFor(pathname) {
 function commerceFor(pathname) {
   if (pathname === "/shop/" || COMMERCE_DETAIL_ROUTES.has(pathname)) return "direct";
   if (pathname === "/contact/") return "support";
+  if ([
+    "/guides/claude-identity-verification/",
+    "/guides/claude-account-disabled-appeal/",
+  ].includes(pathname)) return "none";
   if (pathname.startsWith("/research/")) return "none";
   return "contextual";
 }
 
 function lastModifiedFor(pathname, contentSource) {
+  if (ACCOUNT_VERIFICATION_EXPANSION_ROUTES.has(pathname)) {
+    return ACCOUNT_VERIFICATION_EXPANSION_DATE;
+  }
   if (SEARCH_CONTENT_EXPANSION_ROUTES.has(pathname)) {
     return SEARCH_CONTENT_EXPANSION_DATE;
   }

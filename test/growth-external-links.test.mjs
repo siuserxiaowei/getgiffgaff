@@ -13,6 +13,10 @@ const OFFICIAL_HOSTS = new Set([
   "help.giffgaff.com",
   "www.giffgaff.com",
   "www.ofcom.org.uk",
+  "support.claude.com",
+  "claude.ai",
+  "claude.com",
+  "www.anthropic.com",
 ]);
 
 function attributes(value) {

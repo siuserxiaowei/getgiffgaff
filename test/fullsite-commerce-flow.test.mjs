@@ -53,7 +53,7 @@ function widgetMarkup(html, route) {
   return matches[0];
 }
 
-test("all 50 release routes expose one safe, complete contact and purchase guide", async (t) => {
+test("commerce-relevant routes expose one safe, complete contact and purchase guide", async (t) => {
   const outputRoot = await mkdtemp(
     path.join(os.tmpdir(), "getgiffgaff-commerce-flow-"),
   );
@@ -62,7 +62,7 @@ test("all 50 release routes expose one safe, complete contact and purchase guide
   await buildReleaseArtifact(outputRoot);
 
   const routes = Object.keys(ROUTE_MANIFEST);
-  assert.equal(routes.length, 50, "route manifest must contain all 50 public pages");
+  assert.equal(routes.length, 53, "route manifest must contain all 53 public pages");
 
   for (const target of INTERNAL_TARGETS) {
     const targetRoute = target.split("#", 1)[0];
@@ -100,16 +100,26 @@ test("all 50 release routes expose one safe, complete contact and purchase guide
   for (const route of routes) {
     const html = await readFile(routeFile(outputRoot, route), "utf8");
     assert.doesNotMatch(html, /(?:src|href)=["']\/contact\/wechat-qr\.png["']/i, `${route} stale WeChat QR asset`);
+    const editorialOnly = [
+      "/guides/claude-identity-verification/",
+      "/guides/claude-account-disabled-appeal/",
+    ].includes(route);
     assert.equal(
       (html.match(new RegExp(COMMERCE_SLOT, "g")) || []).length,
-      1,
+      editorialOnly ? 0 : 1,
       `${route} commerce slot count`,
     );
+
+    if (editorialOnly) {
+      assert.doesNotMatch(html, /先选你的问题，再联系咨询|付款前请联系客服核对当前库存/);
+      assert.match(html, /英国号码不能替代身份、年龄、地区资格或账号申诉/);
+      continue;
+    }
 
     const widget = widgetMarkup(html, route);
     assert.match(
       widget,
-      /<h2\b[^>]*>\s*\u82f1\u56fd\u5361\u54a8\u8be2\u6307\u5357\s*<\/h2>/i,
+      /<h2\b[^>]*>\s*先选你的问题，再联系咨询\s*<\/h2>/i,
       `${route} dialog title`,
     );
 
@@ -150,6 +160,8 @@ test("all 50 release routes expose one safe, complete contact and purchase guide
       `${route} factual pre-order contact guidance`,
     );
     assert.match(widget, /先选最方便的咨询方式/, `${route} quick channel chooser`);
+    assert.match(widget, /ChatGPT \/ Claude 等平台验证/, `${route} platform-verification reason`);
+    assert.match(widget, /英国号码不等于通过 KYC/, `${route} KYC boundary`);
     assert.match(widget, /同一手机可改用 Telegram/, `${route} same-device WeChat fallback`);
     assert.match(widget, /Telegram 内搜索 @xiaoyuhuai/, `${route} Telegram search fallback`);
     assert.match(widget, /当前设备没有微信时，可先通过 Telegram 核对/, `${route} KTT no-WeChat fallback`);

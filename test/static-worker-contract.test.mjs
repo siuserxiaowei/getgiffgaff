@@ -286,13 +286,13 @@ function sitemapEntries(xml) {
   return entries;
 }
 
-test("route manifest owns 43 indexable and seven noindex routes with real source dates", async () => {
+test("route manifest owns 46 indexable and seven noindex routes with real source dates", async () => {
   assert.equal(LEGACY_ROUTES.length, 34);
-  assert.equal(INDEXABLE_GROWTH_ROUTES.length, 9);
+  assert.equal(INDEXABLE_GROWTH_ROUTES.length, 12);
   assert.equal(NOINDEX_GROWTH_ROUTES.length, 7);
-  assert.equal(Object.keys(ROUTE_MANIFEST).length, 50);
-  assert.equal(PUBLIC_INDEXABLE_PATHS.length, 43);
-  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 43);
+  assert.equal(Object.keys(ROUTE_MANIFEST).length, 53);
+  assert.equal(PUBLIC_INDEXABLE_PATHS.length, 46);
+  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 46);
   assert.equal(new Set(PUBLIC_STATIC_ASSET_PATHS).size, PUBLIC_STATIC_ASSET_PATHS.length);
 
   const noindexRoutes = Object.values(ROUTE_MANIFEST)
@@ -359,6 +359,16 @@ test("route manifest owns 43 indexable and seven noindex routes with real source
     "/tools/china-roaming-cost/",
     "/tools/g0-g2-total-cost/",
   ]);
+  const accountVerificationExpansionRoutes = new Set([
+    "/",
+    "/shop/",
+    "/guides/3-account/",
+    "/guides/4-signal/",
+    "/guides/6-pitfalls/",
+    "/guides/claude-identity-verification/",
+    "/guides/claude-phone-verification/",
+    "/guides/claude-account-disabled-appeal/",
+  ]);
 
   for (const [pathname, record] of Object.entries(ROUTE_MANIFEST)) {
     assert.equal(record.pathname, pathname);
@@ -376,8 +386,10 @@ test("route manifest owns 43 indexable and seven noindex routes with real source
       assert.ok(!PUBLIC_INDEXABLE_PATHS.includes(pathname), pathname);
     }
 
-    const expectedDate = internalLinkRefinementRoutes.has(pathname)
-      ? "2026-07-19T15:35:26Z"
+    const expectedDate = accountVerificationExpansionRoutes.has(pathname)
+      ? "2026-07-20T06:15:00Z"
+      : internalLinkRefinementRoutes.has(pathname)
+        ? "2026-07-19T15:35:26Z"
       : consultationRecoveryRoutes.has(pathname)
         ? "2026-07-19"
         : record.contentSource === "legacy"
@@ -412,7 +424,11 @@ test("module Worker serves GET and HEAD for every manifest page and overrides in
     totalSlots += slots;
     const commerceWidgets = commerceWidgetCount(getBody);
     totalCommerceWidgets += commerceWidgets;
-    assert.equal(commerceWidgets, 1, `${pathname} commerce widget count`);
+    const expectedWidgets = [
+      "/guides/claude-identity-verification/",
+      "/guides/claude-account-disabled-appeal/",
+    ].includes(pathname) ? 0 : 1;
+    assert.equal(commerceWidgets, expectedWidgets, `${pathname} commerce widget count`);
     if (record.contentSource === "legacy") {
       const frozen = frozenByRoute.get(pathname);
       assert.ok(frozen, `${pathname} freeze record`);
@@ -453,7 +469,7 @@ test("module Worker serves GET and HEAD for every manifest page and overrides in
   }
 
   assert.equal(totalSlots, ADDITIVE_SLOT_ROUTES.length);
-  assert.equal(totalCommerceWidgets, Object.keys(ROUTE_MANIFEST).length);
+  assert.equal(totalCommerceWidgets, Object.keys(ROUTE_MANIFEST).length - 2);
   assert.ok(!env.calls.some((call) => /\/_next(?:\/|$)/i.test(call.pathname)));
 });
 
@@ -468,8 +484,8 @@ test("sitemap is generated from the same manifest for GET and HEAD", async () =>
   assert.equal(getResponse.status, 200);
   assert.match(getResponse.headers.get("content-type") || "", /(?:application|text)\/xml/i);
   assert.equal(getResponse.headers.get("x-robots-tag"), null);
-  assert.equal(entries.length, 43);
-  assert.equal(new Set(entries.map((entry) => entry.location)).size, 43);
+  assert.equal(entries.length, 46);
+  assert.equal(new Set(entries.map((entry) => entry.location)).size, 46);
   assert.deepEqual(
     entries.map((entry) => entry.location),
     PUBLIC_INDEXABLE_PATHS.map((pathname) => `${ORIGIN}${pathname}`),

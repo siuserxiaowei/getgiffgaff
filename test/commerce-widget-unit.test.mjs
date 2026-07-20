@@ -44,7 +44,7 @@ test("commerce widget is one additive, accessible British SIM consultation guide
     /<dialog\b[^>]*id="wechat-buying-guide-dialog"[^>]*aria-labelledby="wechat-buying-guide-title"[^>]*aria-describedby="wechat-buying-guide-description"/,
   );
   assert.doesNotMatch(html, /<dialog\b[^>]*aria-modal=/i);
-  assert.match(html, /<h2 id="wechat-buying-guide-title">\s*英国卡咨询指南\s*<\/h2>/);
+  assert.match(html, /<h2 id="wechat-buying-guide-title">\s*先选你的问题，再联系咨询\s*<\/h2>/);
   const description = html.match(/<p id="wechat-buying-guide-description">([\s\S]*?)<\/p>/i);
   assert.ok(description, "visible commerce boundary disclosure");
   assert.match(description[1], /独立第三方/);
@@ -59,6 +59,11 @@ test("commerce widget is one additive, accessible British SIM consultation guide
   assert.doesNotMatch(html, /客服小玉|微信小玉|联系小玉/);
   assert.match(html, /Telegram @xiaoyuhuai/);
   assert.match(html, /先选最方便的咨询方式/);
+  assert.match(html, /想买英国卡/);
+  assert.match(html, /ChatGPT \/ Claude 等平台验证/);
+  assert.match(html, /已有卡收不到短信/);
+  assert.match(html, /英国号码不等于通过 KYC/);
+  assert.match(html, /手机号验证、短信 OTP、MFA、证件身份核验和账号申诉是不同步骤/);
   assert.match(html, /选卡参考：G0 还是 G2/);
   assert.doesNotMatch(html, /第一步：选 G0 还是 G2/);
   assert.ok(
@@ -382,6 +387,8 @@ test("commerce styles support no-JavaScript :target and visible focus without al
   assert.match(css, /\.commerce-quick-channel-grid\s*\{/);
   assert.match(css, /\.commerce-quick-action:focus-visible/);
   assert.match(css, /\.commerce-action--telegram\s*\{/);
+  assert.match(css, /\.commerce-reason-nav\s*\{/);
+  assert.match(css, /\.commerce-platform-section\s*\{/);
   assert.match(css, /\.commerce-guide-dialog::backdrop/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   const focusColor = css.match(/\.growth-related-slot a:focus-visible\s*\{[^}]*outline:\s*3px solid (#[\dA-F]{6})/i)?.[1];

@@ -11,6 +11,26 @@ const ORIGIN = "https://getgiffgaff.com";
 const SOCIAL_IMAGE = `${ORIGIN}/gg-card-hero.png`;
 
 const INDEXABLE_ANSWER_EVIDENCE = Object.freeze({
+  "/guides/claude-identity-verification/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://support.claude.com/en/articles/14328960-identity-verification-on-claude",
+    ]),
+  }),
+  "/guides/claude-phone-verification/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://support.claude.com/en/articles/8287232-verify-your-phone-number",
+      "https://support.claude.com/en/articles/8461763-where-can-i-access-claude",
+    ]),
+  }),
+  "/guides/claude-account-disabled-appeal/": Object.freeze({
+    kind: "official",
+    sourceUrls: Object.freeze([
+      "https://support.claude.com/en/articles/8241253-safeguards-warnings-and-appeals",
+      "https://support.claude.com/en/articles/13189465-log-in-to-your-claude-account",
+    ]),
+  }),
   "/guides/7-arrival-checklist/": Object.freeze({
     kind: "mixed",
     method: "本站验收与问题分流方法",
@@ -133,7 +153,9 @@ function schemaFor(page) {
     inLanguage: "zh-CN",
     dateModified: page.updatedAt,
     isPartOf: { "@id": `${ORIGIN}/#website` },
-    about: { "@id": "https://www.giffgaff.com/#brand" },
+    about: page.path.startsWith("/guides/claude-")
+      ? { "@type": "Thing", name: "Claude account verification and recovery" }
+      : { "@id": "https://www.giffgaff.com/#brand" },
     citation: page.sources.map((source) => source.url),
   };
   if (page.schemaType === "Article") {
@@ -184,8 +206,11 @@ function schemaFor(page) {
   };
 }
 
-function header() {
-  return `<header class="site-header"><a class="brand" aria-label="getgiffgaff 首页" href="/"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>英国手机卡购买与教程</small></span></a><nav aria-label="主导航"><a href="/shop/">手机卡</a><a href="/guides/">教程</a><a href="/more/">更多玩法</a><a href="/qa/">常见问题</a><a href="/contact/">联系我</a><a class="btn btn-primary btn-compact" href="/shop/">点此购买</a></nav></header>`;
+function header(page) {
+  const purchase = page.commerceWidget === false
+    ? ""
+    : '<a class="btn btn-primary btn-compact" href="/shop/">点此购买</a>';
+  return `<header class="site-header"><a class="brand" aria-label="getgiffgaff 首页" href="/"><span class="brand-mark">GG</span><span><strong>getgiffgaff</strong><small>英国手机卡购买与教程</small></span></a><nav aria-label="主导航"><a href="/shop/">手机卡</a><a href="/guides/">教程</a><a href="/more/">更多玩法</a><a href="/qa/">常见问题</a><a href="/contact/">联系我</a>${purchase}</nav></header>`;
 }
 
 function footer() {
@@ -284,9 +309,19 @@ function analyticsEventForHref(href) {
 }
 
 function renderRelated(page) {
+  const heading = page.commerceHeading ?? "需要确认卡片分类、订单或售后？";
+  const description = page.commerceDescription
+    ?? "可通过微信或 Telegram 联系咨询；敏感账号资料不要发送给本站。联系入口不代表库存、订单、支付或履约已经确认。";
   return `<section class="growth-related" aria-labelledby="related-title"><h2 id="related-title">相关教程与下一步</h2><div class="growth-related-grid">${page.relatedRoutes
     .map((entry) => `<a href="${escapeHtml(entry.href)}" data-analytics-event="growth_related_click">${escapeHtml(entry.label)}</a>`)
-    .join("")}</div></section><section class="growth-commerce"><div><strong>需要确认卡片分类、订单或售后？</strong><p>可通过微信或 Telegram 联系咨询；敏感账号资料不要发送给本站。联系入口不代表库存、订单、支付或履约已经确认。</p></div><a class="btn btn-primary" href="${escapeHtml(page.commerceTarget.href)}" data-analytics-event="${analyticsEventForHref(page.commerceTarget.href)}">${escapeHtml(page.commerceTarget.label)}</a></section>`;
+    .join("")}</div></section><section class="growth-commerce"><div><strong>${escapeHtml(heading)}</strong><p>${escapeHtml(description)}</p></div><a class="btn btn-primary" href="${escapeHtml(page.commerceTarget.href)}" data-analytics-event="${analyticsEventForHref(page.commerceTarget.href)}">${escapeHtml(page.commerceTarget.label)}</a></section>`;
+}
+
+function disclosureFor(page) {
+  if (page.path.startsWith("/guides/claude-")) {
+    return "<strong>实体与范围说明：</strong>本站是独立第三方中文教程与销售服务站，不代表 Claude、Anthropic 或 giffgaff 官方。本文只解释官方验证与申诉路径；英国号码不能替代身份、年龄、地区资格或账号申诉。";
+  }
+  return "<strong>实体与范围说明：</strong>本站是独立第三方中文教程与销售服务站，不代表 giffgaff 官方。G0 / G2 是本站用于区分库存状态和交付方式的库存分类，不是 giffgaff 官方产品名。本文为独立原创内容，不复制竞品正文、截图或图片。";
 }
 
 export function renderGrowthPage(page) {
@@ -335,7 +370,7 @@ export function renderGrowthPage(page) {
   <script type="application/ld+json">${JSON.stringify(schemaFor(page)).replace(/</g, "\\u003c")}</script>
 </head>
 <body>
-  ${header()}
+  ${header(page)}
   <main class="growth-page">
     <article class="article-section">
       <header class="article-head">
@@ -344,7 +379,7 @@ export function renderGrowthPage(page) {
         <p>${escapeHtml(page.deck)}</p>
         <div class="growth-meta"><span>更新 ${escapeHtml(page.updatedAt)}</span><span>核验 ${escapeHtml(page.reviewedAt)}</span><span>${page.indexPolicy === "index" ? "原创教程/工具" : "方法预览 · noindex"}</span></div>
       </header>
-      <p class="growth-disclosure"><strong>实体与范围说明：</strong>本站是独立第三方中文教程与销售服务站，不代表 giffgaff 官方。G0 / G2 是本站用于区分库存状态和交付方式的库存分类，不是 giffgaff 官方产品名。本文为独立原创内容，不复制竞品正文、截图或图片。</p>
+      <p class="growth-disclosure">${disclosureFor(page)}</p>
       <div class="legacy-answer"><strong>直接答案</strong><p>${escapeHtml(page.directAnswer)}</p></div>
       ${renderInlineEvidence(page)}
 ${threshold ? `      ${threshold}\n` : ""}
@@ -355,7 +390,7 @@ ${threshold ? `      ${threshold}\n` : ""}
     </article>
   </main>
   ${footer()}
-  ${renderCommerceWidget()}
+  ${page.commerceWidget === false ? '  <script type="module" src="/growth-assets/analytics.js"></script>' : renderCommerceWidget()}
 ${toolScript}</body>
 </html>
 `;

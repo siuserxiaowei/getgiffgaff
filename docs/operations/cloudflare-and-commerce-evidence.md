@@ -17,8 +17,11 @@ npm run --silent cloudflare:rules:generate > /tmp/getgiffgaff-canonical-rule.jso
 npm run cloudflare:rules:validate -- --file /tmp/getgiffgaff-canonical-rule.json
 ```
 
-生成器直接读取 `public/route-manifest.js` 的全部公开 HTML 路由，当前必须精确产生 **49** 个非根、无尾斜杠路径。除 42 个可索引非根路径外，还包括 7 个 `noindex` 支持/状态页，其中包含：
+生成器直接读取 `public/route-manifest.js` 的全部公开 HTML 路由，当前必须精确产生 **52** 个非根、无尾斜杠路径。除 45 个可索引非根路径外，还包括 7 个 `noindex` 支持/状态页，其中包含：
 
+- `/guides/claude-identity-verification`
+- `/guides/claude-phone-verification`
+- `/guides/claude-account-disabled-appeal`
 - `/guides/7-arrival-checklist`
 - `/guides/8-uk-sim-choice`
 - `/guides/9-number-balance-data-check`
@@ -45,7 +48,7 @@ npm run cloudflare:rules:validate -- \
 
 校验项包括：规则为第一顺位且已启用，仅匹配 GET/HEAD，路径集与 manifest 完全相等，301 直达 `https://getgiffgaff.com<path>/`，并保留 query。缺失、额外路径、复制路径、错误目标、302、未保留 query 或顺序错误都会非零退出。
 
-> 离线 JSON 通过不等于生产已生效。最后仍必须运行 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 43`，并保留 43 URL / 全部变体零错误证据。生产发布脚本会内置执行同一检查。
+> 离线 JSON 通过不等于生产已生效。最后仍必须运行 `npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 46`，并保留 46 URL / 全部变体零错误证据。生产发布脚本会内置执行同一检查。
 
 ## 2. G0/G2 真实交易证据
 

@@ -21,9 +21,9 @@ function sectionText(page, id) {
 
 test("E05 publishes dated answer-first boundaries on all indexable growth pages", () => {
   const pages = GROWTH_PAGES.filter((page) => page.indexPolicy === "index");
-  assert.equal(pages.length, 9);
+  assert.equal(pages.length, 12);
   for (const page of pages) {
-    const expectedDate = ["/guides/9-number-balance-data-check/", "/guides/apn-settings/", "/more/esim-new-phone/", "/more/esim-deleted/"].includes(page.path)
+    const expectedDate = ["/guides/9-number-balance-data-check/", "/guides/apn-settings/", "/more/esim-new-phone/", "/more/esim-deleted/", "/guides/claude-identity-verification/", "/guides/claude-phone-verification/", "/guides/claude-account-disabled-appeal/"].includes(page.path)
       ? HIGH_INTENT_ANSWER_UPDATED_AT
       : EXPECTED_UPDATED_AT;
     assert.equal(page.updatedAt, expectedDate, `${page.path} updatedAt`);

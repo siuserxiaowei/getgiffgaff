@@ -51,6 +51,9 @@ const LEGACY_ROUTES = Object.freeze([
 ]);
 
 const INDEXABLE_GROWTH_ROUTES = Object.freeze([
+  "/guides/claude-identity-verification/",
+  "/guides/claude-phone-verification/",
+  "/guides/claude-account-disabled-appeal/",
   "/guides/7-arrival-checklist/",
   "/guides/8-uk-sim-choice/",
   "/guides/9-number-balance-data-check/",
@@ -153,7 +156,7 @@ function internalHrefs(html) {
     .filter((href) => href.startsWith("/") && !href.startsWith("//"));
 }
 
-test("route manifest keeps 34 frozen pages and adds nine index plus seven noindex pages", async () => {
+test("route manifest keeps 34 frozen pages and adds twelve index plus seven noindex pages", async () => {
   const modulePath = path.join(ROOT, "public", "route-manifest.js");
   await access(modulePath);
   const manifest = await import(`${pathToFileURL(modulePath).href}?t=${Date.now()}`);
@@ -161,8 +164,8 @@ test("route manifest keeps 34 frozen pages and adds nine index plus seven noinde
   assert.deepEqual(manifest.LEGACY_ROUTES, LEGACY_ROUTES);
   assert.deepEqual(manifest.INDEXABLE_GROWTH_ROUTES, INDEXABLE_GROWTH_ROUTES);
   assert.deepEqual(manifest.NOINDEX_GROWTH_ROUTES, NOINDEX_GROWTH_ROUTES);
-  assert.equal(manifest.PUBLIC_INDEXABLE_PATHS.length, 43);
-  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 50);
+  assert.equal(manifest.PUBLIC_INDEXABLE_PATHS.length, 46);
+  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 53);
 
   for (const route of LEGACY_ROUTES) {
     const record = manifest.routeFor(route);
@@ -237,6 +240,11 @@ test("related link registry is append-only and targets valid routes", async () =
     for (const entry of entries) {
       assert.match(entry.label, /\S/, `${route} label`);
       assert.notEqual(entry.label, "点击这里");
+      if (entry.href.startsWith("#")) {
+        assert.equal(route, "/guides/6-pitfalls/", `${route} fragment link scope`);
+        assert.equal(entry.href, "#wechat-buying-guide-dialog", `${route} approved dialog fragment`);
+        continue;
+      }
       const target = manifest.routeFor(entry.href);
       assert.ok(target, `${route} -> ${entry.href}`);
       assert.equal(target.indexPolicy, "index", `${route} -> ${entry.href} stays indexable`);
@@ -257,7 +265,7 @@ test("growth pages are original static pages with correct index policy and comme
     assert.ok(firstHeading(html), `${route} h1`);
     assert.match(html, /核验日期|方法与边界/, route);
     if (page.sources.length > 0) {
-      assert.match(html, /https:\/\/(?:help\.)?giffgaff\.com\//i, `${route} official source`);
+      assert.match(html, /https:\/\/(?:help\.)?giffgaff\.com\/|https:\/\/support\.claude\.com\/|https:\/\/claude\.ai\//i, `${route} official source`);
     } else {
       assert.match(html, /缺少经营负责人确认|不能替代完整政策/, `${route} business evidence gap`);
     }

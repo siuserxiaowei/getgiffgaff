@@ -55,8 +55,13 @@
     <div class="commerce-guide-panel">
       <header class="commerce-guide-header">
         <div>
-          <p class="commerce-guide-eyebrow">微信 / Telegram 咨询 · 选卡 · 核对订单</p>
-          <h2 id="wechat-buying-guide-title">英国卡咨询指南</h2>
+          <p class="commerce-guide-eyebrow">买卡 · 平台验证场景 · 已有卡故障</p>
+          <h2 id="wechat-buying-guide-title">先选你的问题，再联系咨询</h2>
+          <nav class="commerce-reason-nav" aria-label="咨询问题分类">
+            <a href="#commerce-choice-title" data-consultation-entry="reason-buy" data-analytics-event="commerce_click"><strong>想买英国卡</strong><span>比较 G0/G2、库存与订单</span></a>
+            <a href="#commerce-platform-title" data-consultation-entry="reason-platform" data-analytics-event="commerce_click"><strong>ChatGPT / Claude 等平台验证</strong><span>先区分手机号、OTP、身份核验与账号恢复</span></a>
+            <a href="/guides/4-signal/" data-consultation-entry="reason-troubleshoot" data-analytics-event="commerce_click"><strong>已有卡收不到短信</strong><span>按普通短信、网络与平台 OTP 分层排查</span></a>
+          </nav>
           <section class="commerce-quick-channels" aria-label="快速选择咨询方式">
             <h3>先选最方便的咨询方式</h3>
             <div class="commerce-quick-channel-grid">
@@ -86,6 +91,15 @@
           </a>
         </div>
         <a class="commerce-text-link" href="/guides/1-order/" data-analytics-event="commerce_click">查看完整购买教程</a>
+      </section>
+
+      <section class="commerce-platform-section" aria-labelledby="commerce-platform-title">
+        <h3 id="commerce-platform-title">平台验证先确认：英国号码不等于通过 KYC</h3>
+        <p>手机号验证、短信 OTP、MFA、证件身份核验和账号申诉是不同步骤。giffgaff 只能提供号码与运营商短信能力，不保证 ChatGPT、Claude 或其他平台接受该号码、发送验证码或通过身份审核。咨询时只说明平台名称、页面提示和“普通短信是否正常”；不要发送证件、密码、Cookie 或验证码。</p>
+        <div class="commerce-platform-links">
+          <a href="/guides/4-signal/" data-analytics-event="commerce_click">验证码收不到：先做短信分层排查</a>
+          <a href="/shop/" data-analytics-event="shop_click">需要长期英国实体号码：查看卡片分类</a>
+        </div>
       </section>
 
       <div class="commerce-channel-grid">

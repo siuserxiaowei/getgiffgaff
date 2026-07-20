@@ -2,6 +2,7 @@
   "/": [
     { "label": "第一次购买前先看完整避坑清单", "href": "/guides/6-pitfalls/" },
     { "label": "按旅行、留学和保号需求选英国手机卡", "href": "/guides/8-uk-sim-choice/" },
+    { "label": "分清 Claude 身份 KYC、手机号验证和申诉", "href": "/guides/claude-identity-verification/" },
     { "label": "换新手机前检查 giffgaff eSIM 迁移与短信 MFA", "href": "/more/esim-new-phone/" },
     { "label": "收到卡后按步骤完成国内激活", "href": "/guides/2-activate/" }
   ],
@@ -10,7 +11,7 @@
     { "label": "试算卡价、运费、首次充值和使用支出", "href": "/tools/g0-g2-total-cost/" },
     { "label": "收卡后按七步完成 G0/G2 验收", "href": "/guides/7-arrival-checklist/" },
     { "label": "先比较 G0 与 G2 的状态和控制风险", "href": "/answers/" },
-    { "label": "查看国内购买、发货和收货流程", "href": "/guides/1-order/" }
+    { "label": "需要 Claude 短信验证时先核对号码限制", "href": "/guides/claude-phone-verification/" }
   ],
   "/guides/0-intro/": [
     { "label": "从购卡到保号的完整避坑清单", "href": "/guides/6-pitfalls/" },
@@ -45,7 +46,7 @@
     { "label": "在 App 登录正确账号并检查安全设置", "href": "/guides/3-app/" },
     { "label": "新卡建立账号后的国内激活流程", "href": "/guides/2-activate/" },
     { "label": "eSIM 换手机前先保留账号和 MFA 恢复条件", "href": "/more/esim-new-phone/" },
-    { "label": "误删 eSIM 后按原账号恢复线路", "href": "/more/esim-deleted/" }
+    { "label": "Claude 被禁用或 403 时走官方申诉", "href": "/guides/claude-account-disabled-appeal/" }
   ],
   "/guides/3-app/": [
     { "label": "App、保号和收短信的完整避坑清单", "href": "/guides/6-pitfalls/" },
@@ -70,8 +71,8 @@
   "/guides/4-signal/": [
     { "label": "回到网络、短信和 OTP 完整避坑清单", "href": "/guides/6-pitfalls/" },
     { "label": "恢复信号和拨号后再设置语音信箱", "href": "/qa/07-voicemail-switch/" },
-    { "label": "检查旅行数据和漫游设置", "href": "/guides/5-travel-data/" },
-    { "label": "有信号但移动数据失败时核对 APN", "href": "/guides/apn-settings/" },
+    { "label": "Claude 手机号验证与六位代码限制", "href": "/guides/claude-phone-verification/" },
+    { "label": "Claude 403 或明确禁用后的官方申诉", "href": "/guides/claude-account-disabled-appeal/" },
     { "label": "在中国使用前试算 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" }
   ],
   "/guides/5-travel-data/": [
@@ -111,7 +112,7 @@
   "/guides/6-pitfalls/": [
     {
       "label": "未购卡：先咨询选卡与当前信息",
-      "href": "/contact/",
+      "href": "#wechat-buying-guide-dialog",
       "intent": "before-purchase",
       "description": "说明旅行、留学、保号或收短信场景，再核对 G0/G2、当前库存与交易边界。"
     },
@@ -124,7 +125,7 @@
     { "label": "购卡、G0/G2 比较与总成本试算", "href": "/answers/" },
     { "label": "账号与激活失败时的分步排查", "href": "/guides/2-activate/" },
     { "label": "保号、充值和有效动作规则", "href": "/guides/3-usage/" },
-    { "label": "eSIM 官方切换前的账号恢复检查", "href": "/more/03-esim/" },
-    { "label": "在中国使用前试算 PAYG 漫游费用", "href": "/tools/china-roaming-cost/" }
+    { "label": "分清 Claude 身份 KYC、手机号验证和申诉", "href": "/guides/claude-identity-verification/" },
+    { "label": "eSIM 官方切换前的账号恢复检查", "href": "/more/03-esim/" }
   ]
 }
