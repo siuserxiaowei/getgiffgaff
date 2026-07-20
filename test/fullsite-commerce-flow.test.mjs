@@ -218,7 +218,7 @@ test("commerce-relevant routes expose one safe, complete contact and purchase gu
     }
     assert.match(
       html,
-      /href=["']\/growth-assets\/growth\.css["']/i,
+      /href=["']\/growth-assets\/growth\.css\?v=[a-f0-9]{16}["']/i,
       `${route} growth stylesheet`,
     );
     assert.match(

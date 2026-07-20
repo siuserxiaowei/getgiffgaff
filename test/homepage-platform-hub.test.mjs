@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -14,11 +15,14 @@ test("final homepage presents Claude problem owners without selling KYC or appea
   t.after(() => rm(outputRoot, { recursive: true, force: true }));
   await buildReleaseArtifact(outputRoot);
   const html = await readFile(path.join(outputRoot, "index.html"), "utf8");
+  const css = await readFile(path.join(outputRoot, "growth-assets", "growth.css"));
+  const cssVersion = createHash("sha256").update(css).digest("hex").slice(0, 16);
   const slot = html.match(
     /<section\b(?=[^>]*data-growth-slot="related-tutorials-v1")[^>]*>[\s\S]*?<\/section>/i,
   )?.[0] || "";
 
   assert.match(slot, /Claude 验证与账号问题/i);
+  assert.match(html, new RegExp(`/growth-assets/growth\\.css\\?v=${cssVersion}`));
   assert.match(slot, /英国号码最多只涉及受支持地区的短信手机号验证/);
   assert.match(slot, /不能替代政府证件/);
   assert.match(slot, /不能恢复被禁用的账号/);

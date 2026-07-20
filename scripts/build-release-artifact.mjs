@@ -1289,13 +1289,21 @@ function growthModule(links, { homepage = false } = {}) {
   return `<section class="growth-related-slot" ${GROWTH_MARKER} aria-labelledby="growth-related-title"><div class="growth-related-inner">${intentChooser}<ul>${items}</ul></div></section>`;
 }
 
-export function ensureGrowthStylesheet(html) {
+export function growthStylesheetVersion(css) {
+  return sha256(css).slice(0, 16);
+}
+
+export function ensureGrowthStylesheet(html, version = null) {
   let output = html;
-  if (!/href=["']\/growth-assets\/growth\.css["']/i.test(output)) {
-    const stylesheet = '<link rel="stylesheet" href="/growth-assets/growth.css">';
-    if (!/<\/head>/i.test(output)) throw new Error("Legacy page has no closing head");
-    output = output.replace(/<\/head>/i, `${stylesheet}</head>`);
+  const stylesheetHref = /href=["']\/growth-assets\/growth\.css(?:\?[^"']*)?["']/i;
+  const suffix = version ? `?v=${escapeHtml(version)}` : "";
+  const href = `href="/growth-assets/growth.css${suffix}"`;
+  if (stylesheetHref.test(output)) {
+    return version ? output.replace(stylesheetHref, href) : output;
   }
+  const stylesheet = `<link rel="stylesheet" ${href}>`;
+  if (!/<\/head>/i.test(output)) throw new Error("Legacy page has no closing head");
+  output = output.replace(/<\/head>/i, `${stylesheet}</head>`);
   return output;
 }
 
@@ -1781,6 +1789,9 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
   const freeze = JSON.parse(
     await readFile(path.join(LEGACY_ROOT, "legacy-freeze-manifest.json"), "utf8"),
   );
+  const growthCssVersion = growthStylesheetVersion(
+    await readFile(path.join(GROWTH_ROOT, "assets", "growth.css")),
+  );
   if (freeze.schemaVersion !== "legacy-freeze-v2") {
     throw new Error("legacy freeze manifest must use legacy-freeze-v2");
   }
@@ -1793,7 +1804,7 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     const filename = routeFile(outputRoot, route);
     const original = staticizeLegacyHtml(await readFile(filename, "utf8"));
     const links = related[route];
-    let built = ensureGrowthStylesheet(original);
+    let built = ensureGrowthStylesheet(original, growthCssVersion);
     if (links) {
       built = injectRelatedTutorials(
         built,
@@ -1833,7 +1844,10 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     const source = routeFile(GROWTH_ROOT, route);
     const destination = routeFile(outputRoot, route);
     await mkdir(path.dirname(destination), { recursive: true });
-    const growth = applyGrowthSafetyOverrides(await readFile(source, "utf8"), route);
+    const growth = ensureGrowthStylesheet(
+      applyGrowthSafetyOverrides(await readFile(source, "utf8"), route),
+      growthCssVersion,
+    );
     await writeFile(destination, applyGrowthReleaseConversionOverrides(growth, route));
   }
 

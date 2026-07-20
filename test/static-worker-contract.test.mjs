@@ -770,6 +770,29 @@ test("legacy and growth static resources retain their public URLs and never inhe
   }
 });
 
+test("versioned growth stylesheet is served from the same sanitized public asset", async () => {
+  const root = await releaseRoot();
+  const expected = await readFile(publicFile(root, "/growth-assets/growth.css"));
+  for (const method of ["GET", "HEAD"]) {
+    const env = createAssetsEnvironment(root);
+    const response = await worker.fetch(
+      new Request(`${ORIGIN}/growth-assets/growth.css?v=content-fingerprint`, { method }),
+      env,
+      {},
+    );
+    assert.equal(response.status, 200, method);
+    assert.equal(response.headers.get("content-type"), "text/css; charset=utf-8", method);
+    assert.equal(env.calls.length, 1, method);
+    assert.equal(env.calls[0].pathname, "/growth-assets/growth.css", method);
+    assert.equal(env.calls[0].search, "", method);
+    if (method === "GET") {
+      assert.equal(sha256(Buffer.from(await response.arrayBuffer())), sha256(expected));
+    } else {
+      assert.equal(await response.text(), "");
+    }
+  }
+});
+
 test("retired llms-full remains a private 410 for GET and HEAD", async () => {
   const root = await releaseRoot();
   const env = createAssetsEnvironment(root);

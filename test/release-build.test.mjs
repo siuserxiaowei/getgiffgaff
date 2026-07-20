@@ -12,6 +12,7 @@ import {
   bindReleaseSearchChanges,
   buildReleaseArtifact,
   ensureGrowthStylesheet,
+  growthStylesheetVersion,
   injectCommerceWidget,
   injectRelatedTutorials,
   injectVerifiedContactChannels,
@@ -133,6 +134,14 @@ test("related tutorial injection is append-only, exact, and idempotent", async (
   assert.equal(visibleTextSignature(output), visibleTextSignature(source));
   assert.equal(legacyDomSignature(output), legacyDomSignature(source));
   assert.equal(injectRelatedTutorials(output, links), output);
+});
+
+test("growth stylesheet versions are deterministic content fingerprints", () => {
+  const before = Buffer.from(".growth-platform-grid{display:block}");
+  const after = Buffer.from(".growth-platform-grid{display:grid}");
+  assert.match(growthStylesheetVersion(before), /^[a-f0-9]{16}$/);
+  assert.equal(growthStylesheetVersion(before), growthStylesheetVersion(Buffer.from(before)));
+  assert.notEqual(growthStylesheetVersion(before), growthStylesheetVersion(after));
 });
 
 test("homepage Claude hub uses one fail-closed additive slot before products", async () => {
@@ -320,6 +329,9 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   const related = JSON.parse(
     await readFile(path.join(ROOT, "site", "growth", "related-links.json"), "utf8"),
   );
+  const growthCssVersion = growthStylesheetVersion(
+    await readFile(path.join(ROOT, "site", "growth", "assets", "growth.css")),
+  );
   const freeze = JSON.parse(
     await readFile(path.join(LEGACY_ROOT, "legacy-freeze-manifest.json"), "utf8"),
   );
@@ -327,7 +339,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   for (const route of LEGACY_ROUTES) {
     const html = await readFile(routeFile(outputRoot, route), "utf8");
     const source = await readFile(routeFile(LEGACY_ROOT, route), "utf8");
-    let expected = ensureGrowthStylesheet(source);
+    let expected = ensureGrowthStylesheet(source, growthCssVersion);
     if (Object.hasOwn(related, route)) {
       expected = injectRelatedTutorials(
         expected,
