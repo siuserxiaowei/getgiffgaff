@@ -1,0 +1,11 @@
+url,status,role,primary_query,owns,does_not_own,action,canonical_or_redirect,conversion_role,compliance_boundary
+https://getgiffgaff.com/guides/4-signal/,existing,pillar,giffgaff 收不到验证码,"giffgaff收不到验证码|英国手机号收不到验证码|所有短信vs单平台OTP诊断","Claude证件KYC|Claude账号申诉|平台兼容率",keep-and-expand,self,diagnostic-to-shop-or-contact,"不承诺OTP送达；不推荐接码"
+https://getgiffgaff.com/research/otp-status/,existing,research-support,giffgaff 验证码状态,"平台×环境×日期样本方法|未来ChatGPT/Claude样本","当下故障排查|永久支持名单",keep-noindex-until-gate,self,evidence-support,"达到样本门槛前不出兼容结论"
+https://getgiffgaff.com/qa/01-change-number/,existing,supporting,giffgaff 如何更换号码,"giffgaff运营商号码变更|变更前平台恢复备份","ChatGPT/Claude/海外账号的平台换绑步骤",keep,self,pre-purchase-risk,"不把换giffgaff号码写成解封/绕过方案"
+https://getgiffgaff.com/guides/3-account/,existing,supporting,giffgaff 账号安全,"giffgaff账号控制|恢复方式|资料安全","Claude/OpenAI账号登录与KYC",keep,self,trust-support,"不收集账号凭证"
+https://getgiffgaff.com/guides/claude-identity-verification/,planned,mini-pillar,Claude 身份验证,"Claude KYC|Claude实名认证|证件与自拍|验证失败|隐私与官方支持","Claude手机号短信验证|所有403/封号详细申诉|ChatGPT KYC",create,self,weak-contextual-cta,"本人真实证件；禁止假身份/借证/绕过；不收证件"
+https://getgiffgaff.com/guides/claude-phone-verification/,planned,spoke,Claude 手机号验证,"Claude电话验证|六位短信码|收不到码|号码使用过多|验证后能否换号","政府证件KYC|通用英国号段兼容承诺",create,self,qualified-shop-or-contact,"支持地区优先；拒绝VoIP/临时/共享接码；不保证giffgaff可用"
+https://getgiffgaff.com/guides/claude-account-disabled-appeal/,planned,spoke,Claude 封号,"Claude账号被禁用|Claude Code封号|被封403的分流|官方申诉|数据导出删除","防封绕过|换号重开|规避地区限制",create,self,trust-only-not-hard-sell,"只写官方申诉与合法恢复；新卡不是解封方案"
+https://getgiffgaff.com/guides/chatgpt-kyc/,rejected,none,ChatGPT KYC,"",mixed-intents,do-not-create,n/a,none,"17 impressions且SERP混杂；合规风险过高"
+https://getgiffgaff.com/guides/overseas-account-kyc/,rejected,none,海外账号 KYC,"",financial-and-platform-specific-kyc,do-not-create,n/a,none,"跨平台/YMYL；不可能给通用可靠流程"
+https://getgiffgaff.com/guides/overseas-account-change-phone/,rejected,none,海外账号换手机号,"",platform-specific-change-flows,do-not-create,n/a,none,"按平台拆解前没有独立价值"

@@ -1,0 +1,16 @@
+from_url,to_url,direction,type,anchor_example,placement,reason,priority
+https://getgiffgaff.com/guides/4-signal/,https://getgiffgaff.com/research/otp-status/,out,mandatory,giffgaff 平台 OTP 样本状态,平台层结论后,"把个案排障与聚合证据分开",P0
+https://getgiffgaff.com/research/otp-status/,https://getgiffgaff.com/guides/4-signal/,out,mandatory,先做普通短信与平台验证码分层排查,直接答案后,"状态板不能替代现场诊断",P0
+https://getgiffgaff.com/guides/4-signal/,https://getgiffgaff.com/qa/01-change-number/,out,contextual,giffgaff 换号前先备份平台恢复方式,换号分支,"避免把换号当作即时OTP修复",P1
+https://getgiffgaff.com/qa/01-change-number/,https://getgiffgaff.com/guides/4-signal/,out,contextual,换号后收不到短信怎么排查,换号后检查,"形成号码生命周期闭环",P1
+https://getgiffgaff.com/guides/claude-identity-verification/,https://getgiffgaff.com/guides/claude-phone-verification/,out,mandatory,Claude 手机号验证与证件核验有什么不同,概念分流首屏,"防止KYC与短信验证混写",P0
+https://getgiffgaff.com/guides/claude-phone-verification/,https://getgiffgaff.com/guides/claude-identity-verification/,out,mandatory,Claude 身份验证（政府证件与自拍）,电话验证定义后,"双向区分两个官方流程",P0
+https://getgiffgaff.com/guides/claude-identity-verification/,https://getgiffgaff.com/guides/claude-account-disabled-appeal/,out,mandatory,验证后账号被禁用与官方申诉,失败与禁用分支,"官方身份页本身提到验证后禁用",P0
+https://getgiffgaff.com/guides/claude-account-disabled-appeal/,https://getgiffgaff.com/guides/claude-identity-verification/,out,mandatory,身份验证失败与验证后禁用的区别,诊断表,"避免把每个禁用都归因于KYC",P0
+https://getgiffgaff.com/guides/claude-phone-verification/,https://getgiffgaff.com/guides/4-signal/,out,mandatory,英国手机号收不到验证码的基础排查,未收到验证码分支,"先验证普通短信基线再判断平台",P0
+https://getgiffgaff.com/guides/4-signal/,https://getgiffgaff.com/guides/claude-phone-verification/,out,contextual,Claude 官方手机号验证要求,平台专属分流,"只在页面已发布并复核后添加",P1
+https://getgiffgaff.com/guides/claude-phone-verification/,https://getgiffgaff.com/qa/01-change-number/,out,contextual,giffgaff 换号前检查所有账号绑定,官方不可换绑号码答案后,"强调长期控制号码与换号风险",P1
+https://getgiffgaff.com/guides/claude-phone-verification/,https://getgiffgaff.com/shop/,out,conversion,购买前核对 giffgaff 卡状态与当前说明,结尾资格判断后,"只面向需要长期可控英国实体号且满足平台支持条件的人",P1
+https://getgiffgaff.com/guides/claude-phone-verification/,https://getgiffgaff.com/contact/,out,conversion,微信咨询卡片与普通短信排查信息,结尾次级CTA,"明确客服不能代过验证且不得发送验证码/账号资料",P1
+https://getgiffgaff.com/guides/claude-identity-verification/,https://getgiffgaff.com/guides/4-signal/,out,optional,如果实际卡在短信验证码而不是证件核验,误区分流,"弱链接；不是购买CTA",P2
+https://getgiffgaff.com/guides/claude-account-disabled-appeal/,https://getgiffgaff.com/contact/,out,avoid,不设置购买或微信硬CTA,none,"新号码不能恢复被禁账号；避免诱导换号逃避",P0
