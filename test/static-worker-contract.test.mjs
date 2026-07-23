@@ -286,13 +286,13 @@ function sitemapEntries(xml) {
   return entries;
 }
 
-test("route manifest owns 46 indexable and seven noindex routes with real source dates", async () => {
+test("route manifest owns 49 indexable and seven noindex routes with real source dates", async () => {
   assert.equal(LEGACY_ROUTES.length, 34);
-  assert.equal(INDEXABLE_GROWTH_ROUTES.length, 12);
+  assert.equal(INDEXABLE_GROWTH_ROUTES.length, 15);
   assert.equal(NOINDEX_GROWTH_ROUTES.length, 7);
-  assert.equal(Object.keys(ROUTE_MANIFEST).length, 53);
-  assert.equal(PUBLIC_INDEXABLE_PATHS.length, 46);
-  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 46);
+  assert.equal(Object.keys(ROUTE_MANIFEST).length, 56);
+  assert.equal(PUBLIC_INDEXABLE_PATHS.length, 49);
+  assert.equal(new Set(PUBLIC_INDEXABLE_PATHS).size, 49);
   assert.equal(new Set(PUBLIC_STATIC_ASSET_PATHS).size, PUBLIC_STATIC_ASSET_PATHS.length);
 
   const noindexRoutes = Object.values(ROUTE_MANIFEST)
@@ -386,7 +386,9 @@ test("route manifest owns 46 indexable and seven noindex routes with real source
       assert.ok(!PUBLIC_INDEXABLE_PATHS.includes(pathname), pathname);
     }
 
-    const expectedDate = pathname === "/"
+    const expectedDate = pathname === "/tools/keep-number-reminder/"
+      ? "2026-07-23"
+      : pathname === "/"
       ? "2026-07-20T06:51:08Z"
       : accountVerificationExpansionRoutes.has(pathname)
         ? "2026-07-20T06:15:00Z"
@@ -486,8 +488,8 @@ test("sitemap is generated from the same manifest for GET and HEAD", async () =>
   assert.equal(getResponse.status, 200);
   assert.match(getResponse.headers.get("content-type") || "", /(?:application|text)\/xml/i);
   assert.equal(getResponse.headers.get("x-robots-tag"), null);
-  assert.equal(entries.length, 46);
-  assert.equal(new Set(entries.map((entry) => entry.location)).size, 46);
+  assert.equal(entries.length, 49);
+  assert.equal(new Set(entries.map((entry) => entry.location)).size, 49);
   assert.deepEqual(
     entries.map((entry) => entry.location),
     PUBLIC_INDEXABLE_PATHS.map((pathname) => `${ORIGIN}${pathname}`),

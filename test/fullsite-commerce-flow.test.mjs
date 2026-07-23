@@ -62,7 +62,7 @@ test("commerce-relevant routes expose one safe, complete contact and purchase gu
   await buildReleaseArtifact(outputRoot);
 
   const routes = Object.keys(ROUTE_MANIFEST);
-  assert.equal(routes.length, 53, "route manifest must contain all 53 public pages");
+  assert.equal(routes.length, 56, "route manifest must contain all 56 public pages");
 
   for (const target of INTERNAL_TARGETS) {
     const targetRoute = target.split("#", 1)[0];

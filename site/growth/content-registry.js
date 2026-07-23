@@ -2,6 +2,7 @@ const REVIEWED_AT = "2026-07-17";
 const EXPIRES_AT = "2026-08-15";
 const SEARCH_CONTENT_REVIEWED_AT = "2026-07-20";
 const ACCOUNT_VERIFICATION_REVIEWED_AT = "2026-07-20";
+const LOCAL_SEARCH_REVIEWED_AT = "2026-07-24";
 
 const official = Object.freeze({
   activation: {
@@ -83,6 +84,18 @@ const official = Object.freeze({
   ofcomCoverage: {
     label: "Ofcom 英国移动网络覆盖比较",
     url: "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+  },
+  heathrowSim: {
+    label: "希思罗机场英国 SIM 与手机服务",
+    url: "https://www.heathrow.com/zh/at-the-airport/airport-services/uk-sims-and-phones",
+  },
+  manchesterStudentCommunications: {
+    label: "曼彻斯特大学国际学生通信费用说明",
+    url: "https://www.manchester.ac.uk/study/international/finance-and-scholarships/communications/",
+  },
+  tflMobileCoverage: {
+    label: "TfL 伦敦地铁移动网络与 Wi-Fi 说明",
+    url: "https://tfl.gov.uk/modes/tube/station-wifi",
   },
   claudeIdentity: {
     label: "Claude 官方身份验证说明",
@@ -427,11 +440,179 @@ export const GROWTH_PAGES = Object.freeze([
     sources: [official.ofcomCoverage, official.terms, official.plans, official.simOrder, official.esim, official.roamingChina, official.smsPolicy],
     relatedRoutes: [
       { label: "比较 G0 与 G2", href: "/answers/" },
+      { label: "希思罗机场落地后的手机卡使用顺序", href: "/guides/uk-sim-at-heathrow/" },
+      { label: "曼彻斯特留学手机卡与宿舍邮编", href: "/guides/manchester-student-sim/" },
+      { label: "伦敦留学手机卡与地铁通勤覆盖", href: "/guides/london-student-sim/" },
       { label: "eSIM 换新手机前检查设备与短信 MFA", href: "/more/esim-new-phone/" },
       { label: "购买与发货流程", href: "/guides/1-order/" },
       { label: "确定适合后查看购买、激活和保号避坑", href: "/guides/6-pitfalls/" },
     ],
     commerceTarget: { label: "微信或 Telegram 咨询选卡", href: "/contact/" },
+  }),
+  page({
+    path: "/guides/uk-sim-at-heathrow/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: LOCAL_SEARCH_REVIEWED_AT,
+    reviewedAt: LOCAL_SEARCH_REVIEWED_AT,
+    intent: "希思罗机场落地后英国手机卡与 giffgaff 使用",
+    title: "希思罗机场手机卡｜落地后 giffgaff 激活与上网",
+    description:
+      "到希思罗机场后按已有实体卡、eSIM 或现场购卡三种情况处理；先用机场 Wi-Fi，依次检查激活、网络注册、移动数据、APN 和住宿地邮编覆盖。",
+    h1: "希思罗机场落地后，giffgaff 手机卡怎么用",
+    deck: "机场只是第一个测试点；真正决定是否适合的是住宿、学校或工作地点和日常路线。",
+    location: { name: "Heathrow Airport", addressCountry: "GB" },
+    directAnswer:
+      "到希思罗后先保留机场 Wi-Fi，不要一开机就反复激活。已经提前激活 giffgaff 的人，依次检查线路启用、网络注册、普通网页和移动数据；有信号但不能上网时再检查数据线路与 APN。还没有卡的人可以比较机场现场 PAYG SIM、提前准备的实体 SIM 和兼容 eSIM，但希思罗提供 SIM 服务不等于现场一定有 giffgaff 库存。机场测试成功也不能代表酒店、宿舍、地铁或后续城市一定可用，仍要按目的地邮编核对并实测。",
+    answerSources: [official.heathrowSim, official.network, official.ofcomCoverage],
+    sections: [
+      {
+        id: "choose-branch",
+        title: "先按三种到达状态选择路径",
+        html: `<div class="growth-table-wrap" role="region" tabindex="0" aria-label="希思罗落地手机卡路径"><table><caption>落地后不要把三种情况混在一起</caption><thead><tr><th>到达状态</th><th>第一步</th><th>主要风险</th></tr></thead><tbody><tr><th>已有且已激活的 giffgaff</th><td>开启线路，等待网络注册后测试网页</td><td>误把机场拥堵或设置问题当成卡失效</td></tr><tr><th>已有但尚未激活</th><td>连接稳定 Wi-Fi，确认激活码和付款条件后再操作</td><td>在弱网下重复提交或用错账号</td></tr><tr><th>没有英国卡</th><td>比较现场 PAYG SIM、提前准备实体卡和兼容 eSIM</td><td>默认机场一定有某个品牌或套餐</td></tr></tbody></table></div><p><a href="${official.heathrowSim.url}" target="_blank" rel="noopener noreferrer">${official.heathrowSim.label}</a>说明机场提供英国 SIM 相关服务，但页面不构成 giffgaff 库存或价格承诺（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "arrival-sequence",
+        title: "落地后的六步联网顺序",
+        html: `<ol class="growth-steps"><li>先连接机场 Wi-Fi，保存住宿地址、联系人和离线路线。</li><li>确认手机无网络锁、giffgaff 线路已启用，并关闭不需要的数据线路。</li><li>开关一次飞行模式或重启，让设备重新注册网络；不要连续反复激活。</li><li>先打开普通网页测试移动数据，再测试基础通话或普通短信；平台 OTP 不作为基础联网验收。</li><li>有信号但数据失败时，检查默认数据线路、移动数据开关和<a href="/guides/apn-settings/">giffgaff APN 设置</a>。</li><li>记录时间、航站楼、设备和错误文字；仍失败时按<a href="${official.network.url}" target="_blank" rel="noopener noreferrer">${official.network.label}</a>分层排查（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</li></ol>`,
+      },
+      {
+        id: "postcode-check",
+        title: "机场有信号，不代表住宿地和路线都有信号",
+        html: `<p>出发前和落地后至少核对三个地点：希思罗到达点、第一晚住宿、接下来主要学校或工作地点。长期使用再加入日常通勤节点，不要用“伦敦有覆盖”替代具体邮编。</p><p><a href="${official.ofcomCoverage.url}" target="_blank" rel="noopener noreferrer">${official.ofcomCoverage.label}</a>可按邮编比较 O2 等网络的室内外覆盖和当地表现；结果仍是预测，建筑材料、拥堵、天气和设备都会造成差异（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "sim-or-esim",
+        title: "实体 SIM、eSIM 和机场现场购卡怎么选",
+        html: `<ul class="growth-list"><li><strong>提前准备实体 SIM：</strong>适合设备不支持 eSIM，或希望在出发前把卡、激活条件和到手时间核对清楚的人。</li><li><strong>giffgaff eSIM：</strong>先确认设备原生兼容、无网络锁并能使用当前 App；已有实体卡转 eSIM 后旧卡会停止工作，见<a href="${official.esim.url}" target="_blank" rel="noopener noreferrer">${official.esim.label}</a>（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</li><li><strong>机场现场购卡：</strong>适合没有提前准备且愿意按现场实际品牌、库存和价格重新选择的人；不要把机场官方服务页理解成 giffgaff 现货保证。</li></ul>`,
+      },
+      {
+        id: "stop-and-escalate",
+        title: "什么时候停止尝试并改用备用方案",
+        html: `<p class="growth-warning">如果激活状态、付款结果、账号归属或 SIM 状态不明确，停止重复提交。先继续使用机场 Wi-Fi、离线地图和住宿方联系方式，再保存脱敏错误文字。</p><p>订单交付问题联系本站；账号、号码、网络状态和运营商计费问题使用 giffgaff 官方帮助。不要通过聊天发送密码、验证码、完整 ICCID、eSIM 二维码或支付资料。</p>`,
+      },
+    ],
+    sources: [official.heathrowSim, official.activation, official.network, official.apn, official.ofcomCoverage, official.esim, official.simOrder],
+    relatedRoutes: [
+      { label: "英国手机卡按场景怎么选", href: "/guides/8-uk-sim-choice/" },
+      { label: "G0/G2 到手后的完整验收", href: "/guides/7-arrival-checklist/" },
+      { label: "有信号但不能上网：检查 APN", href: "/guides/apn-settings/" },
+      { label: "激活失败分层排查", href: "/guides/2-activate/" },
+      { label: "伦敦留学手机卡与通勤覆盖", href: "/guides/london-student-sim/" },
+    ],
+    commerceHeading: "确认到英日期、卡片状态和落地备用方案",
+    commerceDescription: "咨询前准备到达日期、手机型号、是否已有卡以及第一晚住宿区域；不要发送激活码、密码或验证码。",
+    commerceTarget: { label: "微信或 Telegram 咨询落地方案", href: "/contact/" },
+  }),
+  page({
+    path: "/guides/manchester-student-sim/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: LOCAL_SEARCH_REVIEWED_AT,
+    reviewedAt: LOCAL_SEARCH_REVIEWED_AT,
+    intent: "曼彻斯特留学英国手机卡与 giffgaff 选择",
+    title: "曼彻斯特留学手机卡怎么选｜宿舍邮编与 giffgaff",
+    description:
+      "曼彻斯特留学生按宿舍、校区和通勤路线邮编比较英国手机卡；区分 PAYG 与合约、实体 SIM 与 eSIM，并判断 giffgaff 是否适合。",
+    h1: "曼彻斯特留学手机卡：按宿舍邮编和通勤选",
+    deck: "“曼城有信号”不是可执行答案；把宿舍、校区、通勤节点和回国后的号码需求分开判断。",
+    location: { name: "Manchester", addressCountry: "GB" },
+    directAnswer:
+      "曼彻斯特留学选手机卡时，不要只查一个市中心地点。先取得宿舍和实际校区邮编，再加入每周高频通勤节点，分别比较 O2 等网络的室内外预测；到校后用同一台手机实测。短期交换或不想承担长期合同的人可以优先比较 PAYG，长期学习再结合数据量、付款条件和回国后是否保号判断。giffgaff 使用 O2 网络，是否适合取决于这些具体地点、设备和自主管理能力，而不是“曼城”这个城市名。",
+    answerSources: [official.manchesterStudentCommunications, official.ofcomCoverage, official.terms],
+    sections: [
+      {
+        id: "four-locations",
+        title: "先建立曼彻斯特四地点清单",
+        html: `<ol class="growth-steps"><li><strong>住宿：</strong>使用合同或学校住宿页面上的准确邮编，不用“Manchester”代替。</li><li><strong>校区：</strong>核对自己实际就读校区；如果是曼彻斯特大学主地址，可从学校当前页面看到 Oxford Road, M13 9PL，但不同教学楼和宿舍仍需分别检查。</li><li><strong>通勤：</strong>加入每天换乘、等车或步行时间最长的节点；室外预测不能替代车内、站内和建筑物内实测。</li><li><strong>常用生活地点：</strong>工作、图书馆、超市或每周高频活动区域至少选一个。</li></ol><p>这些地点用于选择和到校验收，不要公开个人完整住址或订单资料。</p>`,
+      },
+      {
+        id: "coverage-method",
+        title: "用邮编比较 O2，而不是搜索“曼城信号最好”",
+        html: `<p>giffgaff 使用 O2 网络，但城市级结论会掩盖宿舍墙体、楼层、局部拥堵和设备差异。把四个地点逐一输入<a href="${official.ofcomCoverage.url}" target="_blank" rel="noopener noreferrer">${official.ofcomCoverage.label}</a>，记录室内、室外和当地性能提示，再与其他网络比较（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</p><div class="growth-table-wrap" role="region" tabindex="0" aria-label="曼彻斯特手机卡覆盖记录"><table><caption>每个地点都单独记录</caption><thead><tr><th>地点</th><th>出发前记录</th><th>到校后复核</th></tr></thead><tbody><tr><th>宿舍</th><td>邮编、室内/室外预测</td><td>房间、公共区域和楼外</td></tr><tr><th>校区</th><td>教学楼或校区邮编</td><td>常用教室和图书馆</td></tr><tr><th>通勤节点</th><td>路线与换乘点</td><td>高峰和非高峰各一次</td></tr></tbody></table></div>`,
+      },
+      {
+        id: "payg-or-contract",
+        title: "PAYG 还是合约：先按停留时间与付款条件排除",
+        html: `<p><a href="${official.manchesterStudentCommunications.url}" target="_blank" rel="noopener noreferrer">${official.manchesterStudentCommunications.label}</a>把英国移动服务区分为 PAYG 与合约，并提醒国际通信成本需要单独注意（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。短期交换、刚到英国或尚未确定用量时，PAYG 更方便先控制支出和实测；考虑合约时，再核对期限、付款方式、信用条件和提前结束成本。</p><p>不要只比较月费。把卡片/寄送、首次充值、套餐、国际通话、漫游和维护号码的时间成本放在同一张清单里。</p>`,
+      },
+      {
+        id: "giffgaff-fit",
+        title: "什么情况下 giffgaff 更匹配曼城留学",
+        html: `<ul class="growth-list"><li>宿舍、校区和高频路线的 O2 预测没有明显短板，并接受到校后再实测。</li><li>手机无网络锁；需要 eSIM 时，设备和当前 App 条件已核对。</li><li>愿意自行管理账号、付款、续费、换卡和回国后的保活动作。</li><li>不把第三方平台 OTP、宿舍室内信号或整个城市覆盖当成保证。</li></ul><p><a href="${official.terms.url}" target="_blank" rel="noopener noreferrer">${official.terms.label}</a>把覆盖信息视为预测，并说明墙体、技术问题和拥堵等因素会影响服务（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</p>`,
+      },
+      {
+        id: "first-week",
+        title: "到校第一周完成三次实测再决定长期方案",
+        html: `<ol class="growth-steps"><li>入住当天分别测试房间、楼道和楼外。</li><li>第一次上课日在校区和通勤节点测试网页、基础通话与普通短信。</li><li>高峰时段再复测一次；如只有移动数据失败，检查<a href="/guides/apn-settings/">giffgaff APN</a>，不要直接把卡判定失效。</li><li>记录结果后再决定是否续费、换网或保留为备用号码。</li></ol>`,
+      },
+    ],
+    sources: [official.manchesterStudentCommunications, official.ofcomCoverage, official.terms, official.network, official.plans, official.esim],
+    relatedRoutes: [
+      { label: "英国手机卡全国选择框架", href: "/guides/8-uk-sim-choice/" },
+      { label: "伦敦留学手机卡与地铁通勤覆盖", href: "/guides/london-student-sim/" },
+      { label: "到手后检查卡片、网络和普通短信", href: "/guides/7-arrival-checklist/" },
+      { label: "giffgaff APN 与移动数据排查", href: "/guides/apn-settings/" },
+      { label: "离英后生成保号提醒", href: "/tools/keep-number-reminder/" },
+    ],
+    commerceHeading: "按宿舍、校区和停留时间核对 G0/G2",
+    commerceDescription: "咨询时只需提供到英日期、学校/区域、手机型号和是否需要长期保号；不要发送完整住址、证件或账号资料。",
+    commerceTarget: { label: "微信或 Telegram 咨询曼城选卡", href: "/contact/" },
+  }),
+  page({
+    path: "/guides/london-student-sim/",
+    indexPolicy: "index",
+    schemaType: "Article",
+    updatedAt: LOCAL_SEARCH_REVIEWED_AT,
+    reviewedAt: LOCAL_SEARCH_REVIEWED_AT,
+    intent: "伦敦留学英国手机卡与 giffgaff 选择",
+    title: "伦敦留学手机卡怎么选｜邮编、地铁与 giffgaff",
+    description:
+      "伦敦留学生按住宿、校区、机场与地铁通勤路线选择英国手机卡；核对邮编覆盖、地下移动网络、实体 SIM/eSIM 和 giffgaff 适配条件。",
+    h1: "伦敦留学手机卡：住宿邮编与地铁路线一起查",
+    deck: "伦敦不是一个统一信号点；机场、宿舍、校区、地面路线和地下通勤要分别判断。",
+    location: { name: "London", addressCountry: "GB" },
+    directAnswer:
+      "伦敦留学选手机卡时，至少分别检查住宿邮编、实际校区和日常通勤路线；从希思罗或其他机场落地时的信号不能代表长期使用。giffgaff 使用 O2 网络，可先用 Ofcom 按邮编比较，再到房间、教学楼和高峰通勤时实测。伦敦地铁的 4G/5G 正在分区段铺设，TfL 当前页面列出的线路和区段会变化，因此不能把“伦敦地铁有信号”写成全网连续覆盖保证。",
+    answerSources: [official.ofcomCoverage, official.tflMobileCoverage, official.terms],
+    sections: [
+      {
+        id: "location-sheet",
+        title: "伦敦选卡先填五个地点，不先看运营商榜单",
+        html: `<ol class="growth-steps"><li>抵达机场或车站，只作为落地测试点。</li><li>住宿准确邮编，是室内使用的首要输入。</li><li>实际校区和最常用教学楼，不用学校名称代替地点。</li><li>每天通勤的线路、换乘站和地下区段。</li><li>工作、图书馆或每周高频生活地点。</li></ol><p>每个地点分别标记“必须稳定”“有 Wi-Fi 可备用”或“偶尔使用”，再决定哪个网络的局部短板能够接受。</p>`,
+      },
+      {
+        id: "postcode-first",
+        title: "住宿与校区先按邮编比较 O2",
+        html: `<p>把住宿、校区和地面高频地点逐一输入<a href="${official.ofcomCoverage.url}" target="_blank" rel="noopener noreferrer">${official.ofcomCoverage.label}</a>。该工具区分室内外预测和当地性能，并明确提示建筑、拥堵、天气及设备会影响实际结果（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</p><p>giffgaff 使用 O2，但“O2 在伦敦覆盖”不能替代某栋宿舍、地下层教室或具体手机的判断。抵达后要在同一台设备上复核。</p>`,
+      },
+      {
+        id: "tube-check",
+        title: "地铁通勤必须单独查当前覆盖区段",
+        html: `<p><a href="${official.tflMobileCoverage.url}" target="_blank" rel="noopener noreferrer">${official.tflMobileCoverage.label}</a>显示，4G/5G 正在伦敦地下交通网络逐步铺设，当前只有页面列出的线路和区段可用；尚未覆盖的场景可使用车站 Wi-Fi，但隧道连续性仍取决于具体区段（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</p><ul class="growth-list"><li>先写下每天实际乘坐的线路、起点、换乘和终点。</li><li>打开 TfL 当前页面核对覆盖区段，不使用过期截图。</li><li>把“站内可连 Wi-Fi”“站台有移动网络”和“隧道连续覆盖”分开记录。</li><li>重要导航、住宿地址和紧急联系人提前离线保存。</li></ul>`,
+      },
+      {
+        id: "arrival-versus-daily",
+        title: "机场落地可用，不等于伦敦日常使用合格",
+        html: `<div class="growth-table-wrap" role="region" tabindex="0" aria-label="伦敦手机卡落地与长期使用差异"><table><caption>两个验收阶段分别判断</caption><thead><tr><th>阶段</th><th>验收目标</th><th>不要外推</th></tr></thead><tbody><tr><th>机场落地</th><td>能注册网络、打开网页、找到住宿路线</td><td>不能证明宿舍和校区室内表现</td></tr><tr><th>第一周日常</th><td>房间、教学楼、高峰通勤和普通短信</td><td>不能由一次成功保证长期或平台 OTP</td></tr></tbody></table></div><p>如果从希思罗入境，可先看<a href="/guides/uk-sim-at-heathrow/">希思罗机场落地后的联网顺序</a>。</p>`,
+      },
+      {
+        id: "sim-esim-fit",
+        title: "实体 SIM、eSIM 与 giffgaff 适配检查",
+        html: `<ul class="growth-list"><li>实体 SIM 适合设备不支持 eSIM、希望提前验收卡片或需要人工换机的人。</li><li>eSIM 需要设备原生兼容、无网络锁并满足当前 App 条件；转换后旧实体 SIM 会停止工作，见<a href="${official.esim.url}" target="_blank" rel="noopener noreferrer">${official.esim.label}</a>（核验 ${LOCAL_SEARCH_REVIEWED_AT}）。</li><li>giffgaff 更适合愿意自行管理账号、套餐、换卡和离英后保号的人。</li><li>如果住宿或高频路线的 O2 预测明显弱，或要求地下全程连续连接，就应继续比较其他网络，不因品牌偏好勉强选择。</li></ul>`,
+      },
+    ],
+    sources: [official.ofcomCoverage, official.tflMobileCoverage, official.terms, official.network, official.esim, official.heathrowSim],
+    relatedRoutes: [
+      { label: "希思罗机场落地后的联网顺序", href: "/guides/uk-sim-at-heathrow/" },
+      { label: "英国手机卡全国选择框架", href: "/guides/8-uk-sim-choice/" },
+      { label: "曼彻斯特留学手机卡与宿舍邮编", href: "/guides/manchester-student-sim/" },
+      { label: "有信号但数据失败：检查 APN", href: "/guides/apn-settings/" },
+      { label: "离英后生成保号提醒", href: "/tools/keep-number-reminder/" },
+    ],
+    commerceHeading: "按住宿、校区和地铁路线核对选卡条件",
+    commerceDescription: "咨询时可提供到英日期、学校/区域、主要线路、手机型号和是否长期保号；不要发送完整住址或账号凭证。",
+    commerceTarget: { label: "微信或 Telegram 咨询伦敦选卡", href: "/contact/" },
   }),
   page({
     path: "/guides/9-number-balance-data-check/",
@@ -625,12 +806,15 @@ export const GROWTH_PAGES = Object.freeze([
     path: "/tools/keep-number-reminder/",
     indexPolicy: "index",
     schemaType: "WebApplication",
+    updatedAt: "2026-07-23",
+    socialImage: "/growth-assets/keep-number-reminder-og.png",
     intent: "giffgaff 保号提醒日期计算",
     title: "giffgaff 保号提醒工具｜本地生成第 5 个月提醒",
     description:
       "输入最近一次有效动作日期，在浏览器本地生成第 5 个月提醒并导出 .ics；不上传号码、账号或日期，不承诺永久保号。",
     h1: "giffgaff 保号提醒：生成本地日历",
     deck: "日期只在当前浏览器内计算，不发送到本站服务器。",
+    productIntroHtml: `<section class="growth-product-intro" id="english-overview" lang="en" aria-labelledby="english-product-title"><p class="growth-product-kicker">Free browser tool · no sign-up · local-only</p><h2 id="english-product-title">UK SIM Keep-Number Reminder</h2><p>Turn the date of your last qualifying giffgaff activity into a fifth-month calendar reminder. The date stays in your browser, and the exported .ics file contains no phone number or account details.</p><div class="growth-product-actions"><a class="btn btn-primary" href="#tool">Create a reminder</a><a class="btn btn-secondary" href="#rule">Read the rule and limits</a></div><ul class="growth-product-points"><li>Runs locally in your browser</li><li>Exports a standard calendar file</li><li>Uses an early reminder, not a service guarantee</li></ul></section>`,
     directAnswer:
       "官方停用边界是连续 6 个月没有列明的有效动作；可记为“最近一次有效动作 + 6 个月”，本站在第 5 个月提前生成缓冲提醒。日期只在本机计算，不保证号码状态。号码一旦被停用就不能重新激活；如需保留号码，应在停用后的 30 天内按官方说明申请 PAC。",
     tool: "keep-number",
@@ -643,7 +827,7 @@ export const GROWTH_PAGES = Object.freeze([
       {
         id: "tool",
         title: "输入最近一次有效动作",
-        html: `<div class="growth-tool" data-tool="keep-number" data-expires="${EXPIRES_AT}" role="group" aria-label="本地保号提醒工具"><label>最近一次可验证动作日期<input type="date" name="last-action" required></label><button class="btn btn-primary" type="button" data-calculate>生成第 5 个月提醒</button><output aria-live="polite"></output><button class="btn btn-secondary" type="button" data-download-ics disabled>下载 .ics 日历</button></div>`,
+        html: `<div class="growth-tool" data-tool="keep-number" data-locale="bilingual" data-expires="${EXPIRES_AT}" role="group" aria-label="UK SIM keep-number reminder / 本地保号提醒工具"><label>Last qualifying activity / 最近一次可验证动作日期<input type="date" name="last-action" required></label><button class="btn btn-primary" type="button" data-calculate>Create fifth-month reminder / 生成提醒</button><output aria-live="polite"></output><button class="btn btn-secondary" type="button" data-download-ics disabled>Download .ics / 下载日历</button></div>`,
       },
       {
         id: "privacy",

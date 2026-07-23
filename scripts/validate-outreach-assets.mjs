@@ -114,7 +114,7 @@ function findUnnegatedMatch(text, patterns) {
   return null;
 }
 
-export function validateOutreachLedger(csvText, { expectedCandidateCount = 23 } = {}) {
+export function validateOutreachLedger(csvText, { expectedCandidateCount = 25 } = {}) {
   const errors = [];
   let csvRows;
   try {

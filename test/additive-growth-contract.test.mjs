@@ -56,6 +56,9 @@ const INDEXABLE_GROWTH_ROUTES = Object.freeze([
   "/guides/claude-account-disabled-appeal/",
   "/guides/7-arrival-checklist/",
   "/guides/8-uk-sim-choice/",
+  "/guides/uk-sim-at-heathrow/",
+  "/guides/manchester-student-sim/",
+  "/guides/london-student-sim/",
   "/guides/9-number-balance-data-check/",
   "/guides/apn-settings/",
   "/more/esim-new-phone/",
@@ -156,7 +159,7 @@ function internalHrefs(html) {
     .filter((href) => href.startsWith("/") && !href.startsWith("//"));
 }
 
-test("route manifest keeps 34 frozen pages and adds twelve index plus seven noindex pages", async () => {
+test("route manifest keeps 34 frozen pages and adds fifteen index plus seven noindex pages", async () => {
   const modulePath = path.join(ROOT, "public", "route-manifest.js");
   await access(modulePath);
   const manifest = await import(`${pathToFileURL(modulePath).href}?t=${Date.now()}`);
@@ -164,8 +167,8 @@ test("route manifest keeps 34 frozen pages and adds twelve index plus seven noin
   assert.deepEqual(manifest.LEGACY_ROUTES, LEGACY_ROUTES);
   assert.deepEqual(manifest.INDEXABLE_GROWTH_ROUTES, INDEXABLE_GROWTH_ROUTES);
   assert.deepEqual(manifest.NOINDEX_GROWTH_ROUTES, NOINDEX_GROWTH_ROUTES);
-  assert.equal(manifest.PUBLIC_INDEXABLE_PATHS.length, 46);
-  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 53);
+  assert.equal(manifest.PUBLIC_INDEXABLE_PATHS.length, 49);
+  assert.equal(Object.keys(manifest.ROUTE_MANIFEST).length, 56);
 
   for (const route of LEGACY_ROUTES) {
     const record = manifest.routeFor(route);
@@ -424,7 +427,7 @@ test("backlink outreach tracker is ready without fabricated placements", async (
     counts.set(host, (counts.get(host) || 0) + 1);
     return counts;
   }, new Map());
-  assert.equal(hostCounts.size, 22);
+  assert.equal(hostCounts.size, 24);
   assert.deepEqual(
     [...hostCounts.entries()].filter(([, count]) => count > 1),
     [["github.com", 2]],

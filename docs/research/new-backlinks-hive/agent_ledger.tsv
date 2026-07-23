@@ -1,0 +1,12 @@
+agent_id	task_id	lane	claim_group_id	evidence_ids	source_ids	status	verification_status	confidence	notes
+agent-01	TASK-001	worker	CG-SRC-001-OBSERVATION	EV-001, EV-002	SRC-001	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-02	TASK-002	worker	CG-SRC-002-OBSERVATION	EV-003, EV-004	SRC-002	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-03	TASK-003	worker	CG-SRC-003-OBSERVATION	EV-005, EV-006	SRC-003	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-01	TASK-004	worker	CG-SRC-004-OBSERVATION	EV-007, EV-008	SRC-004	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-02	TASK-005	worker	CG-SRC-005-OBSERVATION	EV-009, EV-010	SRC-005	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-03	TASK-006	worker	CG-SRC-006-OBSERVATION	EV-011, EV-012	SRC-006	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-01	TASK-007	worker	CG-SRC-007-OBSERVATION	EV-013, EV-014	SRC-007	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-02	TASK-008	worker	CG-SRC-008-OBSERVATION	EV-015, EV-016	SRC-008	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-03	TASK-009	worker	CG-SRC-009-OBSERVATION	EV-017, EV-018	SRC-009	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+agent-01	TASK-010	worker	CG-SRC-010-OBSERVATION	EV-019, EV-020	SRC-010	done	single_source	low	Processed 2 evidence card(s) with 1 independent accepted source(s).
+curator-01	CURATOR-001	curator	ALL	EV-001, EV-002, EV-003, EV-004, EV-005, EV-006, EV-007, EV-008, EV-009, EV-010, EV-011, EV-012, EV-013, EV-014, EV-015, EV-016, EV-017, EV-018, EV-019, EV-020	SRC-001, SRC-002, SRC-003, SRC-004, SRC-005, SRC-006, SRC-007, SRC-008, SRC-009, SRC-010	accepted	single_source=10	reviewed	Curated 10 claim group(s) after worker cross-check.

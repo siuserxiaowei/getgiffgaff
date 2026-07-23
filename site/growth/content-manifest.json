@@ -115,9 +115,88 @@
       ],
       "relatedRoutes": [
         "/answers/",
+        "/guides/uk-sim-at-heathrow/",
+        "/guides/manchester-student-sim/",
+        "/guides/london-student-sim/",
         "/more/esim-new-phone/",
         "/guides/1-order/",
         "/guides/6-pitfalls/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/guides/uk-sim-at-heathrow/",
+      "title": "希思罗机场手机卡｜落地后 giffgaff 激活与上网",
+      "description": "到希思罗机场后按已有实体卡、eSIM 或现场购卡三种情况处理；先用机场 Wi-Fi，依次检查激活、网络注册、移动数据、APN 和住宿地邮编覆盖。",
+      "intent": "希思罗机场落地后英国手机卡与 giffgaff 使用",
+      "updatedAt": "2026-07-24",
+      "reviewedAt": "2026-07-24",
+      "sources": [
+        "https://www.heathrow.com/zh/at-the-airport/airport-services/uk-sims-and-phones",
+        "https://help.giffgaff.com/en/articles/240393-activating-your-giffgaff-sim",
+        "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+        "https://help.giffgaff.com/en/articles/245215-internet-apn-settings-guide",
+        "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+        "https://help.giffgaff.com/en/articles/240676-ordering-a-sim-in-the-uk-or-abroad"
+      ],
+      "relatedRoutes": [
+        "/guides/8-uk-sim-choice/",
+        "/guides/7-arrival-checklist/",
+        "/guides/apn-settings/",
+        "/guides/2-activate/",
+        "/guides/london-student-sim/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/guides/manchester-student-sim/",
+      "title": "曼彻斯特留学手机卡怎么选｜宿舍邮编与 giffgaff",
+      "description": "曼彻斯特留学生按宿舍、校区和通勤路线邮编比较英国手机卡；区分 PAYG 与合约、实体 SIM 与 eSIM，并判断 giffgaff 是否适合。",
+      "intent": "曼彻斯特留学英国手机卡与 giffgaff 选择",
+      "updatedAt": "2026-07-24",
+      "reviewedAt": "2026-07-24",
+      "sources": [
+        "https://www.manchester.ac.uk/study/international/finance-and-scholarships/communications/",
+        "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+        "https://www.giffgaff.com/boiler-plate/terms",
+        "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+        "https://www.giffgaff.com/sim-only-deals",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff"
+      ],
+      "relatedRoutes": [
+        "/guides/8-uk-sim-choice/",
+        "/guides/london-student-sim/",
+        "/guides/7-arrival-checklist/",
+        "/guides/apn-settings/",
+        "/tools/keep-number-reminder/"
+      ],
+      "commerceTarget": "/contact/",
+      "indexPolicy": "index"
+    },
+    {
+      "path": "/guides/london-student-sim/",
+      "title": "伦敦留学手机卡怎么选｜邮编、地铁与 giffgaff",
+      "description": "伦敦留学生按住宿、校区、机场与地铁通勤路线选择英国手机卡；核对邮编覆盖、地下移动网络、实体 SIM/eSIM 和 giffgaff 适配条件。",
+      "intent": "伦敦留学英国手机卡与 giffgaff 选择",
+      "updatedAt": "2026-07-24",
+      "reviewedAt": "2026-07-24",
+      "sources": [
+        "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+        "https://tfl.gov.uk/modes/tube/station-wifi",
+        "https://www.giffgaff.com/boiler-plate/terms",
+        "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+        "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+        "https://www.heathrow.com/zh/at-the-airport/airport-services/uk-sims-and-phones"
+      ],
+      "relatedRoutes": [
+        "/guides/uk-sim-at-heathrow/",
+        "/guides/8-uk-sim-choice/",
+        "/guides/manchester-student-sim/",
+        "/guides/apn-settings/",
+        "/tools/keep-number-reminder/"
       ],
       "commerceTarget": "/contact/",
       "indexPolicy": "index"
@@ -216,7 +295,7 @@
       "title": "giffgaff 保号提醒工具｜本地生成第 5 个月提醒",
       "description": "输入最近一次有效动作日期，在浏览器本地生成第 5 个月提醒并导出 .ics；不上传号码、账号或日期，不承诺永久保号。",
       "intent": "giffgaff 保号提醒日期计算",
-      "updatedAt": "2026-07-17",
+      "updatedAt": "2026-07-23",
       "reviewedAt": "2026-07-17",
       "sources": [
         "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",

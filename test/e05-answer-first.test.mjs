@@ -5,6 +5,8 @@ import { GROWTH_PAGES } from "../site/growth/content-registry.js";
 
 const EXPECTED_UPDATED_AT = "2026-07-17";
 const HIGH_INTENT_ANSWER_UPDATED_AT = "2026-07-20";
+const KEEP_NUMBER_PRODUCT_UPDATED_AT = "2026-07-23";
+const LOCAL_SEARCH_UPDATED_AT = "2026-07-24";
 const EXPECTED_EXPIRY = "2026-08-15";
 
 function growthPage(path) {
@@ -21,13 +23,20 @@ function sectionText(page, id) {
 
 test("E05 publishes dated answer-first boundaries on all indexable growth pages", () => {
   const pages = GROWTH_PAGES.filter((page) => page.indexPolicy === "index");
-  assert.equal(pages.length, 12);
+  assert.equal(pages.length, 15);
   for (const page of pages) {
-    const expectedDate = ["/guides/9-number-balance-data-check/", "/guides/apn-settings/", "/more/esim-new-phone/", "/more/esim-deleted/", "/guides/claude-identity-verification/", "/guides/claude-phone-verification/", "/guides/claude-account-disabled-appeal/"].includes(page.path)
-      ? HIGH_INTENT_ANSWER_UPDATED_AT
-      : EXPECTED_UPDATED_AT;
-    assert.equal(page.updatedAt, expectedDate, `${page.path} updatedAt`);
-    assert.equal(page.reviewedAt, expectedDate, `${page.path} reviewedAt`);
+    const expectedUpdatedAt = page.path === "/tools/keep-number-reminder/"
+      ? KEEP_NUMBER_PRODUCT_UPDATED_AT
+      : ["/guides/uk-sim-at-heathrow/", "/guides/manchester-student-sim/", "/guides/london-student-sim/"].includes(page.path)
+        ? LOCAL_SEARCH_UPDATED_AT
+      : ["/guides/9-number-balance-data-check/", "/guides/apn-settings/", "/more/esim-new-phone/", "/more/esim-deleted/", "/guides/claude-identity-verification/", "/guides/claude-phone-verification/", "/guides/claude-account-disabled-appeal/"].includes(page.path)
+        ? HIGH_INTENT_ANSWER_UPDATED_AT
+        : EXPECTED_UPDATED_AT;
+    const expectedReviewedAt = page.path === "/tools/keep-number-reminder/"
+      ? EXPECTED_UPDATED_AT
+      : expectedUpdatedAt;
+    assert.equal(page.updatedAt, expectedUpdatedAt, `${page.path} updatedAt`);
+    assert.equal(page.reviewedAt, expectedReviewedAt, `${page.path} reviewedAt`);
     assert.ok(page.directAnswer.length >= 70, `${page.path} self-contained direct answer`);
   }
 
@@ -77,6 +86,26 @@ test("UK SIM choice answer states coverage, eSIM, old-SIM and fit boundaries", (
   assert.match(page.directAnswer, /旧.*SIM.*停止/);
   assert.match(page.directAnswer, /不适合|不要选择/);
   assert.ok(page.sources.some(({ url }) => url === "https://www.giffgaff.com/boiler-plate/terms"));
+});
+
+test("local-search pilots own distinct airport, Manchester and London decisions", () => {
+  const heathrow = growthPage("/guides/uk-sim-at-heathrow/");
+  assert.match(heathrow.directAnswer, /机场 Wi-Fi/);
+  assert.match(heathrow.directAnswer, /不等于现场一定有 giffgaff 库存/);
+  assert.match(sectionText(heathrow, "choose-branch"), /已有且已激活.*已有但尚未激活.*没有英国卡/);
+
+  const manchester = growthPage("/guides/manchester-student-sim/");
+  assert.match(manchester.directAnswer, /宿舍.*校区.*通勤/);
+  assert.match(sectionText(manchester, "payg-or-contract"), /PAYG.*合约/);
+  assert.match(sectionText(manchester, "first-week"), /高峰/);
+
+  const london = growthPage("/guides/london-student-sim/");
+  assert.match(london.directAnswer, /地铁.*分区段|区段.*变化/);
+  assert.match(sectionText(london, "tube-check"), /TfL.*Wi-Fi.*隧道/);
+  assert.match(sectionText(london, "arrival-versus-daily"), /机场落地.*第一周日常/);
+
+  assert.notEqual(heathrow.title, manchester.title);
+  assert.notEqual(manchester.title, london.title);
 });
 
 test("keep-number answer exposes the six-month rule, buffer formula and deactivation boundary", () => {

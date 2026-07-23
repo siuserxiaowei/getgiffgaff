@@ -1,0 +1,11 @@
+source_id	url	source_type	tier	status	access_date	owner_worker	title	notes
+SRC-001	https://github.com/RipplePiam/MobaXterm-Chinese-Simplified	repo	required	verified	2026-07-22	search	RipplePiam/MobaXterm-Chinese-Simplified	"MobaXterm 简体中文汉化版🌏🖥🖥🖥 【💌慢工精心制作，""提示""也汉化💻】 【😍控件布局精细调整】"
+SRC-002	https://en.wikipedia.org/wiki/Chinese_Simplified	encyclopedia	important	verified	2026-07-22	search	Chinese Simplified	
+SRC-003	https://github.com/chinakids/atom-simplified-chinese-menu	repo	important	verified	2026-07-22	search	chinakids/atom-simplified-chinese-menu	Atom 的简体中文汉化扩展,目前最全的汉化包。包含菜单汉化、右键菜单汉化以及设置汉化
+SRC-004	https://en.wikipedia.org/wiki/Chinese_simplification	encyclopedia	important	verified	2026-07-22	search	Chinese simplification	
+SRC-005	https://github.com/Ludeon/RimWorld-ChineseSimplified	repo	important	verified	2026-07-22	search	Ludeon/RimWorld-ChineseSimplified	
+SRC-006	https://en.wikipedia.org/wiki/Chinese_Communist_Party	encyclopedia	important	verified	2026-07-22	search	Chinese Communist Party	
+SRC-007	https://github.com/J-11/Aseprite-Simplified-Chinese	repo	important	verified	2026-07-22	search	J-11/Aseprite-Simplified-Chinese	Aseprite汉化文件
+SRC-008	https://en.wikipedia.org/wiki/Chinese_Civil_War	encyclopedia	important	verified	2026-07-22	search	Chinese Civil War	
+SRC-009	https://github.com/kingmo888/Spyder_Simplified_Chinese	repo	important	verified	2026-07-22	search	kingmo888/Spyder_Simplified_Chinese	Spyder简体中文语言包及一键安装脚本
+SRC-010	https://en.wikipedia.org/wiki/Chinese_Super_League	encyclopedia	important	verified	2026-07-22	search	Chinese Super League	

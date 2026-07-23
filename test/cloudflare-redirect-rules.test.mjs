@@ -33,8 +33,8 @@ test("Cloudflare canonical rule is generated from every non-root public HTML pat
   const ruleset = buildCloudflareRedirectRuleset();
   const rule = ruleset.rules[0];
 
-  assert.equal(EXPECTED_NO_TRAILING_SLASH_PATHS.length, 52);
-  assert.equal(new Set(EXPECTED_NO_TRAILING_SLASH_PATHS).size, 52);
+  assert.equal(EXPECTED_NO_TRAILING_SLASH_PATHS.length, 55);
+  assert.equal(new Set(EXPECTED_NO_TRAILING_SLASH_PATHS).size, 55);
   assert.ok(EXPECTED_NO_TRAILING_SLASH_PATHS.every((pathname) => !pathname.endsWith("/")));
   for (const pathname of NEW_PATHS) assert.ok(EXPECTED_NO_TRAILING_SLASH_PATHS.includes(pathname));
   for (const pathname of POLICY_PATHS) assert.ok(EXPECTED_NO_TRAILING_SLASH_PATHS.includes(pathname));
@@ -98,7 +98,7 @@ test("offline validator reads a Cloudflare-exported JSON file without an API cal
     const result = await validateCloudflareRedirectExportFile(exportedPath, {
       ruleId: "23a9c07759414918816c2e768101d6f0",
     });
-    assert.equal(result.pathCount, 52);
+    assert.equal(result.pathCount, 55);
     assert.deepEqual(result.errors, []);
   } finally {
     await rm(root, { recursive: true, force: true });

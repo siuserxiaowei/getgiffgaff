@@ -6,6 +6,8 @@ const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";
 const SEARCH_CONTENT_EXPANSION_DATE = "2026-07-20";
 const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-20T06:15:00Z";
 const HOMEPAGE_PLATFORM_HUB_DATE = "2026-07-20T06:51:08Z";
+const KEEP_NUMBER_PRODUCTIZATION_DATE = "2026-07-23";
+const LOCAL_SEARCH_EXPANSION_DATE = "2026-07-24";
 
 export const LEGACY_ROUTES = Object.freeze([
   "/",
@@ -50,6 +52,9 @@ export const INDEXABLE_GROWTH_ROUTES = Object.freeze([
   "/guides/claude-account-disabled-appeal/",
   "/guides/7-arrival-checklist/",
   "/guides/8-uk-sim-choice/",
+  "/guides/uk-sim-at-heathrow/",
+  "/guides/manchester-student-sim/",
+  "/guides/london-student-sim/",
   "/guides/9-number-balance-data-check/",
   "/guides/apn-settings/",
   "/more/esim-new-phone/",
@@ -89,6 +94,7 @@ export const PUBLIC_STATIC_ASSET_PATHS = Object.freeze([
   "/growth-assets/tools.js",
   "/growth-assets/commerce-ui.js",
   "/growth-assets/analytics.js",
+  "/growth-assets/keep-number-reminder-og.png",
   "/release-provenance.json",
   "/indexnow-key.txt",
   "/robots.txt",
@@ -185,6 +191,12 @@ const SEARCH_CONTENT_EXPANSION_ROUTES = new Set([
   "/more/esim-deleted/",
 ]);
 
+const LOCAL_SEARCH_EXPANSION_ROUTES = new Set([
+  "/guides/uk-sim-at-heathrow/",
+  "/guides/manchester-student-sim/",
+  "/guides/london-student-sim/",
+]);
+
 const ACCOUNT_VERIFICATION_EXPANSION_ROUTES = new Set([
   "/",
   "/shop/",
@@ -242,11 +254,17 @@ function commerceFor(pathname) {
 }
 
 function lastModifiedFor(pathname, contentSource) {
+  if (pathname === "/tools/keep-number-reminder/") {
+    return KEEP_NUMBER_PRODUCTIZATION_DATE;
+  }
   if (pathname === "/") {
     return HOMEPAGE_PLATFORM_HUB_DATE;
   }
   if (ACCOUNT_VERIFICATION_EXPANSION_ROUTES.has(pathname)) {
     return ACCOUNT_VERIFICATION_EXPANSION_DATE;
+  }
+  if (LOCAL_SEARCH_EXPANSION_ROUTES.has(pathname)) {
+    return LOCAL_SEARCH_EXPANSION_DATE;
   }
   if (SEARCH_CONTENT_EXPANSION_ROUTES.has(pathname)) {
     return SEARCH_CONTENT_EXPANSION_DATE;

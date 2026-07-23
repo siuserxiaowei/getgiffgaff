@@ -38,12 +38,15 @@ function bindKeepNumber(root) {
   const calculate = root.querySelector("[data-calculate]");
   const download = root.querySelector("[data-download-ics]");
   if (!output || !calculate || !download) return;
+  const bilingual = root.dataset.locale === "bilingual";
   let calendar = null;
   calculate.addEventListener("click", () => {
     if (!evidenceIsCurrent({ expiresAt: root.dataset.expires, now: todayIso() })) {
       calendar = null;
       download.disabled = true;
-      output.textContent = "规则核验期已过，请先打开官方来源复核；当前不生成日历。";
+      output.textContent = bilingual
+        ? "The rule review window has expired. Please re-check the official source before creating a calendar reminder. / 规则核验期已过，请先复核官方来源。"
+        : "规则核验期已过，请先打开官方来源复核；当前不生成日历。";
       return;
     }
     const value = fieldValue(root, "last-action");
@@ -51,10 +54,14 @@ function bindKeepNumber(root) {
     calendar = keepNumberCalendar(value);
     if (!reminder || !calendar) {
       download.disabled = true;
-      output.textContent = "请输入有效日期。";
+      output.textContent = bilingual
+        ? "Enter a valid date. / 请输入有效日期。"
+        : "请输入有效日期。";
       return;
     }
-    output.textContent = `第 5 个月操作提醒：${reminder}。这不是号码状态保证，请操作前复核官方规则。`;
+    output.textContent = bilingual
+      ? `Fifth-month reminder: ${reminder}. This is not proof of number status; re-check the official rule before acting. / 第 5 个月提醒：${reminder}。`
+      : `第 5 个月操作提醒：${reminder}。这不是号码状态保证，请操作前复核官方规则。`;
     download.disabled = false;
     emitToolResult();
   });

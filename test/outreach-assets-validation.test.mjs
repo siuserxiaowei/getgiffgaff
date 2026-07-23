@@ -12,7 +12,7 @@ test("outreach ledger and external-content drafts remain pre-action and safely g
   const result = await validateOutreachAssets();
 
   assert.equal(result.errors.length, 0, result.errors.join("\n"));
-  assert.equal(result.candidateCount, 23);
+  assert.equal(result.candidateCount, 25);
   assert.equal(result.draftCount, 7);
   assert.ok(result.markdownCount >= 14);
 });

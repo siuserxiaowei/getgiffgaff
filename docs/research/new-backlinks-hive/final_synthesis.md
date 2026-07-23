@@ -1,0 +1,45 @@
+# Final Synthesis
+
+## Executive Conclusion
+
+free high quality website directories and startup launch platforms accepting submissions for independent Chinese travel telecom SIM guide website was processed into auditable research artifacts. Conclusions below are grouped by accepted evidence and retain their verification status.
+
+## Scope
+
+- Topic: free high quality website directories and startup launch platforms accepting submissions for independent Chinese travel telecom SIM guide website
+- Geography: global
+- Language: auto
+- Timeframe: current
+- Stop condition: Search results processed or blocked.
+
+## Accepted Findings
+
+| Claim Group | Entity | Timeframe | Status | Confidence | Independent Sources | Evidence IDs | Claims |
+|---|---|---|---|---|---:|---|---|
+| CG-SRC-001-OBSERVATION | Chinese | 2024-01 | single_source | low | 1 | EV-001, EV-002 | 不保证实时更新： MobaXterm Latest Version 24.3 (2024-10-30) 汉化最新版本：24.3, 总进度 100% About MobaXterm 简体中文汉化版🌏🖥🖥🖥 【💌慢工精心制作，"提示"也汉化💻】 【😍控件布局精细调整】 Topics chinese-simplified mobaxterm Resources Readme Uh oh!<br>--> Search Clear Search syntax tips Provide feedback --> We read every piece of feedback, and take your input very seriously. |
+| CG-SRC-002-OBSERVATION | Chinese | unknown | single_source | low | 1 | EV-003, EV-004 | Mainland China [ edit ] The Law of the People's Republic of China on the National Common Language and Characters implies that simplified Chinese characters are the country's standard script, with traditional Chinese being used for purposes such as ceremonies, cultural purposes such as calligraphy, for decoration, in publications and books on ancient literature and poetry, and for research purposes.<br>Find sources: "Simplified Chinese characters" – news · newspapers · books · scholar · JSTOR ( April 2018 ) ( Learn how and when to remove this message ) This article may contain original research . |
+| CG-SRC-003-OBSERVATION | Chinese | unknown | single_source | low | 1 | EV-005, EV-006 | --> Search Clear Search syntax tips Provide feedback --> We read every piece of feedback, and take your input very seriously.<br>Activity Stars 1.3k stars Watchers 49 watching Forks 135 forks Report repository Releases 11 1.9.0+适配版本 Latest Sep 2, 2016 + 10 releases Packages 0 Uh oh! |
+| CG-SRC-004-OBSERVATION | Chinese | 2025 | single_source | low | 1 | EV-007, EV-008 | Retrieved from " https://en.wikipedia.org/w/index.php?title=Chinese simplification&oldid=1306911079 " Category : Disambiguation pages Hidden categories: Short description is different from Wikidata All article disambiguation pages All disambiguation pages This page was last edited on 20 August 2025, at 11:44 (UTC) .<br>If an internal link incorrectly led you here, you may wish to change the link to point directly to the intended article. |
+| CG-SRC-005-OBSERVATION | Chinese | unknown | single_source | low | 1 | EV-009, EV-010 | 特别感谢 AlyxMS 从 A3 开始和作者紧密联系并共同创建了本项目 Bigmap 伟大的国旗哥 duduluu （风之起灵） 一手拉起了边缘汉化组 本项目地址 GitHub ： https://github.com/Ludeon/RimWorld-ChineseSimplified 链接 百度贴吧 RimWorld 吧 翻译工具 RimTrans 饼叔的游戏笔记 GameJiLu.com About No description, website, or topics provided.<br>安装方法 下载压缩包 解压缩得到「Core」、「Royalty」、「Ideology」、「Biotech」、「Anomaly」文件夹 删除 RimWorld 安装目录 > Data > Core/Royalty/Ideology/Biotech/Anomaly > Languages 内的「ChineseSimplified (简体中文).tar」文件 在上一步的目录中新建文件夹，命名为「ChineseSimplified (简体中文)」，并将解压缩得到的文件夹中的内容放入对应目录 注意事项 内置翻译落后 ：官方内置的翻译版本落后，玩家可自行下载安装。 |
+| CG-SRC-006-OBSERVATION | Chinese | 2013 | single_source | low | 1 | EV-011, EV-012 | Although the exact date of the 1st National Congress was later determined by party officials to be 23 July 1921, the date of the anniversary has not been changed.<ref>{{Cite news |last=楊立傑 |date=30 April 2013 |title=共产主义小组的建立与中国共产党的成立 |language=zh-Hans-CN |work=Xinhua |url=http://news.xinhuanet.com/ziliao/2004-10/25/content 2136770.htm |access-date=3 December 2021 |archive-url=https://web.archive.org/web/20130430055514/http://news.xinhuanet.com/ziliao/2004-10/25/content 2136770.htm |archive-date<br>and others 1st National Congress representatives: Henk Sneevliet Vladimir Neumann Li Da Li Hanjun Zhang Guotao Liu Renjing Mao Zedong He Shuheng Dong Biwu Chen Tanqiu Wang Jinmei Deng Enming Chen Gongbo Zhou Fohai Bao Huiseng Founded 23 July 1921 (104 years, 363 days) at the 1st National Congress [ a ] Site of the First National Congress of the Chinese Communist Party (106 Rue Wantz, Shanghai French Concession ; now 76 Xingye Road, Huangpu District , Shanghai, China) Headquarters Zhongnanhai , X |
+| CG-SRC-007-OBSERVATION | Chinese | unknown | single_source | low | 1 | EV-013, EV-014 | --> Search Clear Search syntax tips Provide feedback --> We read every piece of feedback, and take your input very seriously.<br>Activity Stars 556 stars Watchers 12 watching Forks 64 forks Report repository Releases 2 对应Aseprite版本v1.2.23（主题无改动） Latest Nov 1, 2019 + 1 release Packages 0 Uh oh! |
+| CG-SRC-008-OBSERVATION | Chinese | unknown | single_source | low | 1 | EV-015, EV-016 | [ 27 ] 1927–1937: First phase [ edit ] First phase Traditional Chinese 第一次國共內戰 Simplified Chinese 第一次国共内战 Literal meaning First Kuomintang–Communist civil war Transcriptions Standard Mandarin Hanyu Pinyin Dì-Yī Cì Guó-Gòng Nèizhàn Name in mainland China Traditional Chinese 第二次國內革命戰爭 Simplified Chinese 第二次国内革命战争 Literal meaning Second National Revolutionary War Transcriptions Standard Mandarin Hanyu Pinyin Dìèrcì guónèi gémìng zhànzhēng Early communist uprisings [ edit ] Main article: Encirclemen<br>[ 92 ] : 54 In the last month of World War II in East Asia, Soviet forces launched the huge Manchurian Strategic Offensive Operation against the Japanese Kwantung Army in Manchuria and along the Chinese-Mongolian border. |
+| CG-SRC-009-OBSERVATION | Chinese | unknown | single_source | low | 1 | EV-017, EV-018 | --> Search Clear Search syntax tips Provide feedback --> We read every piece of feedback, and take your input very seriously.<br>2017-10-31: 解决各种编码问题，最突出的问题就是： TypeError: 'encoding' in an invalid keyword argument for this function 这是由于Python2.x对文件支持问题导致的，已经修复。还有一些诸如编码神马的问题也一并修复。 |
+| CG-SRC-010-OBSERVATION | Chinese | unknown | single_source | low | 1 | EV-019, EV-020 | The CSL and China League One's goals are to promote high-quality and high-level competition, introduce advanced managerial concepts to the market, enforce the delivery of minimum standards of professionalism, encourage an influx of higher-quality foreign coaches and players, and gradually establish the European system for player registrations and transfers.<br>[ citation needed ] In 2022, Chinese Communist Party (CCP) officials launched an anti-corruption probe resulting in eight footballing officials being investigated for "suspected of violations of discipline and law". |
+
+## Counter-Evidence And Caveats
+
+Rows marked `conflicting`, `single_source`, or `blocked` should not be treated as final high-confidence conclusions.
+
+## Source Gaps
+
+See `source_gap_backlog.md` for unresolved, conflicting, or under-supported claims.
+
+## Agent Ledger
+
+This run used up to 3 worker agent(s). See `agent_ledger.tsv` for per-agent task assignments and curator status.
+Ledger rows: 11.
+
+## Retrieval Notes
+
+Index only generated artifacts and source excerpts that are allowed to be stored.

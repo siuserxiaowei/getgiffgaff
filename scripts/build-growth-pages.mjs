@@ -10,6 +10,11 @@ const OUTPUT_ROOT = path.join(ROOT, "site", "growth");
 const ORIGIN = "https://getgiffgaff.com";
 const SOCIAL_IMAGE = `${ORIGIN}/gg-card-hero.png`;
 
+function socialImageFor(page) {
+  if (!page.socialImage) return SOCIAL_IMAGE;
+  return new URL(page.socialImage, ORIGIN).href;
+}
+
 const INDEXABLE_ANSWER_EVIDENCE = Object.freeze({
   "/guides/claude-identity-verification/": Object.freeze({
     kind: "official",
@@ -47,6 +52,33 @@ const INDEXABLE_ANSWER_EVIDENCE = Object.freeze({
       "https://www.giffgaff.com/boiler-plate/terms",
       "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
       "https://help.giffgaff.com/en/articles/261570-switching-to-an-esim-with-giffgaff",
+    ]),
+  }),
+  "/guides/uk-sim-at-heathrow/": Object.freeze({
+    kind: "mixed",
+    method: "本站机场落地通信分流方法",
+    sourceUrls: Object.freeze([
+      "https://www.heathrow.com/zh/at-the-airport/airport-services/uk-sims-and-phones",
+      "https://help.giffgaff.com/en/articles/639659-network-service-troubleshooting",
+      "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+    ]),
+  }),
+  "/guides/manchester-student-sim/": Object.freeze({
+    kind: "mixed",
+    method: "本站宿舍、校区与通勤地点比较方法",
+    sourceUrls: Object.freeze([
+      "https://www.manchester.ac.uk/study/international/finance-and-scholarships/communications/",
+      "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+      "https://www.giffgaff.com/boiler-plate/terms",
+    ]),
+  }),
+  "/guides/london-student-sim/": Object.freeze({
+    kind: "mixed",
+    method: "本站住宿、校区与地下通勤地点比较方法",
+    sourceUrls: Object.freeze([
+      "https://www.ofcom.org.uk/mobile-coverage-checker?language=en",
+      "https://tfl.gov.uk/modes/tube/station-wifi",
+      "https://www.giffgaff.com/boiler-plate/terms",
     ]),
   }),
   "/guides/9-number-balance-data-check/": Object.freeze({
@@ -168,6 +200,16 @@ function schemaFor(page) {
       width: 1400,
       height: 1000,
     };
+    if (page.location) {
+      pageNode.contentLocation = {
+        "@type": "Place",
+        name: page.location.name,
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: page.location.addressCountry,
+        },
+      };
+    }
   }
   if (page.schemaType === "WebApplication") {
     pageNode.applicationCategory = "UtilitiesApplication";
@@ -326,6 +368,10 @@ function disclosureFor(page) {
 
 export function renderGrowthPage(page) {
   const url = canonicalUrl(page);
+  const socialImage = socialImageFor(page);
+  const socialImageDimensions = page.socialImage
+    ? '\n  <meta property="og:image:width" content="1200">\n  <meta property="og:image:height" content="630">'
+    : "";
   const robots =
     page.indexPolicy === "index"
       ? "index, follow, max-snippet:-1, max-image-preview:large"
@@ -359,11 +405,11 @@ export function renderGrowthPage(page) {
   <meta property="og:title" content="${escapeHtml(page.title)}">
   <meta property="og:description" content="${escapeHtml(page.description)}">
   <meta property="og:url" content="${url}">
-  <meta property="og:image" content="${SOCIAL_IMAGE}">
+  <meta property="og:image" content="${socialImage}">${socialImageDimensions}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
-  <meta name="twitter:image" content="${SOCIAL_IMAGE}">
+  <meta name="twitter:image" content="${socialImage}">
   <link rel="icon" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/site.css">
   <link rel="stylesheet" href="/growth-assets/growth.css">
@@ -379,7 +425,7 @@ export function renderGrowthPage(page) {
         <p>${escapeHtml(page.deck)}</p>
         <div class="growth-meta"><span>更新 ${escapeHtml(page.updatedAt)}</span><span>核验 ${escapeHtml(page.reviewedAt)}</span><span>${page.indexPolicy === "index" ? "原创教程/工具" : "方法预览 · noindex"}</span></div>
       </header>
-      <p class="growth-disclosure">${disclosureFor(page)}</p>
+${page.productIntroHtml ? `      ${page.productIntroHtml}\n` : ""}      <p class="growth-disclosure">${disclosureFor(page)}</p>
       <div class="legacy-answer"><strong>直接答案</strong><p>${escapeHtml(page.directAnswer)}</p></div>
       ${renderInlineEvidence(page)}
 ${threshold ? `      ${threshold}\n` : ""}

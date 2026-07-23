@@ -262,6 +262,13 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 - [ ] 在发布后 24–72 小时抽查日志：请求路径、状态码、缓存状态、Verified Bot 分类和 IP 验证结果；不得仅以 UA 字符串统计。
 - [ ] 发现真实搜索机器人持续 403、429 或 5xx 时，先定位具体 WAF 规则并最小范围修正，不能无条件放开所有“bot”流量。
 
+2026-07-23 搜索平台接入记录：
+
+- 生产 `robots.txt`、`sitemap.xml` 与 `/indexnow-key.txt` 均返回 HTTP 200；当日 sitemap 含 46 个唯一 `<loc>`。
+- 显式执行 `npm run submit:indexnow -- --all`，向 `https://api.indexnow.org/indexnow` 提交 46 个 sitemap URL，回执为 HTTP 200、`outcome=accepted`。该回执只证明批次已接收，不证明任何搜索引擎已经抓取、收录或排名。
+- IndexNow 官方参与方清单当日包含 Bing、Yandex、Seznam、Naver、Yep、Internet Archive 与 Amazonbot；全局端点会把提交共享给参与方，因此不为这些引擎重复运行相同的全站批次。
+- 百度账号现场可访问，`https://getgiffgaff.com/` 已存在于站点管理但状态仍为“未验证”；验证流程尚未完成，不能写成已接入。Yandex Webmaster 已进入 Yandex ID 登录页，仍需账号所有者完成登录。
+
 ## 8. 搜索引擎重新提交
 
 只有对应账号的已验证站点所有者可以执行，完成后在发布记录中保存提交时间和平台回执，不记录登录凭证。

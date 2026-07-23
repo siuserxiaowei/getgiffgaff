@@ -79,6 +79,30 @@ test("all indexable growth answers declare route-specific evidence instead of a 
       },
     ],
     [
+      "/guides/uk-sim-at-heathrow/",
+      {
+        kind: "mixed",
+        method: /本站机场落地通信分流方法/,
+        sources: ["heathrow.com/zh/at-the-airport", "639659-network", "ofcom.org.uk/mobile-coverage-checker"],
+      },
+    ],
+    [
+      "/guides/manchester-student-sim/",
+      {
+        kind: "mixed",
+        method: /本站宿舍、校区与通勤地点比较方法/,
+        sources: ["manchester.ac.uk/study/international", "ofcom.org.uk/mobile-coverage-checker", "boiler-plate/terms"],
+      },
+    ],
+    [
+      "/guides/london-student-sim/",
+      {
+        kind: "mixed",
+        method: /本站住宿、校区与地下通勤地点比较方法/,
+        sources: ["ofcom.org.uk/mobile-coverage-checker", "tfl.gov.uk/modes/tube/station-wifi", "boiler-plate/terms"],
+      },
+    ],
+    [
       "/guides/9-number-balance-data-check/",
       {
         kind: "official",

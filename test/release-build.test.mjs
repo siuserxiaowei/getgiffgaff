@@ -352,7 +352,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   const report = await buildReleaseArtifact(outputRoot);
 
   assert.equal(report.legacyPages, 34);
-  assert.equal(report.growthPages, 19);
+  assert.equal(report.growthPages, 22);
   assert.equal(report.injectedPages, 17);
   assert.equal(report.commerceWidgets, 34);
 
@@ -442,7 +442,7 @@ test("release build contains frozen pages, growth pages, semantic related slots,
   );
 
   const sitemap = await readFile(path.join(outputRoot, "sitemap.xml"), "utf8");
-  assert.equal((sitemap.match(/<url>/g) || []).length, 46);
+  assert.equal((sitemap.match(/<url>/g) || []).length, 49);
   for (const route of NOINDEX_GROWTH_ROUTES) {
     assert.doesNotMatch(sitemap, new RegExp(route.replaceAll("/", "\\/")), route);
   }
@@ -562,7 +562,7 @@ test("release search-change binding records only routes whose sitemap lastmod ch
   });
 });
 
-test("llms.txt is a curated task index for exactly the 46 indexable pages", async (t) => {
+test("llms.txt is a curated task index for exactly the 49 indexable pages", async (t) => {
   const outputRoot = await mkdtemp(path.join(os.tmpdir(), "getgiffgaff-llms-"));
   t.after(() => rm(outputRoot, { recursive: true, force: true }));
   await buildReleaseArtifact(outputRoot);
@@ -582,7 +582,7 @@ test("llms.txt is a curated task index for exactly the 46 indexable pages", asyn
 
   const entries = [...llms.matchAll(/^- \[([^\]]+)\]\((https:\/\/getgiffgaff\.com\/[^)]*)\)：([^\n]+)$/gm)]
     .map((match) => ({ title: match[1], url: match[2], purpose: match[3].trim() }));
-  assert.equal(entries.length, 46, "one titled purpose entry per indexable page");
+  assert.equal(entries.length, 49, "one titled purpose entry per indexable page");
   assert.deepEqual(
     entries.map((entry) => new URL(entry.url).pathname).sort(),
     [...PUBLIC_INDEXABLE_PATHS].sort(),
