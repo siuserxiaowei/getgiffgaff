@@ -35,9 +35,9 @@
 
 已上线三页：
 
-1. `/guides/china-mainland-buy-giffgaff-sim/`
-2. `/guides/hong-kong-buy-giffgaff-sim/`
-3. `/guides/uk-student-giffgaff-sim-before-departure/`
+1. `/guides/uk-sim-at-heathrow/`
+2. `/guides/manchester-student-sim/`
+3. `/guides/london-student-sim/`
 
 执行规则：
 
