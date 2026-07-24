@@ -30,6 +30,10 @@ import {
   legacyDomSignature,
   visibleTextSignature,
 } from "../scripts/capture-legacy-site.mjs";
+import {
+  BAIDU_SITE_VERIFICATION_CODE,
+  injectBaiduVerificationMeta,
+} from "../scripts/search-platform-verification.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const LEGACY_ROOT = path.join(ROOT, "site", "legacy");
@@ -386,6 +390,12 @@ test("release build contains frozen pages, growth pages, semantic related slots,
     if (route === "/contact/") expected = injectVerifiedContactChannels(expected);
     expected = applyLegacySafetyOverrides(expected, route).html;
     expected = applyReleaseConversionOverrides(expected, route);
+    if (route === "/") {
+      expected = injectBaiduVerificationMeta(
+        expected,
+        BAIDU_SITE_VERIFICATION_CODE,
+      );
+    }
     const expectedSlots = Object.hasOwn(related, route) ? 2 : 1;
     assert.equal((html.match(/data-growth-slot=/g) || []).length, expectedSlots, route);
     const expectedWidgets = [

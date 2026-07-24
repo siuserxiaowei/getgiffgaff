@@ -1,8 +1,10 @@
 # Final Synthesis
 
+> **REJECTED FOR OPERATIONS — 2026-07-24.** This run did not retrieve relevant submission targets. Its accepted rows are unrelated Chinese-language snippets, Wikipedia fragments, or GitHub repositories. Do not submit, contact, score, or import any entity from this folder into the outreach pipeline. Keep the artifacts only as a failed-research audit trail.
+
 ## Executive Conclusion
 
-free high quality website directories and startup launch platforms accepting submissions for independent Chinese travel telecom SIM guide website was processed into auditable research artifacts. Conclusions below are grouped by accepted evidence and retain their verification status.
+The requested directory/platform research failed relevance review. No operational backlink target was accepted. Conclusions below are retained only to explain why the run was rejected.
 
 ## Scope
 

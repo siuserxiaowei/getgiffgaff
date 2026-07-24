@@ -26,6 +26,7 @@ import {
 import { applyGrowthSafetyOverrides } from "./build-growth-pages.mjs";
 import { renderCommerceWidget } from "../site/growth/commerce-widget.js";
 import { configureAdsenseVerification } from "./adsense-verification.mjs";
+import { configureSearchPlatformVerification } from "./search-platform-verification.mjs";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const LEGACY_ROOT = path.join(ROOT, "site", "legacy");
@@ -1918,6 +1919,9 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
       ...NOINDEX_GROWTH_ROUTES,
     ],
   });
+  const searchPlatformVerification = await configureSearchPlatformVerification({
+    outputRoot,
+  });
 
   return {
     outputRoot,
@@ -1928,6 +1932,7 @@ export async function buildReleaseArtifact(options = DEFAULT_OUTPUT) {
     safetyOverrides,
     indexablePages: PUBLIC_INDEXABLE_PATHS.length,
     adsense,
+    searchPlatformVerification,
   };
 }
 

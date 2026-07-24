@@ -23,12 +23,12 @@
 - [ ] 冻结新增内容、URL、导航和模板改版，只允许本次索引修复及其测试变更。
 - [ ] 记录待发布 Git commit、当前生产部署 ID、上一个可恢复部署 ID、执行人和时间。
 - [ ] 保存发布前 `/sitemap.xml`、`/robots.txt`、核心页面响应头及验证脚本输出；日志中不得保存 Cookie、订单参数或个人信息。
-- [ ] 确认 sitemap 预期为 **39 个唯一 URL**；如业务已批准变更数量，先同步更新测试和发布记录，不能临时跳过计数检查。
+- [ ] 通过 `PUBLIC_INDEXABLE_PATHS.length` 确认 sitemap 预期数量（2026-07-24 为 **49 个唯一 URL**）；如业务已批准变更数量，先同步更新测试和发布记录，不能临时跳过计数检查。
 
 生产发布前的基线命令：
 
 ```bash
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
+npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 49
 ```
 
 该命令调用 [`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs)。如果当前线上正是待修复的 `noindex` 事故版本，预发布基线可以失败，但只允许记录已经确认的事故项；出现新的 5xx、跨域 canonical、重定向环或 sitemap 数量变化时停止发布。发布后必须全部通过，不得继续豁免。
@@ -117,7 +117,7 @@ npm run deploy:preview
 - [ ] `.pages.dev` Preview 按设计应返回 `noindex, nofollow, noarchive`，防止预览环境被收录。
 - [ ] 不把 Pages Preview 上的 `noindex` 当作生产公开页策略，也不把 Preview URL 提交给搜索引擎。
 
-注意：[`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs) 要求 sitemap、canonical 与被测 origin 完全一致，因此 `.pages.dev` Preview 不应被强行跑成“绿色”。候选版本的预发布门禁由本地测试、Preview 人工检查和生产发布前基线共同组成；生产域发布后再执行完整 39 URL 验证。
+注意：[`scripts/verify-seo-release.mjs`](../scripts/verify-seo-release.mjs) 要求 sitemap、canonical 与被测 origin 完全一致，因此 `.pages.dev` Preview 不应被强行跑成“绿色”。候选版本的预发布门禁由本地测试、Preview 人工检查和生产发布前基线共同组成；生产域发布后再按 `PUBLIC_INDEXABLE_PATHS.length` 执行完整 URL 验证。
 
 ## 5. 发布、缓存与域名
 
@@ -135,7 +135,7 @@ npm run deploy:maintenance
 
 维护发布同样执行本地验证、外联资产校验、静态商业断言扫描、两次 clean-tree 检查、fresh `origin/main = HEAD` 和生产后 `verify:seo`；它不会读取或绕过商业证据，也不能据此声称库存、交易、支付、履约或退款已核验。所有 release deployment 都会剔除 `ADSENSE_PUBLISHER_ID`；maintenance 还会剔除 `COMMERCE_EVIDENCE_FILE`，因此本次构建不会因调用终端残留变量而暗含 AdSense 或商业证据配置。
 
-生产脚本会在上传前后分别读取 Production deployment metadata，并要求恰好新增一条 `Environment = Production`、`Branch = main`、`Source` 匹配精确 HEAD 的记录；同时校验 Wrangler 结构化输出中的完整 40 位 commit、deployment ID 和 URL。上传后还会再次 fresh fetch `origin/main`，若远端已推进则明确失败（已发生的上传无法由该检查自动回滚）。只有新的 deployment URL 首页返回 200 且 canonical 指向 `https://getgiffgaff.com/`、canonical 生产域的 39 URL `verify:seo` 全绿，并且一次性 Analytics canary 已通过 Cloudflare SQL API 精确回读，脚本才输出 `deployed: true`。SQL 回读使用本机 Wrangler 登录态的 bearer credential，只在子进程内存中使用且不得写入日志或仓库；不支持或权限不足时发布失败关闭。这些检查都在 `deploy-release.mjs` 内执行，不依赖 npm `postdeploy` lifecycle。部署完成后：
+生产脚本会在上传前后分别读取 Production deployment metadata，并要求恰好新增一条 `Environment = Production`、`Branch = main`、`Source` 匹配精确 HEAD 的记录；同时校验 Wrangler 结构化输出中的完整 40 位 commit、deployment ID 和 URL。上传后还会再次 fresh fetch `origin/main`，若远端已推进则明确失败（已发生的上传无法由该检查自动回滚）。只有新的 deployment URL 首页返回 200 且 canonical 指向 `https://getgiffgaff.com/`、canonical 生产域全部 manifest URL 的 `verify:seo` 全绿，并且一次性 Analytics canary 已通过 Cloudflare SQL API 精确回读，脚本才输出 `deployed: true`。SQL 回读使用本机 Wrangler 登录态的 bearer credential，只在子进程内存中使用且不得写入日志或仓库；不支持或权限不足时发布失败关闭。这些检查都在 `deploy-release.mjs` 内执行，不依赖 npm `postdeploy` lifecycle。部署完成后：
 
 2026-07-15 生产实施记录：
 
@@ -184,7 +184,7 @@ npm run deploy:maintenance
 - Preview analytics probe 的通过状态是 404；生产 canary 的通过状态是 204，并应写入与一次性 ID 对齐的 `index1 = 'seo_release_canary:<探针 ID>'` 及 `blob4 = 'seo_release_canary'`。生产 204 后仍需在最多 19 次、8 分钟 wall-clock 硬截止内由 SQL 查询确认点已可见，所有运营报表必须排除该 canary。
 - 上线状态、真机验收矩阵和观察口径以[咨询链路恢复与观察记录](operations/consultation-recovery-2026-07-19.md)为准。当前正式版本以生产 `/release-provenance.json` 返回的完整 Git SHA 为准；自动测试、二维码哈希和 HTTP 状态都不能证明微信真机拉起、消息送达、订单生成或付款完成。
 - 发布门禁要求 GitHub `main`、Preview Source、Production Source 和生产 provenance 使用同一个 clean 40 字符 SHA；Preview analytics probe 必须隔离为 404，生产 probe 必须返回 204 并由 SQL API 精确回读后，发布脚本才可报告 `deployed: true`。
-- sitemap 的 `lastmod` 只在页面主体、搜索摘要或主要咨询/购买路径发生实质变化时更新；共享样式、埋点或无关页脚变化不得把全部 39 个 URL 伪装成同一天更新。
+- sitemap 的 `lastmod` 只在页面主体、搜索摘要或主要咨询/购买路径发生实质变化时更新；共享样式、埋点或无关页脚变化不得把全部 URL 伪装成同一天更新。
 - 构建生成 `release-search-changes.json`；生产发布前将其绑定到当前线上 `/release-provenance.json` 对应提交，与候选 sitemap 比较得到真实变化 URL，并用 sitemap SHA-256 防止提交旧清单。
 - 生产验证完成后，变化集合非空才自动运行 `npm run submit:indexnow`。该命令默认只提交此集合；人工确需重提全部 canonical URL 时，必须显式执行 `npm run submit:indexnow:all` 并记录原因。IndexNow 的 200/202 只表示批次被接收，不代表抓取、收录或排名。
 
@@ -220,20 +220,20 @@ https://getgiffgaff.com/contact/
 
 不得出现 `www` 200、临时重定向、两跳链、跨域跳转或循环。
 
-如果 Cloudflare 在 Pages Worker 之前先把 HTTP 跳到 HTTPS，单靠 Worker 无法消除 `HTTP → HTTPS www → HTTPS apex` 链。此时需在 Cloudflare Redirect Rules / Bulk Redirects 中配置优先级更高的规范化规则（需 Zone Rules 权限）：`www.getgiffgaff.com` 指向 `https://getgiffgaff.com`，保留 query、子路径和 path suffix；对 46 个公开 HTML 路由中除 `/` 外的 45 个无尾斜杠路径，规则目标必须直接是最终带 `/` URL。以生产 `verify:seo` 的组合变体结果为准，不能只验证 HTTPS www。
+如果 Cloudflare 在 Pages Worker 之前先把 HTTP 跳到 HTTPS，单靠 Worker 无法消除 `HTTP → HTTPS www → HTTPS apex` 链。此时需在 Cloudflare Redirect Rules / Bulk Redirects 中配置优先级更高的规范化规则（需 Zone Rules 权限）：`www.getgiffgaff.com` 指向 `https://getgiffgaff.com`，保留 query、子路径和 path suffix；对 `PUBLIC_INDEXABLE_PATHS` 中除 `/` 外的全部无尾斜杠路径，规则目标必须直接是最终带 `/` URL。以生产 `verify:seo` 的组合变体结果为准，不能只验证 HTTPS www。
 
-## 6. 发布后 39 URL 强制验收
+## 6. 发布后全部 manifest URL 强制验收
 
 缓存清理后立即执行：
 
 ```bash
-npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
+npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 49
 ```
 
 该门禁必须确认：
 
-- [x] sitemap 有 39 个唯一 URL，且都属于 canonical origin。
-- [x] 39/39 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
+- [ ] sitemap URL 数量与 `PUBLIC_INDEXABLE_PATHS.length` 相同（2026-07-24 为 49），且都属于 canonical origin。
+- [ ] 全部 manifest URL 均直接返回 200、HTML、无 HTTP 或 meta `noindex`。
 - [x] 每页只有一个自指 canonical，且 `og:url` 与 canonical 一致。
 - [ ] HTTP、`www`、无尾斜杠变体均一跳永久重定向；以发布后的当前门禁为准，不沿用历史失败数。
 - [x] JSON-LD 可解析，不引用 `pages.dev`，不把本站声明为 giffgaff 官方实体、母公司或官方 seller。
@@ -283,7 +283,7 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 任一条件触发立即停止后续提交，并进入回滚或紧急向前修复：
 
 - 公开 sitemap URL 出现 `noindex`、非 200、跨域 canonical、重定向循环或两跳以上规范化。
-- sitemap 不再是批准的 39 个唯一 URL。
+- sitemap 不再与批准的 `PUBLIC_INDEXABLE_PATHS` 集合完全一致。
 - JSON-LD 无法解析、含 `pages.dev`，或出现本站是 giffgaff 官方实体的错误声明。
 - 5xx、403/429、缓存错误或核心 CTA 故障明显上升。
 - 订单、Cookie、个人信息或敏感参数进入公共缓存/日志。
@@ -294,7 +294,7 @@ npm run verify:seo -- --base-url https://getgiffgaff.com --expected-url-count 39
 1. 保留失败验证输出、部署 ID、时间点和最小必要日志。
 2. 若上一个部署没有本次事故，通过 Cloudflare Pages 回滚到记录的部署并清理相关缓存（需账号权限）。
 3. 若上一个部署就是已知的 32/34 `noindex` 事故版本，不回滚到同一故障；保持内容冻结，发布最小向前修复。
-4. 重新执行本地门禁与生产 39 URL 验证，全部通过后才恢复搜索引擎提交。
+4. 重新执行本地门禁与生产全部 manifest URL 验证，全部通过后才恢复搜索引擎提交。
 
 ## 10. 首个完整 28 天基线
 
