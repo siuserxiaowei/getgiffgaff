@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071d33"/>
+      <stop offset="1" stop-color="#123c43"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="82%" cy="10%" r="70%">
+      <stop offset="0" stop-color="#f6c85f" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#f6c85f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" rx="32" fill="url(#bg)"/>
+  <rect width="1200" height="630" rx="32" fill="url(#glow)"/>
+  <g transform="translate(70 58)">
+    <text x="0" y="26" fill="#f6c85f" font-family="Verdana" font-size="22" font-weight="700" letter-spacing="2">FREE · NO SIGN-UP · DATED PUBLIC RATES</text>
+    <text x="0" y="102" fill="#ffffff" font-family="Verdana" font-size="55" font-weight="800">China PAYG Roaming</text>
+    <text x="0" y="166" fill="#ffffff" font-family="Verdana" font-size="55" font-weight="800">Cost Calculator</text>
+    <text x="0" y="216" fill="#c7d8da" font-family="Verdana" font-size="24">Estimate data, SMS and single-call Credit before travel.</text>
+  </g>
+  <g transform="translate(70 330)" font-family="Verdana">
+    <g>
+      <rect width="240" height="130" rx="20" fill="#ffffff" fill-opacity=".09" stroke="#ffffff" stroke-opacity=".17"/>
+      <text x="24" y="40" fill="#bcd0d3" font-size="18">DATA</text>
+      <text x="24" y="88" fill="#ffffff" font-size="35" font-weight="800">20p / MB</text>
+    </g>
+    <g transform="translate(260)">
+      <rect width="240" height="130" rx="20" fill="#ffffff" fill-opacity=".09" stroke="#ffffff" stroke-opacity=".17"/>
+      <text x="24" y="40" fill="#bcd0d3" font-size="18">SENT SMS</text>
+      <text x="24" y="88" fill="#ffffff" font-size="35" font-weight="800">30p each</text>
+    </g>
+    <g transform="translate(520)">
+      <rect width="240" height="130" rx="20" fill="#ffffff" fill-opacity=".09" stroke="#ffffff" stroke-opacity=".17"/>
+      <text x="24" y="40" fill="#bcd0d3" font-size="18">OUTGOING</text>
+      <text x="24" y="88" fill="#ffffff" font-size="35" font-weight="800">£1 / min</text>
+    </g>
+    <g transform="translate(780)">
+      <rect width="240" height="130" rx="20" fill="#ffffff" fill-opacity=".09" stroke="#ffffff" stroke-opacity=".17"/>
+      <text x="24" y="40" fill="#bcd0d3" font-size="18">INCOMING</text>
+      <text x="24" y="88" fill="#ffffff" font-size="35" font-weight="800">£1 / min</text>
+    </g>
+  </g>
+  <g transform="translate(70 526)" font-family="Verdana">
+    <text x="0" y="24" fill="#f6c85f" font-size="22" font-weight="700">getgiffgaff.com/tools/china-roaming-cost/</text>
+    <text x="0" y="62" fill="#9fb5b8" font-size="17">Independent utility for giffgaff users · Travel Data Add-on excluded</text>
+  </g>
+</svg>

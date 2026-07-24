@@ -14,6 +14,8 @@ export const ATTRIBUTION_SOURCES = Object.freeze({
   wechat_official: "dist_wechat_official",
   partner: "dist_partner",
   private_share: "dist_private_share",
+  uneed: "dist_uneed",
+  tinylaunch: "dist_tinylaunch",
   google_ads: "paid_google",
   microsoft_ads: "paid_microsoft",
 });

@@ -292,11 +292,11 @@
     },
     {
       "path": "/tools/keep-number-reminder/",
-      "title": "giffgaff 保号提醒工具｜本地生成第 5 个月提醒",
-      "description": "输入最近一次有效动作日期，在浏览器本地生成第 5 个月提醒并导出 .ics；不上传号码、账号或日期，不承诺永久保号。",
+      "title": "UK SIM Keep-Number Reminder｜giffgaff 第 5 个月保号提醒",
+      "description": "Create a private fifth-month reminder for an infrequently used UK SIM, export a standard .ics file, and review the current giffgaff inactivity rule. 中文说明附后。",
       "intent": "giffgaff 保号提醒日期计算",
-      "updatedAt": "2026-07-23",
-      "reviewedAt": "2026-07-17",
+      "updatedAt": "2026-07-24",
+      "reviewedAt": "2026-07-24",
       "sources": [
         "https://help.giffgaff.com/en/articles/242797-understanding-why-your-number-has-been-deactivated",
         "https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit"
@@ -312,11 +312,11 @@
     },
     {
       "path": "/tools/china-roaming-cost/",
-      "title": "giffgaff 中国 PAYG 漫游费用计算器｜短信、通话与流量",
-      "description": "按 giffgaff 当前中国 PAYG Credit 漫游费率试算短信、单次通话和流量成本；不包含 Travel Data Add-on，费率过期停止给出总价。",
+      "title": "China PAYG Roaming Cost Calculator｜giffgaff 用户漫游试算",
+      "description": "Estimate China PAYG Credit for data, SMS and calls using dated public giffgaff rates. Independent utility; excludes the Travel Data Add-on. 中文说明附后。",
       "intent": "giffgaff 中国 PAYG Credit 漫游费用试算",
-      "updatedAt": "2026-07-17",
-      "reviewedAt": "2026-07-17",
+      "updatedAt": "2026-07-24",
+      "reviewedAt": "2026-07-24",
       "sources": [
         "https://www.giffgaff.com/roaming/china",
         "https://help.giffgaff.com/en/articles/365501-giffgaff-travel-data-add-ons-and-how-they-work",

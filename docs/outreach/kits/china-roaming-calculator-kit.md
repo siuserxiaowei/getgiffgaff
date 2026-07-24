@@ -1,9 +1,9 @@
 # China PAYG roaming calculator editorial kit / 中国 PAYG 漫游试算编辑资料包
 
 Status: **`release-gated — do not publish, syndicate, or pitch yet`**<br>
-Prepared: 2026-07-17 (Asia/Shanghai)<br>
-Evidence retrieved: 2026-07-17<br>
-Evidence expires: 2026-08-15<br>
+Prepared: 2026-07-24 (Asia/Shanghai)<br>
+Evidence retrieved: 2026-07-24<br>
+Evidence expires: 2026-08-22<br>
 Proposed public asset: `https://getgiffgaff.com/tools/china-roaming-cost/`
 
 This kit documents the E08 calculation fix and gives editors a source-traceable way to assess the methodology. The E08 unit tests pass locally, but that does not prove that the corrected build is live, that an editor has reviewed it, or that a real giffgaff bill will equal an estimate. Keep the kit behind the release gate until every item in the final checklist passes.
@@ -20,9 +20,9 @@ The calculator estimates how much **giffgaff account Credit** the listed China P
 
 | Source | What this kit uses it for | Retrieved | Recheck no later than |
 |---|---|---:|---:|
-| [giffgaff — Roaming charges in China](https://www.giffgaff.com/roaming/china) | China rates, call billing units, Travel Data Add-on distinction and PAYG/Credit context | 2026-07-17 | 2026-08-15 |
-| [giffgaff Help — Everything to know about Credit](https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit) | Definition and use of account Credit | 2026-07-17 | 2026-08-15 |
-| [giffgaff Help — Travel Data Add-ons and how they work](https://help.giffgaff.com/en/articles/365501-giffgaff-travel-data-add-ons-and-how-they-work) | App-only purchase route and country-specific non-EU scope, including China | 2026-07-17 | 2026-08-15 |
+| [giffgaff — Roaming charges in China](https://www.giffgaff.com/roaming/china) | China rates, call billing units, Travel Data Add-on distinction and PAYG/Credit context | 2026-07-24 | 2026-08-22 |
+| [giffgaff Help — Everything to know about Credit](https://help.giffgaff.com/en/articles/240847-everything-to-know-about-credit) | Definition and use of account Credit | 2026-07-24 | 2026-08-22 |
+| [giffgaff Help — Travel Data Add-ons and how they work](https://help.giffgaff.com/en/articles/365501-giffgaff-travel-data-add-ons-and-how-they-work) | App-only purchase route and country-specific non-EU scope, including China | 2026-07-24 | 2026-08-22 |
 
 The dates above are this project's evidence window, not a promise that the source will remain unchanged until the expiry date. If any source changes earlier, the rate card must be treated as stale immediately.
 
@@ -53,7 +53,7 @@ The accepted rate inputs for this documentation window are:
 | Voicemail | Listed with calls on the source page | not modelled as a distinct input | No |
 | Travel Data Add-on | Separate product route | excluded from every formula and total | No |
 
-All numeric output must fail closed after `2026-08-15` unless a reviewer rechecks the official pages, updates the evidence dates and rate card, and reruns the release tests.
+All numeric output must fail closed after `2026-08-22` unless a reviewer rechecks the official pages, updates the evidence dates and rate card, and reruns the release tests.
 
 ## Formula and billing boundaries / 公式与计费边界
 
@@ -112,7 +112,7 @@ The current interface models one outgoing and one incoming call per calculation.
 
 ## Explainable breakdown example / 可解释的分项示例
 
-Illustrative inputs, using the rate card retrieved on 2026-07-17:
+Illustrative inputs, using the rate card retrieved on 2026-07-24:
 
 - 10 MB of data;
 - 1 sent SMS;
@@ -142,7 +142,7 @@ These rows explain the billing boundary; they are not claims about an observed i
 
 The calculator's numeric output is **PAYG Credit only**. A Travel Data Add-on is a separate route and must not be silently included in or compared against the total.
 
-The official pages retrieved on 2026-07-17 indicate that:
+The official pages retrieved on 2026-07-24 indicate that:
 
 - Travel Data Add-ons are purchased through the giffgaff app;
 - China is listed among the supported non-EU destinations;
@@ -169,15 +169,15 @@ The JSON below is a documentation example only. E16 does **not** add it as a run
   "schemaVersion": "draft-1",
   "status": "release-gated",
   "runtimeAsset": false,
-  "id": "giffgaff-china-payg-credit-2026-07-17",
+  "id": "giffgaff-china-payg-credit-2026-07-24",
   "destination": {
     "name": "China",
     "isoCountryCode": "CN"
   },
   "scope": "payg-credit-only",
   "currency": "GBP",
-  "retrievedAt": "2026-07-17",
-  "expiresAt": "2026-08-15",
+  "retrievedAt": "2026-07-24",
+  "expiresAt": "2026-08-22",
   "rates": {
     "data": {
       "rate": 0.2,
@@ -244,7 +244,7 @@ Use only after the release gate passes and recheck the linked source on the publ
 
 ### Short Chinese citation
 
-> getgiffgaff 的中国漫游工具按 giffgaff 公开的中国 PAYG Credit 费率逐项试算，并把拨出电话的单次 30 秒最低计费、之后按秒，以及接听电话逐通向上取整到整分钟分别显示；费率核验于 2026-07-17，当前证据窗口截至 2026-08-15。它不包含 Travel Data Add-on，也不代表实际账单。
+> getgiffgaff 的中国漫游工具按 giffgaff 公开的中国 PAYG Credit 费率逐项试算，并把拨出电话的单次 30 秒最低计费、之后按秒，以及接听电话逐通向上取整到整分钟分别显示；费率核验于 2026-07-24，当前证据窗口截至 2026-08-22。它不包含 Travel Data Add-on，也不代表实际账单。
 
 ### Short English citation
 

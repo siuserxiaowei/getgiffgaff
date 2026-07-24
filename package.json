@@ -19,6 +19,7 @@
     "validate:commerce-evidence": "node scripts/validate-commerce-evidence.mjs",
     "growth:ops": "node scripts/growth-ops.mjs",
     "analytics:report": "node scripts/analytics-report.mjs",
+    "analytics:distribution": "node scripts/distribution-report.mjs",
     "submit:indexnow": "node scripts/submit-indexnow.mjs",
     "submit:indexnow:all": "node scripts/submit-indexnow.mjs --all",
     "gate:maintenance": "node scripts/verify-maintenance-release.mjs --mode maintenance",

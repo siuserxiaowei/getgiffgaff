@@ -5,9 +5,9 @@ import { GROWTH_PAGES } from "../site/growth/content-registry.js";
 
 const EXPECTED_UPDATED_AT = "2026-07-17";
 const HIGH_INTENT_ANSWER_UPDATED_AT = "2026-07-20";
-const KEEP_NUMBER_PRODUCT_UPDATED_AT = "2026-07-23";
+const TOOL_PRODUCT_UPDATED_AT = "2026-07-24";
 const LOCAL_SEARCH_UPDATED_AT = "2026-07-24";
-const EXPECTED_EXPIRY = "2026-08-15";
+const EXPECTED_EXPIRY = "2026-08-22";
 
 function growthPage(path) {
   const page = GROWTH_PAGES.find((entry) => entry.path === path);
@@ -25,16 +25,14 @@ test("E05 publishes dated answer-first boundaries on all indexable growth pages"
   const pages = GROWTH_PAGES.filter((page) => page.indexPolicy === "index");
   assert.equal(pages.length, 15);
   for (const page of pages) {
-    const expectedUpdatedAt = page.path === "/tools/keep-number-reminder/"
-      ? KEEP_NUMBER_PRODUCT_UPDATED_AT
+    const expectedUpdatedAt = ["/tools/keep-number-reminder/", "/tools/china-roaming-cost/"].includes(page.path)
+      ? TOOL_PRODUCT_UPDATED_AT
       : ["/guides/uk-sim-at-heathrow/", "/guides/manchester-student-sim/", "/guides/london-student-sim/"].includes(page.path)
         ? LOCAL_SEARCH_UPDATED_AT
       : ["/guides/9-number-balance-data-check/", "/guides/apn-settings/", "/more/esim-new-phone/", "/more/esim-deleted/", "/guides/claude-identity-verification/", "/guides/claude-phone-verification/", "/guides/claude-account-disabled-appeal/"].includes(page.path)
         ? HIGH_INTENT_ANSWER_UPDATED_AT
         : EXPECTED_UPDATED_AT;
-    const expectedReviewedAt = page.path === "/tools/keep-number-reminder/"
-      ? EXPECTED_UPDATED_AT
-      : expectedUpdatedAt;
+    const expectedReviewedAt = expectedUpdatedAt;
     assert.equal(page.updatedAt, expectedUpdatedAt, `${page.path} updatedAt`);
     assert.equal(page.reviewedAt, expectedReviewedAt, `${page.path} reviewedAt`);
     assert.ok(page.directAnswer.length >= 70, `${page.path} self-contained direct answer`);

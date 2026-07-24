@@ -3,6 +3,10 @@ const EXPIRES_AT = "2026-08-15";
 const SEARCH_CONTENT_REVIEWED_AT = "2026-07-20";
 const ACCOUNT_VERIFICATION_REVIEWED_AT = "2026-07-20";
 const LOCAL_SEARCH_REVIEWED_AT = "2026-07-24";
+const KEEP_NUMBER_REVIEWED_AT = "2026-07-24";
+const KEEP_NUMBER_EXPIRES_AT = "2026-08-22";
+const ROAMING_REVIEWED_AT = "2026-07-24";
+const ROAMING_EXPIRES_AT = "2026-08-22";
 
 const official = Object.freeze({
   activation: {
@@ -806,15 +810,16 @@ export const GROWTH_PAGES = Object.freeze([
     path: "/tools/keep-number-reminder/",
     indexPolicy: "index",
     schemaType: "WebApplication",
-    updatedAt: "2026-07-23",
+    updatedAt: KEEP_NUMBER_REVIEWED_AT,
+    reviewedAt: KEEP_NUMBER_REVIEWED_AT,
     socialImage: "/growth-assets/keep-number-reminder-og.png",
     intent: "giffgaff 保号提醒日期计算",
-    title: "giffgaff 保号提醒工具｜本地生成第 5 个月提醒",
+    title: "UK SIM Keep-Number Reminder｜giffgaff 第 5 个月保号提醒",
     description:
-      "输入最近一次有效动作日期，在浏览器本地生成第 5 个月提醒并导出 .ics；不上传号码、账号或日期，不承诺永久保号。",
-    h1: "giffgaff 保号提醒：生成本地日历",
-    deck: "日期只在当前浏览器内计算，不发送到本站服务器。",
-    productIntroHtml: `<section class="growth-product-intro" id="english-overview" lang="en" aria-labelledby="english-product-title"><p class="growth-product-kicker">Free browser tool · no sign-up · local-only</p><h2 id="english-product-title">UK SIM Keep-Number Reminder</h2><p>Turn the date of your last qualifying giffgaff activity into a fifth-month calendar reminder. The date stays in your browser, and the exported .ics file contains no phone number or account details.</p><div class="growth-product-actions"><a class="btn btn-primary" href="#tool">Create a reminder</a><a class="btn btn-secondary" href="#rule">Read the rule and limits</a></div><ul class="growth-product-points"><li>Runs locally in your browser</li><li>Exports a standard calendar file</li><li>Uses an early reminder, not a service guarantee</li></ul></section>`,
+      "Create a private fifth-month reminder for an infrequently used UK SIM, export a standard .ics file, and review the current giffgaff inactivity rule. 中文说明附后。",
+    h1: "UK SIM Keep-Number Reminder｜英国 SIM 保号提醒",
+    deck: "Create a fifth-month calendar reminder locally in your browser. 日期不会发送到本站服务器。",
+    productIntroHtml: `<section class="growth-product-intro" id="english-overview" lang="en" aria-labelledby="english-product-title"><p class="growth-product-kicker">Free browser tool · no sign-up · local-only</p><h2 id="english-product-title">A private early reminder for an infrequently used UK SIM</h2><p>Turn the date of your last qualifying giffgaff activity into a fifth-month calendar reminder. The date stays in your browser, and the exported .ics file contains no phone number or account details.</p><div class="growth-product-actions"><a class="btn btn-primary" href="#tool">Create a reminder</a><a class="btn btn-secondary" href="#rule">Read the rule and limits</a></div><ul class="growth-product-points"><li>Runs locally in your browser</li><li>Exports a standard calendar file</li><li>Uses an early reminder, not a service guarantee</li></ul><p class="growth-product-disclosure">Independent utility for giffgaff users. Not affiliated with or endorsed by giffgaff.</p></section>`,
     directAnswer:
       "官方停用边界是连续 6 个月没有列明的有效动作；可记为“最近一次有效动作 + 6 个月”，本站在第 5 个月提前生成缓冲提醒。日期只在本机计算，不保证号码状态。号码一旦被停用就不能重新激活；如需保留号码，应在停用后的 30 天内按官方说明申请 PAC。",
     tool: "keep-number",
@@ -822,12 +827,12 @@ export const GROWTH_PAGES = Object.freeze([
       {
         id: "rule",
         title: "当前官方规则与本站缓冲提醒",
-        html: `<p>官方当前规则可写成：连续 6 个月没有列明的有效动作会进入停用边界；本站用“最近一次有效动作 + 6 个月”记录最晚复核点。列明动作包括主动通话、主动 SMS/MMS、移动数据连接、购买 Airtime Credit 或 plan，单纯接收短信不在列表中。<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${REVIEWED_AT}）。</p><p>第 5 个月是本站给异常排查预留时间的缓冲提醒，不是官方把周期改成了 5 个月。</p>`,
+        html: `<p>官方当前规则可写成：连续 6 个月没有列明的有效动作会进入停用边界；本站用“最近一次有效动作 + 6 个月”记录最晚复核点。列明动作包括主动通话、主动 SMS/MMS、移动数据连接、购买 Airtime Credit 或 plan，单纯接收短信不在列表中。<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${KEEP_NUMBER_REVIEWED_AT}）。</p><p>第 5 个月是本站给异常排查预留时间的缓冲提醒，不是官方把周期改成了 5 个月。</p>`,
       },
       {
         id: "tool",
         title: "输入最近一次有效动作",
-        html: `<div class="growth-tool" data-tool="keep-number" data-locale="bilingual" data-expires="${EXPIRES_AT}" role="group" aria-label="UK SIM keep-number reminder / 本地保号提醒工具"><label>Last qualifying activity / 最近一次可验证动作日期<input type="date" name="last-action" required></label><button class="btn btn-primary" type="button" data-calculate>Create fifth-month reminder / 生成提醒</button><output aria-live="polite"></output><button class="btn btn-secondary" type="button" data-download-ics disabled>Download .ics / 下载日历</button></div>`,
+        html: `<div class="growth-tool" data-tool="keep-number" data-locale="bilingual" data-expires="${KEEP_NUMBER_EXPIRES_AT}" role="group" aria-label="UK SIM keep-number reminder / 本地保号提醒工具"><label>Last qualifying activity / 最近一次可验证动作日期<input type="date" name="last-action" required></label><button class="btn btn-primary" type="button" data-calculate>Create fifth-month reminder / 生成提醒</button><output aria-live="polite"></output><button class="btn btn-secondary" type="button" data-download-ics disabled>Download .ics / 下载日历</button><div class="growth-tool-success-actions" data-tool-success-actions hidden><p>Need a UK SIM you can maintain long-term? / 需要长期维护的英国 SIM？</p><a class="btn btn-secondary" href="/shop/" data-analytics-event="shop_click">View purchase options / 查看购买选项</a><a class="btn btn-secondary" href="/contact/" data-analytics-event="commerce_click">Ask before buying / 购买前咨询</a></div></div>`,
       },
       {
         id: "privacy",
@@ -837,7 +842,7 @@ export const GROWTH_PAGES = Object.freeze([
       {
         id: "expired",
         title: "超过周期或号码已停用怎么办",
-        html: `<p>不要把计算日期当成号码仍然有效的证明。立即登录官方账号检查号码、余额和服务状态。官方说明号码一旦停用就不能重新激活；如仍需保留号码，应在停用后的 30 天内按当前页面申请 PAC 并转出。<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${REVIEWED_AT}）。</p>`,
+        html: `<p>不要把计算日期当成号码仍然有效的证明。立即登录官方账号检查号码、余额和服务状态。官方说明号码一旦停用就不能重新激活；如仍需保留号码，应在停用后的 30 天内按当前页面申请 PAC 并转出。<a href="${official.inactive.url}" target="_blank" rel="noopener noreferrer">${official.inactive.label}</a>（核验 ${KEEP_NUMBER_REVIEWED_AT}）。</p>`,
       },
     ],
     sources: [official.inactive, official.credit],
@@ -853,30 +858,34 @@ export const GROWTH_PAGES = Object.freeze([
     path: "/tools/china-roaming-cost/",
     indexPolicy: "index",
     schemaType: "WebApplication",
+    updatedAt: ROAMING_REVIEWED_AT,
+    reviewedAt: ROAMING_REVIEWED_AT,
+    socialImage: "/growth-assets/china-roaming-cost-og.png",
     intent: "giffgaff 中国 PAYG Credit 漫游费用试算",
-    title: "giffgaff 中国 PAYG 漫游费用计算器｜短信、通话与流量",
+    title: "China PAYG Roaming Cost Calculator｜giffgaff 用户漫游试算",
     description:
-      "按 giffgaff 当前中国 PAYG Credit 漫游费率试算短信、单次通话和流量成本；不包含 Travel Data Add-on，费率过期停止给出总价。",
-    h1: "giffgaff 中国 PAYG 漫游费用计算器",
-    deck: `PAYG Credit 费率核验日期 ${REVIEWED_AT}，到 ${EXPIRES_AT} 前用于估算；不包含 Travel Data Add-on，实际扣费以运营商账单为准。`,
+      "Estimate China PAYG Credit for data, SMS and calls using dated public giffgaff rates. Independent utility; excludes the Travel Data Add-on. 中文说明附后。",
+    h1: "China PAYG Roaming Cost Calculator｜中国漫游费用计算器",
+    deck: `Estimate data, SMS and call Credit with public rates reviewed ${ROAMING_REVIEWED_AT}. 独立工具，不包含 Travel Data Add-on。`,
+    productIntroHtml: `<section class="growth-product-intro" id="english-overview" lang="en" aria-labelledby="english-product-title"><p class="growth-product-kicker">Free calculator · no sign-up · dated public rates</p><h2 id="english-product-title">Estimate China roaming Credit before you travel</h2><p>Enter expected data, sent texts and single-call durations. The calculator explains each PAYG Credit component and stops producing numbers when its evidence window expires.</p><div class="growth-product-actions"><a class="btn btn-primary" href="#tool">Estimate my cost</a><a class="btn btn-secondary" href="#method">Review billing units</a></div><ul class="growth-product-points"><li>Data, sent SMS and single-call estimates</li><li>Fail-closed after the dated review window</li><li>Travel Data Add-on deliberately excluded</li></ul><p class="growth-product-disclosure">Independent utility for giffgaff users. Not affiliated with or endorsed by giffgaff.</p></section>`,
     directAnswer:
       "本页只试算中国 PAYG Credit：数据费用 = MB × £0.20，发出短信费用 = 条数 × £0.30；拨出电话最低单位为 30 秒，即 30 秒是最低计费单位，之后按秒；接听电话逐通按分钟向上取整，所以多通电话必须分别计算。本工具不包含通过 App 购买、30 天有效的 Travel Data Add-on。",
     tool: "roaming-cost",
     sections: [
       {
         id: "status",
-        title: "当前中国 PAYG Credit 费率核验状态",
-        html: `<div class="growth-rate-status"><strong>已核验：${REVIEWED_AT}</strong><span>失效日：${EXPIRES_AT}</span><p>当前公开页显示：数据 20p/MB；拨打 £1/分钟，首 30 秒起计、之后按秒；接听 £1/分钟，每次通话按整分钟向上取整；发短信 30p，收短信免费。见<a href="${official.roamingChina.url}" target="_blank" rel="noopener noreferrer">${official.roamingChina.label}</a>（核验 ${REVIEWED_AT}）。</p></div>`,
+        title: "Rate status / 当前中国 PAYG Credit 费率状态",
+        html: `<div class="growth-rate-status"><strong>Reviewed / 已核验：${ROAMING_REVIEWED_AT}</strong><span>Expires / 失效日：${ROAMING_EXPIRES_AT}</span><p>Public rate page currently shows: data 20p/MB; outgoing calls £1/minute with a 30-second minimum then per-second billing; incoming calls £1/minute rounded up per call; sent texts 30p and received texts free. 当前公开页显示：数据 20p/MB；拨打 £1/分钟，首 30 秒起计、之后按秒；接听 £1/分钟，每次通话按整分钟向上取整；发短信 30p，收短信免费。见<a href="${official.roamingChina.url}" target="_blank" rel="noopener noreferrer">${official.roamingChina.label}</a>（核验 ${ROAMING_REVIEWED_AT}）。</p></div>`,
       },
       {
         id: "tool",
-        title: "输入预计用量",
-        html: `<div class="growth-tool" data-tool="roaming-cost" data-rate-per-megabyte="0.2" data-rate-per-sms="0.3" data-rate-per-outgoing-minute="1" data-rate-per-incoming-minute="1" data-expires="${EXPIRES_AT}" role="group" aria-label="中国 PAYG Credit 漫游费用试算工具"><label>预计 PAYG 流量（MB）<input type="number" name="megabytes" min="0" step="0.01" value="0" required></label><label>预计发出短信（条）<input type="number" name="sms" min="0" step="1" value="0" required></label><label>单次预计拨打时长（分钟）<input type="number" name="outgoing-minutes" min="0" step="0.01" value="0" required></label><label>单次预计接听时长（分钟）<input type="number" name="incoming-minutes" min="0" step="0.01" value="0" required></label><button class="btn btn-primary" type="button" data-calculate>计算 PAYG Credit 估算费用</button><output aria-live="polite"></output></div>`,
+        title: "Enter expected usage / 输入预计用量",
+        html: `<div class="growth-tool" data-tool="roaming-cost" data-locale="bilingual" data-rate-per-megabyte="0.2" data-rate-per-sms="0.3" data-rate-per-outgoing-minute="1" data-rate-per-incoming-minute="1" data-expires="${ROAMING_EXPIRES_AT}" role="group" aria-label="China PAYG Credit roaming cost calculator / 中国漫游费用试算工具"><label>PAYG data / 预计流量（MB）<input type="number" name="megabytes" min="0" step="0.01" value="0" required></label><label>Sent SMS / 预计发出短信（条）<input type="number" name="sms" min="0" step="1" value="0" required></label><label>One outgoing call / 单次拨打时长（分钟）<input type="number" name="outgoing-minutes" min="0" step="0.01" value="0" required></label><label>One incoming call / 单次接听时长（分钟）<input type="number" name="incoming-minutes" min="0" step="0.01" value="0" required></label><button class="btn btn-primary" type="button" data-calculate>Estimate PAYG Credit / 计算费用</button><output aria-live="polite"></output><div class="growth-tool-success-actions" data-tool-success-actions hidden><p>Need a UK SIM for longer-term use? / 需要长期使用的英国 SIM？</p><a class="btn btn-secondary" href="/shop/" data-analytics-event="shop_click">View options / 查看选项</a><a class="btn btn-secondary" href="/contact/" data-analytics-event="commerce_click">Ask about current stock / 咨询库存</a></div></div>`,
       },
       {
         id: "method",
         title: "通话和流量计费单位说明",
-        html: `<p>公开公式是：数据 = MB × £0.20；发出短信 = 条数 × £0.30；拨出电话逐通计算，首 30 秒按最低计费单位、之后按秒；接听电话逐通按分钟向上取整。若预计多次通话，应逐通计算后相加，不能先合并分钟，否则每通各自的最低单位或取整会被低估。后台同步可能在你没有主动打开网页时产生 PAYG 数据。</p><p>本页只估算 PAYG Credit，明确不包含 Travel Data Add-on。中国另有通过 App 购买的非欧盟 Travel Data Add-on，购买后 30 天有效；规格和当前价格先查看<a href="${official.travelAddOn.url}" target="_blank" rel="noopener noreferrer">${official.travelAddOn.label}</a>（核验 ${REVIEWED_AT}）。</p><p class="growth-warning">如果费率超过失效日，数值结果会关闭。先打开官方中国漫游页复核，再重新发布配置。</p>`,
+        html: `<p>公开公式是：数据 = MB × £0.20；发出短信 = 条数 × £0.30；拨出电话逐通计算，首 30 秒按最低计费单位、之后按秒；接听电话逐通按分钟向上取整。若预计多次通话，应逐通计算后相加，不能先合并分钟，否则每通各自的最低单位或取整会被低估。后台同步可能在你没有主动打开网页时产生 PAYG 数据。</p><p>本页只估算 PAYG Credit，明确不包含 Travel Data Add-on。中国另有通过 App 购买的非欧盟 Travel Data Add-on，购买后 30 天有效；规格和当前价格先查看<a href="${official.travelAddOn.url}" target="_blank" rel="noopener noreferrer">${official.travelAddOn.label}</a>（核验 ${ROAMING_REVIEWED_AT}）。</p><p class="growth-warning">If the evidence window expires, numeric output stops. / 如果费率超过失效日，数值结果会关闭。先打开官方中国漫游页复核，再重新发布配置。</p>`,
       },
       {
         id: "boundaries",

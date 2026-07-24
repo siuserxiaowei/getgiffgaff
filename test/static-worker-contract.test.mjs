@@ -386,8 +386,8 @@ test("route manifest owns 49 indexable and seven noindex routes with real source
       assert.ok(!PUBLIC_INDEXABLE_PATHS.includes(pathname), pathname);
     }
 
-    const expectedDate = pathname === "/tools/keep-number-reminder/"
-      ? "2026-07-23"
+    const expectedDate = ["/tools/keep-number-reminder/", "/tools/china-roaming-cost/"].includes(pathname)
+      ? "2026-07-24"
       : pathname === "/"
       ? "2026-07-20T06:51:08Z"
       : accountVerificationExpansionRoutes.has(pathname)

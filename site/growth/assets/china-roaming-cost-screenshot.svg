@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1270" height="760" viewBox="0 0 1270 760">
+  <rect width="1270" height="760" fill="#eef3f0"/>
+  <rect x="35" y="30" width="1200" height="700" rx="28" fill="#fff" stroke="#d6e0da" stroke-width="2"/>
+  <g font-family="Verdana">
+    <text x="82" y="88" fill="#137153" font-size="17" font-weight="800" letter-spacing="1.5">FREE CALCULATOR · DATED PUBLIC RATES</text>
+    <text x="82" y="147" fill="#102c36" font-size="42" font-weight="800">China PAYG Roaming Cost Calculator</text>
+    <text x="82" y="186" fill="#53656a" font-size="21">Estimate data, SMS and calls before you travel.</text>
+    <rect x="82" y="225" width="1106" height="414" rx="22" fill="#fbf8ef" stroke="#e4bd57" stroke-width="2"/>
+    <g transform="translate(116 265)">
+      <text x="0" y="0" fill="#506066" font-size="16" font-weight="700">PAYG data (MB)</text>
+      <rect y="18" width="470" height="54" rx="10" fill="#fff" stroke="#cad5d0"/>
+      <text x="18" y="54" fill="#183642" font-size="21">10</text>
+      <text x="536" y="0" fill="#506066" font-size="16" font-weight="700">Sent SMS</text>
+      <rect x="536" y="18" width="470" height="54" rx="10" fill="#fff" stroke="#cad5d0"/>
+      <text x="554" y="54" fill="#183642" font-size="21">1</text>
+      <text x="0" y="116" fill="#506066" font-size="16" font-weight="700">One outgoing call (minutes)</text>
+      <rect y="134" width="470" height="54" rx="10" fill="#fff" stroke="#cad5d0"/>
+      <text x="18" y="170" fill="#183642" font-size="21">0.5</text>
+      <text x="536" y="116" fill="#506066" font-size="16" font-weight="700">One incoming call (minutes)</text>
+      <rect x="536" y="134" width="470" height="54" rx="10" fill="#fff" stroke="#cad5d0"/>
+      <text x="554" y="170" fill="#183642" font-size="21">1</text>
+      <rect y="223" width="1006" height="56" rx="11" fill="#183642"/>
+      <text x="503" y="258" text-anchor="middle" fill="#fff" font-size="19" font-weight="800">Estimate PAYG Credit</text>
+      <rect y="300" width="1006" height="72" rx="11" fill="#fff" stroke="#cad5d0"/>
+      <text x="20" y="330" fill="#183642" font-size="18" font-weight="800">Estimated total £3.80</text>
+      <text x="20" y="357" fill="#65757a" font-size="15">Data £2.00 · SMS £0.30 · outgoing £0.50 · incoming £1.00</text>
+    </g>
+    <text x="82" y="690" fill="#6b7a7c" font-size="16">Independent utility for giffgaff users · No account or usage data is stored</text>
+  </g>
+</svg>

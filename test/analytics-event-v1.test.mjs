@@ -128,6 +128,8 @@ test("analytics_event_v1 accepts only fixed privacy-safe distribution sources", 
   const allowed = [
     "dist_partner",
     "dist_private_share",
+    "dist_tinylaunch",
+    "dist_uneed",
     "dist_wechat_group",
     "dist_wechat_official",
     "dist_xiaohongshu",

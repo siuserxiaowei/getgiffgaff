@@ -197,6 +197,27 @@
   line-height: 1.65;
 }
 
+.growth-tool-success-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.growth-tool-success-actions[hidden] {
+  display: none;
+}
+
+.growth-tool-success-actions p {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--gg-muted);
+  font-size: 14px;
+  font-weight: 800;
+}
+
 .growth-sources,
 .growth-related,
 .growth-commerce {
@@ -1045,4 +1066,10 @@ body:has(.commerce-guide-dialog:target) {
   margin-right: 0.4rem;
   color: #137153;
   font-weight: 900;
+}
+
+.growth-product-intro .growth-product-disclosure {
+  margin: 1rem 0 0;
+  color: #64716b;
+  font-size: 0.82rem;
 }

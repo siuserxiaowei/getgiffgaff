@@ -6,7 +6,7 @@ const INTERNAL_LINK_REFINEMENT_DATE = "2026-07-19T15:35:26Z";
 const SEARCH_CONTENT_EXPANSION_DATE = "2026-07-20";
 const ACCOUNT_VERIFICATION_EXPANSION_DATE = "2026-07-20T06:15:00Z";
 const HOMEPAGE_PLATFORM_HUB_DATE = "2026-07-20T06:51:08Z";
-const KEEP_NUMBER_PRODUCTIZATION_DATE = "2026-07-23";
+const TOOL_PRODUCTIZATION_DATE = "2026-07-24";
 const LOCAL_SEARCH_EXPANSION_DATE = "2026-07-24";
 
 export const LEGACY_ROUTES = Object.freeze([
@@ -95,6 +95,8 @@ export const PUBLIC_STATIC_ASSET_PATHS = Object.freeze([
   "/growth-assets/commerce-ui.js",
   "/growth-assets/analytics.js",
   "/growth-assets/keep-number-reminder-og.png",
+  "/growth-assets/china-roaming-cost-og.png",
+  "/growth-assets/china-roaming-cost-screenshot.png",
   "/release-provenance.json",
   "/indexnow-key.txt",
   "/robots.txt",
@@ -254,8 +256,11 @@ function commerceFor(pathname) {
 }
 
 function lastModifiedFor(pathname, contentSource) {
-  if (pathname === "/tools/keep-number-reminder/") {
-    return KEEP_NUMBER_PRODUCTIZATION_DATE;
+  if ([
+    "/tools/keep-number-reminder/",
+    "/tools/china-roaming-cost/",
+  ].includes(pathname)) {
+    return TOOL_PRODUCTIZATION_DATE;
   }
   if (pathname === "/") {
     return HOMEPAGE_PLATFORM_HUB_DATE;

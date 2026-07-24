@@ -108,6 +108,8 @@ test("client analytics reduces referrers to a fixed category and emits an allowl
   for (const sourceName of [
     "dist_partner",
     "dist_private_share",
+    "dist_tinylaunch",
+    "dist_uneed",
     "dist_wechat_group",
     "dist_wechat_official",
     "dist_xiaohongshu",

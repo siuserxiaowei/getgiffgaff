@@ -52,6 +52,8 @@ test("UTM links use only fixed first-party attribution values and one query para
     "dist_wechat_official",
     "dist_partner",
     "dist_private_share",
+    "dist_uneed",
+    "dist_tinylaunch",
     "paid_google",
     "paid_microsoft",
   ];
@@ -65,7 +67,7 @@ test("UTM links use only fixed first-party attribution values and one query para
   assert.deepEqual([...url.searchParams], [["utm_source", "dist_wechat_group"]]);
 
   const matrix = attributionMatrix("/shop/");
-  assert.equal(matrix.length, 7);
+  assert.equal(matrix.length, 9);
   assert.equal(matrix.filter(({ kind }) => kind === "paid").length, 2);
   assert.throws(
     () => buildAttributionUrl({ source: "private-person-name", pathname: "/" }),

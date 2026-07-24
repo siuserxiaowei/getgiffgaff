@@ -33,6 +33,11 @@ function emitToolResult() {
   }));
 }
 
+function setSuccessActions(root, visible) {
+  const actions = root.querySelector("[data-tool-success-actions]");
+  if (actions) actions.hidden = !visible;
+}
+
 function bindKeepNumber(root) {
   const output = root.querySelector("output");
   const calculate = root.querySelector("[data-calculate]");
@@ -44,6 +49,7 @@ function bindKeepNumber(root) {
     if (!evidenceIsCurrent({ expiresAt: root.dataset.expires, now: todayIso() })) {
       calendar = null;
       download.disabled = true;
+      setSuccessActions(root, false);
       output.textContent = bilingual
         ? "The rule review window has expired. Please re-check the official source before creating a calendar reminder. / 规则核验期已过，请先复核官方来源。"
         : "规则核验期已过，请先打开官方来源复核；当前不生成日历。";
@@ -54,6 +60,7 @@ function bindKeepNumber(root) {
     calendar = keepNumberCalendar(value);
     if (!reminder || !calendar) {
       download.disabled = true;
+      setSuccessActions(root, false);
       output.textContent = bilingual
         ? "Enter a valid date. / 请输入有效日期。"
         : "请输入有效日期。";
@@ -63,6 +70,7 @@ function bindKeepNumber(root) {
       ? `Fifth-month reminder: ${reminder}. This is not proof of number status; re-check the official rule before acting. / 第 5 个月提醒：${reminder}。`
       : `第 5 个月操作提醒：${reminder}。这不是号码状态保证，请操作前复核官方规则。`;
     download.disabled = false;
+    setSuccessActions(root, true);
     emitToolResult();
   });
   download.addEventListener("click", () => {
@@ -80,6 +88,7 @@ function bindRoamingCost(root) {
   const output = root.querySelector("output");
   const calculate = root.querySelector("[data-calculate]");
   if (!output || !calculate) return;
+  const bilingual = root.dataset.locale === "bilingual";
   calculate.addEventListener("click", () => {
     const result = roamingCostBreakdown({
       megabytes: fieldValue(root, "megabytes"),
@@ -94,10 +103,16 @@ function bindRoamingCost(root) {
       now: todayIso(),
     });
     if (result === null) {
-      output.textContent = "费率已过核验期或输入无效，已停止给出数值结果。";
+      setSuccessActions(root, false);
+      output.textContent = bilingual
+        ? "The rate review window has expired or an input is invalid, so numeric output is disabled. / 费率已过核验期或输入无效，已停止给出数值结果。"
+        : "费率已过核验期或输入无效，已停止给出数值结果。";
       return;
     }
-    output.textContent = `PAYG Credit 估算合计 ${money(result.total, "GBP")}：流量 ${money(result.data.amount, "GBP")}；发出短信 ${money(result.sms.amount, "GBP")}；单次拨打 ${money(result.outgoingCall.amount, "GBP")}（按 ${result.outgoingCall.billedSeconds} 秒）；单次接听 ${money(result.incomingCall.amount, "GBP")}（按 ${result.incomingCall.billedMinutes} 个整分钟）。不含 Travel Data Add-on；实际扣费以运营商账单为准。`;
+    output.textContent = bilingual
+      ? `Estimated PAYG Credit total ${money(result.total, "GBP")}: data ${money(result.data.amount, "GBP")}; sent SMS ${money(result.sms.amount, "GBP")}; one outgoing call ${money(result.outgoingCall.amount, "GBP")} (${result.outgoingCall.billedSeconds} billed seconds); one incoming call ${money(result.incomingCall.amount, "GBP")} (${result.incomingCall.billedMinutes} billed whole minute(s)). Excludes the Travel Data Add-on; the operator bill is final. / PAYG Credit 估算合计 ${money(result.total, "GBP")}：流量 ${money(result.data.amount, "GBP")}；发出短信 ${money(result.sms.amount, "GBP")}；单次拨打 ${money(result.outgoingCall.amount, "GBP")}（按 ${result.outgoingCall.billedSeconds} 秒）；单次接听 ${money(result.incomingCall.amount, "GBP")}（按 ${result.incomingCall.billedMinutes} 个整分钟）。不含 Travel Data Add-on；实际扣费以运营商账单为准。`
+      : `PAYG Credit 估算合计 ${money(result.total, "GBP")}：流量 ${money(result.data.amount, "GBP")}；发出短信 ${money(result.sms.amount, "GBP")}；单次拨打 ${money(result.outgoingCall.amount, "GBP")}（按 ${result.outgoingCall.billedSeconds} 秒）；单次接听 ${money(result.incomingCall.amount, "GBP")}（按 ${result.incomingCall.billedMinutes} 个整分钟）。不含 Travel Data Add-on；实际扣费以运营商账单为准。`;
+    setSuccessActions(root, true);
     emitToolResult();
   });
 }

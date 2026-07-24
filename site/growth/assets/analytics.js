@@ -7,6 +7,8 @@ const ATTRIBUTION_STORAGE_KEY = "getgiffgaff_attribution_source_v1";
 const ATTRIBUTION_SOURCES = new Set([
   "dist_partner",
   "dist_private_share",
+  "dist_tinylaunch",
+  "dist_uneed",
   "dist_wechat_group",
   "dist_wechat_official",
   "dist_xiaohongshu",

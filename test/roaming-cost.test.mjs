@@ -10,6 +10,10 @@ import {
 import { renderGrowthPage } from "../scripts/build-growth-pages.mjs";
 import { GROWTH_PAGES } from "../site/growth/content-registry.js";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const CURRENT_EVIDENCE = Object.freeze({
   expiresAt: "2026-08-15",
@@ -142,6 +146,23 @@ test("China calculator is visibly scoped to PAYG Credit and links the separate o
   );
   assert.match(html, /不包含[^<。]*Travel Data Add-on/);
   assert.match(html, /单次|一次/);
+  assert.match(html, /<title>China PAYG Roaming Cost Calculator/);
+  assert.match(html, /Independent utility for giffgaff users/);
+  assert.match(html, /data-locale="bilingual"/);
+  assert.match(html, /growth-assets\/china-roaming-cost-og\.png/);
+  assert.match(html, /data-tool-success-actions hidden/);
+});
+
+test("China calculator launch images have fixed platform-ready dimensions", async () => {
+  for (const [filename, width, height] of [
+    ["china-roaming-cost-og.png", 1200, 630],
+    ["china-roaming-cost-screenshot.png", 1270, 760],
+  ]) {
+    const image = await readFile(path.join(ROOT, "site", "growth", "assets", filename));
+    assert.equal(image.subarray(1, 4).toString(), "PNG");
+    assert.equal(image.readUInt32BE(16), width);
+    assert.equal(image.readUInt32BE(20), height);
+  }
 });
 
 test("roaming UI renders an explainable component breakdown", async () => {
@@ -160,4 +181,5 @@ test("roaming UI renders an explainable component breakdown", async () => {
     assert.match(source, new RegExp(component.replaceAll(".", "\\.")), component);
   }
   assert.match(source, /不含 Travel Data Add-on/);
+  assert.match(source, /Estimated PAYG Credit total/);
 });

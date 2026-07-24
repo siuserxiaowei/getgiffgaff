@@ -17,9 +17,12 @@ test("keep-number tool exposes an English launch surface without changing its ca
   assert.match(html, /<link rel="canonical" href="https:\/\/getgiffgaff\.com\/tools\/keep-number-reminder\/">/);
   assert.match(html, /id="english-overview" lang="en"/);
   assert.match(html, /UK SIM Keep-Number Reminder/);
+  assert.match(html, /<title>UK SIM Keep-Number Reminder/);
   assert.match(html, /Free browser tool · no sign-up · local-only/);
   assert.match(html, /data-locale="bilingual"/);
   assert.match(html, /growth-assets\/keep-number-reminder-og\.png/);
+  assert.match(html, /data-tool-success-actions hidden/);
+  assert.match(html, /View purchase options/);
 });
 
 test("keep-number social launch card is a 1200 by 630 PNG", async () => {
