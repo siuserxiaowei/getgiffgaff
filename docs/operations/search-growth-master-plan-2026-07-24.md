@@ -26,8 +26,8 @@
 | S03 | IndexNow | 发布后只提交真实变化 URL | DONE | 站点已部署 key 与增量脚本；本地词三页及保号工具已收到 200/202 接收回执 |
 | S04 | Yahoo Search | 不建立重复控制台；通过 Bing 抓取与索引体系覆盖 | DONE | 无独立站长提交动作；后续以 Bing Query/Page 报告判断 |
 | S05 | DuckDuckGo | 不重复提交；保持 Bing 可发现性 | DONE | 传统网页结果的重要来源之一是 Bing；继续维护 canonical/sitemap/IndexNow |
-| S06 | Yandex Webmaster | 添加 canonical 域、验证所有权、提交 sitemap | OWNER-AUTH | 当前停在 Yandex 登录页；需所有者完成 Yandex ID 登录，随后由运营继续 |
-| S07 | Baidu 搜索资源平台 | 保留首页验证标签，完成平台验证并提交 sitemap | READY | 已取得公开验证标签 `codeva-EHQw5Gn8uH`，纳入发布构建；发布后点“完成验证” |
+| S06 | Yandex Webmaster | 添加 canonical 域、验证所有权、提交 sitemap | READY | 站点已添加，公开验证标签已取得并纳入发布构建；发布后完成平台复核 |
+| S07 | Baidu 搜索资源平台 | 保留首页验证标签，完成平台验证并提交 sitemap | DONE | 所有权验证成功；sitemap 页当前显示今日上限/余额均为 0，待平台释放配额后提交 |
 | S08 | Naver / Seznam / Yep 等 | 先用 IndexNow 覆盖，不逐个平台做空账号 | HOLD | 只有出现目标国家曝光、品牌查询或实际用户来源后，才评估独立控制台 |
 | S09 | Direct | 作为直接访问渠道建立基线 | OBSERVE | 记录 `source=direct` 的 session、咨询、付款；不称为“Direct 搜索” |
 
@@ -96,9 +96,11 @@
 - [x] 拒绝错误 `new-backlinks-hive` 结果，改用编辑型相关外链。
 - [x] 将 sitemap 活动门禁从历史硬编码 39 更新为当前 manifest 的 49。
 - [x] 将百度所有权标签做成可测试、长期保留的发布构建能力。
-- [ ] 发布百度验证标签，并在生产首页核对。
-- [ ] 百度点击“完成验证”并提交 sitemap。
-- [ ] Yandex 所有者登录后添加站点、验证并提交 sitemap。
+- [x] 发布百度验证标签，并在生产首页核对。
+- [x] 百度点击“完成验证”。
+- [ ] 百度释放 sitemap 配额后提交 `https://getgiffgaff.com/sitemap.xml`。
+- [x] Yandex 添加站点并取得公开验证标签。
+- [ ] 发布 Yandex 验证标签，完成平台复核并提交 sitemap。
 - [ ] 2026-07-31 完成 D7 复盘。
 - [ ] 2026-08-21 完成 D28 去留决策。
 

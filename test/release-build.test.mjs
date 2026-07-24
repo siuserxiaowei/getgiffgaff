@@ -32,7 +32,9 @@ import {
 } from "../scripts/capture-legacy-site.mjs";
 import {
   BAIDU_SITE_VERIFICATION_CODE,
+  YANDEX_SITE_VERIFICATION_CODE,
   injectBaiduVerificationMeta,
+  injectYandexVerificationMeta,
 } from "../scripts/search-platform-verification.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -394,6 +396,10 @@ test("release build contains frozen pages, growth pages, semantic related slots,
       expected = injectBaiduVerificationMeta(
         expected,
         BAIDU_SITE_VERIFICATION_CODE,
+      );
+      expected = injectYandexVerificationMeta(
+        expected,
+        YANDEX_SITE_VERIFICATION_CODE,
       );
     }
     const expectedSlots = Object.hasOwn(related, route) ? 2 : 1;

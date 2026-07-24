@@ -3,12 +3,16 @@ import path from "node:path";
 
 const BAIDU_META_PATTERN =
   /<meta\b(?=[^>]*\bname\s*=\s*["']baidu-site-verification["'])[^>]*>\s*/gi;
+const YANDEX_META_PATTERN =
+  /<meta\b(?=[^>]*\bname\s*=\s*["']yandex-verification["'])[^>]*>\s*/gi;
 const CONTENT_PATTERN = /\bcontent\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i;
 const BAIDU_CODE_PATTERN = /^codeva-[A-Za-z0-9_-]{6,80}$/;
+const YANDEX_CODE_PATTERN = /^[a-f0-9]{16}$/;
 
 // Public ownership token issued by Baidu Search Resource Platform on 2026-07-24.
 // Baidu requires this tag to remain on the verified homepage.
 export const BAIDU_SITE_VERIFICATION_CODE = "codeva-EHQw5Gn8uH";
+export const YANDEX_SITE_VERIFICATION_CODE = "df6c92e880f58c32";
 
 function contentValue(tag) {
   const match = String(tag).match(CONTENT_PATTERN);
@@ -44,21 +48,59 @@ export function injectBaiduVerificationMeta(html, value) {
   return String(html).replace(/<\/head>/i, `  ${tag}\n</head>`);
 }
 
+export function normalizeYandexVerificationCode(value) {
+  const code = String(value || "").trim();
+  if (!YANDEX_CODE_PATTERN.test(code)) {
+    throw new Error(
+      `Invalid Yandex site verification code ${JSON.stringify(value)}; expected the issued 16-character hexadecimal token`,
+    );
+  }
+  return code;
+}
+
+export function injectYandexVerificationMeta(html, value) {
+  const code = normalizeYandexVerificationCode(value);
+  const tags = String(html).match(YANDEX_META_PATTERN) || [];
+  if (tags.length > 1) {
+    throw new Error("Duplicate yandex-verification meta tags are not allowed");
+  }
+  if (tags.length === 1) {
+    if (contentValue(tags[0]) !== code) {
+      throw new Error("Conflicting yandex-verification meta tag");
+    }
+    return html;
+  }
+  if (!/<\/head>/i.test(html)) {
+    throw new Error("Cannot inject Yandex verification meta: homepage has no closing head");
+  }
+  const tag = `<meta name="yandex-verification" content="${code}">`;
+  return String(html).replace(/<\/head>/i, `  ${tag}\n</head>`);
+}
+
 export async function configureSearchPlatformVerification({
   outputRoot,
   baiduVerificationCode = BAIDU_SITE_VERIFICATION_CODE,
+  yandexVerificationCode = YANDEX_SITE_VERIFICATION_CODE,
 }) {
   if (!outputRoot) {
     throw new Error("Search platform verification requires an outputRoot");
   }
   const homepage = path.join(outputRoot, "index.html");
   const html = await readFile(homepage, "utf8");
-  const configured = injectBaiduVerificationMeta(html, baiduVerificationCode);
+  const configured = injectYandexVerificationMeta(
+    injectBaiduVerificationMeta(html, baiduVerificationCode),
+    yandexVerificationCode,
+  );
   if (configured !== html) await writeFile(homepage, configured);
   return {
     baidu: {
       enabled: true,
       code: normalizeBaiduVerificationCode(baiduVerificationCode),
+      pages: 1,
+    },
+    yandex: {
+      enabled: true,
+      code: normalizeYandexVerificationCode(yandexVerificationCode),
       pages: 1,
     },
   };
